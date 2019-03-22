@@ -218,12 +218,13 @@ public class StartScreenFunctionalities : MonoBehaviour {
         GameSceneManager.LoadPlayersSetupScene();
     }
 
-    private void InitGame()
+    public void InitGame()
     {
 
         //play theme song
         //GameGlobals.audioManager.PlayInfinitClip("Audio/theme/themeIntro", "Audio/theme/themeLoop");
-        UIStartGameButton.onClick.AddListener(delegate () { StartGame(); });
+        if(UIStartGameButton!=null)
+            UIStartGameButton.onClick.AddListener(delegate () { StartGame(); });
 
         //thanks WebGL, because of you I've got to init a game global to init the rest of the game globals!
         GameObject monoBehaviourDummy = Instantiate(monoBehaviourDummyPrefab);

@@ -63,16 +63,12 @@ public class GameManager : MonoBehaviour {
     {
         GameGlobals.gameManager = this;
         //mock to test
-        //GameGlobals.gameLogManager.InitLogs();
-        //GameGlobals.albums = new List<Album>(GameProperties.numberOfAlbumsPerGame);
-        //GameGlobals.players = new List<Player>(GameProperties.numberOfPlayersPerGame);
-        //GameGlobals.players.Add(new RoboticPlayerCoopStrategy(0,"PL2",false));
-        //GameGlobals.players.Add(new RoboticPlayerGreedyStrategy(1,"PL3",false));
-        //GameGlobals.players.Add(new UIPlayer("PL1"));
-        //GameGlobals.gameDiceNG = new RandomDiceNG();
-        //GameGlobals.currSessionId = "0";
-        //GameGlobals.currGameId = 0;
-        //GameGlobals.currGameRoundId = 0;
+        new StartScreenFunctionalities().InitGame();
+        GameGlobals.players = new List<Player>(3);
+        GameGlobals.gameDiceNG = new RandomDiceNG();
+        GameGlobals.currSessionId = "0";
+        GameGlobals.currGameId = 0;
+        GameGlobals.currGameRoundId = 0;
     }
 
     public int InterruptGame()

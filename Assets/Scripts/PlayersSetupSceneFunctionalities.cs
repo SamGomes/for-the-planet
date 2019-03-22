@@ -23,7 +23,7 @@ public class PlayersSetupSceneFunctionalities : MonoBehaviour {
     private PoppupScreenFunctionalities playerWarningPoppupRef;
     private PoppupScreenFunctionalities setupWarningPoppupRef;
 
-    void SetUpParameterization(GameParameterization parameterization)
+    public void SetUpParameterization(GameParameterization parameterization)
     {
         GameGlobals.players.Clear();
         int currPlayerId = 0;

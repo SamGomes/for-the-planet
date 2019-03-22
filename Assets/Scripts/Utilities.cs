@@ -14,6 +14,7 @@ public static class GameGlobals
     public static int currGameId;
     public static int currGameRoundId;
 
+
     public static GameProperties.GameState currGameState;
 
     public static int numberOfSpeakingPlayers;
