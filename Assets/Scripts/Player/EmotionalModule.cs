@@ -25,7 +25,7 @@ public class EmotionalModule : MonoBehaviour
 
 
     public bool Speaks { get; internal set; }
-    private UIPlayer invoker; //when no speech the object is passed so that text is displayed
+    private Player invoker; //when no speech the object is passed so that text is displayed
     private GameObject speechBalloon;
 
     private List<string> currSpeeches;
@@ -43,7 +43,6 @@ public class EmotionalModule : MonoBehaviour
         //Application.ExternalEval("console.log(\"rpcPath: " + rpcPath + "\")");
         rpc = RolePlayCharacterAsset.LoadFromFile(rpcPath);
 
-
         rpc.LoadAssociatedAssets();
         GameGlobals.FAtiMAIat.BindToRegistry(rpc.DynamicPropertiesRegistry);
 
@@ -53,12 +52,11 @@ public class EmotionalModule : MonoBehaviour
         speechBalloonDelayPerWordInSeconds = 0.5f;
         currSpeeches = new List<string>();
 
-
         float speechCheckDelayInSeconds = 0.1f;
         StartCoroutine(ConsumeSpeeches(speechCheckDelayInSeconds));
     }
 
-    public void ReceiveInvoker(UIPlayer invoker)
+    public void ReceiveInvoker(Player invoker)
     {
         this.invoker = invoker;
         speechBalloon = invoker.GetSpeechBaloonUI();
@@ -104,8 +102,6 @@ public class EmotionalModule : MonoBehaviour
         else
         {
             //saveToFile();
-
-
             switch (chosenAction.Key.ToString())
             {
                 case "Speak":

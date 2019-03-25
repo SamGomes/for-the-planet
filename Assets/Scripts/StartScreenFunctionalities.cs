@@ -14,8 +14,6 @@ using System.Runtime.InteropServices;
 
 
 public class StartScreenFunctionalities : MonoBehaviour {
-
-
     private StreamReader fileReader;
     
     private Transform UIStartScreen;
@@ -39,9 +37,7 @@ public class StartScreenFunctionalities : MonoBehaviour {
     private IEnumerator InitGameGlobals()
     {
         string configText = "";
-
         GameProperties.configurableProperties = new DynamicallyConfigurableGameProperties();
-
 
         //Assign configurable game properties from file if any
         //Application.ExternalEval("console.log('streaming assets: "+ Application.streamingAssetsPath + "')");
@@ -60,36 +56,24 @@ public class StartScreenFunctionalities : MonoBehaviour {
 
         UpdateGameConfig(configText);
 
-
         GameGlobals.numberOfSpeakingPlayers = 0;
         GameGlobals.currGameId++;
         GameGlobals.currGameRoundId = 0;
 
         GameGlobals.gameDiceNG = new RandomDiceNG();
         GameGlobals.audioManager = new AudioManager();
-       
 
-        //GameGlobals.playerIdCount = 0;
-        //GameGlobals.albumIdCount = 0;
-        
         //destroy UIs if any
-        if (GameGlobals.players!=null && GameGlobals.players.Count > 0)
+        if(GameGlobals.players != null)
         {
-            UIPlayer firstUIPlayer = null;
-            int pIndex = 0;
-            while (firstUIPlayer == null && pIndex < GameGlobals.players.Count)
+            foreach (Player currPlayer in GameGlobals.players)
             {
-                firstUIPlayer = (UIPlayer)GameGlobals.players[pIndex++];
-                if (firstUIPlayer != null)
-                {
-                    firstUIPlayer.GetWarningScreenRef().DestroyPoppupPanel();
-                    Destroy(firstUIPlayer.GetPlayerCanvas());
-                }
+                currPlayer.GetWarningScreenRef().DestroyPoppupPanel();
+                Destroy(currPlayer.GetPlayerCanvas());
             }
-
         }
+        
         GameGlobals.players = new List<Player>(GameProperties.configurableProperties.numberOfPlayersPerGame);
-
 
         GameGlobals.gameLogManager = new MongoDBLogManager();
         GameGlobals.gameLogManager.InitLogs();
@@ -98,28 +82,22 @@ public class StartScreenFunctionalities : MonoBehaviour {
         if (GameGlobals.currGameId == 1)
         {
             //GameGlobals.gameLogManager = new DebugLogManager();
-            
-
             string date = System.DateTime.Now.ToString("ddHHmm");
 
             //generate external game code from currsessionid and lock it in place
             //gamecode is in the format ddmmhhmmss<3RandomLetters>[TestGameCondition]
-
             string generatedCode = date; //sb.ToString();
-            
             //generate 3 random letters
             for (int i = 0; i < 3; i++)
             {
                 generatedCode += (char)('A' + Random.Range(0, 26));
             }
-
             GameGlobals.currSessionId = generatedCode;
 
             //update the gamecode UI
             //GameObject UIGameCodeDisplay = Object.Instantiate(UIGameCodeDisplayPrefab);
             //UIGameCodeDisplay.GetComponentInChildren<Text>().text = "Game Code: " + GameGlobals.currSessionId;
             //Object.DontDestroyOnLoad(UIGameCodeDisplay);
-        
         }
         else
         {
@@ -139,7 +117,6 @@ public class StartScreenFunctionalities : MonoBehaviour {
 
             GameProperties.configurableProperties.numSessionGames = 0; //not used
         }
-
 
         //init fatima strings
         GameGlobals.FAtiMAScenarioPath = "/Scenarios/ForTheRecord-EN.iat";
@@ -169,10 +146,8 @@ public class StartScreenFunctionalities : MonoBehaviour {
                 this.UIStartGameButton.interactable = false;
             }
         }
-
         GameGlobals.gameLogManager.WriteGameToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameProperties.currSessionParameterization.id, GameGlobals.currGameState.ToString());
         
-
         if (GameProperties.configurableProperties.isSimulation) //start game right after getting the condition
         {
             StartGame();
@@ -220,7 +195,6 @@ public class StartScreenFunctionalities : MonoBehaviour {
 
     public void InitGame()
     {
-
         //play theme song
         //GameGlobals.audioManager.PlayInfinitClip("Audio/theme/themeIntro", "Audio/theme/themeLoop");
         if(UIStartGameButton!=null)
@@ -238,36 +212,9 @@ public class StartScreenFunctionalities : MonoBehaviour {
         // Make the game perform as good as possible
         Application.targetFrameRate = 40;
         UIStartScreen = GameObject.Find("Canvas/StartScreen").transform;
-        if (GameProperties.displayFetchExternalConfigFileOption)
-        {
-            GameObject UILoadExternalConfig = Instantiate(UILoadExternalConfigPrefab,UIStartScreen);
-            InputField UIExternalConfig = UILoadExternalConfig.transform.Find("text").gameObject.GetComponent<InputField>();
-            Button UILoadExternalConfigButton = UILoadExternalConfig.transform.Find("button").gameObject.GetComponent<Button>();
-
-#if UNITY_EDITOR
-            UILoadExternalConfigButton.onClick.AddListener(delegate ()
-            {
-                string configText = UIExternalConfig.text;
-                UpdateGameConfig(configText);
-                GameProperties.currSessionParameterization = GameProperties.configurableProperties.possibleParameterizations[autoSessionConfigurationIndex];
-            });
-#elif UNITY_WEBGL
-            string configText = "";
-            EnableFileLoad(configText);
-            UILoadExternalConfigButton.onClick.AddListener(delegate ()
-            {
-                Application.ExternalEval("console.log("+configText+")");
-                UpdateGameConfig(configText);
-                GameProperties.currSessionParameterization = GameProperties.configurableProperties.possibleParameterizations[autoSessionConfigurationIndex];
-            });
-#endif
-
-        }
-
-
+       
         this.UIStartGameButton = GameObject.Find("Canvas/StartScreen/startGameButton").gameObject.GetComponent<Button>();
         this.UIStartGameButton.interactable = false;
-
 
         InitGame();
     }

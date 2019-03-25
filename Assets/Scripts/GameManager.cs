@@ -17,11 +17,10 @@ public class GameManager : MonoBehaviour {
 
     //------------ UI -----------------------------
     public GameObject playerUIPrefab;
-    public GameObject albumUIPrefab;
+    public GameObject investmentUIPrefab;
 
     public GameObject UInewRoundScreen;
     public Button UIadvanceRoundButton;
-    public Text UIalbumNameText;
     
     public GameObject UIRollDiceForInstrumentOverlay;
     public Animator rollDiceForInstrumentOverlayAnimator;
@@ -30,9 +29,7 @@ public class GameManager : MonoBehaviour {
     public GameObject dice20UI;
 
     public GameObject diceArrowPrefab;
-
-    public GameObject UIAlbumCollectionDisplay;
-    public GameObject UIAlbumDisplay;
+    
     public GameObject UIPrototypeArea;
 
     public GameObject poppupPrefab;
@@ -63,12 +60,12 @@ public class GameManager : MonoBehaviour {
     {
         GameGlobals.gameManager = this;
         //mock to test
-        new StartScreenFunctionalities().InitGame();
-        GameGlobals.players = new List<Player>(3);
-        GameGlobals.gameDiceNG = new RandomDiceNG();
-        GameGlobals.currSessionId = "0";
-        GameGlobals.currGameId = 0;
-        GameGlobals.currGameRoundId = 0;
+        //new StartScreenFunctionalities().InitGame();
+        //GameGlobals.players = new List<Player>(3);
+        //GameGlobals.gameDiceNG = new RandomDiceNG();
+        //GameGlobals.currSessionId = "0";
+        //GameGlobals.currGameId = 0;
+        //GameGlobals.currGameRoundId = 0;
     }
 
     public int InterruptGame()
@@ -93,23 +90,8 @@ public class GameManager : MonoBehaviour {
         historyDisplayResponseReceived = false;
         budgetExecutionResponseReceived = false;
         currPlayerIndex = 0;
-
         
         //get player poppups (can be from any player) and set methods
-        if (GameGlobals.players.Count > 0)
-        {
-            UIPlayer firstUIPlayer = null;
-            int pIndex = 0;
-            while (firstUIPlayer == null && pIndex < GameGlobals.players.Count)
-            {
-                firstUIPlayer = (UIPlayer) GameGlobals.players[pIndex++];
-                if (firstUIPlayer != null)
-                {
-                    firstUIPlayer.GetWarningScreenRef().AddOnShow(InterruptGame);
-                    firstUIPlayer.GetWarningScreenRef().AddOnHide(ContinueGame);
-                }
-            }
-        }
         infoPoppupLossRef = new PoppupScreenFunctionalities(false, InterruptGame, ContinueGame, poppupPrefab,canvas, GameGlobals.monoBehaviourFunctionalities, Resources.Load<Sprite>("Textures/UI/Icons/InfoLoss"), new Color(0.9f, 0.8f, 0.8f), "Audio/albumLoss");
         infoPoppupWinRef = new PoppupScreenFunctionalities(false, InterruptGame, ContinueGame, poppupPrefab,canvas, GameGlobals.monoBehaviourFunctionalities, Resources.Load<Sprite>("Textures/UI/Icons/InfoWin"), new Color(0.9f, 0.9f, 0.8f), "Audio/albumVictory");
         infoPoppupNeutralRef = new PoppupScreenFunctionalities(false, InterruptGame, ContinueGame, poppupPrefab,canvas, GameGlobals.monoBehaviourFunctionalities, Resources.Load<Sprite>("Textures/UI/Icons/Info"), new Color(0.9f, 0.9f, 0.9f), "Audio/snap");
@@ -118,7 +100,7 @@ public class GameManager : MonoBehaviour {
         endPoppupLossRef = new PoppupScreenFunctionalities(false, InterruptGame, ContinueGame, poppupPrefab, canvas, GameGlobals.monoBehaviourFunctionalities, Resources.Load<Sprite>("Textures/UI/Icons/InfoLoss"), new Color(0.9f, 0.8f, 0.8f), delegate() { /*end game*/ if (this.gameMainSceneFinished) GameSceneManager.LoadEndScene(); return 0; });
         endPoppupWinRef = new PoppupScreenFunctionalities(false, InterruptGame, ContinueGame, poppupPrefab, canvas, GameGlobals.monoBehaviourFunctionalities, Resources.Load<Sprite>("Textures/UI/Icons/InfoWin"), new Color(0.9f, 0.9f, 0.8f), delegate () { /*end game*/ if (this.gameMainSceneFinished) GameSceneManager.LoadEndScene(); return 0; });
 
-        ChangeActivePlayerUI(((UIPlayer)(GameGlobals.players[0])), 2.0f);
+        ChangeActivePlayerUI(GameGlobals.players[0], 2.0f);
 
         gameMainSceneFinished = false;
         preferredInstrumentsChoosen = false;
@@ -136,8 +118,12 @@ public class GameManager : MonoBehaviour {
             currPlayer = GameGlobals.players[i];
             currPlayer.ReceiveGameManager(this);
             currPlayer.UpdateEconomicIndex(0.1f);
+
+            //Setup warnings
+            currPlayer.GetWarningScreenRef().AddOnShow(InterruptGame);
+            currPlayer.GetWarningScreenRef().AddOnHide(ContinueGame);
         }
-       
+
         GameGlobals.currGameRoundId = 0; //first round
         GameGlobals.commonEnvironmentInvestment = 0;
 
@@ -150,7 +136,7 @@ public class GameManager : MonoBehaviour {
     }
 
     //warning: works only when using human players!
-    private IEnumerator ChangeActivePlayerUI(UIPlayer player, float delay)
+    private IEnumerator ChangeActivePlayerUI(Player player, float delay)
     {
         player.GetPlayerUI().transform.SetAsLastSibling();
         //yield return new WaitForSeconds(delay);
@@ -163,7 +149,7 @@ public class GameManager : MonoBehaviour {
                 player.GetPlayerDisablerUI().SetActive(true);
                 continue;
             }
-            UIPlayer currPlayer = (UIPlayer)GameGlobals.players[i];
+            Player currPlayer = GameGlobals.players[i];
             currPlayer.GetPlayerMarkerUI().SetActive(false);
             currPlayer.GetPlayerDisablerUI().SetActive(false);
         }
@@ -172,7 +158,6 @@ public class GameManager : MonoBehaviour {
 
     void Start()
     {
-
         InitGame();
 
         numPlayersToAllocateBudget = GameGlobals.players.Count;
@@ -188,37 +173,31 @@ public class GameManager : MonoBehaviour {
         //    player.InformNewAlbum();
         //}
 
-
         if (GameProperties.configurableProperties.isSimulation) //start imidiately in simulation
         {
-            StartGameRoundForAllPlayers("SimAlbum");
+            StartGameRoundForAllPlayers();
         }
         else
         {
             UIadvanceRoundButton.onClick.AddListener(delegate () {
                 UInewRoundScreen.SetActive(false);
-                StartGameRoundForAllPlayers(UIalbumNameText.text);
+                StartGameRoundForAllPlayers();
             });
-
             UIRollDiceForInstrumentOverlay.SetActive(false);
-
         }
         
     }
 
-    public void StartGameRoundForAllPlayers(string albumName)
+    public void StartGameRoundForAllPlayers()
     {
         int numPlayers = GameGlobals.players.Count;
-        //for (int i = 0; i < numPlayers; i++)
-        //{
-        //    Player currPlayer = GameGlobals.players[i];
-        //    currPlayer.InitAlbumContributions();
-        //}
-        
+        for (int i = 0; i < numPlayers; i++)
+        {
+            Player currPlayer = GameGlobals.players[i];
+            currPlayer.SetCurrBudget(5);
+        }
         StartAlocateBudgetPhase();
     }
-
-
 
     public int ExecutionPhase(Player currPlayer, GameProperties.InvestmentTarget target)
     {
@@ -351,13 +330,10 @@ public class GameManager : MonoBehaviour {
         diceImage.overrideSprite = currDiceNumberSprite;
         
     }
-
-    //assuming the first player rolls the market dices
+    
     public void UpdateGrowths()
     {
     }
-    
-    
 
     private void ResetAllPlayers()
     {
@@ -376,7 +352,6 @@ public class GameManager : MonoBehaviour {
             //Debug.Log("pause...");
             return;
         }
-        
 
         //middle of the phases
         if (budgetAllocationResponseReceived) 
@@ -507,7 +482,7 @@ public class GameManager : MonoBehaviour {
     {
         currPlayerIndex = (currPlayerIndex + 1) % GameGlobals.players.Count;
         Player nextPlayer = GameGlobals.players[currPlayerIndex];
-        ChangeActivePlayerUI((UIPlayer) nextPlayer, 2.0f);
+        ChangeActivePlayerUI(nextPlayer, 2.0f);
         return nextPlayer;
     }
     

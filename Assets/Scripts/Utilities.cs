@@ -156,10 +156,10 @@ public struct PlayerParameterization
     //used when the the game ngType is not RANDOM
     public int[] fixedEnvironmentDiceResults; 
     public int[] fixedEconomicDiceResults;
+    
+    public int spriteIndex;
 
-    public string likedInstrument;
-
-    public PlayerParameterization(string name, string playerType, bool isSpeechAllowed, int[] fixedEnvironmentDiceResults, int[] fixedEconomicDiceResults, string likedInstrument)
+    public PlayerParameterization(string name, string playerType, bool isSpeechAllowed, int[] fixedEnvironmentDiceResults, int[] fixedEconomicDiceResults, int spriteIndex)
     {
         this.name = name;
         this.isSpeechAllowed = isSpeechAllowed;
@@ -168,9 +168,9 @@ public struct PlayerParameterization
         this.fixedEnvironmentDiceResults = fixedEnvironmentDiceResults;
         this.fixedEconomicDiceResults = fixedEconomicDiceResults;
 
-        this.likedInstrument = likedInstrument;
+        this.spriteIndex = spriteIndex;
     }
-    public PlayerParameterization(string name, string playerType, bool isSpeechAllowed, int[] fixedInstrumentDiceResults, int[] fixedMarketingDiceResults) : this(name, playerType, isSpeechAllowed, fixedInstrumentDiceResults, fixedMarketingDiceResults, null) { }
+    public PlayerParameterization(string name, string playerType, bool isSpeechAllowed, int[] fixedInstrumentDiceResults, int[] fixedMarketingDiceResults) : this(name, playerType, isSpeechAllowed, fixedInstrumentDiceResults, fixedMarketingDiceResults, 0) { }
     public PlayerParameterization(string name, string playerType, bool isSpeechAllowed) : this(name, playerType, isSpeechAllowed, new int[] { }, new int[] { }) { }
     public PlayerParameterization(string name, string playerType) : this(name, playerType, false) { }
 }
