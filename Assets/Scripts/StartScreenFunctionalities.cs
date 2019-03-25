@@ -207,6 +207,7 @@ public class StartScreenFunctionalities : MonoBehaviour {
         GameGlobals.monoBehaviourFunctionalities.StartCoroutine(InitGameGlobals());
     }
 
+
     private void Start()
     {
         // Make the game perform as good as possible
@@ -217,5 +218,13 @@ public class StartScreenFunctionalities : MonoBehaviour {
         this.UIStartGameButton.interactable = false;
 
         InitGame();
+        
+        Button[] allButtons = FindObjectsOfType<Button>();
+        foreach (Button button in allButtons)
+        {
+            button.onClick.AddListener(delegate () {
+                GameGlobals.audioManager.PlayClip("Audio/snap");
+            });
+        }
     }
 }

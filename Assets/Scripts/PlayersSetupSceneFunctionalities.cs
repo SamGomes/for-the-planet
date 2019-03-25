@@ -227,7 +227,17 @@ public class PlayersSetupSceneFunctionalities : MonoBehaviour {
 
         string json = JsonUtility.ToJson(GameProperties.configurableProperties);
 
+        //this init is not nice
+        Button[] allButtons = FindObjectsOfType<Button>();
+        foreach (Button button in allButtons)
+        {
+            button.onClick.AddListener(delegate () {
+                GameGlobals.audioManager.PlayClip("Audio/snap");
+            });
+        }
+
         GameSceneManager.LoadMainScene();
+
     }
 
     void CheckForAllPlayersRegistered(GameParameterization param)

@@ -132,6 +132,15 @@ public class GameManager : MonoBehaviour {
 
         rollDiceForInstrumentOverlayAnimator = UIRollDiceForInstrumentOverlay.GetComponent<Animator>();
 
+        //this init is not nice
+        Button[] allButtons = FindObjectsOfType<Button>();
+        foreach (Button button in allButtons)
+        {
+            button.onClick.AddListener(delegate () {
+                GameGlobals.audioManager.PlayClip("Audio/snap");
+            });
+        }
+
         ContinueGame();
     }
 
@@ -306,14 +315,12 @@ public class GameManager : MonoBehaviour {
     private IEnumerator PlayDiceUI(GameObject diceUIClone, Player diceThrower, int numDicesInThrow, int sequenceNumber, int diceNum, Sprite currDiceNumberSprite, float delayToClose)
     //the sequence number aims to void dice overlaps as it represents the order for which this dice is going to be rolled. We do not want to roll a dice two times for the same place
     {
-
         Image diceImage = diceUIClone.GetComponentInChildren<Image>();
         Animator diceAnimator = diceImage.GetComponentInChildren<Animator>();
 
         float translationFactorX = Screen.width * 0.04f;
         float translationFactorY = Screen.width * 0.02f;
         diceUIClone.transform.Translate(new Vector3(Random.Range(-translationFactorX, translationFactorY), Random.Range(-translationFactorX, translationFactorY), 0));
-
         
         float diceRotation = sequenceNumber * (360.0f / numDicesInThrow);
 
@@ -389,7 +396,6 @@ public class GameManager : MonoBehaviour {
                 //    if (player == currPlayer) continue;
                 //    player.InformPlayForInstrument(nextPlayer);
                 //}
-
             //}
             numPlayersToDisplayHistory--;
             if (numPlayersToDisplayHistory > 0)
@@ -423,21 +429,21 @@ public class GameManager : MonoBehaviour {
         if (numPlayersToAllocateBudget == 0)
         {
             //Debug.Log("running2...");
-            StartAlocateBudgetPhase();
+            StartDisplayHistoryPhase();
             numPlayersToAllocateBudget = GameGlobals.players.Count;
         }
         
         //end of second phase;
         if (numPlayersToDisplayHistory == 0)
         {
-            StartDisplayHistoryPhase();
+            StartExecuteBudgetPhase();
             numPlayersToAllocateBudget = GameGlobals.players.Count;
         }
 
         //end of forth phase; trigger and log album result
         if (numPlayersToExecuteBudget == 0)
         {
-            StartExecuteBudgetPhase();
+            StartGameRoundForAllPlayers();
             numPlayersToAllocateBudget = GameGlobals.players.Count;
         }
 

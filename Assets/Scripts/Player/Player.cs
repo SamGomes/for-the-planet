@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 
@@ -17,7 +18,7 @@ public class Player
     protected float economicIndex;
 
     protected Dictionary<GameProperties.InvestmentTarget, int> currRoundInvestment;
-    protected List<Dictionary<GameProperties.InvestmentTarget, int>> investmentHistory;
+    protected Dictionary<GameProperties.InvestmentTarget, int> investmentHistory;
 
 
     //UI Stuff
@@ -30,6 +31,7 @@ public class Player
     private GameObject playerDisablerUI;
     private GameObject playerSelfDisablerUI;
     protected Button playerActionButtonUI;
+    private UnityAction playerActionCall;
 
     private Text currBudgetUI;
 
@@ -43,15 +45,16 @@ public class Player
     protected Button spendTokenInEconomicGrowthButtonUI;
     protected Button removeTokenInEconomicGrowthButtonUI;
     protected Text economicGrowthTokensDisplayUI;
+    protected Text economicGrowthHistoryDisplay;
 
     protected Button spendTokenInEnvironmentButtonUI;
     protected Button removeTokenInEnvironmentButtonUI;
     protected Text environmentTokensDisplayUI;
+    protected Text environmentHistoryDisplay;
 
     private PoppupScreenFunctionalities warningScreenRef;
 
     protected GameObject speechBalloonUI;
-
 
     public Player(GameObject playerUIPrefab, GameObject playerCanvas, MonoBehaviourFunctionalities playerMonoBehaviourFunctionalities, PoppupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name)
     {
@@ -68,6 +71,10 @@ public class Player
         //position UI on canvas
         this.GetPlayerUI().transform.Translate(new Vector3(0, -GameGlobals.players.Count * (0.2f * Screen.height), 0));
         this.playerMonoBehaviourFunctionalities = playerMonoBehaviourFunctionalities;
+
+        investmentHistory = new Dictionary<GameProperties.InvestmentTarget, int>();
+        investmentHistory[GameProperties.InvestmentTarget.ECONOMIC] = 0;
+        investmentHistory[GameProperties.InvestmentTarget.ENVIRONMENT] = 0;
 
     }
 
@@ -118,26 +125,61 @@ public class Player
     {
         return this.currRoundInvestment;
     }
-    public List<Dictionary<GameProperties.InvestmentTarget, int>> GetInvestmentsHistory()
+    public Dictionary<GameProperties.InvestmentTarget, int> GetInvestmentsHistory()
     {
         return this.investmentHistory;
     }
 
     public void BudgetAllocationPhaseRequest()
     {
+        this.budgetAllocationScreenUI.SetActive(true);
+        this.displayHistoryScreenUI.SetActive(false);
+        this.budgetExecutionScreenUI.SetActive(false);
+
+        //init before starting phase (on request)
         currRoundInvestment = new Dictionary<GameProperties.InvestmentTarget, int>();
         currRoundInvestment[GameProperties.InvestmentTarget.ECONOMIC] = 0;
         currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT] = 0;
+
+        this.playerActionButtonUI.onClick.RemoveListener(playerActionCall);
+        playerActionCall = delegate ()
+        {
+            SendBudgetAllocationPhaseResponse();
+        };
+        this.playerActionButtonUI.onClick.AddListener(playerActionCall);
+
         UpdateUI();
         BudgetAllocation();
     }
     public void HistoryDisplayPhaseRequest()
     {
+        this.budgetAllocationScreenUI.SetActive(false);
+        this.displayHistoryScreenUI.SetActive(true);
+        this.budgetExecutionScreenUI.SetActive(false);
+
+        this.playerActionButtonUI.onClick.RemoveListener(playerActionCall);
+        playerActionCall = delegate ()
+        {
+            SendHistoryDisplayPhaseResponse();
+        };
+        this.playerActionButtonUI.onClick.AddListener(playerActionCall);
+
         UpdateUI();
         HistoryDisplay();
     }
     public void BudgetExecutionPhaseRequest()
     {
+        this.budgetAllocationScreenUI.SetActive(false);
+        this.displayHistoryScreenUI.SetActive(false);
+        this.budgetExecutionScreenUI.SetActive(true);
+
+        this.playerActionButtonUI.onClick.RemoveListener(playerActionCall);
+        playerActionCall = delegate ()
+        {
+            SendBudgetExecutionPhaseResponse();
+        };
+        this.playerActionButtonUI.onClick.AddListener(playerActionCall);
+
         UpdateUI();
         BudgetExecution();
     }
@@ -167,6 +209,7 @@ public class Player
         }
         currBudget--;
         currRoundInvestment[target]++;
+        investmentHistory[target]++;
 
         GameGlobals.gameLogManager.WriteEventToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameGlobals.currGameRoundId.ToString(), this.id.ToString(), this.name,"ADDED_INVESTMENT", target.ToString() , "-");
         UpdateUI();
@@ -175,6 +218,7 @@ public class Player
     {
         currBudget++;
         currRoundInvestment[target]--;
+        investmentHistory[target]--;
 
         GameGlobals.gameLogManager.WriteEventToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameGlobals.currGameRoundId.ToString(), this.id.ToString(), this.name, "REMOVED_INVESTMENT", target.ToString(), "-");
         UpdateUI();
@@ -191,10 +235,6 @@ public class Player
     }
 
 
-
-
-
-
     //UI Stuff
 
     private void UpdateUI()
@@ -202,6 +242,9 @@ public class Player
         economicGrowthTokensDisplayUI.text = currRoundInvestment[GameProperties.InvestmentTarget.ECONOMIC].ToString();
         environmentTokensDisplayUI.text = currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT].ToString();
         currBudgetUI.text = currBudget.ToString();
+
+        economicGrowthHistoryDisplay.text = investmentHistory[GameProperties.InvestmentTarget.ECONOMIC].ToString();
+        environmentHistoryDisplay.text = investmentHistory[GameProperties.InvestmentTarget.ENVIRONMENT].ToString();
     }
 
     public PoppupScreenFunctionalities GetWarningScreenRef()
@@ -255,6 +298,7 @@ public class Player
         UISpeechBalloonRight.SetActive(false);
 
         this.playerActionButtonUI = playerUI.transform.Find("playerActionSection/playerActionButton").gameObject.GetComponent<Button>();
+        this.playerActionCall = delegate () { };
 
         this.nameTextUI = playerUI.transform.Find("nameText").gameObject.GetComponent<Text>();
         this.moneySliderUI = playerUI.transform.Find("playerStateSection/InvestmentUI/Slider").gameObject.GetComponent<Text>();
@@ -283,9 +327,13 @@ public class Player
 
         this.currBudgetUI = playerUI.transform.Find("playerStateSection/currBudget").gameObject.GetComponent<Text>();
 
-        this.budgetAllocationScreenUI = playerUI.transform.Find("playerActionSection/playForInstrumentUI").gameObject;
-        this.displayHistoryScreenUI = playerUI.transform.Find("playerActionSection/playForInstrumentUI").gameObject;
-        this.budgetExecutionScreenUI = playerUI.transform.Find("playerActionSection/lastDecisionsUI").gameObject;
+        this.economicGrowthHistoryDisplay = playerUI.transform.Find("playerActionSection/displayHistoryUI/economicGrowthHistory").gameObject.GetComponent<Text>();
+        this.environmentHistoryDisplay = playerUI.transform.Find("playerActionSection/displayHistoryUI/environmentHistory").gameObject.GetComponent<Text>();
+
+
+        this.budgetAllocationScreenUI = playerUI.transform.Find("playerActionSection/budgetAllocationUI").gameObject;
+        this.displayHistoryScreenUI = playerUI.transform.Find("playerActionSection/displayHistoryUI").gameObject;
+        this.budgetExecutionScreenUI = playerUI.transform.Find("playerActionSection/budgetExecutionUI").gameObject;
 
         nameTextUI.text = this.name;
     }
