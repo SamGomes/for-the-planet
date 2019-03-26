@@ -52,6 +52,8 @@ public class Player
     protected Text environmentTokensDisplayUI;
     protected Text environmentHistoryDisplay;
 
+    protected Button executeBudgetButton;
+
     private PoppupScreenFunctionalities warningScreenRef;
 
     protected GameObject speechBalloonUI;
@@ -135,6 +137,7 @@ public class Player
         this.budgetAllocationScreenUI.SetActive(true);
         this.displayHistoryScreenUI.SetActive(false);
         this.budgetExecutionScreenUI.SetActive(false);
+        this.playerActionButtonUI.gameObject.SetActive(true);
 
         //init before starting phase (on request)
         currRoundInvestment = new Dictionary<GameProperties.InvestmentTarget, int>();
@@ -156,6 +159,7 @@ public class Player
         this.budgetAllocationScreenUI.SetActive(false);
         this.displayHistoryScreenUI.SetActive(true);
         this.budgetExecutionScreenUI.SetActive(false);
+        this.playerActionButtonUI.gameObject.SetActive(true);
 
         this.playerActionButtonUI.onClick.RemoveListener(playerActionCall);
         playerActionCall = delegate ()
@@ -172,6 +176,7 @@ public class Player
         this.budgetAllocationScreenUI.SetActive(false);
         this.displayHistoryScreenUI.SetActive(false);
         this.budgetExecutionScreenUI.SetActive(true);
+        this.playerActionButtonUI.gameObject.SetActive(false);
 
         this.playerActionButtonUI.onClick.RemoveListener(playerActionCall);
         playerActionCall = delegate ()
@@ -186,6 +191,8 @@ public class Player
 
     public virtual int SendBudgetAllocationPhaseResponse()
     {
+        this.economicGrowthTokensDisplayUI.text = "-";
+        this.environmentTokensDisplayUI.text = "-";
         gameManagerRef.BudgetAllocationPhaseResponse(this);
         return 0;
     }
