@@ -86,7 +86,6 @@ public class DynamicallyConfigurableGameProperties
     //(default configurations already assigned)
 
     public int tokenValue = 0; //1000;
-    public int marketingPointValue = 1000; //config the initial number of dices to roll
 
     public int allowedPlayerActionsPerAlbum = 2;
     public int allowedPlayerTokenBuysPerRound = 1;

@@ -11,10 +11,6 @@ public class GameManager : MonoBehaviour {
     private int numPlayersToExecuteBudget;
     private int numPlayersToDisplayHistory;
 
-    private bool canSelectToCheckAlbumResult;
-    private bool canCheckAlbumResult;
-    private bool checkedAlbumResult;
-
     //------------ UI -----------------------------
     public GameObject playerUIPrefab;
     public GameObject investmentUIPrefab;
@@ -44,7 +40,6 @@ public class GameManager : MonoBehaviour {
 
     private bool gameMainSceneFinished;
     private int interruptionRequests; //changed whenever an interruption occurs (either a poppup, warning, etc.)
-    private bool preferredInstrumentsChoosen;
 
     private bool budgetAllocationResponseReceived;
     private bool historyDisplayResponseReceived;
@@ -105,15 +100,9 @@ public class GameManager : MonoBehaviour {
         ChangeActivePlayerUI(GameGlobals.players[0], 2.0f);
 
         gameMainSceneFinished = false;
-        preferredInstrumentsChoosen = false;
-
         diceRollDelay = 4.0f;
-
-        canCheckAlbumResult = false;
-        checkedAlbumResult = false;
-        canSelectToCheckAlbumResult = true;
+        
         int numPlayers = GameGlobals.players.Count;
-
         Player currPlayer = null;
         for (int i = 0; i < numPlayers; i++)
         {
@@ -207,22 +196,29 @@ public class GameManager : MonoBehaviour {
         for (int i = 0; i < numPlayers; i++)
         {
             Player currPlayer = GameGlobals.players[i];
+            currPlayer.ResetPlayerUI();
             currPlayer.SetCurrBudget(5);
         }
         StartAlocateBudgetPhase();
     }
 
-    public int RollInvestmentDices(Player currPlayer, GameProperties.InvestmentTarget target)
+
+    public IEnumerator RollInvestmentDices(Player currPlayer, GameProperties.InvestmentTarget target)
     {
-        var skillSet = currPlayer.GetCurrRoundInvestment();
+        var currInvestment = currPlayer.GetCurrRoundInvestment();
 
         int newInvestmentValue = 0;
-        int numTokensForTarget = skillSet[target];
+        int numTokensForTarget = currInvestment[target];
+        if (numTokensForTarget == 0) //there are no dices to roll so return imediately
+        {
+            yield break;
+        }
 
         //UI stuff
         UIRollDiceForInstrumentOverlay.transform.Find("title/Text").GetComponent<Text>().text = currPlayer.GetName() + " rolling "+ numTokensForTarget + " dice for " + target.ToString() + " ...";
 
         int[] rolledDiceNumbers = new int[numTokensForTarget]; //save each rolled dice number to display in the UI
+
 
         for (int i = 0; i < numTokensForTarget; i++)
         {
@@ -234,30 +230,34 @@ public class GameManager : MonoBehaviour {
         string arrowText = "";
         if(target == GameProperties.InvestmentTarget.ECONOMIC)
         {
-            arrowText = "+ " + newInvestmentValue * GameProperties.configurableProperties.marketingPointValue + " $";
+            arrowText = "+ " + newInvestmentValue + " Economic Growth";
         }
         else
         {
-            arrowText = "+ " + newInvestmentValue + " 🍃";
+            arrowText = "+ " + newInvestmentValue + " Environment growth";
         }
-        
-        StartCoroutine(PlayDiceUIs(currPlayer, newInvestmentValue, rolledDiceNumbers, 6, dice6UI, "Animations/RollDiceForInstrumentOverlay/dice6/sprites_3/endingAlternatives/", Color.yellow, arrowText, diceRollDelay));
+
+        yield return StartCoroutine(PlayDiceUIs(currPlayer, newInvestmentValue, rolledDiceNumbers, 6, dice6UI, "Animations/RollDiceForInstrumentOverlay/dice6/sprites_3/endingAlternatives/", Color.yellow, arrowText, diceRollDelay));
+
+        //update game metrics after animation
+        if (target == GameProperties.InvestmentTarget.ECONOMIC)
+        {
+            currPlayer.UpdateMoney(currPlayer.GetMoney() + ((float)newInvestmentValue / 100.0f));
+        }
+        else
+        {
+            environmentSlider.value = ((float) newInvestmentValue / 100.0f);
+        }
 
         GameGlobals.gameLogManager.WriteEventToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameGlobals.currGameRoundId.ToString(), currPlayer.GetId().ToString(), currPlayer.GetName().ToString(), "ROLLED_INVESTMENT_TARGET_DICES", "-", numTokensForTarget.ToString());
-        return newInvestmentValue;
     }
 
     private IEnumerator BudgetExecutionPhase(Player currPlayer)
     {
-        float playerEconomicGrowth = 0.0f;
-        float playerEnvironmentContribution = 0.0f;
-        yield return playerEconomicGrowth = RollInvestmentDices(currPlayer, GameProperties.InvestmentTarget.ECONOMIC);
-        yield return playerEnvironmentContribution = RollInvestmentDices(currPlayer, GameProperties.InvestmentTarget.ENVIRONMENT);
-
-        environmentSlider.value += playerEnvironmentContribution/100;
-        currPlayer.UpdateMoney(currPlayer.GetMoney() + playerEnvironmentContribution/100);
+        yield return RollInvestmentDices(currPlayer, GameProperties.InvestmentTarget.ECONOMIC);
+        yield return RollInvestmentDices(currPlayer, GameProperties.InvestmentTarget.ENVIRONMENT);
     }
-
+    
     private IEnumerator PlayDiceUIs(Player diceThrower, int totalDicesValue, int[] rolledDiceNumbers, int diceNum, GameObject diceImagePrefab, string diceNumberSpritesPath, Color diceArrowColor, string diceArrowText, float delayToClose)
     //the sequence number aims to void dice overlaps as it represents the order for which this dice is going to be rolled. We do not want to roll a dice two times for the same place
     {
@@ -354,26 +354,25 @@ public class GameManager : MonoBehaviour {
     {
     }
 
-    private void ResetAllPlayers()
+    private void ResetAllPlayerUIs()
     {
         foreach (Player player in GameGlobals.players)
         {
-            player.ResetPlayer();
+            player.ResetPlayerUI();
         }
     }
 
-    // wait for all players to exit one phase and start other phase
-    void Update () {
-        
+    IEnumerator YieldedGameUpdateLoop()
+    {
         //avoid rerun in this case because load scene is asyncronous
         if (this.gameMainSceneFinished || this.interruptionRequests > 0)
         {
             //Debug.Log("pause...");
-            return;
+            yield return null;
         }
 
         //middle of the phases
-        if (budgetAllocationResponseReceived) 
+        if (budgetAllocationResponseReceived)
         {
             currSpeakingPlayerId = Random.Range(0, GameGlobals.numberOfSpeakingPlayers);
 
@@ -382,17 +381,17 @@ public class GameManager : MonoBehaviour {
             Player nextPlayer = ChangeToNextPlayer(currPlayer);
             //if (numPlayersToLevelUp > 0)
             //{
-                //foreach (var player in GameGlobals.players)
-                //{
-                //    if (player == currPlayer) continue;
-                //    player.InformLevelUp(currPlayer, currPlayer.GetLeveledUpInstrument());
-                //}
+            //foreach (var player in GameGlobals.players)
+            //{
+            //    if (player == currPlayer) continue;
+            //    player.InformLevelUp(currPlayer, currPlayer.GetLeveledUpInstrument());
+            //}
             //}
             numPlayersToAllocateBudget--;
             if (numPlayersToAllocateBudget > 0)
             {
                 nextPlayer.BudgetAllocationPhaseRequest();
-            }   
+            }
         }
         if (historyDisplayResponseReceived)
         {
@@ -403,11 +402,11 @@ public class GameManager : MonoBehaviour {
             Player nextPlayer = ChangeToNextPlayer(currPlayer);
             //if (numPlayersToPlayForInstrument > 0)
             //{
-                //foreach (var player in GameGlobals.players)
-                //{
-                //    if (player == currPlayer) continue;
-                //    player.InformPlayForInstrument(nextPlayer);
-                //}
+            //foreach (var player in GameGlobals.players)
+            //{
+            //    if (player == currPlayer) continue;
+            //    player.InformPlayForInstrument(nextPlayer);
+            //}
             //}
             numPlayersToDisplayHistory--;
             if (numPlayersToDisplayHistory > 0)
@@ -421,7 +420,7 @@ public class GameManager : MonoBehaviour {
 
             budgetExecutionResponseReceived = false;
             Player currPlayer = GameGlobals.players[currPlayerIndex];
-            StartCoroutine(BudgetExecutionPhase(currPlayer));
+            yield return StartCoroutine(BudgetExecutionPhase(currPlayer));
             Player nextPlayer = ChangeToNextPlayer(currPlayer);
             //if (numPlayersToStartLastDecisions > 0)
             //{
@@ -445,39 +444,43 @@ public class GameManager : MonoBehaviour {
             StartDisplayHistoryPhase();
             numPlayersToAllocateBudget = GameGlobals.players.Count;
         }
-        
+
         //end of second phase;
         if (numPlayersToDisplayHistory == 0)
         {
             StartExecuteBudgetPhase();
-            numPlayersToAllocateBudget = GameGlobals.players.Count;
+            numPlayersToDisplayHistory = GameGlobals.players.Count;
         }
 
         //end of forth phase; trigger and log album result
         if (numPlayersToExecuteBudget == 0)
         {
             UInewRoundScreen.SetActive(true);
-            numPlayersToAllocateBudget = GameGlobals.players.Count;
+            numPlayersToExecuteBudget = GameGlobals.players.Count;
         }
+    }
 
+    // wait for all players to exit one phase and start other phase
+    void Update () {
+        StartCoroutine(YieldedGameUpdateLoop());
     }
 
 
     public void StartAlocateBudgetPhase()
     {
-        ResetAllPlayers();
+        ResetAllPlayerUIs();
         int numPlayers = GameGlobals.players.Count;
         GameGlobals.players[0].BudgetAllocationPhaseRequest();
     }
     public void StartDisplayHistoryPhase()
     {
-        ResetAllPlayers();
+        ResetAllPlayerUIs();
         int numPlayers = GameGlobals.players.Count;
         GameGlobals.players[0].HistoryDisplayPhaseRequest();
     }
     public void StartExecuteBudgetPhase()
     {
-        ResetAllPlayers();
+        ResetAllPlayerUIs();
         int numPlayers = GameGlobals.players.Count;
         GameGlobals.players[0].BudgetExecutionPhaseRequest();
     }

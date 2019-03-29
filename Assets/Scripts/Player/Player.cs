@@ -60,19 +60,23 @@ public class Player
 
     public Player(GameObject playerUIPrefab, GameObject playerCanvas, MonoBehaviourFunctionalities playerMonoBehaviourFunctionalities, PoppupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name)
     {
-        //General stuff
         this.gameManagerRef = GameGlobals.gameManager;
         this.id = id;
         this.name = name;
-        this.money = 0.0f;
 
-        //UI stuff
         this.type = GameProperties.PlayerType.HUMAN;
+
+        InitDynamicData();
         InitUI(playerUIPrefab, playerCanvas, warningScreenRef, UIAvatar);
 
         //position UI on canvas
         this.GetPlayerUI().transform.Translate(new Vector3(0, -GameGlobals.players.Count * (0.2f * Screen.height), 0));
         this.playerMonoBehaviourFunctionalities = playerMonoBehaviourFunctionalities;
+    }
+
+    public void InitDynamicData()
+    {
+        this.money = 0.0f;
 
         investmentHistory = new Dictionary<GameProperties.InvestmentTarget, int>();
         investmentHistory[GameProperties.InvestmentTarget.ECONOMIC] = 0;
@@ -371,7 +375,18 @@ public class Player
         playerSelfDisablerUI.SetActive(false);
     }
     
-    public void ResetPlayer(params object[] args) { }
+    public void ResetPlayerUI() {
+        this.budgetAllocationScreenUI.SetActive(false);
+        this.displayHistoryScreenUI.SetActive(false);
+        this.budgetExecutionScreenUI.SetActive(false);
+        this.playerActionButtonUI.gameObject.SetActive(false);
+    }
+    public void ResetPlayer()
+    {
+        InitDynamicData();
+        ResetPlayerUI(); //no need to init them again just hiding them
+    }
+
 
     public void BudgetAllocation() { }
     public void HistoryDisplay() { }
