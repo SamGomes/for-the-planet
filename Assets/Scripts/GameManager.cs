@@ -40,6 +40,8 @@ public class GameManager : MonoBehaviour {
     public PoppupScreenFunctionalities endPoppupWinRef;
     public PoppupScreenFunctionalities endPoppupLossRef;
 
+    public Slider environmentSlider;
+
     private bool gameMainSceneFinished;
     private int interruptionRequests; //changed whenever an interruption occurs (either a poppup, warning, etc.)
     private bool preferredInstrumentsChoosen;
@@ -117,12 +119,14 @@ public class GameManager : MonoBehaviour {
         {
             currPlayer = GameGlobals.players[i];
             currPlayer.ReceiveGameManager(this);
-            currPlayer.UpdateEconomicIndex(0.1f);
+            currPlayer.UpdateMoney(0.1f);
 
             //Setup warnings
             currPlayer.GetWarningScreenRef().AddOnShow(InterruptGame);
             currPlayer.GetWarningScreenRef().AddOnHide(ContinueGame);
         }
+
+        environmentSlider.value = 0.1f;
 
         GameGlobals.currGameRoundId = 0; //first round
         GameGlobals.commonEnvironmentInvestment = 0;
@@ -208,43 +212,51 @@ public class GameManager : MonoBehaviour {
         StartAlocateBudgetPhase();
     }
 
-    public int ExecutionPhase(Player currPlayer, GameProperties.InvestmentTarget target)
+    public int RollInvestmentDices(Player currPlayer, GameProperties.InvestmentTarget target)
     {
         var skillSet = currPlayer.GetCurrRoundInvestment();
 
-        int newAlbumInstrumentValue = 0;
-        int numTokensForInstrument = skillSet[target];
+        int newInvestmentValue = 0;
+        int numTokensForTarget = skillSet[target];
 
         //UI stuff
-        UIRollDiceForInstrumentOverlay.transform.Find("title/Text").GetComponent<Text>().text = currPlayer.GetName() + " rolling "+ numTokensForInstrument + " dice for " + target.ToString() + " ...";
+        UIRollDiceForInstrumentOverlay.transform.Find("title/Text").GetComponent<Text>().text = currPlayer.GetName() + " rolling "+ numTokensForTarget + " dice for " + target.ToString() + " ...";
 
-        int[] rolledDiceNumbers = new int[numTokensForInstrument]; //save each rolled dice number to display in the UI
+        int[] rolledDiceNumbers = new int[numTokensForTarget]; //save each rolled dice number to display in the UI
 
-        for (int i = 0; i < numTokensForInstrument; i++)
+        for (int i = 0; i < numTokensForTarget; i++)
         {
-            int randomIncrease = GameGlobals.gameDiceNG.RollTheDice(currPlayer, target, 6, i, numTokensForInstrument);
+            int randomIncrease = GameGlobals.gameDiceNG.RollTheDice(currPlayer, target, 6, i, numTokensForTarget);
             rolledDiceNumbers[i] = randomIncrease;
-            newAlbumInstrumentValue += randomIncrease;
+            newInvestmentValue += randomIncrease;
         }
-        if (!GameProperties.configurableProperties.isSimulation)
+       
+        string arrowText = "";
+        if(target == GameProperties.InvestmentTarget.ECONOMIC)
         {
-            string arrowText = "";
-            if(target == GameProperties.InvestmentTarget.ECONOMIC)
-            {
-                arrowText = "+" + newAlbumInstrumentValue * GameProperties.configurableProperties.marketingPointValue + " $";
-            }
-            else
-            {
-                arrowText = "+ " + newAlbumInstrumentValue + " 🍃";
-            }
-
-            StartCoroutine(PlayDiceUIs(currPlayer, newAlbumInstrumentValue, rolledDiceNumbers, 6, dice6UI, "Animations/RollDiceForInstrumentOverlay/dice6/sprites_3/endingAlternatives/", Color.yellow, arrowText, diceRollDelay));
+            arrowText = "+ " + newInvestmentValue * GameProperties.configurableProperties.marketingPointValue + " $";
         }
+        else
+        {
+            arrowText = "+ " + newInvestmentValue + " 🍃";
+        }
+        
+        StartCoroutine(PlayDiceUIs(currPlayer, newInvestmentValue, rolledDiceNumbers, 6, dice6UI, "Animations/RollDiceForInstrumentOverlay/dice6/sprites_3/endingAlternatives/", Color.yellow, arrowText, diceRollDelay));
 
-        GameGlobals.gameLogManager.WriteEventToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameGlobals.currGameRoundId.ToString(), currPlayer.GetId().ToString(), currPlayer.GetName().ToString(), "ROLLED_INVESTMENT_TARGET_DICES", "-", newAlbumInstrumentValue.ToString());
-        return newAlbumInstrumentValue;
+        GameGlobals.gameLogManager.WriteEventToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameGlobals.currGameRoundId.ToString(), currPlayer.GetId().ToString(), currPlayer.GetName().ToString(), "ROLLED_INVESTMENT_TARGET_DICES", "-", numTokensForTarget.ToString());
+        return newInvestmentValue;
     }
 
+    private IEnumerator BudgetExecutionPhase(Player currPlayer)
+    {
+        float playerEconomicGrowth = 0.0f;
+        float playerEnvironmentContribution = 0.0f;
+        yield return playerEconomicGrowth = RollInvestmentDices(currPlayer, GameProperties.InvestmentTarget.ECONOMIC);
+        yield return playerEnvironmentContribution = RollInvestmentDices(currPlayer, GameProperties.InvestmentTarget.ENVIRONMENT);
+
+        environmentSlider.value += playerEnvironmentContribution/100;
+        currPlayer.UpdateMoney(currPlayer.GetMoney() + playerEnvironmentContribution/100);
+    }
 
     private IEnumerator PlayDiceUIs(Player diceThrower, int totalDicesValue, int[] rolledDiceNumbers, int diceNum, GameObject diceImagePrefab, string diceNumberSpritesPath, Color diceArrowColor, string diceArrowText, float delayToClose)
     //the sequence number aims to void dice overlaps as it represents the order for which this dice is going to be rolled. We do not want to roll a dice two times for the same place
@@ -409,14 +421,15 @@ public class GameManager : MonoBehaviour {
 
             budgetExecutionResponseReceived = false;
             Player currPlayer = GameGlobals.players[currPlayerIndex];
+            StartCoroutine(BudgetExecutionPhase(currPlayer));
             Player nextPlayer = ChangeToNextPlayer(currPlayer);
             //if (numPlayersToStartLastDecisions > 0)
             //{
-                //foreach (var player in GameGlobals.players)
-                //{
-                //    if (player == currPlayer) continue;
-                //    player.InformLastDecision(nextPlayer);
-                //}
+            //foreach (var player in GameGlobals.players)
+            //{
+            //    if (player == currPlayer) continue;
+            //    player.InformLastDecision(nextPlayer);
+            //}
             //}
             numPlayersToExecuteBudget--;
             if (numPlayersToExecuteBudget > 0)
@@ -443,7 +456,7 @@ public class GameManager : MonoBehaviour {
         //end of forth phase; trigger and log album result
         if (numPlayersToExecuteBudget == 0)
         {
-            StartGameRoundForAllPlayers();
+            UInewRoundScreen.SetActive(true);
             numPlayersToAllocateBudget = GameGlobals.players.Count;
         }
 
