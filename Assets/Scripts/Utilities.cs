@@ -99,7 +99,7 @@ public class DynamicallyConfigurableGameProperties
 
 
     //----------- AutomaticBriefing -------------------
-    public bool isAutomaticalBriefing = false;
+    public bool isAutomaticBriefing = false;
     public int numSessionGames = 0; //no tutorials
 
     //------------ Simulation --------------------

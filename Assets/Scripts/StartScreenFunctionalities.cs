@@ -104,7 +104,7 @@ public class StartScreenFunctionalities : MonoBehaviour {
             this.UIStartGameButton.interactable = true;
         }
 
-        if (GameProperties.configurableProperties.isAutomaticalBriefing) //generate condition automatically (asynchronous)
+        if (GameProperties.configurableProperties.isAutomaticBriefing) //generate condition automatically (asynchronous)
         {
             GameGlobals.gameLogManager.GetLastSessionConditionFromLog(YieldedActionsAfterGet); //changes session code
         }

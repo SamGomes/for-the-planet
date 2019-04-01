@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour {
     public GameObject UInewRoundScreen;
     public Button UIadvanceRoundButton;
     
+    public GameObject rollDiceForInstrumentOverlayDicesUI;
     public GameObject UIRollDiceForInstrumentOverlay;
     public Animator rollDiceForInstrumentOverlayAnimator;
 
@@ -115,7 +116,7 @@ public class GameManager : MonoBehaviour {
             currPlayer.GetWarningScreenRef().AddOnHide(ContinueGame);
         }
 
-        environmentSlider.value = 0.1f;
+        StartCoroutine(UpdateEnvironmentValue(0.1f));
 
         GameGlobals.currGameRoundId = 0; //first round
         GameGlobals.commonEnvironmentInvestment = 0;
@@ -124,6 +125,7 @@ public class GameManager : MonoBehaviour {
         currNumberOfMarketDices = GameProperties.configurableProperties.initNumberMarketDices;
 
         rollDiceForInstrumentOverlayAnimator = UIRollDiceForInstrumentOverlay.GetComponent<Animator>();
+        rollDiceForInstrumentOverlayDicesUI = UIRollDiceForInstrumentOverlay.transform.Find("diceUIs").gameObject;
 
         //this init is not nice
         Button[] allButtons = FindObjectsOfType<Button>();
@@ -174,24 +176,20 @@ public class GameManager : MonoBehaviour {
         //{
         //    player.InformNewAlbum();
         //}
-
-        if (GameProperties.configurableProperties.isSimulation) //start imidiately in simulation
-        {
-            StartGameRoundForAllPlayers();
-        }
-        else
-        {
-            UIadvanceRoundButton.onClick.AddListener(delegate () {
-                UInewRoundScreen.SetActive(false);
-                StartGameRoundForAllPlayers();
-            });
-            UIRollDiceForInstrumentOverlay.SetActive(false);
-        }
         
+        UIadvanceRoundButton.onClick.AddListener(delegate () {
+            UInewRoundScreen.SetActive(false);
+            StartGameRoundForAllPlayers();
+        });
+        UIRollDiceForInstrumentOverlay.SetActive(false);
     }
 
     public void StartGameRoundForAllPlayers()
     {
+        if (GameGlobals.currGameRoundId > 0)
+        {
+            StartCoroutine(ComputeRealGrowrths());
+        }
         int numPlayers = GameGlobals.players.Count;
         for (int i = 0; i < numPlayers; i++)
         {
@@ -246,7 +244,7 @@ public class GameManager : MonoBehaviour {
         }
         else
         {
-            environmentSlider.value = ((float) newInvestmentValue / 100.0f);
+            StartCoroutine(UpdateEnvironmentValue((float) newInvestmentValue / 100.0f));
         }
 
         GameGlobals.gameLogManager.WriteEventToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameGlobals.currGameRoundId.ToString(), currPlayer.GetId().ToString(), currPlayer.GetName().ToString(), "ROLLED_INVESTMENT_TARGET_DICES", "-", numTokensForTarget.ToString());
@@ -276,7 +274,7 @@ public class GameManager : MonoBehaviour {
             }
             else
             {
-                GameObject diceUIClone = Instantiate(diceImagePrefab, UIRollDiceForInstrumentOverlay.transform);
+                GameObject diceUIClone = Instantiate(diceImagePrefab, rollDiceForInstrumentOverlayDicesUI.transform);
                 diceUIs.Add(diceUIClone);
                 StartCoroutine(PlayDiceUI(diceUIClone, diceThrower, numDiceRolls, i, diceNum, currDiceNumberSprite, delayToClose));
             }
@@ -290,7 +288,8 @@ public class GameManager : MonoBehaviour {
         rollDiceForInstrumentOverlayAnimator.speed = 0;
         
         //get and disable arrow animation until end of dice animation
-        GameObject diceArrowClone = Instantiate(diceArrowPrefab, UIRollDiceForInstrumentOverlay.transform);
+        GameObject diceArrowClone = UIRollDiceForInstrumentOverlay.transform.Find("oneUpArrow").gameObject;
+        diceArrowClone.SetActive(true);
         diceArrowClone.GetComponentInChildren<Image>().color = diceArrowColor;
         
         Text arrowText = diceArrowClone.GetComponentInChildren<Text>();
@@ -313,8 +312,9 @@ public class GameManager : MonoBehaviour {
         }
 
         //destroy arrows, dice images and finally set screen active to false
-        Destroy(diceArrowClone);
-        for(int i=0; i<diceUIs.Count; i++)
+        //Destroy(diceArrowClone);
+        diceArrowClone.SetActive(false);
+        for (int i=0; i<diceUIs.Count; i++)
         {
             GameObject currDice = diceUIs[i];
             Destroy(currDice);
@@ -350,8 +350,31 @@ public class GameManager : MonoBehaviour {
         
     }
     
-    public void UpdateGrowths()
+    public IEnumerator UpdateEnvironmentValue(float growth)
     {
+        //get and disable arrow animation until end of dice animation
+        //GameObject diceArrowClone = Instantiate(diceArrowPrefab, UIPrototypeArea.transform);
+        //diceArrowClone.GetComponentInChildren<Image>().color = Color.green;
+
+        //Text arrowText = diceArrowClone.GetComponentInChildren<Text>();
+        //arrowText.text = (growth>0)? "+" : "";
+        //arrowText.text += growth + " Environment value";
+        //arrowText.color = Color.green;
+
+        //yield return new WaitForSeconds(3.0f);
+        //Destroy(diceArrowClone);
+        environmentSlider.value += growth;
+        yield return null;
+    }
+
+    public IEnumerator ComputeRealGrowrths()
+    {
+        UpdateEnvironmentValue(-1.0f*Random.Range(0.05f, 0.2f));
+        foreach(Player player in GameGlobals.players)
+        {
+            player.UpdateMoney(Random.Range(0.05f, 0.2f));
+        }
+        yield return null;
     }
 
     private void ResetAllPlayerUIs()

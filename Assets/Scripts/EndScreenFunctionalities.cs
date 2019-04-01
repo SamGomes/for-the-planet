@@ -62,7 +62,7 @@ public class EndScreenFunctionalities : MonoBehaviour
         
         //Text UIEndGameButtonText = UIEndGameButton.GetComponentInChildren<Text>();
         Text UIRestartGameButtonText = UIRestartGameButton.GetComponentInChildren<Text>();
-        if (GameProperties.configurableProperties.isAutomaticalBriefing)
+        if (GameProperties.configurableProperties.isAutomaticBriefing)
         {
             if (GameGlobals.currGameId >= GameProperties.configurableProperties.numSessionGames)
             {

@@ -104,7 +104,7 @@ public class PlayersSetupSceneFunctionalities : MonoBehaviour {
         Object.DontDestroyOnLoad(playerCanvas);
 
        
-        if (!GameProperties.configurableProperties.isSimulation && !GameProperties.configurableProperties.isAutomaticalBriefing)
+        if (!GameProperties.configurableProperties.isSimulation && !GameProperties.configurableProperties.isAutomaticBriefing)
         {
             GameParameterization manualGameParam = new GameParameterization();
             manualGameParam.playerParameterizations = new List<PlayerParameterization>();

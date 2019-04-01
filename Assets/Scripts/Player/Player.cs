@@ -32,9 +32,7 @@ public class Player
     private GameObject playerSelfDisablerUI;
     protected Button playerActionButtonUI;
     private UnityAction playerActionCall;
-
-    private Text currBudgetUI;
-
+    
     private Text nameTextUI;
     private Slider moneySliderUI;
 
@@ -148,17 +146,23 @@ public class Player
 
         //reinit before starting phase (on request)
         currRoundInvestment = new Dictionary<GameProperties.InvestmentTarget, int>();
-        currRoundInvestment[GameProperties.InvestmentTarget.ECONOMIC] = 0;
-        currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT] = 0;
+        investmentHistory = new Dictionary<GameProperties.InvestmentTarget, int>();
+        int halfBudget = Mathf.FloorToInt(this.currBudget / 2.0f);
+        int startingEconomicInv = halfBudget;
+        int startingEnvironmentInv = currBudget - halfBudget;
+        currRoundInvestment[GameProperties.InvestmentTarget.ECONOMIC] = startingEconomicInv;
+        currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT] = startingEnvironmentInv;
+        investmentHistory[GameProperties.InvestmentTarget.ECONOMIC] = startingEconomicInv;
+        investmentHistory[GameProperties.InvestmentTarget.ENVIRONMENT] = startingEnvironmentInv;
 
         this.playerActionButtonUI.onClick.RemoveListener(playerActionCall);
         playerActionCall = delegate ()
         {
-            if (currBudget > 0)
-            {
-                warningScreenRef.DisplayPoppup("There is still budget to allocate!");
-                return;
-            }
+            //if (currBudget > 0)
+            //{
+            //    warningScreenRef.DisplayPoppup("There is still budget to allocate!");
+            //    return;
+            //}
             SendBudgetAllocationPhaseResponse();
         };
         this.playerActionButtonUI.onClick.AddListener(playerActionCall);
@@ -263,11 +267,9 @@ public class Player
     {
         economicGrowthTokensDisplayUI.text = currRoundInvestment[GameProperties.InvestmentTarget.ECONOMIC].ToString();
         environmentTokensDisplayUI.text = currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT].ToString();
-        currBudgetUI.text = currBudget.ToString();
 
         economicGrowthHistoryDisplay.text = investmentHistory[GameProperties.InvestmentTarget.ECONOMIC].ToString();
         environmentHistoryDisplay.text = investmentHistory[GameProperties.InvestmentTarget.ENVIRONMENT].ToString();
-
 
         moneySliderUI.value = money;
     }
@@ -329,31 +331,33 @@ public class Player
         this.moneySliderUI = playerUI.transform.Find("playerStateSection/InvestmentUI/Slider").gameObject.GetComponent<Slider>();
 
 
-        this.spendTokenInEconomicGrowthButtonUI = playerUI.transform.Find("playerActionSection/budgetAllocationUI/tokenSelection/alocateEconomicGrowth/more").gameObject.GetComponent<Button>();
+        this.spendTokenInEconomicGrowthButtonUI = playerUI.transform.Find("playerActionSection/budgetAllocationUI/tokenSelection/alocateEconomicGrowth/Image").gameObject.GetComponent<Button>();
         this.spendTokenInEconomicGrowthButtonUI.onClick.AddListener(delegate () {
+            if (currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT] == 0)
+            {
+                warningScreenRef.DisplayPoppup("There is no budget to allocate!");
+                return;
+            }
             this.AddInvestment(GameProperties.InvestmentTarget.ECONOMIC);
-        });
-        this.removeTokenInEconomicGrowthButtonUI = playerUI.transform.Find("playerActionSection/budgetAllocationUI/tokenSelection/alocateEconomicGrowth/less").gameObject.GetComponent<Button>();
-        this.removeTokenInEconomicGrowthButtonUI.onClick.AddListener(delegate () {
-            this.RemoveInvestment(GameProperties.InvestmentTarget.ECONOMIC);
+            this.RemoveInvestment(GameProperties.InvestmentTarget.ENVIRONMENT);
+
         });
         this.economicGrowthTokensDisplayUI = playerUI.transform.Find("playerActionSection/budgetAllocationUI/tokenSelection/alocateEconomicGrowth/display").gameObject.GetComponent<Text>();
 
-
-        this.spendTokenInEnvironmentButtonUI = playerUI.transform.Find("playerActionSection/budgetAllocationUI/tokenSelection/alocateEnvironment/more").gameObject.GetComponent<Button>();
+        this.spendTokenInEnvironmentButtonUI = playerUI.transform.Find("playerActionSection/budgetAllocationUI/tokenSelection/alocateEnvironment/Image").gameObject.GetComponent<Button>();
         this.spendTokenInEnvironmentButtonUI.onClick.AddListener(delegate () {
+            if (currRoundInvestment[GameProperties.InvestmentTarget.ECONOMIC] == 0)
+            {
+                warningScreenRef.DisplayPoppup("There is no budget to allocate!");
+                return;
+            }
             this.AddInvestment(GameProperties.InvestmentTarget.ENVIRONMENT);
-        });
-        this.removeTokenInEnvironmentButtonUI = playerUI.transform.Find("playerActionSection/budgetAllocationUI/tokenSelection/alocateEnvironment/less").gameObject.GetComponent<Button>();
-        this.removeTokenInEnvironmentButtonUI.onClick.AddListener(delegate () {
-            this.RemoveInvestment(GameProperties.InvestmentTarget.ENVIRONMENT);
+            this.RemoveInvestment(GameProperties.InvestmentTarget.ECONOMIC);
         });
         this.environmentTokensDisplayUI = playerUI.transform.Find("playerActionSection/budgetAllocationUI/tokenSelection/alocateEnvironment/display").gameObject.GetComponent<Text>();
-
-        this.currBudgetUI = playerUI.transform.Find("playerStateSection/currBudget").gameObject.GetComponent<Text>();
-
-        this.economicGrowthHistoryDisplay = playerUI.transform.Find("playerActionSection/displayHistoryUI/economicGrowthHistory").gameObject.GetComponent<Text>();
-        this.environmentHistoryDisplay = playerUI.transform.Find("playerActionSection/displayHistoryUI/environmentHistory").gameObject.GetComponent<Text>();
+        
+        this.economicGrowthHistoryDisplay = playerUI.transform.Find("playerActionSection/displayHistoryUI/tokenSelection/alocateEconomicGrowth/display").gameObject.GetComponent<Text>();
+        this.environmentHistoryDisplay = playerUI.transform.Find("playerActionSection/displayHistoryUI/tokenSelection/alocateEnvironment/display").gameObject.GetComponent<Text>();
 
         this.executeBudgetButton = playerUI.transform.Find("playerActionSection/budgetExecutionUI/rollForInvestmentButton").gameObject.GetComponent<Button>();
 
