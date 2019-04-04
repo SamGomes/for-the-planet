@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public static class GameGlobals
 {
@@ -75,8 +76,34 @@ public static class GameProperties
     public static bool displayFetchExternalConfigFileOption = false;
 }
 
+public static class AuxiliaryMethods
+{
+    public static IEnumerator UpdateSliderValue(Slider slider, float targetSliderValue)
+    {
+        //get and disable arrow animation until end of dice animation
+        //GameObject diceArrowClone = Instantiate(diceArrowPrefab, UIPrototypeArea.transform);
+        //diceArrowClone.GetComponentInChildren<Image>().color = Color.green;
 
+        //Text arrowText = diceArrowClone.GetComponentInChildren<Text>();
+        //arrowText.text = (growth>0)? "+" : "";
+        //arrowText.text += growth + " Environment value";
+        //arrowText.color = Color.green;
 
+        //yield return new WaitForSeconds(3.0f);
+        //Destroy(diceArrowClone);
+        float currSliderValue = slider.value;
+        float growth = targetSliderValue - currSliderValue;
+        float t = 0;
+        while (currSliderValue < targetSliderValue)
+        {
+            currSliderValue += Mathf.Sin(t) * growth;
+            slider.value = currSliderValue;
+            t += 0.02f;
+            yield return new WaitForSeconds(0.0416f);
+        }
+        yield return null;
+    }
+}
 
 //configurations classes
 

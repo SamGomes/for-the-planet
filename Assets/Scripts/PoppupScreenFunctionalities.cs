@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class PoppupScreenFunctionalities
+public class PopupScreenFunctionalities
 {
     private Button UIcloseButton;
     private GameObject poppupInstance;
@@ -52,7 +52,7 @@ public class PoppupScreenFunctionalities
     }
 
     // Use this for initialization
-    public PoppupScreenFunctionalities(bool isGlobal, Func<int> OnShow, Func<int> OnHide, GameObject poppupPrefab, GameObject canvas, MonoBehaviourFunctionalities monoBehaviourFunctionalities, Sprite icon, Color backgroundColor)
+    public PopupScreenFunctionalities(bool isGlobal, Func<int> OnShow, Func<int> OnHide, GameObject poppupPrefab, GameObject canvas, MonoBehaviourFunctionalities monoBehaviourFunctionalities, Sprite icon, Color backgroundColor)
     {
         poppupInstance = UnityEngine.Object.Instantiate(poppupPrefab, canvas.transform).gameObject;
         if (isGlobal)
@@ -93,17 +93,17 @@ public class PoppupScreenFunctionalities
         this.audioPath = null;
     }
 
-    public PoppupScreenFunctionalities(bool isGlobal, Func<int> OnShow, Func<int> OnHide, GameObject poppupPrefab, GameObject canvas, MonoBehaviourFunctionalities monoBehaviourFunctionalities, Sprite icon, Color backgroundColor, string audioPath)
+    public PopupScreenFunctionalities(bool isGlobal, Func<int> OnShow, Func<int> OnHide, GameObject poppupPrefab, GameObject canvas, MonoBehaviourFunctionalities monoBehaviourFunctionalities, Sprite icon, Color backgroundColor, string audioPath)
         : this(isGlobal, OnShow, OnHide, poppupPrefab, canvas, monoBehaviourFunctionalities, icon, backgroundColor)
     {
         this.audioPath = audioPath;
     }
-    public PoppupScreenFunctionalities(bool isGlobal, Func<int> OnShow, Func<int> OnHide, GameObject poppupPrefab, GameObject canvas, MonoBehaviourFunctionalities monoBehaviourFunctionalities, Sprite icon, Color backgroundColor, System.Func<int> additionalCloseButtonFunctionalities)
+    public PopupScreenFunctionalities(bool isGlobal, Func<int> OnShow, Func<int> OnHide, GameObject poppupPrefab, GameObject canvas, MonoBehaviourFunctionalities monoBehaviourFunctionalities, Sprite icon, Color backgroundColor, System.Func<int> additionalCloseButtonFunctionalities)
         : this(isGlobal, OnShow, OnHide, poppupPrefab, canvas, monoBehaviourFunctionalities, icon, backgroundColor)
     {
         this.UIcloseButton.onClick.AddListener(delegate () { additionalCloseButtonFunctionalities(); });
     }
-    public PoppupScreenFunctionalities(bool isGlobal, Func<int> OnShow, Func<int> OnHide, GameObject poppupPrefab, GameObject canvas, MonoBehaviourFunctionalities monoBehaviourFunctionalities, Sprite icon, Color backgroundColor, string audioPath, System.Func<int> additionalCloseButtonFunctionalities)
+    public PopupScreenFunctionalities(bool isGlobal, Func<int> OnShow, Func<int> OnHide, GameObject poppupPrefab, GameObject canvas, MonoBehaviourFunctionalities monoBehaviourFunctionalities, Sprite icon, Color backgroundColor, string audioPath, System.Func<int> additionalCloseButtonFunctionalities)
         : this(isGlobal, OnShow, OnHide, poppupPrefab, canvas, monoBehaviourFunctionalities, icon, backgroundColor)
     {
         this.audioPath = audioPath;

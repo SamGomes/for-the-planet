@@ -48,7 +48,7 @@ public class EndScreenFunctionalities : MonoBehaviour
 
     private void LoadEndScreenUIElements()
     {
-        PoppupScreenFunctionalities infoPoppupNeutralRef = new PoppupScreenFunctionalities(false, null, null, poppupPrefab, mainScene, this.GetComponent<MonoBehaviourFunctionalities>(), Resources.Load<Sprite>("Textures/UI/Icons/Info"), new Color(0.9f, 0.9f, 0.9f));
+        PopupScreenFunctionalities infoPoppupNeutralRef = new PopupScreenFunctionalities(false, null, null, poppupPrefab, mainScene, this.GetComponent<MonoBehaviourFunctionalities>(), Resources.Load<Sprite>("Textures/UI/Icons/Info"), new Color(0.9f, 0.9f, 0.9f));
 
         GameGlobals.players.Sort(SortPlayersByMoney);
         int numPlayers = GameGlobals.players.Count;

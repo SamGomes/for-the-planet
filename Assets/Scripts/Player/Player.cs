@@ -52,11 +52,11 @@ public class Player
 
     protected Button executeBudgetButton;
 
-    private PoppupScreenFunctionalities warningScreenRef;
+    private PopupScreenFunctionalities warningScreenRef;
 
     protected GameObject speechBalloonUI;
 
-    public Player(GameObject playerUIPrefab, GameObject playerCanvas, MonoBehaviourFunctionalities playerMonoBehaviourFunctionalities, PoppupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name)
+    public Player(GameObject playerUIPrefab, GameObject playerCanvas, MonoBehaviourFunctionalities playerMonoBehaviourFunctionalities, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name)
     {
         this.gameManagerRef = GameGlobals.gameManager;
         this.id = id;
@@ -175,7 +175,7 @@ public class Player
         this.budgetAllocationScreenUI.SetActive(false);
         this.displayHistoryScreenUI.SetActive(true);
         this.budgetExecutionScreenUI.SetActive(false);
-        this.playerActionButtonUI.gameObject.SetActive(true);
+        this.playerActionButtonUI.gameObject.SetActive(false);
 
         this.playerActionButtonUI.onClick.RemoveListener(playerActionCall);
         playerActionCall = delegate ()
@@ -205,6 +205,11 @@ public class Player
         UpdateUI();
         BudgetExecution();
     }
+    public void InvestmentSimulationRequest()
+    {
+        UpdateUI();
+        InvestmentSimulation();
+    }
 
     public virtual int SendBudgetAllocationPhaseResponse()
     {
@@ -221,6 +226,11 @@ public class Player
     public virtual int SendBudgetExecutionPhaseResponse()
     {
         gameManagerRef.BudgetExecutionPhaseResponse(this);
+        return 0;
+    }
+    public virtual int SendInvestmentSimulationPhaseResponse()
+    {
+        gameManagerRef.InvestmentSimulationPhaseResponse(this);
         return 0;
     }
 
@@ -271,10 +281,10 @@ public class Player
         economicGrowthHistoryDisplay.text = investmentHistory[GameProperties.InvestmentTarget.ECONOMIC].ToString();
         environmentHistoryDisplay.text = investmentHistory[GameProperties.InvestmentTarget.ENVIRONMENT].ToString();
 
-        moneySliderUI.value = money;
+        playerMonoBehaviourFunctionalities.StartCoroutine(AuxiliaryMethods.UpdateSliderValue(moneySliderUI,money));
     }
 
-    public PoppupScreenFunctionalities GetWarningScreenRef()
+    public PopupScreenFunctionalities GetWarningScreenRef()
     {
         return this.warningScreenRef;
     }
@@ -303,7 +313,7 @@ public class Player
         return this.UIAvatar;
     }
 
-    public virtual void InitUI(GameObject playerUIPrefab, GameObject canvas, PoppupScreenFunctionalities warningScreenRef, Sprite UIAvatar)
+    public virtual void InitUI(GameObject playerUIPrefab, GameObject canvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar)
     {
         this.canvas = canvas;
         this.warningScreenRef = warningScreenRef;
@@ -331,7 +341,7 @@ public class Player
         this.moneySliderUI = playerUI.transform.Find("playerStateSection/InvestmentUI/Slider").gameObject.GetComponent<Slider>();
 
 
-        this.spendTokenInEconomicGrowthButtonUI = playerUI.transform.Find("playerActionSection/budgetAllocationUI/tokenSelection/alocateEconomicGrowth/Image").gameObject.GetComponent<Button>();
+        this.spendTokenInEconomicGrowthButtonUI = playerUI.transform.Find("playerActionSection/budgetAllocationUI/tokenSelection/alocateEconomicGrowth/Button").gameObject.GetComponent<Button>();
         this.spendTokenInEconomicGrowthButtonUI.onClick.AddListener(delegate () {
             if (currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT] == 0)
             {
@@ -344,7 +354,7 @@ public class Player
         });
         this.economicGrowthTokensDisplayUI = playerUI.transform.Find("playerActionSection/budgetAllocationUI/tokenSelection/alocateEconomicGrowth/display").gameObject.GetComponent<Text>();
 
-        this.spendTokenInEnvironmentButtonUI = playerUI.transform.Find("playerActionSection/budgetAllocationUI/tokenSelection/alocateEnvironment/Image").gameObject.GetComponent<Button>();
+        this.spendTokenInEnvironmentButtonUI = playerUI.transform.Find("playerActionSection/budgetAllocationUI/tokenSelection/alocateEnvironment/Button").gameObject.GetComponent<Button>();
         this.spendTokenInEnvironmentButtonUI.onClick.AddListener(delegate () {
             if (currRoundInvestment[GameProperties.InvestmentTarget.ECONOMIC] == 0)
             {
@@ -384,6 +394,8 @@ public class Player
         this.displayHistoryScreenUI.SetActive(false);
         this.budgetExecutionScreenUI.SetActive(false);
         this.playerActionButtonUI.gameObject.SetActive(false);
+        this.playerMarkerUI.SetActive(false);
+        this.playerDisablerUI.SetActive(true);
     }
     public void ResetPlayer()
     {
@@ -395,5 +407,5 @@ public class Player
     public void BudgetAllocation() { }
     public void HistoryDisplay() { }
     public void BudgetExecution() { }
-    
+    public void InvestmentSimulation() { }
 }

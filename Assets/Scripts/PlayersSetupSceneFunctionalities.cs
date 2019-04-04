@@ -20,8 +20,8 @@ public class PlayersSetupSceneFunctionalities : MonoBehaviour {
     public GameObject poppupPrefab;
     public GameObject playerUIPrefab;
     public GameObject playerCanvas;
-    private PoppupScreenFunctionalities playerWarningPoppupRef;
-    private PoppupScreenFunctionalities setupWarningPoppupRef;
+    private PopupScreenFunctionalities playerWarningPoppupRef;
+    private PopupScreenFunctionalities setupWarningPoppupRef;
 
     public void SetUpParameterization(GameParameterization parameterization)
     {
@@ -99,8 +99,8 @@ public class PlayersSetupSceneFunctionalities : MonoBehaviour {
     void Start ()
     {
         isErrorEncountered = false;
-        playerWarningPoppupRef = new PoppupScreenFunctionalities(true, null, null, poppupPrefab, playerCanvas, GameGlobals.monoBehaviourFunctionalities, Resources.Load<Sprite>("Textures/UI/Icons/Info"), new Color(0.9f, 0.9f, 0.9f), "Audio/snap");
-        setupWarningPoppupRef = new PoppupScreenFunctionalities(true, null, null, poppupPrefab, playerCanvas, GameGlobals.monoBehaviourFunctionalities, Resources.Load<Sprite>("Textures/UI/Icons/Info"), new Color(0.9f, 0.9f, 0.9f), "Audio/snap");
+        playerWarningPoppupRef = new PopupScreenFunctionalities(true, null, null, poppupPrefab, playerCanvas, GameGlobals.monoBehaviourFunctionalities, Resources.Load<Sprite>("Textures/UI/Icons/Info"), new Color(0.9f, 0.9f, 0.9f), "Audio/snap");
+        setupWarningPoppupRef = new PopupScreenFunctionalities(true, null, null, poppupPrefab, playerCanvas, GameGlobals.monoBehaviourFunctionalities, Resources.Load<Sprite>("Textures/UI/Icons/Info"), new Color(0.9f, 0.9f, 0.9f), "Audio/snap");
         Object.DontDestroyOnLoad(playerCanvas);
 
        
