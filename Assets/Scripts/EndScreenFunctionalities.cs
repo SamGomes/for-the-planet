@@ -28,6 +28,10 @@ public class EndScreenFunctionalities : MonoBehaviour
 
     public GameObject albumUIPrefab;
 
+    public GameObject playerUIPrefab;
+
+    private PopupScreenFunctionalities infoPoppupNeutralRef;
+
 
     [DllImport("__Internal")]
     private static extern void EnableCopyToClipboard(string text);
@@ -48,7 +52,7 @@ public class EndScreenFunctionalities : MonoBehaviour
 
     private void LoadEndScreenUIElements()
     {
-        PopupScreenFunctionalities infoPoppupNeutralRef = new PopupScreenFunctionalities(false, null, null, poppupPrefab, mainScene, this.GetComponent<MonoBehaviourFunctionalities>(), Resources.Load<Sprite>("Textures/UI/Icons/Info"), new Color(0.9f, 0.9f, 0.9f));
+        infoPoppupNeutralRef = new PopupScreenFunctionalities(false, null, null, poppupPrefab, mainScene, this.GetComponent<MonoBehaviourFunctionalities>(), Resources.Load<Sprite>("Textures/UI/Icons/Info"), new Color(0.9f, 0.9f, 0.9f));
 
         GameGlobals.players.Sort(SortPlayersByMoney);
         int numPlayers = GameGlobals.players.Count;
@@ -122,12 +126,12 @@ public class EndScreenFunctionalities : MonoBehaviour
     void Start()
     {
         //mock
-        //GameProperties.configurableProperties = new DynamicallyConfigurableGameProperties();
-        //GameProperties.configurableProperties.numSessionGames = 3;
-        //GameProperties.configurableProperties.isAutomaticalBriefing = true;
-        //GameGlobals.currSessionId = System.DateTime.Now.ToString("yyyy/MM/dd/HH-mm-ss");
-        //GameGlobals.gameLogManager = new DebugLogManager();
-        //GameGlobals.gameLogManager.InitLogs();
+        GameProperties.configurableProperties = new DynamicallyConfigurableGameProperties();
+        GameProperties.configurableProperties.numSessionGames = 3;
+        GameProperties.configurableProperties.isAutomaticBriefing = true;
+        GameGlobals.currSessionId = System.DateTime.Now.ToString("yyyy/MM/dd/HH-mm-ss");
+        GameGlobals.gameLogManager = new DebugLogManager();
+        GameGlobals.gameLogManager.InitLogs();
         //GameGlobals.albums = new List<Album>(5);
         //Album newAlbum = new Album("1", albumUIPrefab);
         //GameGlobals.albums.Add(newAlbum);
@@ -143,12 +147,13 @@ public class EndScreenFunctionalities : MonoBehaviour
         //GameGlobals.albums.Add(newAlbum);
         //newAlbum = new Album("7", albumUIPrefab);
         //GameGlobals.albums.Add(newAlbum);
-        //GameGlobals.players = new List<Player>(5);
-        //GameGlobals.players.Add(new UIPlayer(0, "PL1"));
+        GameGlobals.players = new List<Player>(5);
+        Player playerToBeAdded = new Player(playerUIPrefab, new GameObject(), GameGlobals.monoBehaviourFunctionalities, infoPoppupNeutralRef, Resources.Load<Sprite>("Textures/UI/Icons/" + 0), 0, "Troll");
+        GameGlobals.players.Add(playerToBeAdded);
         //GameGlobals.players.Add(new UIPlayer(1, "PL2"));
         //GameGlobals.players.Add(new UIPlayer(2, "PL3"));
-        //GameGlobals.currGameState = GameProperties.GameState.VICTORY;
-        //GameGlobals.currGameId = 2;
+        GameGlobals.currGameState = GameProperties.GameState.VICTORY;
+        GameGlobals.currGameId = 2;
 
         GameGlobals.gameLogManager.UpdateGameResultInLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameProperties.currSessionParameterization.id, GameGlobals.currGameState.ToString());
 
