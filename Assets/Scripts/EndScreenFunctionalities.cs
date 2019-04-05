@@ -30,6 +30,9 @@ public class EndScreenFunctionalities : MonoBehaviour
 
     public GameObject playerUIPrefab;
 
+    public GameObject UIVictoryBackground;
+    public GameObject UILossBackground;
+
     private PopupScreenFunctionalities infoPoppupNeutralRef;
 
 
@@ -161,15 +164,21 @@ public class EndScreenFunctionalities : MonoBehaviour
         UIVictoryOverlay.SetActive(false);
         UILossOverlay.SetActive(false);
         UIFinishedGameOverlay.SetActive(false);
+
+        UIVictoryBackground.SetActive(false);
+        UILossBackground.SetActive(false);
+
         mainScene.SetActive(false);
 
         if (GameGlobals.currGameState == GameProperties.GameState.VICTORY)
         {
-            UIVictoryOverlay.SetActive(true);
+            //UIVictoryOverlay.SetActive(true);
+            UIVictoryBackground.SetActive(true);
         }
         else if (GameGlobals.currGameState == GameProperties.GameState.LOSS)
         {
-            UILossOverlay.SetActive(true);
+            //UILossOverlay.SetActive(true);
+            UILossBackground.SetActive(true);
 
         }
         else
