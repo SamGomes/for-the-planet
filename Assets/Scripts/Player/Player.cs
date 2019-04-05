@@ -68,7 +68,7 @@ public class Player
         InitUI(playerUIPrefab, playerCanvas, warningScreenRef, UIAvatar);
 
         //position UI on canvas
-        this.GetPlayerUI().transform.Translate(new Vector3(0, -GameGlobals.players.Count * (0.2f * Screen.height), 0));
+        this.GetPlayerUI().transform.Translate(new Vector3(0, -GameGlobals.players.Count * (0.17f * Screen.height), 0));
         this.playerMonoBehaviourFunctionalities = playerMonoBehaviourFunctionalities;
     }
 
