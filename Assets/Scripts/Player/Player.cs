@@ -263,10 +263,10 @@ public class Player
         this.money = 0;
         UpdateUI();
     }
-    public void UpdateMoney(float economicGrowth)
+    public void SetMoney(float money)
     {
-        this.money += economicGrowth;
-        GameGlobals.gameLogManager.WriteEventToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameGlobals.currGameRoundId.ToString(), this.id.ToString(), this.name,"ECONOMIC_GROWTH", "-" , economicGrowth.ToString());
+        this.money = money;
+        GameGlobals.gameLogManager.WriteEventToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameGlobals.currGameRoundId.ToString(), this.id.ToString(), this.name,"SET_MONEY", "-" , money.ToString());
         UpdateUI();
     }
 
@@ -317,7 +317,6 @@ public class Player
     {
         this.canvas = canvas;
         this.warningScreenRef = warningScreenRef;
-
 
         this.playerUI = Object.Instantiate(playerUIPrefab, canvas.transform);
 
