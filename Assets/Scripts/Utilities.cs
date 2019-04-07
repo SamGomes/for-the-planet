@@ -80,7 +80,8 @@ public static class AuxiliaryMethods
 {
     public static IEnumerator UpdateSliderValue(Slider slider, float targetSliderValue)
     {
-        Debug.Log("targetValue: " + targetSliderValue);
+        //make sure that the target value is within the slider range
+        targetSliderValue = Mathf.Clamp01(targetSliderValue);
 
         float initialSliderValue = slider.value;
         float currSliderValue = initialSliderValue;
