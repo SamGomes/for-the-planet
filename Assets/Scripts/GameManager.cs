@@ -45,17 +45,13 @@ public class GameManager : MonoBehaviour {
 
     private bool gameMainSceneFinished;
     private int interruptionRequests; //changed whenever an interruption occurs (either a poppup, warning, etc.)
-
-    private bool budgetAllocationResponseReceived;
-    private bool historyDisplayResponseReceived;
-    private bool budgetExecutionResponseReceived;
-    private bool investmentSimulationResponseReceived;
+   
 
     private int currPlayerIndex;
     private int currSpeakingPlayerId;
 
     private float diceRollDelay;
-    private float displayHistoryDelay;
+    private float phaseEndDelay;
 
     private int marketLimit;
     private int currNumberOfMarketDices;
@@ -86,11 +82,6 @@ public class GameManager : MonoBehaviour {
         interruptionRequests = 0;
         InterruptGame(); //interrupt game update while loading...
 
-        budgetAllocationResponseReceived = false;
-        historyDisplayResponseReceived = false;
-        budgetExecutionResponseReceived = false;
-        investmentSimulationResponseReceived = false;
-
         numPlayersToAllocateBudget = GameGlobals.players.Count;
         numPlayersToExecuteBudget = GameGlobals.players.Count;
         numPlayersToDisplayHistory = GameGlobals.players.Count;
@@ -109,7 +100,7 @@ public class GameManager : MonoBehaviour {
 
         gameMainSceneFinished = false;
         diceRollDelay = 4.0f;
-        displayHistoryDelay = 5.0f;
+        phaseEndDelay = 2.0f;
 
         int numPlayers = GameGlobals.players.Count;
         Player currPlayer = null;
@@ -342,7 +333,7 @@ public class GameManager : MonoBehaviour {
         if (numPlayersToDisplayHistory == 0)
         {
             numPlayersToDisplayHistory = GameGlobals.players.Count;
-            yield return new WaitForSeconds(displayHistoryDelay);
+            yield return new WaitForSeconds(phaseEndDelay);
             StartExecuteBudgetPhase();
         }
 
@@ -356,8 +347,9 @@ public class GameManager : MonoBehaviour {
         //end of forth phase
         if (numPlayersToSimulateInvestment == 0)
         {
-            newRoundScreen.SetActive(true);
             numPlayersToSimulateInvestment = GameGlobals.players.Count;
+            yield return new WaitForSeconds(phaseEndDelay);
+            newRoundScreen.SetActive(true);
         }
 
     }
@@ -390,13 +382,10 @@ public class GameManager : MonoBehaviour {
     }
     public void StartDisplayHistoryPhase()
     {
-        foreach (Player player in GameGlobals.players)
-        {
-            player.ResetPlayerUI();
-        }
         //this phase displays the history of all players
         foreach (Player player in GameGlobals.players)
         {
+            player.ResetPlayerUI();
             player.HistoryDisplayPhaseRequest();
             player.GetPlayerDisablerUI().SetActive(false);
             player.GetPlayerMarkerUI().SetActive(false);
@@ -417,6 +406,7 @@ public class GameManager : MonoBehaviour {
         //this phase simulates the evolution of all players
         foreach (Player player in GameGlobals.players)
         {
+            player.ResetPlayerUI();
             player.InvestmentSimulationRequest();
             player.GetPlayerDisablerUI().SetActive(false);
             player.GetPlayerMarkerUI().SetActive(false);
@@ -482,8 +472,8 @@ public class GameManager : MonoBehaviour {
         //{
         //    nextPlayer.InvestmentSimulationRequest();
         //}
-        numPlayersToSimulateInvestment--;
         yield return StartCoroutine(InvestmentSimulationPhase());
+        numPlayersToSimulateInvestment--;
     }
 
     public Player ChangeToNextPlayer(Player currPlayer)

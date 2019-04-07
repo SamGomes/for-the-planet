@@ -91,7 +91,7 @@ public static class AuxiliaryMethods
         {
             currSliderValue = initialSliderValue + Mathf.Sin(t) * growth;
             slider.value = currSliderValue;
-            t += 0.02f;
+            t += 0.2f;
             yield return new WaitForSeconds(0.0416f);
         }
         yield return null;

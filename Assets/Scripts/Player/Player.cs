@@ -146,6 +146,13 @@ public class Player
 
         //position UI on canvas
         this.GetPlayerUI().transform.Translate(new Vector3(0, -GameGlobals.players.Count * (0.2f * Screen.height), 0));
+
+
+        this.budgetAllocationScreenUI.SetActive(false);
+        this.displayHistoryScreenUI.SetActive(false);
+        this.budgetExecutionScreenUI.SetActive(false);
+        this.investmentSimulationScreenUI.SetActive(false);
+        this.playerActionButtonUI.gameObject.SetActive(false);
     }
 
     public void ReceiveGameManager(GameManager gameManagerRef) {
@@ -202,6 +209,8 @@ public class Player
 
     public void BudgetAllocationPhaseRequest()
     {
+        this.playerSelfDisablerUI.SetActive(false);
+
         this.budgetAllocationScreenUI.SetActive(true);
         this.displayHistoryScreenUI.SetActive(false);
         this.budgetExecutionScreenUI.SetActive(false);
@@ -211,6 +220,9 @@ public class Player
         int halfBudget = Mathf.FloorToInt(this.currBudget / 2.0f);
         int startingEconomicInv = halfBudget;
         int startingEnvironmentInv = currBudget - halfBudget;
+
+        currRoundInvestment[GameProperties.InvestmentTarget.ECONOMIC] = 0;
+        currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT] = 0;
 
         AddInvestment(GameProperties.InvestmentTarget.ECONOMIC, startingEconomicInv);
         AddInvestment(GameProperties.InvestmentTarget.ENVIRONMENT, startingEnvironmentInv);
@@ -231,24 +243,20 @@ public class Player
     }
     public void HistoryDisplayPhaseRequest()
     {
+        this.playerSelfDisablerUI.SetActive(false);
+
         this.budgetAllocationScreenUI.SetActive(false);
         this.displayHistoryScreenUI.SetActive(true);
         this.budgetExecutionScreenUI.SetActive(false);
         this.investmentSimulationScreenUI.SetActive(false);
         this.playerActionButtonUI.gameObject.SetActive(false);
-
-        //this.playerActionButtonUI.onClick.RemoveListener(playerActionCall);
-        //playerActionCall = delegate ()
-        //{
-        //SendHistoryDisplayPhaseResponse();
-        //};
-        //this.playerActionButtonUI.onClick.AddListener(playerActionCall);
-
         HistoryDisplay();
         SendHistoryDisplayPhaseResponse();
     }
     public void BudgetExecutionPhaseRequest()
     {
+        this.playerSelfDisablerUI.SetActive(false);
+
         this.budgetAllocationScreenUI.SetActive(false);
         this.displayHistoryScreenUI.SetActive(false);
         this.budgetExecutionScreenUI.SetActive(true);
@@ -267,35 +275,43 @@ public class Player
     }
     public void InvestmentSimulationRequest()
     {
+        this.playerSelfDisablerUI.SetActive(false);
+
         this.budgetAllocationScreenUI.SetActive(false);
         this.displayHistoryScreenUI.SetActive(false);
         this.budgetExecutionScreenUI.SetActive(false);
         this.investmentSimulationScreenUI.SetActive(true);
         this.playerActionButtonUI.gameObject.SetActive(false);
         InvestmentSimulation();
+        SendInvestmentSimulationPhaseResponse();
     }
 
     public virtual int SendBudgetAllocationPhaseResponse()
     {
+        this.playerSelfDisablerUI.SetActive(true);
         //hide chosen investments before next player turn
         this.economicGrowthTokensDisplayUI.text = "-";
         this.environmentTokensDisplayUI.text = "-";
 
         playerMonoBehaviourFunctionalities.StartCoroutine(gameManagerRef.BudgetAllocationPhaseResponse(this));
+
         return 0;
     }
     public virtual int SendHistoryDisplayPhaseResponse()
     {
+        this.playerSelfDisablerUI.SetActive(true);
         playerMonoBehaviourFunctionalities.StartCoroutine(gameManagerRef.HistoryDisplayPhaseResponse(this));
         return 0;
     }
     public virtual int SendBudgetExecutionPhaseResponse()
     {
+        this.playerSelfDisablerUI.SetActive(true);
         playerMonoBehaviourFunctionalities.StartCoroutine(gameManagerRef.BudgetExecutionPhaseResponse(this));
         return 0;
     }
     public virtual int SendInvestmentSimulationPhaseResponse()
     {
+        this.playerSelfDisablerUI.SetActive(true);
         playerMonoBehaviourFunctionalities.StartCoroutine(gameManagerRef.InvestmentSimulationPhaseResponse(this));
         return 0;
     }
