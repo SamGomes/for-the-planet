@@ -301,17 +301,6 @@ public class GameManager : MonoBehaviour {
         yield return RollInvestmentDices(currPlayer, GameProperties.InvestmentTarget.ENVIRONMENT);
     }
 
-    private IEnumerator InvestmentSimulationPhase()
-    {
-        //simulate evolution
-        yield return StartCoroutine(AuxiliaryMethods.UpdateSliderValue(environmentSlider, 0.1f));//Random.Range(0.2f, 0.4f));
-        foreach (Player player in GameGlobals.players)
-        {
-            yield return StartCoroutine(player.SetMoney(0.1f));//s Random.Range(0.2f, 0.4f));
-        }
-        yield return null;
-    }
-
     private IEnumerator YieldedGameUpdateLoop()
     {
         //avoid rerun in this case because load scene is asyncronous
@@ -319,6 +308,11 @@ public class GameManager : MonoBehaviour {
         {
             //Debug.Log("pause...");
             yield return null;
+        }
+
+        if (GameGlobals.currGameState != GameProperties.GameState.NOT_FINISHED)
+        {
+            GameSceneManager.LoadEndScene();
         }
 
         //end of first phase; trigger second phase
@@ -387,8 +381,6 @@ public class GameManager : MonoBehaviour {
         {
             player.ResetPlayerUI();
             player.HistoryDisplayPhaseRequest();
-            player.GetPlayerDisablerUI().SetActive(false);
-            player.GetPlayerMarkerUI().SetActive(false);
         }
     }
     public void StartExecuteBudgetPhase()
@@ -397,19 +389,32 @@ public class GameManager : MonoBehaviour {
         {
             player.ResetPlayerUI();
         }
+
         ChangeActivePlayerUI(GameGlobals.players[0]);
         GameGlobals.players[0].BudgetExecutionPhaseRequest();
     }
 
     public void StartInvestmentSimulationPhase()
     {
+
         //this phase simulates the evolution of all players
         foreach (Player player in GameGlobals.players)
         {
             player.ResetPlayerUI();
             player.InvestmentSimulationRequest();
-            player.GetPlayerDisablerUI().SetActive(false);
-            player.GetPlayerMarkerUI().SetActive(false);
+        }
+
+        //check for game end
+        if (environmentSlider.value <= 0.0f)
+        {
+            GameGlobals.currGameState = GameProperties.GameState.LOSS;
+        }
+        else
+        {
+            if (GameGlobals.currGameRoundId > 2)
+            {
+                GameGlobals.currGameState = GameProperties.GameState.VICTORY;
+            }
         }
     }
 
@@ -472,7 +477,14 @@ public class GameManager : MonoBehaviour {
         //{
         //    nextPlayer.InvestmentSimulationRequest();
         //}
-        yield return StartCoroutine(InvestmentSimulationPhase());
+
+        //simulate evolution
+        //yield return StartCoroutine(RollInvestmentDices(GameProperties.InvestmentTarget.ENVIRONMENT));//Random.Range(0.2f, 0.4f));
+        yield return StartCoroutine(AuxiliaryMethods.UpdateSliderValue(environmentSlider, 0.1f));//Random.Range(0.2f, 0.4f));
+        foreach (Player player in GameGlobals.players)
+        {
+            yield return StartCoroutine(player.SetMoney(0.1f));//s Random.Range(0.2f, 0.4f));
+        }
         numPlayersToSimulateInvestment--;
     }
 

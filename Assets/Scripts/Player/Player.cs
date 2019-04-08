@@ -135,7 +135,11 @@ public class Player
         this.environmentHistoryDisplay = playerUI.transform.Find("playerActionSection/displayHistoryUI/tokenSelection/alocateEnvironment/display").gameObject.GetComponent<Text>();
 
         this.executeBudgetButton = playerUI.transform.Find("playerActionSection/budgetExecutionUI/rollForInvestmentButton").gameObject.GetComponent<Button>();
-
+        playerActionCall = delegate ()
+        {
+            SendBudgetExecutionPhaseResponse();
+        };
+        this.executeBudgetButton.onClick.AddListener(playerActionCall);
 
         this.budgetAllocationScreenUI = playerUI.transform.Find("playerActionSection/budgetAllocationUI").gameObject;
         this.displayHistoryScreenUI = playerUI.transform.Find("playerActionSection/displayHistoryUI").gameObject;
@@ -147,13 +151,22 @@ public class Player
         //position UI on canvas
         this.GetPlayerUI().transform.Translate(new Vector3(0, -GameGlobals.players.Count * (0.2f * Screen.height), 0));
 
+        ResetPlayerUI();
+    }
 
+    public void ResetPlayerUI()
+    {
         this.budgetAllocationScreenUI.SetActive(false);
         this.displayHistoryScreenUI.SetActive(false);
         this.budgetExecutionScreenUI.SetActive(false);
         this.investmentSimulationScreenUI.SetActive(false);
         this.playerActionButtonUI.gameObject.SetActive(false);
+    
+        this.playerActionButtonUI.gameObject.SetActive(false);
+        //this.playerMarkerUI.SetActive(false);
+        //this.playerDisablerUI.SetActive(true);
     }
+
 
     public void ReceiveGameManager(GameManager gameManagerRef) {
         this.gameManagerRef = gameManagerRef;
@@ -250,6 +263,10 @@ public class Player
         this.budgetExecutionScreenUI.SetActive(false);
         this.investmentSimulationScreenUI.SetActive(false);
         this.playerActionButtonUI.gameObject.SetActive(false);
+
+        this.playerMarkerUI.SetActive(false);
+        this.playerDisablerUI.SetActive(false);
+
         HistoryDisplay();
         SendHistoryDisplayPhaseResponse();
     }
@@ -263,13 +280,13 @@ public class Player
         this.investmentSimulationScreenUI.SetActive(false);
         this.playerActionButtonUI.gameObject.SetActive(false);
 
-        this.playerActionButtonUI.onClick.RemoveListener(playerActionCall);
-        playerActionCall = delegate ()
-        {
-            SendBudgetExecutionPhaseResponse();
-        };
-        this.playerActionButtonUI.onClick.AddListener(playerActionCall);
-        this.executeBudgetButton.onClick.AddListener(playerActionCall);
+        //this.playerActionButtonUI.onClick.RemoveListener(playerActionCall);
+        //playerActionCall = delegate ()
+        //{
+        //    SendBudgetExecutionPhaseResponse();
+        //};
+        //this.playerActionButtonUI.onClick.AddListener(playerActionCall);
+        //this.executeBudgetButton.onClick.AddListener(playerActionCall);
         
         BudgetExecution();
     }
@@ -282,6 +299,10 @@ public class Player
         this.budgetExecutionScreenUI.SetActive(false);
         this.investmentSimulationScreenUI.SetActive(true);
         this.playerActionButtonUI.gameObject.SetActive(false);
+
+        this.playerMarkerUI.SetActive(false);
+        this.playerDisablerUI.SetActive(false);
+
         InvestmentSimulation();
         SendInvestmentSimulationPhaseResponse();
     }
@@ -408,20 +429,6 @@ public class Player
     {
         playerSelfDisablerUI.SetActive(false);
     }
-
-    public void ResetPlayerUI()
-    {
-        this.budgetAllocationScreenUI.SetActive(false);
-        this.displayHistoryScreenUI.SetActive(false);
-        this.budgetExecutionScreenUI.SetActive(false);
-        this.playerActionButtonUI.gameObject.SetActive(false);
-        //this.playerMarkerUI.SetActive(false);
-        //this.playerDisablerUI.SetActive(true);
-    }
-    //public void ResetPlayer()
-    //{
-    //    ResetPlayerUI(); //no need to init them again just hiding them
-    //}
 
 
     public void BudgetAllocation() { }
