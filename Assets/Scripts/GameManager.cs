@@ -40,7 +40,8 @@ public class GameManager : MonoBehaviour {
     public PopupScreenFunctionalities endPoppupWinRef;
     public PopupScreenFunctionalities endPoppupLossRef;
 
-    public Slider environmentSlider;
+    public Slider environmentSliderSceneElement;
+    private DynamicSlider envDynamicSlider;
     public bool isAutomaticPhaseSkipEnabled;
 
     private bool gameMainSceneFinished;
@@ -115,7 +116,9 @@ public class GameManager : MonoBehaviour {
             currPlayer.GetWarningScreenRef().AddOnHide(ContinueGame);
         }
 
-        StartCoroutine(AuxiliaryMethods.UpdateSliderValue(environmentSlider, 0.1f));
+        envDynamicSlider = new DynamicSlider(environmentSliderSceneElement.gameObject);
+
+        StartCoroutine(envDynamicSlider.UpdateSliderValue(0.1f));
 
         GameGlobals.currGameRoundId = 0; //first round
         GameGlobals.commonEnvironmentInvestment = 0;
@@ -195,7 +198,7 @@ public class GameManager : MonoBehaviour {
         }
         else
         {
-            yield return StartCoroutine(AuxiliaryMethods.UpdateSliderValue(environmentSlider, environmentSlider.value + (float) newInvestmentValue / 100.0f));
+            yield return StartCoroutine(envDynamicSlider.UpdateSliderValue(environmentSliderSceneElement.value + (float)newInvestmentValue / 100.0f));
         }
        
         GameGlobals.gameLogManager.WriteEventToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameGlobals.currGameRoundId.ToString(), currPlayer.GetId().ToString(), currPlayer.GetName().ToString(), "ROLLED_INVESTMENT_TARGET_DICES", "-", numTokensForTarget.ToString());
@@ -405,7 +408,7 @@ public class GameManager : MonoBehaviour {
         }
 
         //check for game end
-        if (environmentSlider.value <= 0.0f)
+        if (environmentSliderSceneElement.value <= 0.0f)
         {
             GameGlobals.currGameState = GameProperties.GameState.LOSS;
         }
@@ -480,7 +483,7 @@ public class GameManager : MonoBehaviour {
 
         //simulate evolution
         //yield return StartCoroutine(RollInvestmentDices(GameProperties.InvestmentTarget.ENVIRONMENT));//Random.Range(0.2f, 0.4f));
-        yield return StartCoroutine(AuxiliaryMethods.UpdateSliderValue(environmentSlider, 0.1f));//Random.Range(0.2f, 0.4f));
+        yield return StartCoroutine(envDynamicSlider.UpdateSliderValue(0.1f));//Random.Range(0.2f, 0.4f));
         foreach (Player player in GameGlobals.players)
         {
             yield return StartCoroutine(player.SetMoney(0.1f));//s Random.Range(0.2f, 0.4f));

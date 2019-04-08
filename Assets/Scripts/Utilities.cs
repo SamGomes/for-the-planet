@@ -76,28 +76,6 @@ public static class GameProperties
     public static bool displayFetchExternalConfigFileOption = false;
 }
 
-public static class AuxiliaryMethods
-{
-    public static IEnumerator UpdateSliderValue(Slider slider, float targetSliderValue)
-    {
-        //make sure that the target value is within the slider range
-        targetSliderValue = Mathf.Clamp01(targetSliderValue);
-
-        float initialSliderValue = slider.value;
-        float currSliderValue = initialSliderValue;
-        float growth = targetSliderValue - currSliderValue;
-        float t = 0;
-        while (Mathf.Abs(targetSliderValue - currSliderValue) > 0.02f)
-        {
-            currSliderValue = initialSliderValue + Mathf.Sin(t) * growth;
-            slider.value = currSliderValue;
-            t += 0.2f;
-            yield return new WaitForSeconds(0.0416f);
-        }
-        yield return null;
-    }
-}
-
 //configurations classes
 
 [Serializable]

@@ -57,6 +57,8 @@ public class Player
 
     protected GameObject speechBalloonUI;
 
+    private DynamicSlider dynamicSlider;
+
     public Player(GameObject playerUIPrefab, GameObject playerCanvas, MonoBehaviourFunctionalities playerMonoBehaviourFunctionalities, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name)
     {
         this.gameManagerRef = GameGlobals.gameManager;
@@ -148,8 +150,10 @@ public class Player
 
         nameTextUI.text = this.name;
 
+        this.dynamicSlider = new DynamicSlider(this.playerUI.transform.Find("playerStateSection/InvestmentUI/Slider").gameObject);
+
         //position UI on canvas
-        this.GetPlayerUI().transform.Translate(new Vector3(0, -GameGlobals.players.Count * (0.2f * Screen.height), 0));
+        this.playerUI.transform.Translate(new Vector3(0, -GameGlobals.players.Count * (0.2f * Screen.height), 0));
 
         ResetPlayerUI();
     }
@@ -370,13 +374,13 @@ public class Player
     public IEnumerator TakeAllMoney()
     {
         this.money = 0;
-        yield return playerMonoBehaviourFunctionalities.StartCoroutine(AuxiliaryMethods.UpdateSliderValue(moneySliderUI, money));
+        yield return playerMonoBehaviourFunctionalities.StartCoroutine(this.dynamicSlider.UpdateSliderValue(money));
     }
     public IEnumerator SetMoney(float money)
     {
         this.money = money;
         GameGlobals.gameLogManager.WriteEventToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameGlobals.currGameRoundId.ToString(), this.id.ToString(), this.name,"SET_MONEY", "-" , money.ToString());
-        yield return playerMonoBehaviourFunctionalities.StartCoroutine(AuxiliaryMethods.UpdateSliderValue(moneySliderUI, money));
+        yield return playerMonoBehaviourFunctionalities.StartCoroutine(this.dynamicSlider.UpdateSliderValue(money));
     }
 
 
