@@ -235,15 +235,6 @@ public class GameManager : MonoBehaviour {
 
         rollDiceOverlayAnimator.speed = 0;
         
-        //get and disable arrow animation until end of dice animation
-        GameObject diceArrowClone = rollDiceOverlay.transform.Find("oneUpArrow").gameObject;
-        diceArrowClone.SetActive(true);
-        diceArrowClone.GetComponentInChildren<Image>().color = diceArrowColor;
-        
-        Text arrowText = diceArrowClone.GetComponentInChildren<Text>();
-        arrowText.text = diceArrowText;
-        arrowText.color = diceArrowColor;
-
         yield return new WaitForSeconds(delayToClose);
 
         //players see the dice result
@@ -261,7 +252,6 @@ public class GameManager : MonoBehaviour {
 
         //destroy arrows, dice images and finally set screen active to false
         //Destroy(diceArrowClone);
-        diceArrowClone.SetActive(false);
         for (int i=0; i<diceUIs.Count; i++)
         {
             GameObject currDice = diceUIs[i];

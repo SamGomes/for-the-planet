@@ -4,12 +4,12 @@ using System.Security.Policy;
 using UnityEngine;
 using Utilities;
 
-public interface IDiceNG
+public interface IDiceLogic
 {
     int RollTheDice(Player whoRollsTheDice, GameProperties.InvestmentTarget diceTarget, int diceNumbers, int rollOrderNumber, int currNumberOfRolls);
 }
 
-public class RandomDiceNG : IDiceNG
+public class RandomDiceLogic : IDiceLogic
 {
     private System.Random random = new System.Random();
 
@@ -19,7 +19,7 @@ public class RandomDiceNG : IDiceNG
     }
 }
 
-public abstract class FixedDiceNG : IDiceNG
+public abstract class FixedDiceLogic : IDiceLogic
 {
 
     //associate one player and one round to dice results (1 dice, 2 dices, etc. )
@@ -27,7 +27,7 @@ public abstract class FixedDiceNG : IDiceNG
     private List<int> currIndividualDiceValues;
     protected System.Random random = new System.Random();
 
-    public FixedDiceNG(): base()
+    public FixedDiceLogic(): base()
     {
         currIndividualDiceValues = new List<int>();
 
@@ -137,24 +137,24 @@ public abstract class FixedDiceNG : IDiceNG
 
     public abstract int RollTheDice(Player whoRollsTheDice, GameProperties.InvestmentTarget diceTarget, int diceNumbers, int rollOrderNumber, int currNumberOfRolls);
 }
+public class VictoryDiceLogic : FixedDiceLogic
+{
+    public override int RollTheDice(Player whoRollsTheDice, GameProperties.InvestmentTarget diceTarget, int diceNumbers, int rollOrderNumber, int currNumberOfRolls)
+    {
+        return RollDiceFor6(whoRollsTheDice, diceTarget, diceNumbers, rollOrderNumber, currNumberOfRolls);
+    }
+}
+public class LossDiceLogic : FixedDiceLogic
+{
+    public override int RollTheDice(Player whoRollsTheDice, GameProperties.InvestmentTarget diceTarget, int diceNumbers, int rollOrderNumber, int currNumberOfRolls)
+    {
+        return RollDiceFor6(whoRollsTheDice, diceTarget, diceNumbers, rollOrderNumber, currNumberOfRolls);
+    }
+}
 
-public class VictoryDiceNG : FixedDiceNG
+public class PredefinedDiceLogic : FixedDiceLogic
 {
-    public override int RollTheDice(Player whoRollsTheDice, GameProperties.InvestmentTarget diceTarget, int diceNumbers, int rollOrderNumber, int currNumberOfRolls)
-    {
-        return RollDiceFor6(whoRollsTheDice, diceTarget, diceNumbers, rollOrderNumber, currNumberOfRolls);
-    }
-}
-public class LossDiceNG : FixedDiceNG
-{
-    public override int RollTheDice(Player whoRollsTheDice, GameProperties.InvestmentTarget diceTarget, int diceNumbers, int rollOrderNumber, int currNumberOfRolls)
-    {
-        return RollDiceFor6(whoRollsTheDice, diceTarget, diceNumbers, rollOrderNumber, currNumberOfRolls);
-    }
-}
-public class PredefinedDiceNG : FixedDiceNG
-{
-    public PredefinedDiceNG()
+    public PredefinedDiceLogic()
     {
     }
 
