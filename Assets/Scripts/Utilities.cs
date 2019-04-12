@@ -20,7 +20,7 @@ public static class GameGlobals
 
     public static int numberOfSpeakingPlayers;
 
-    public static IDiceLogic gameDiceNG;
+    public static IDiceLogic diceLogic;
 
     public static ILogManager gameLogManager;
     public static AudioManager audioManager;

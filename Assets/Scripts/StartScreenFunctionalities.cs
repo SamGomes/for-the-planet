@@ -60,7 +60,7 @@ public class StartScreenFunctionalities : MonoBehaviour {
         GameGlobals.currGameId++;
         GameGlobals.currGameRoundId = 0;
 
-        GameGlobals.gameDiceNG = new RandomDiceLogic();
+        GameGlobals.diceLogic = new RandomDiceLogic();
         GameGlobals.audioManager = new AudioManager();
 
         //destroy UIs if any

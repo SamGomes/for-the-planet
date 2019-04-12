@@ -21,12 +21,9 @@ public class GameManager : MonoBehaviour {
     public GameObject simulateInvestmentScreen;
     public Button simulateEvolutionButton;
     
-    private GameObject rollDiceOverlayDicesContainer;
-    private Animator rollDiceOverlayAnimator;
     public GameObject rollDiceOverlay;
-
-    public GameObject dice6UI;
-    public GameObject dice20UI;
+    public GameObject diceUIPrefab;
+    private DiceManager diceManager;
 
     public GameObject diceArrowPrefab;
 
@@ -73,11 +70,11 @@ public class GameManager : MonoBehaviour {
 
     void Start()
     {
-
-
         //assign some game globals
         GameGlobals.gameManager = this;
         GameGlobals.currGameState = GameProperties.GameState.NOT_FINISHED;
+
+        diceManager = new DiceManager(rollDiceOverlay, diceUIPrefab, GameGlobals.diceLogic);
 
         // init main scene elements
         interruptionRequests = 0;
@@ -125,9 +122,7 @@ public class GameManager : MonoBehaviour {
 
         marketLimit = Mathf.FloorToInt(GameProperties.configurableProperties.numberOfAlbumsPerGame * 4.0f / 5.0f) - 1;
         currNumberOfMarketDices = GameProperties.configurableProperties.initNumberMarketDices;
-
-        rollDiceOverlayAnimator = rollDiceOverlay.GetComponent<Animator>();
-        rollDiceOverlayDicesContainer = rollDiceOverlay.transform.Find("diceUIs").gameObject;
+        
         rollDiceOverlay.SetActive(false);
 
         advanceRoundButton.onClick.AddListener(delegate () {
@@ -156,142 +151,20 @@ public class GameManager : MonoBehaviour {
         //currSpeakingPlayerId = Random.Range(0, GameGlobals.numberOfSpeakingPlayers);
     }
 
-
-
-    public IEnumerator RollInvestmentDices(Player currPlayer, GameProperties.InvestmentTarget target)
-    {
-        var currInvestment = currPlayer.GetCurrRoundInvestment();
-
-        int newInvestmentValue = 0;
-        int numTokensForTarget = currInvestment[target];
-        if (numTokensForTarget == 0) //there are no dices to roll so return imediately
-        {
-            yield break;
-        }
-
-        rollDiceOverlay.transform.Find("title/Text").GetComponent<Text>().text = currPlayer.GetName() + " rolling "+ numTokensForTarget + " dice for " + target.ToString() + " ...";
-        int[] rolledDiceNumbers = new int[numTokensForTarget]; //save each rolled dice number to display in the UI
-
-        for (int i = 0; i < numTokensForTarget; i++)
-        {
-            int randomIncrease = GameGlobals.gameDiceNG.RollTheDice(currPlayer, target, 6, i, numTokensForTarget);
-            rolledDiceNumbers[i] = randomIncrease;
-            newInvestmentValue += randomIncrease;
-        }
-       
-        string arrowText = "";
-        if(target == GameProperties.InvestmentTarget.ECONOMIC)
-        {
-            arrowText = "+ " + newInvestmentValue + " Economic Growth";
-        }
-        else
-        {
-            arrowText = "+ " + newInvestmentValue + " Environment growth";
-        }
-
-        yield return StartCoroutine(PlayDiceUIs(currPlayer, newInvestmentValue, rolledDiceNumbers, 6, dice6UI, "Animations/RollDiceOverlay/dice6/sprites_3/endingAlternatives/", Color.yellow, arrowText, diceRollDelay));
-
-        //update game metrics after dice rolls
-        if (target == GameProperties.InvestmentTarget.ECONOMIC)
-        {
-            yield return StartCoroutine(currPlayer.SetMoney(currPlayer.GetMoney() + ((float)newInvestmentValue / 100.0f)));
-        }
-        else
-        {
-            yield return StartCoroutine(envDynamicSlider.UpdateSliderValue(environmentSliderSceneElement.value + (float)newInvestmentValue / 100.0f));
-        }
-       
-        GameGlobals.gameLogManager.WriteEventToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameGlobals.currGameRoundId.ToString(), currPlayer.GetId().ToString(), currPlayer.GetName().ToString(), "ROLLED_INVESTMENT_TARGET_DICES", "-", numTokensForTarget.ToString());
-    }
-
-    private IEnumerator PlayDiceUIs(Player diceThrower, int totalDicesValue, int[] rolledDiceNumbers, int diceNum, GameObject diceImagePrefab, string diceNumberSpritesPath, Color diceArrowColor, string diceArrowText, float delayToClose)
-    //the sequence number aims to void dice overlaps as it represents the order for which this dice is going to be rolled. We do not want to roll a dice two times for the same place
-    {
-        InterruptGame();
-        rollDiceOverlay.SetActive(true);
-        List<GameObject> diceUIs = new List<GameObject>();
-
-        int numDiceRolls = rolledDiceNumbers.Length;
-        for (int i = 0; i < numDiceRolls; i++)
-        {
-            int currDiceNumber = rolledDiceNumbers[i];
-            Sprite currDiceNumberSprite = Resources.Load<Sprite>(diceNumberSpritesPath + currDiceNumber);
-            if (currDiceNumberSprite == null)
-            {
-                Debug.Log("cannot find sprite for dice number " + currDiceNumber);
-            }
-            else
-            {
-                GameObject diceUIClone = Instantiate(diceImagePrefab, rollDiceOverlayDicesContainer.transform);
-                diceUIs.Add(diceUIClone);
-                StartCoroutine(PlayDiceUI(diceUIClone, diceThrower, numDiceRolls, i, diceNum, currDiceNumberSprite, delayToClose));
-            }
-        }
-
-        while (!rollDiceOverlayAnimator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
-        {
-            yield return null;
-        }
-
-        rollDiceOverlayAnimator.speed = 0;
-        
-        yield return new WaitForSeconds(delayToClose);
-
-        //players see the dice result
-        currSpeakingPlayerId = Random.Range(0, GameGlobals.numberOfSpeakingPlayers);
-        //foreach (var player in GameGlobals.players)
-        //{
-        //    player.InformRollDicesValue(diceThrower, numDiceRolls * diceNum, totalDicesValue); //max value = the max dice number * number of rolls
-        //}
-
-        rollDiceOverlayAnimator.speed = 1;
-        while (!rollDiceOverlayAnimator.GetCurrentAnimatorStateInfo(0).IsName("Idle2"))
-        {
-            yield return null;
-        }
-
-        //destroy arrows, dice images and finally set screen active to false
-        //Destroy(diceArrowClone);
-        for (int i=0; i<diceUIs.Count; i++)
-        {
-            GameObject currDice = diceUIs[i];
-            Destroy(currDice);
-        }
-
-        ContinueGame();
-        rollDiceOverlay.SetActive(false);
-    }
-
-    private IEnumerator PlayDiceUI(GameObject diceUIClone, Player diceThrower, int numDicesInThrow, int sequenceNumber, int diceNum, Sprite currDiceNumberSprite, float delayToClose)
-    //the sequence number aims to void dice overlaps as it represents the order for which this dice is going to be rolled. We do not want to roll a dice two times for the same place
-    {
-        Image diceImage = diceUIClone.GetComponentInChildren<Image>();
-        Animator diceAnimator = diceImage.GetComponentInChildren<Animator>();
-
-        float translationFactorX = Screen.width * 0.04f;
-        float translationFactorY = Screen.width * 0.02f;
-        diceUIClone.transform.Translate(new Vector3(Random.Range(-translationFactorX, translationFactorY), Random.Range(-translationFactorX, translationFactorY), 0));
-        
-        float diceRotation = sequenceNumber * (360.0f / numDicesInThrow);
-
-        diceUIClone.transform.Rotate(new Vector3(0, 0, 1), diceRotation);
-        diceImage.overrideSprite = null;
-        diceAnimator.Rebind();
-        diceAnimator.Play(0);
-        diceAnimator.speed = Random.Range(0.8f,1.0f);
-
-        while (!diceAnimator.GetCurrentAnimatorStateInfo(0).IsName("endState"))
-        {
-            yield return null;
-        }
-        diceImage.overrideSprite = currDiceNumberSprite;
-        
-    }
     
     private IEnumerator BudgetExecutionPhase(Player currPlayer)
     {
-        yield return RollInvestmentDices(currPlayer, GameProperties.InvestmentTarget.ECONOMIC);
-        yield return RollInvestmentDices(currPlayer, GameProperties.InvestmentTarget.ENVIRONMENT);
+        var currInvestment = currPlayer.GetCurrRoundInvestment();
+        int numTokensForEconomy = currInvestment[GameProperties.InvestmentTarget.ECONOMIC];
+        int numTokensForEnvironment = currInvestment[GameProperties.InvestmentTarget.ENVIRONMENT];
+
+        //roll dice for GameProperties.InvestmentTarget.ECONOMIC
+        string diceOverlayTitle = currPlayer.GetName() + " rolling " + numTokensForEconomy + " dice for economic growth ...";
+        yield return diceManager.RollTheDice(diceOverlayTitle, numTokensForEconomy);
+
+        //roll dice for GameProperties.InvestmentTarget.ENVIRONMENT       
+        diceOverlayTitle = currPlayer.GetName() + " rolling " + numTokensForEconomy + " dice for environment ...";
+        yield return diceManager.RollTheDice(diceOverlayTitle, numTokensForEnvironment);
     }
 
     private IEnumerator YieldedGameUpdateLoop()
