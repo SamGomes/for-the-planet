@@ -13,14 +13,15 @@ public class DiceManager
 
     private MonoBehaviourFunctionalities monobehaviorFunctionalities;
 
-    private int[] currDiceResults;
+    private List<int> currDiceResults;
+    private int currDiceTotal;
 
-    public DiceManager(GameObject rollDiceOverlay, GameObject diceUIPrefab, IDiceLogic diceLogic)
+    public DiceManager(GameObject rollDiceOverlay, GameObject diceUIPrefab, MonoBehaviourFunctionalities monobehaviorFunctionalities, IDiceLogic diceLogic)
     {
         this.diceUIPrefab = diceUIPrefab;
         this.diceLogic = diceLogic;
 
-        this.monobehaviorFunctionalities = new MonoBehaviourFunctionalities();
+        this.monobehaviorFunctionalities = monobehaviorFunctionalities;
 
         this.rollDiceOverlay = rollDiceOverlay;
         this.rollDiceOverlayContainer = rollDiceOverlay.transform.Find("diceUIs").gameObject;
@@ -41,39 +42,39 @@ public class DiceManager
 
         //rollDiceOverlay.transform.Find("title/Text").GetComponent<Text>().text = currPlayer.GetName() + " rolling " + numTokensForTarget + " dice for " + target.ToString() + " ...";
         rollDiceOverlay.transform.Find("title/Text").GetComponent<Text>().text = rollOverlayTitle;
-        List<int> currDiceResults = new List<int>(); //save each rolled dice number to display in the UI
+        currDiceResults = new List<int>(); //save each rolled dice number to display in the UI
+        currDiceTotal = 0;
 
         for (int i = 0; i < numRolls; i++)
         {
             int randomResult = diceLogic.RollTheDice(6, numRolls);
-            currDiceResults.Add(randomResult);
-            //newInvestmentValue += randomIncrease;
-            monobehaviorFunctionalities.StartCoroutine(PlayDiceUI(randomResult, i, numRolls, 2.0f, diceUIPrefab, "Animations/RollDiceOverlay/dice6/sprites_3/endingAlternatives/"));
+
+            monobehaviorFunctionalities.StartCoroutine(PlayDiceUI(randomResult, i, numRolls, diceUIPrefab, "Animations/RollDiceOverlay/dice6/sprites_3/endingAlternatives/"));
         }
 
-        //update game metrics after dice rolls
-        //if (target == GameProperties.InvestmentTarget.ECONOMIC)
-        //{
-        //    yield return StartCoroutine(currPlayer.SetMoney(currPlayer.GetMoney() + ((float)newInvestmentValue / 100.0f)));
-        //}
-        //else
-        //{
-        //    yield return StartCoroutine(envDynamicSlider.UpdateSliderValue(environmentSliderSceneElement.value + (float)newInvestmentValue / 100.0f));
-        //}
-
-        //GameGlobals.gameLogManager.WriteEventToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameGlobals.currGameRoundId.ToString(), currPlayer.GetId().ToString(), currPlayer.GetName().ToString(), "ROLLED_INVESTMENT_TARGET_DICES", "-", numTokensForTarget.ToString());
-
-
-        yield return currDiceResults.Count == numRolls; //wait until all dice are rolled
+        //wait until all dice are rolled
+        while (currDiceResults.Count < numRolls)
+        {
+            yield return null;
+        }
         currDiceResults.Clear();
     }
 
+    public List<int> GetCurrDiceResults()
+    {
+        return currDiceResults;
+    }
+
+    public int GetCurrDiceTotal()
+    {
+        return currDiceTotal;
+    }
 
     //public IEnumerator YieldedRollDices(int numRolls, string rollOverlayTitle)
     //{
     //}
 
-    private IEnumerator PlayDiceUI(int currThrowResult, int sequenceNumber, int numDicesInThrow, float displayDelay, GameObject diceImagePrefab, string diceNumberSpritesPath)
+    private IEnumerator PlayDiceUI(int currThrowResult, int sequenceNumber, int numDicesInThrow, GameObject diceImagePrefab, string diceNumberSpritesPath)
     //the sequence number aims to void dice overlaps as it represents the order for which this dice is going to be rolled. We do not want to roll a dice two times for the same place
     {
 
@@ -124,7 +125,6 @@ public class DiceManager
         }
 
         rollDiceOverlayAnimator.speed = 0;
-        yield return new WaitForSeconds(displayDelay);
 
         rollDiceOverlayAnimator.speed = 1;
         while (!rollDiceOverlayAnimator.GetCurrentAnimatorStateInfo(0).IsName("Idle2"))
@@ -133,7 +133,12 @@ public class DiceManager
         }
         
         Object.Destroy(diceUIClone);
-        if (sequenceNumber > numDicesInThrow)
+
+        //record result
+        currDiceResults.Add(currThrowResult);
+        currDiceTotal += currThrowResult;
+
+        if (sequenceNumber > numDicesInThrow-2)
         {
             this.rollDiceOverlay.SetActive(false);
         }

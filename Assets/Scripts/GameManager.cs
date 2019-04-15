@@ -25,10 +25,6 @@ public class GameManager : MonoBehaviour {
     public GameObject diceUIPrefab;
     private DiceManager diceManager;
 
-    public GameObject diceArrowPrefab;
-
-    public GameObject prototypeArea;
-
     public GameObject poppupPrefab;
     public PopupScreenFunctionalities infoPoppupNeutralRef;
     public PopupScreenFunctionalities infoPoppupLossRef;
@@ -74,7 +70,7 @@ public class GameManager : MonoBehaviour {
         GameGlobals.gameManager = this;
         GameGlobals.currGameState = GameProperties.GameState.NOT_FINISHED;
 
-        diceManager = new DiceManager(rollDiceOverlay, diceUIPrefab, GameGlobals.diceLogic);
+        diceManager = new DiceManager(rollDiceOverlay, diceUIPrefab, GameGlobals.monoBehaviourFunctionalities, GameGlobals.diceLogic);
 
         // init main scene elements
         interruptionRequests = 0;
@@ -160,11 +156,13 @@ public class GameManager : MonoBehaviour {
 
         //roll dice for GameProperties.InvestmentTarget.ECONOMIC
         string diceOverlayTitle = currPlayer.GetName() + " rolling " + numTokensForEconomy + " dice for economic growth ...";
-        yield return diceManager.RollTheDice(diceOverlayTitle, numTokensForEconomy);
+        yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, numTokensForEconomy));
+        yield return StartCoroutine(currPlayer.SetMoney(currPlayer.GetMoney() + ((float)diceManager.GetCurrDiceTotal() / 100.0f)));
 
         //roll dice for GameProperties.InvestmentTarget.ENVIRONMENT       
         diceOverlayTitle = currPlayer.GetName() + " rolling " + numTokensForEconomy + " dice for environment ...";
-        yield return diceManager.RollTheDice(diceOverlayTitle, numTokensForEnvironment);
+        yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, numTokensForEnvironment));
+        yield return StartCoroutine(envDynamicSlider.UpdateSliderValue(environmentSliderSceneElement.value + ((float)diceManager.GetCurrDiceTotal() / 100.0f)));
     }
 
     private IEnumerator YieldedGameUpdateLoop()
@@ -208,6 +206,19 @@ public class GameManager : MonoBehaviour {
         if (numPlayersToSimulateInvestment == 0)
         {
             numPlayersToSimulateInvestment = GameGlobals.players.Count;
+
+            string diceOverlayTitle = "Simulating environment growth ...";
+            yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, 2));
+            yield return StartCoroutine(envDynamicSlider.UpdateSliderValue(environmentSliderSceneElement.value - ((float)diceManager.GetCurrDiceTotal() / 100.0f)));
+
+            foreach (Player player in GameGlobals.players)
+            {
+                diceOverlayTitle = "Simulating economic growth ...";
+                yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, 2));
+                yield return StartCoroutine(player.SetMoney(player.GetMoney() - ((float)diceManager.GetCurrDiceTotal() / 100.0f)));
+
+            }
+
             yield return new WaitForSeconds(phaseEndDelay);
             newRoundScreen.SetActive(true);
         }
@@ -344,14 +355,9 @@ public class GameManager : MonoBehaviour {
         //    nextPlayer.InvestmentSimulationRequest();
         //}
 
-        //simulate evolution
-        //yield return StartCoroutine(RollInvestmentDices(GameProperties.InvestmentTarget.ENVIRONMENT));//Random.Range(0.2f, 0.4f));
-        yield return StartCoroutine(envDynamicSlider.UpdateSliderValue(0.1f));//Random.Range(0.2f, 0.4f));
-        foreach (Player player in GameGlobals.players)
-        {
-            yield return StartCoroutine(player.SetMoney(0.1f));//s Random.Range(0.2f, 0.4f));
-        }
+        
         numPlayersToSimulateInvestment--;
+        yield return null;
     }
 
     public Player ChangeToNextPlayer(Player currPlayer)
