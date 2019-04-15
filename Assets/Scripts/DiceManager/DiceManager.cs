@@ -48,7 +48,6 @@ public class DiceManager
         for (int i = 0; i < numRolls; i++)
         {
             int randomResult = diceLogic.RollTheDice(6, numRolls);
-
             monobehaviorFunctionalities.StartCoroutine(PlayDiceUI(randomResult, i, numRolls, diceUIPrefab, "Animations/RollDiceOverlay/dice6/sprites_3/endingAlternatives/"));
         }
 
@@ -135,8 +134,8 @@ public class DiceManager
         Object.Destroy(diceUIClone);
 
         //record result
-        currDiceResults.Add(currThrowResult);
         currDiceTotal += currThrowResult;
+        currDiceResults.Add(currThrowResult);
 
         if (sequenceNumber > numDicesInThrow-2)
         {

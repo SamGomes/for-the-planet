@@ -172,12 +172,12 @@ public class EndScreenFunctionalities : MonoBehaviour
 
         if (GameGlobals.currGameState == GameProperties.GameState.VICTORY)
         {
-            //UIVictoryOverlay.SetActive(true);
+            UIVictoryOverlay.SetActive(true);
             UIVictoryBackground.SetActive(true);
         }
         else if (GameGlobals.currGameState == GameProperties.GameState.LOSS)
         {
-            //UILossOverlay.SetActive(true);
+            UILossOverlay.SetActive(true);
             UILossBackground.SetActive(true);
 
         }

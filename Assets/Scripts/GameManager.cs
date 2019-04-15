@@ -173,12 +173,7 @@ public class GameManager : MonoBehaviour {
             //Debug.Log("pause...");
             yield return null;
         }
-
-        if (GameGlobals.currGameState != GameProperties.GameState.NOT_FINISHED)
-        {
-            GameSceneManager.LoadEndScene();
-        }
-
+        
         //end of first phase; trigger second phase
         if (numPlayersToAllocateBudget == 0)
         {
@@ -209,7 +204,8 @@ public class GameManager : MonoBehaviour {
 
             string diceOverlayTitle = "Simulating environment growth ...";
             yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, 2));
-            yield return StartCoroutine(envDynamicSlider.UpdateSliderValue(environmentSliderSceneElement.value - ((float)diceManager.GetCurrDiceTotal() / 100.0f)));
+            //yield return StartCoroutine(envDynamicSlider.UpdateSliderValue(environmentSliderSceneElement.value - ((float)diceManager.GetCurrDiceTotal() / 100.0f)));
+            yield return StartCoroutine(envDynamicSlider.UpdateSliderValue(environmentSliderSceneElement.value - (0.8f)));
 
             foreach (Player player in GameGlobals.players)
             {
@@ -220,6 +216,24 @@ public class GameManager : MonoBehaviour {
             }
 
             yield return new WaitForSeconds(phaseEndDelay);
+            //check for game end to stop the game instead of loading new round
+            if (environmentSliderSceneElement.value <= 0.05f)
+            {
+                GameGlobals.currGameState = GameProperties.GameState.LOSS;
+            }
+            else
+            {
+                if (GameGlobals.currGameRoundId > 2)
+                {
+                    GameGlobals.currGameState = GameProperties.GameState.VICTORY;
+                }
+            }
+
+            if (GameGlobals.currGameState != GameProperties.GameState.NOT_FINISHED)
+            {
+                GameSceneManager.LoadEndScene();
+            }
+
             newRoundScreen.SetActive(true);
         }
 
@@ -240,6 +254,7 @@ public class GameManager : MonoBehaviour {
             currPlayer.SetCurrBudget(5);
         }
         StartAlocateBudgetPhase();
+
     }
 
     public void StartAlocateBudgetPhase()
@@ -273,25 +288,11 @@ public class GameManager : MonoBehaviour {
 
     public void StartInvestmentSimulationPhase()
     {
-
         //this phase simulates the evolution of all players
         foreach (Player player in GameGlobals.players)
         {
             player.ResetPlayerUI();
             player.InvestmentSimulationRequest();
-        }
-
-        //check for game end
-        if (environmentSliderSceneElement.value <= 0.0f)
-        {
-            GameGlobals.currGameState = GameProperties.GameState.LOSS;
-        }
-        else
-        {
-            if (GameGlobals.currGameRoundId > 2)
-            {
-                GameGlobals.currGameState = GameProperties.GameState.VICTORY;
-            }
         }
     }
 
