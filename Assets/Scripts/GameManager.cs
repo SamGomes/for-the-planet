@@ -30,9 +30,6 @@ public class GameManager : MonoBehaviour {
     public PopupScreenFunctionalities infoPoppupLossRef;
     public PopupScreenFunctionalities infoPoppupWinRef;
 
-    public PopupScreenFunctionalities endPoppupWinRef;
-    public PopupScreenFunctionalities endPoppupLossRef;
-
     public Slider environmentSliderSceneElement;
     private DynamicSlider envDynamicSlider;
     public bool isAutomaticPhaseSkipEnabled;
@@ -87,10 +84,7 @@ public class GameManager : MonoBehaviour {
         infoPoppupLossRef = new PopupScreenFunctionalities(false, InterruptGame, ContinueGame, poppupPrefab, canvas, GameGlobals.monoBehaviourFunctionalities, Resources.Load<Sprite>("Textures/UI/Icons/InfoLoss"), new Color(0.9f, 0.8f, 0.8f), "Audio/albumLoss");
         infoPoppupWinRef = new PopupScreenFunctionalities(false, InterruptGame, ContinueGame, poppupPrefab, canvas, GameGlobals.monoBehaviourFunctionalities, Resources.Load<Sprite>("Textures/UI/Icons/InfoWin"), new Color(0.9f, 0.9f, 0.8f), "Audio/albumVictory");
         infoPoppupNeutralRef = new PopupScreenFunctionalities(false, InterruptGame, ContinueGame, poppupPrefab, canvas, GameGlobals.monoBehaviourFunctionalities, Resources.Load<Sprite>("Textures/UI/Icons/Info"), new Color(0.9f, 0.9f, 0.9f), "Audio/snap");
-
-        //these poppups load the end scene
-        endPoppupLossRef = new PopupScreenFunctionalities(false, InterruptGame, ContinueGame, poppupPrefab, canvas, GameGlobals.monoBehaviourFunctionalities, Resources.Load<Sprite>("Textures/UI/Icons/InfoLoss"), new Color(0.9f, 0.8f, 0.8f), delegate () { /*end game*/ if (this.gameMainSceneFinished) GameSceneManager.LoadEndScene(); return 0; });
-        endPoppupWinRef = new PopupScreenFunctionalities(false, InterruptGame, ContinueGame, poppupPrefab, canvas, GameGlobals.monoBehaviourFunctionalities, Resources.Load<Sprite>("Textures/UI/Icons/InfoWin"), new Color(0.9f, 0.9f, 0.8f), delegate () { /*end game*/ if (this.gameMainSceneFinished) GameSceneManager.LoadEndScene(); return 0; });
+        
 
         gameMainSceneFinished = false;
         diceRollDelay = 4.0f;
@@ -231,7 +225,7 @@ public class GameManager : MonoBehaviour {
 
             if (GameGlobals.currGameState != GameProperties.GameState.NOT_FINISHED)
             {
-                GameSceneManager.LoadEndScene();
+                GameGlobals.gameSceneManager.LoadEndScene();
             }
 
             newRoundScreen.SetActive(true);

@@ -29,7 +29,7 @@ public class Player
     private GameObject playerUI;
     private GameObject playerMarkerUI;
     private GameObject playerDisablerUI;
-    private GameObject playerSelfDisablerUI;
+    protected GameObject playerSelfDisablerUI;
     protected Button playerActionButtonUI;
     private UnityAction playerActionCall;
     
@@ -42,14 +42,12 @@ public class Player
     private GameObject investmentSimulationScreenUI;
 
     protected Button spendTokenInEconomicGrowthButtonUI;
-    protected Button removeTokenInEconomicGrowthButtonUI;
-    protected Text economicGrowthTokensDisplayUI;
-    protected Text economicGrowthHistoryDisplay;
+    private Text economicGrowthTokensDisplayUI;
+    private Text economicGrowthHistoryDisplay;
 
     protected Button spendTokenInEnvironmentButtonUI;
-    protected Button removeTokenInEnvironmentButtonUI;
-    protected Text environmentTokensDisplayUI;
-    protected Text environmentHistoryDisplay;
+    private Text environmentTokensDisplayUI;
+    private Text environmentHistoryDisplay;
 
     protected Button executeBudgetButton;
 
@@ -224,9 +222,9 @@ public class Player
         return this.investmentHistory;
     }
 
-    public void BudgetAllocationPhaseRequest()
+    public virtual void BudgetAllocationPhaseRequest()
     {
-        this.playerSelfDisablerUI.SetActive(false);
+        //this.playerSelfDisablerUI.SetActive(false);
 
         this.budgetAllocationScreenUI.SetActive(true);
         this.displayHistoryScreenUI.SetActive(false);
@@ -255,12 +253,10 @@ public class Player
             SendBudgetAllocationPhaseResponse();
         };
         this.playerActionButtonUI.onClick.AddListener(playerActionCall);
-        
-        BudgetAllocation();
     }
-    public void HistoryDisplayPhaseRequest()
+    public virtual void HistoryDisplayPhaseRequest()
     {
-        this.playerSelfDisablerUI.SetActive(false);
+        //this.playerSelfDisablerUI.SetActive(false);
 
         this.budgetAllocationScreenUI.SetActive(false);
         this.displayHistoryScreenUI.SetActive(true);
@@ -271,12 +267,11 @@ public class Player
         this.playerMarkerUI.SetActive(false);
         this.playerDisablerUI.SetActive(false);
 
-        HistoryDisplay();
         SendHistoryDisplayPhaseResponse();
     }
-    public void BudgetExecutionPhaseRequest()
+    public virtual void BudgetExecutionPhaseRequest()
     {
-        this.playerSelfDisablerUI.SetActive(false);
+        //this.playerSelfDisablerUI.SetActive(false);
 
         this.budgetAllocationScreenUI.SetActive(false);
         this.displayHistoryScreenUI.SetActive(false);
@@ -292,11 +287,10 @@ public class Player
         //this.playerActionButtonUI.onClick.AddListener(playerActionCall);
         //this.executeBudgetButton.onClick.AddListener(playerActionCall);
         
-        BudgetExecution();
     }
-    public void InvestmentSimulationRequest()
+    public virtual void InvestmentSimulationRequest()
     {
-        this.playerSelfDisablerUI.SetActive(false);
+        //this.playerSelfDisablerUI.SetActive(false);
 
         this.budgetAllocationScreenUI.SetActive(false);
         this.displayHistoryScreenUI.SetActive(false);
@@ -307,13 +301,12 @@ public class Player
         this.playerMarkerUI.SetActive(false);
         this.playerDisablerUI.SetActive(false);
 
-        InvestmentSimulation();
         SendInvestmentSimulationPhaseResponse();
     }
 
-    public virtual int SendBudgetAllocationPhaseResponse()
+    public int SendBudgetAllocationPhaseResponse()
     {
-        this.playerSelfDisablerUI.SetActive(true);
+        //this.playerSelfDisablerUI.SetActive(true);
         //hide chosen investments before next player turn
         this.economicGrowthTokensDisplayUI.text = "-";
         this.environmentTokensDisplayUI.text = "-";
@@ -322,21 +315,21 @@ public class Player
 
         return 0;
     }
-    public virtual int SendHistoryDisplayPhaseResponse()
+    public int SendHistoryDisplayPhaseResponse()
     {
-        this.playerSelfDisablerUI.SetActive(true);
+        //this.playerSelfDisablerUI.SetActive(true);
         playerMonoBehaviourFunctionalities.StartCoroutine(gameManagerRef.HistoryDisplayPhaseResponse(this));
         return 0;
     }
-    public virtual int SendBudgetExecutionPhaseResponse()
+    public int SendBudgetExecutionPhaseResponse()
     {
-        this.playerSelfDisablerUI.SetActive(true);
+        //this.playerSelfDisablerUI.SetActive(true);
         playerMonoBehaviourFunctionalities.StartCoroutine(gameManagerRef.BudgetExecutionPhaseResponse(this));
         return 0;
     }
-    public virtual int SendInvestmentSimulationPhaseResponse()
+    public int SendInvestmentSimulationPhaseResponse()
     {
-        this.playerSelfDisablerUI.SetActive(true);
+        //this.playerSelfDisablerUI.SetActive(true);
         playerMonoBehaviourFunctionalities.StartCoroutine(gameManagerRef.InvestmentSimulationPhaseResponse(this));
         return 0;
     }
@@ -425,18 +418,4 @@ public class Player
         return this.UIAvatar;
     }
 
-    public void DisableAllInputs()
-    {
-        playerSelfDisablerUI.SetActive(true);
-    }
-    public void EnableAllInputs()
-    {
-        playerSelfDisablerUI.SetActive(false);
-    }
-
-
-    public void BudgetAllocation() { }
-    public void HistoryDisplay() { }
-    public void BudgetExecution() { }
-    public void InvestmentSimulation() { }
 }

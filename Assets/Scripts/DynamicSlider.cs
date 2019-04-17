@@ -52,6 +52,7 @@ public class DynamicSlider
             t += 0.2f;
             yield return new WaitForSeconds(0.0416f);
         }
+        sliderUI.value = targetSliderValue; //to avoid rounding errors due to animation
         
         yield return null;
     }

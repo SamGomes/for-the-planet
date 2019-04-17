@@ -62,6 +62,7 @@ public class StartScreenFunctionalities : MonoBehaviour {
 
         GameGlobals.diceLogic = new RandomDiceLogic();
         GameGlobals.audioManager = new AudioManager();
+        GameGlobals.gameSceneManager = new GameSceneManager();
 
         //destroy UIs if any
         if(GameGlobals.players != null)
@@ -190,7 +191,7 @@ public class StartScreenFunctionalities : MonoBehaviour {
 
     private void StartGame()
     {
-        GameSceneManager.LoadPlayersSetupScene();
+        GameGlobals.gameSceneManager.LoadPlayersSetupScene();
     }
 
     public void InitGame()

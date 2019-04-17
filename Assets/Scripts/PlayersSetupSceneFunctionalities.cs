@@ -35,7 +35,7 @@ public class PlayersSetupSceneFunctionalities : MonoBehaviour {
             switch (currParam.playerType)
             {
                 case "HUMAN":
-                    GameGlobals.players.Add(new Player(playerUIPrefab, playerCanvas, GameGlobals.monoBehaviourFunctionalities, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/"+ currParam.spriteIndex), currPlayerId++, currParam.name));
+                    GameGlobals.players.Add(new AIPlayerCooperative(playerUIPrefab, playerCanvas, GameGlobals.monoBehaviourFunctionalities, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/"+ currParam.spriteIndex), currPlayerId++, currParam.name));
                     break;
                 //case "SIMPLE":
                 //    GameGlobals.players.Add(new AIPlayerSimpleStrategy(playerUIPrefab, playerCanvas, GameGlobals.monoBehaviourFunctionalities, playerWarningPoppupRef, currPlayerId++, currParam.name, currParam.isSpeechAllowed, currLikedInstrument));
@@ -236,8 +236,7 @@ public class PlayersSetupSceneFunctionalities : MonoBehaviour {
             });
         }
 
-        GameSceneManager.LoadMainScene();
-
+        GameGlobals.gameSceneManager.LoadMainScene();
     }
 
     void CheckForAllPlayersRegistered(GameParameterization param)

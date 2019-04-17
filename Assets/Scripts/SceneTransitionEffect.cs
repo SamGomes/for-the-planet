@@ -12,6 +12,7 @@ public abstract class SceneTransitionEffect
     {
         transitionScreen = Object.Instantiate(Resources.Load<GameObject>("Prefabs/TransitionScreen"));
         Object.DontDestroyOnLoad(transitionScreen);
+        transitionScreen.SetActive(false);
     }
     public abstract void LoadSceneWithEffect(string sceneName, LoadSceneMode mode);
 }
@@ -20,18 +21,24 @@ public abstract class SceneTransitionEffect
 public class Fade: SceneTransitionEffect{
 
     private float fadeRate;
+    private float presentationDelay;
     private Color currFadeColor;
 
     private Image transitionImage;
     private bool isFading;
 
-    public Fade(Color transitionColor) : base()
+    public Fade(Color transitionColor, float fadeRate, float presentationDelay) : base()
     {
         currFadeColor = transitionColor;
         currFadeColor.a = 0.0f;
-        fadeRate = 0.05f;
+        this.fadeRate = fadeRate;
+        this.presentationDelay = presentationDelay;
 
         transitionImage = transitionScreen.GetComponentInChildren<Image>();
+    }
+    public Fade(Sprite transitionSprite, float fadeRate, float presentationDelay) : this(Color.white, fadeRate, presentationDelay)
+    {
+        this.transitionImage.sprite = transitionSprite;
     }
 
     public override void LoadSceneWithEffect(string sceneName, LoadSceneMode mode)
@@ -58,7 +65,9 @@ public class Fade: SceneTransitionEffect{
        
         isFading = true;
         yield return ApplyFadeIn();
+        yield return new WaitForSeconds(presentationDelay / 2.0f);
         SceneManager.LoadScene(sceneName, mode);
+        yield return new WaitForSeconds(presentationDelay / 2.0f);
         yield return ApplyFadeOut();
         isFading = false;
     }
@@ -87,7 +96,6 @@ public class AnimatedEffect : SceneTransitionEffect {
     public AnimatedEffect(Animator animator) : base()
     {
         transitionScreen.gameObject.AddComponent<Animator>().runtimeAnimatorController = animator.runtimeAnimatorController;
-
         //this.gameObject.SetActive(false);
     }
 

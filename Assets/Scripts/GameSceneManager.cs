@@ -1,54 +1,33 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public static class GameSceneManager{
+public class GameSceneManager{
 
-    private static SceneTransitionEffect transitionEffect = new Fade(Color.black);
+    private SceneTransitionEffect transitionEffect;
 
-    public static void LoadStartScene()
+    public GameSceneManager()
     {
-        if (!GameProperties.configurableProperties.isSimulation)
-        {
-            transitionEffect.LoadSceneWithEffect("startScene", LoadSceneMode.Single);
-        }
-        else
-        {
-            SceneManager.LoadScene("startScene", LoadSceneMode.Single);
-        }
+        //this.transitionEffect = new Fade(Color.black, 0.15f);
+        this.transitionEffect = new Fade(Resources.Load<Sprite>("Textures/loadingScreen"), 0.1f, 0.5f);
     }
-    public static void LoadPlayersSetupScene()
+
+    public void LoadStartScene()
     {
-        if (!GameProperties.configurableProperties.isSimulation)
-        {
-            transitionEffect.LoadSceneWithEffect("playersSetupScene", LoadSceneMode.Single);
-        }
-        else
-        {
-            SceneManager.LoadScene("playersSetupScene", LoadSceneMode.Single);
-        }
+        transitionEffect.LoadSceneWithEffect("startScene", LoadSceneMode.Single);
     }
-    public static void LoadMainScene()
+    public void LoadPlayersSetupScene()
     {
-        if (!GameProperties.configurableProperties.isSimulation)
-        {
-            transitionEffect.LoadSceneWithEffect("mainScene", LoadSceneMode.Single);
-        }
-        else
-        {
-            SceneManager.LoadScene("mainScene", LoadSceneMode.Single);
-        }
+        transitionEffect.LoadSceneWithEffect("playersSetupScene", LoadSceneMode.Single);
     }
-    public static void LoadEndScene()
+    public void LoadMainScene()
     {
-        if (!GameProperties.configurableProperties.isSimulation)
-        {
-            transitionEffect.LoadSceneWithEffect("endScene", LoadSceneMode.Single);
-        }
-        else
-        {
-            SceneManager.LoadScene("endScene", LoadSceneMode.Single);
-        }
+        transitionEffect.LoadSceneWithEffect("mainScene", LoadSceneMode.Single);
+    }
+    public void LoadEndScene()
+    {
+        transitionEffect.LoadSceneWithEffect("endScene", LoadSceneMode.Single);
     }
 }

@@ -26,6 +26,9 @@ public static class GameGlobals
     public static AudioManager audioManager;
     public static GameManager gameManager;
 
+    public static GameSceneManager gameSceneManager;
+
+
     public static float commonEnvironmentInvestment;
 
     //fatima stuff

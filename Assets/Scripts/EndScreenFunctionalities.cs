@@ -41,7 +41,7 @@ public class EndScreenFunctionalities : MonoBehaviour
 
     private void RestartGame()
     {
-        GameSceneManager.LoadStartScene();
+        GameGlobals.gameSceneManager.LoadStartScene();
         Debug.Log("numGamesToSimulate: " + (GameProperties.configurableProperties.numGamesToSimulate - GameGlobals.currGameId));
     }
 
@@ -129,34 +129,17 @@ public class EndScreenFunctionalities : MonoBehaviour
     void Start()
     {
         //mock
-        GameProperties.configurableProperties = new DynamicallyConfigurableGameProperties();
-        GameProperties.configurableProperties.numSessionGames = 3;
-        GameProperties.configurableProperties.isAutomaticBriefing = true;
-        GameGlobals.currSessionId = System.DateTime.Now.ToString("yyyy/MM/dd/HH-mm-ss");
-        GameGlobals.gameLogManager = new DebugLogManager();
-        GameGlobals.gameLogManager.InitLogs();
-        //GameGlobals.albums = new List<Album>(5);
-        //Album newAlbum = new Album("1", albumUIPrefab);
-        //GameGlobals.albums.Add(newAlbum);
-        //newAlbum = new Album("2", albumUIPrefab);
-        //GameGlobals.albums.Add(newAlbum);
-        //newAlbum = new Album("3", albumUIPrefab);
-        //GameGlobals.albums.Add(newAlbum);
-        //newAlbum = new Album("4", albumUIPrefab);
-        //GameGlobals.albums.Add(newAlbum);
-        //newAlbum = new Album("5", albumUIPrefab);
-        //GameGlobals.albums.Add(newAlbum);
-        //newAlbum = new Album("6", albumUIPrefab);
-        //GameGlobals.albums.Add(newAlbum);
-        //newAlbum = new Album("7", albumUIPrefab);
-        //GameGlobals.albums.Add(newAlbum);
-        GameGlobals.players = new List<Player>(5);
-        Player playerToBeAdded = new Player(playerUIPrefab, new GameObject(), GameGlobals.monoBehaviourFunctionalities, infoPoppupNeutralRef, Resources.Load<Sprite>("Textures/UI/Icons/" + 0), 0, "Troll");
-        GameGlobals.players.Add(playerToBeAdded);
-        //GameGlobals.players.Add(new UIPlayer(1, "PL2"));
-        //GameGlobals.players.Add(new UIPlayer(2, "PL3"));
-        GameGlobals.currGameState = GameProperties.GameState.VICTORY;
-        GameGlobals.currGameId = 2;
+        //GameProperties.configurableProperties = new DynamicallyConfigurableGameProperties();
+        //GameProperties.configurableProperties.numSessionGames = 3;
+        //GameProperties.configurableProperties.isAutomaticBriefing = true;
+        //GameGlobals.currSessionId = System.DateTime.Now.ToString("yyyy/MM/dd/HH-mm-ss");
+        //GameGlobals.gameLogManager = new DebugLogManager();
+        //GameGlobals.gameLogManager.InitLogs();
+        //GameGlobals.players = new List<Player>(5);
+        //Player playerToBeAdded = new Player(playerUIPrefab, new GameObject(), GameGlobals.monoBehaviourFunctionalities, infoPoppupNeutralRef, Resources.Load<Sprite>("Textures/UI/Icons/" + 0), 0, "Troll");
+        //GameGlobals.players.Add(playerToBeAdded);
+        //GameGlobals.currGameState = GameProperties.GameState.VICTORY;
+        //GameGlobals.currGameId = 2;
 
         GameGlobals.gameLogManager.UpdateGameResultInLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameProperties.currSessionParameterization.id, GameGlobals.currGameState.ToString());
 
