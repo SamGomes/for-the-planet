@@ -14,7 +14,8 @@ public class Player
     protected int id;
     protected GameManager gameManagerRef;
     protected string name;
-    protected int currBudget;
+    protected int roundBudget;
+    protected int unallocatedBudget;
     protected float money;
 
     protected Dictionary<GameProperties.InvestmentTarget, int> currRoundInvestment;
@@ -113,8 +114,8 @@ public class Player
                 warningScreenRef.DisplayPoppup("There is no budget to allocate!");
                 return;
             }
-            this.AddInvestment(GameProperties.InvestmentTarget.ECONOMIC, 1);
             this.RemoveInvestment(GameProperties.InvestmentTarget.ENVIRONMENT, 1);
+            this.AddInvestment(GameProperties.InvestmentTarget.ECONOMIC, 1);
 
         });
         this.economicGrowthTokensDisplayUI = playerUI.transform.Find("playerActionSection/budgetAllocationUI/tokenSelection/alocateEconomicGrowth/display").gameObject.GetComponent<Text>();
@@ -126,8 +127,8 @@ public class Player
                 warningScreenRef.DisplayPoppup("There is no budget to allocate!");
                 return;
             }
-            this.AddInvestment(GameProperties.InvestmentTarget.ENVIRONMENT, 1);
             this.RemoveInvestment(GameProperties.InvestmentTarget.ECONOMIC, 1);
+            this.AddInvestment(GameProperties.InvestmentTarget.ENVIRONMENT, 1);
         });
         this.environmentTokensDisplayUI = playerUI.transform.Find("playerActionSection/budgetAllocationUI/tokenSelection/alocateEnvironment/display").gameObject.GetComponent<Text>();
 
@@ -188,13 +189,23 @@ public class Player
     //public abstract void InformGameResult(GameProperties.GameState state);
     //public abstract void InformNewAlbum();
 
-    public int GetCurrBudget()
+    public int GetRoundBudget()
     {
-        return this.currBudget;
+        return this.roundBudget;
     }
-    public void SetCurrBudget(int newBudget)
+    public void SetRoundBudget(int newBudget)
     {
-        this.currBudget = newBudget;
+        this.roundBudget = newBudget;
+        this.SetUnallocatedBudget(newBudget);
+    }
+
+    public int GetUnallocatedBudget()
+    {
+        return this.unallocatedBudget;
+    }
+    public void SetUnallocatedBudget(int newBudget)
+    {
+        this.unallocatedBudget = newBudget;
     }
 
     public int GetId()
@@ -232,9 +243,9 @@ public class Player
         this.investmentSimulationScreenUI.SetActive(false);
         this.playerActionButtonUI.gameObject.SetActive(true);
         
-        int halfBudget = Mathf.FloorToInt(this.currBudget / 2.0f);
+        int halfBudget = Mathf.FloorToInt(this.unallocatedBudget / 2.0f);
         int startingEconomicInv = halfBudget;
-        int startingEnvironmentInv = currBudget - halfBudget;
+        int startingEnvironmentInv = unallocatedBudget - halfBudget;
 
         currRoundInvestment[GameProperties.InvestmentTarget.ECONOMIC] = 0;
         currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT] = 0;
@@ -336,11 +347,11 @@ public class Player
 
     public void AddInvestment(GameProperties.InvestmentTarget target, int amount)
     {
-        if (currBudget == 0)
+        if (unallocatedBudget == 0)
         {
             return;
         }
-        currBudget--;
+        unallocatedBudget -= amount;
         currRoundInvestment[target]+=amount;
         investmentHistory[target]+=amount;
 
@@ -355,7 +366,7 @@ public class Player
         {
             return;
         }
-        currBudget++;
+        unallocatedBudget += amount;
         currRoundInvestment[target]-=amount;
         investmentHistory[target]-=amount;
 

@@ -245,7 +245,7 @@ public class GameManager : MonoBehaviour {
         for (int i = 0; i < numPlayers; i++)
         {
             Player currPlayer = GameGlobals.players[i];
-            currPlayer.SetCurrBudget(5);
+            currPlayer.SetRoundBudget(5);
         }
         StartAlocateBudgetPhase();
 

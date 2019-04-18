@@ -69,6 +69,65 @@ public class AIPlayer : Player
         base.InvestmentSimulationRequest();
         playerMonoBehaviourFunctionalities.StartCoroutine(AutoInvestmentExecution());
     }
+
+    public IEnumerator InvestInEconomy()
+    {
+        yield return new WaitForSeconds(1.0f);
+        yield return SimulateMouseClick(this.spendTokenInEconomicGrowthButtonUI, 0.5f);
+    }
+
+    //This needs to be refactored so that the number of button clicks results in the investment being the amount passed in quantity
+    public IEnumerator InvestInEconomy(int quantity)
+    {
+        for(int i = 0; i < quantity; i++)
+        {
+            yield return InvestInEconomy();
+        }
+    }
+
+    public IEnumerator InvestAllInEconomy()
+    {
+        while(currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT] > 0)
+        {
+            yield return InvestInEconomy();
+        }
+    }
+
+    public IEnumerator InvestInEnvironment()
+    {
+        yield return new WaitForSeconds(1.0f);
+        yield return SimulateMouseClick(this.spendTokenInEnvironmentButtonUI, 0.5f);
+    }
+
+    //This needs to be refactored so that the number of button clicks results in the investment being the amount passed in quantity
+    public IEnumerator InvestInEnvironment(int quantity)
+    {
+        for (int i = 0; i < quantity; i++)
+        {
+            yield return InvestInEnvironment();
+        }
+    }
+
+    public IEnumerator InvestAllInEvironment()
+    {
+        while (currRoundInvestment[GameProperties.InvestmentTarget.ECONOMIC] > 0)
+        {
+            yield return InvestInEnvironment();
+        }
+    }
+
+    public IEnumerator EndBudgetAllocationPhase()
+    {
+        yield return new WaitForSeconds(3.0f);
+        yield return SimulateMouseClick(this.playerActionButtonUI, 0.5f);
+    }
+
+    public IEnumerator ApplyInvestments()
+    {
+        yield return new WaitForSeconds(3.0f);
+        yield return SimulateMouseClick(this.executeBudgetButton, 0.5f);
+    }
+
 }
 
 
@@ -81,10 +140,8 @@ public class AIPlayerCooperative : AIPlayer
     { }
 
     public override IEnumerator AutoBudgetAlocation() {
-        yield return new WaitForSeconds(3.0f);
-        yield return SimulateMouseClick(this.spendTokenInEconomicGrowthButtonUI, 0.5f);
-        yield return new WaitForSeconds(3.0f);
-        yield return SimulateMouseClick(this.playerActionButtonUI, 0.5f);
+        yield return InvestAllInEvironment();
+        yield return EndBudgetAllocationPhase();
     }
     public override IEnumerator AutoHistoryDisplay() {
         yield return new WaitForSeconds(3.0f);
@@ -92,10 +149,37 @@ public class AIPlayerCooperative : AIPlayer
     }
     public override IEnumerator AutoBudgetExecution()
     {
-        yield return new WaitForSeconds(3.0f);
-        yield return SimulateMouseClick(this.executeBudgetButton, 0.5f);
+        yield return ApplyInvestments();
     }
     public override IEnumerator AutoInvestmentExecution() {
         yield return null;
     }
+
+}
+
+public class AIPlayerDefector : AIPlayer
+{
+    public AIPlayerDefector(GameObject playerUIPrefab, GameObject playerCanvas, MonoBehaviourFunctionalities playerMonoBehaviourFunctionalities, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
+        base(playerUIPrefab, playerCanvas, playerMonoBehaviourFunctionalities, warningScreenRef, UIAvatar, id, name)
+    { }
+
+    public override IEnumerator AutoBudgetAlocation()
+    {
+        yield return InvestAllInEconomy();
+        yield return EndBudgetAllocationPhase();
+    }
+    public override IEnumerator AutoHistoryDisplay()
+    {
+        yield return new WaitForSeconds(3.0f);
+        yield return emotionalModule.DisplaySpeechBalloonForAWhile("Mock Warning! This is not a fatima call!", 2.0f);
+    }
+    public override IEnumerator AutoBudgetExecution()
+    {
+        yield return ApplyInvestments();
+    }
+    public override IEnumerator AutoInvestmentExecution()
+    {
+        yield return null;
+    }
+
 }
