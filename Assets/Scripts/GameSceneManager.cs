@@ -10,8 +10,8 @@ public class GameSceneManager{
 
     public GameSceneManager()
     {
-        //this.transitionEffect = new Fade(Color.black, 0.15f);
-        this.transitionEffect = new Fade(Resources.Load<Sprite>("Textures/loadingScreen"), 0.1f, 0.5f);
+        this.transitionEffect = new Fade(Color.black, 0.1f, 0.5f);
+        //this.transitionEffect = new Fade(Resources.Load<Sprite>("Textures/loadingScreen"), 0.1f, 0.5f);
     }
 
     public void LoadStartScene()

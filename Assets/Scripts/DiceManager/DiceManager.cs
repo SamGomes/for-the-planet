@@ -31,16 +31,6 @@ public class DiceManager
 
     public IEnumerator RollTheDice(string rollOverlayTitle, int numRolls)
     {
-        //var currInvestment = currPlayer.GetCurrRoundInvestment();
-
-        //int newInvestmentValue = 0;
-        //int numTokensForTarget = currInvestment[target];
-        //if (numTokensForTarget == 0) //there are no dices to roll so return imediately
-        //{
-        //    yield break;
-        //}
-
-        //rollDiceOverlay.transform.Find("title/Text").GetComponent<Text>().text = currPlayer.GetName() + " rolling " + numTokensForTarget + " dice for " + target.ToString() + " ...";
         rollDiceOverlay.transform.Find("title/Text").GetComponent<Text>().text = rollOverlayTitle;
         currDiceResults = new List<int>(); //save each rolled dice number to display in the UI
         currDiceTotal = 0;
@@ -68,10 +58,6 @@ public class DiceManager
     {
         return currDiceTotal;
     }
-
-    //public IEnumerator YieldedRollDices(int numRolls, string rollOverlayTitle)
-    //{
-    //}
 
     private IEnumerator PlayDiceUI(int currThrowResult, int sequenceNumber, int numDicesInThrow, GameObject diceImagePrefab, string diceNumberSpritesPath)
     //the sequence number aims to void dice overlaps as it represents the order for which this dice is going to be rolled. We do not want to roll a dice two times for the same place

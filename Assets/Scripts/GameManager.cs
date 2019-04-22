@@ -154,7 +154,7 @@ public class GameManager : MonoBehaviour {
         yield return StartCoroutine(currPlayer.SetMoney(currPlayer.GetMoney() + ((float)diceManager.GetCurrDiceTotal() / 100.0f)));
 
         //roll dice for GameProperties.InvestmentTarget.ENVIRONMENT       
-        diceOverlayTitle = currPlayer.GetName() + " rolling " + numTokensForEconomy + " dice for environment ...";
+        diceOverlayTitle = currPlayer.GetName() + " rolling " + numTokensForEnvironment + " dice for environment ...";
         yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, numTokensForEnvironment));
         yield return StartCoroutine(envDynamicSlider.UpdateSliderValue(environmentSliderSceneElement.value + ((float)diceManager.GetCurrDiceTotal() / 100.0f)));
     }

@@ -38,7 +38,7 @@ public class DynamicSlider
             valueUpdateUIup.SetActive(true);
             valueUpdateUIup.GetComponentInChildren<Text>().text = textToDisplay;
         }
-        else
+        else if (growth < 0)
         {
             valueUpdateUIdown.SetActive(false);
             valueUpdateUIdown.SetActive(true);

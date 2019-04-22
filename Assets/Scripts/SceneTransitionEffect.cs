@@ -64,16 +64,23 @@ public class Fade: SceneTransitionEffect{
     {
        
         isFading = true;
+        currFadeColor.a = 0.0f;
+        transitionImage.color = currFadeColor;
         yield return ApplyFadeIn();
         yield return new WaitForSeconds(presentationDelay / 2.0f);
+        currFadeColor.a = 1.0f;
+        transitionImage.color = currFadeColor;
         SceneManager.LoadScene(sceneName, mode);
         yield return new WaitForSeconds(presentationDelay / 2.0f);
         yield return ApplyFadeOut();
+        currFadeColor.a = 0.0f;
+        transitionImage.color = currFadeColor;
         isFading = false;
     }
     IEnumerator ApplyFadeIn() {
-        while (currFadeColor.a <= 1.0f)
+        while (!(currFadeColor.a > 1.0f))
         {
+            Debug.Log(currFadeColor.a);
             currFadeColor.a += fadeRate;
             transitionImage.color = currFadeColor;
             yield return new WaitForSeconds(0.0417f);
@@ -81,7 +88,7 @@ public class Fade: SceneTransitionEffect{
     }
     IEnumerator ApplyFadeOut()
     {
-        while (currFadeColor.a >= 0.0f)
+        while (!(currFadeColor.a < 0.0f))
         {
             currFadeColor.a -= fadeRate;
             transitionImage.color = currFadeColor;
