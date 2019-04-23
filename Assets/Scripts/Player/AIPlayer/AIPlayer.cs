@@ -70,50 +70,62 @@ public class AIPlayer : Player
         playerMonoBehaviourFunctionalities.StartCoroutine(AutoInvestmentExecution());
     }
 
-    public IEnumerator InvestInEconomy()
+    public IEnumerator ClickEconomyInvestmentButton()
     {
         yield return new WaitForSeconds(1.0f);
         yield return SimulateMouseClick(this.spendTokenInEconomicGrowthButtonUI, 0.5f);
     }
 
-    //This needs to be refactored so that the number of button clicks results in the investment being the amount passed in quantity
+    public IEnumerator ClickEconomyInvestmentButton(int quantity)
+    {
+        for (int i = 0; i < quantity; i++)
+        {
+            yield return ClickEconomyInvestmentButton();
+        }
+    }
+
     public IEnumerator InvestInEconomy(int quantity)
     {
-        for(int i = 0; i < quantity; i++)
-        {
-            yield return InvestInEconomy();
-        }
+        // TODO:
+        // validate if there is enough budget for the quantity
+        // output a debug message if there isn't
+        int clicks = quantity - currRoundInvestment[GameProperties.InvestmentTarget.ECONOMIC];
+        yield return ClickEconomyInvestmentButton(clicks);
     }
 
     public IEnumerator InvestAllInEconomy()
     {
-        while(currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT] > 0)
-        {
-            yield return InvestInEconomy();
-        }
+        int quantity = roundBudget;
+        yield return InvestInEconomy(quantity);
     }
 
-    public IEnumerator InvestInEnvironment()
+    public IEnumerator ClickEnvironmentInvestmentButton()
     {
         yield return new WaitForSeconds(1.0f);
         yield return SimulateMouseClick(this.spendTokenInEnvironmentButtonUI, 0.5f);
     }
 
-    //This needs to be refactored so that the number of button clicks results in the investment being the amount passed in quantity
-    public IEnumerator InvestInEnvironment(int quantity)
+    public IEnumerator ClickEnvironmentInvestmentButton(int quantity)
     {
         for (int i = 0; i < quantity; i++)
         {
-            yield return InvestInEnvironment();
+            yield return ClickEnvironmentInvestmentButton();
         }
+    }
+
+    public IEnumerator InvestInEnvironment(int quantity)
+    {
+        // TODO:
+        // validate if there is enough budget for the quantity
+        // output a debug message if there isn't
+        int clicks = quantity - currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT];
+        yield return ClickEnvironmentInvestmentButton(clicks);
     }
 
     public IEnumerator InvestAllInEvironment()
     {
-        while (currRoundInvestment[GameProperties.InvestmentTarget.ECONOMIC] > 0)
-        {
-            yield return InvestInEnvironment();
-        }
+        int quantity = roundBudget;
+        yield return InvestInEnvironment(quantity);
     }
 
     public IEnumerator EndBudgetAllocationPhase()
