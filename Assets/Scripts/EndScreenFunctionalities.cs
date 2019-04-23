@@ -67,7 +67,7 @@ public class EndScreenFunctionalities : MonoBehaviour
             Player currPlayer = GameGlobals.players[i];
             GameObject newTableEntry = Object.Instantiate(tableEntryPrefab, economicTableUI.transform);
             newTableEntry.GetComponentsInChildren<Text>()[0].text = currPlayer.GetName();
-            newTableEntry.GetComponentsInChildren<Text>()[1].text = currPlayer.GetMoney().ToString();
+            newTableEntry.GetComponentsInChildren<Text>()[1].text = currPlayer.GetMoney()*100.0f + " %";
         }
         for (int i = 0; i < numPlayers; i++)
         {
@@ -139,7 +139,17 @@ public class EndScreenFunctionalities : MonoBehaviour
         GameGlobals.gameSceneManager = new GameSceneManager();
         GameGlobals.gameLogManager.InitLogs();
         GameGlobals.players = new List<Player>(5);
-        Player playerToBeAdded = new Player(playerUIPrefab, new GameObject(), GameGlobals.monoBehaviourFunctionalities, infoPoppupNeutralRef, Resources.Load<Sprite>("Textures/UI/Icons/" + 0), 0, "Troll");
+        Player playerToBeAdded = new Player(playerUIPrefab, new GameObject(), GameGlobals.monoBehaviourFunctionalities, infoPoppupNeutralRef, Resources.Load<Sprite>("Textures/UI/Icons/" + 0), 0, "Sam. G.");
+        StartCoroutine(playerToBeAdded.SetMoney(0.3f));
+        playerToBeAdded.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ENVIRONMENT] = 8;
+        GameGlobals.players.Add(playerToBeAdded);
+        playerToBeAdded = new Player(playerUIPrefab, new GameObject(), GameGlobals.monoBehaviourFunctionalities, infoPoppupNeutralRef, Resources.Load<Sprite>("Textures/UI/Icons/" + 0), 0, "Zé");
+        StartCoroutine(playerToBeAdded.SetMoney(0.5f));
+        playerToBeAdded.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ENVIRONMENT] = 5;
+        GameGlobals.players.Add(playerToBeAdded);
+        playerToBeAdded = new Player(playerUIPrefab, new GameObject(), GameGlobals.monoBehaviourFunctionalities, infoPoppupNeutralRef, Resources.Load<Sprite>("Textures/UI/Icons/" + 0), 0, "Player");
+        StartCoroutine(playerToBeAdded.SetMoney(0.7f));
+        playerToBeAdded.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ENVIRONMENT] = 2;
         GameGlobals.players.Add(playerToBeAdded);
         GameGlobals.currGameState = GameProperties.GameState.VICTORY;
         GameGlobals.currGameId = 2;
