@@ -15,23 +15,20 @@ public class EndScreenFunctionalities : MonoBehaviour
     public Button UIRestartGameButton;
     public Button UIEndGameButton;
     public Text UIWarningText;
+    
+    public GameObject economicTableUI;
+    public GameObject environmentContributionsTableUI;
+    public GameObject tableEntryPrefab;
 
-    public GameObject UIAlbumCollectionDisplay;
-    public GameObject UIIndividualTable;
-    public GameObject UIIndividualTableEntryPrefab;
-
-    public GameObject UIVictoryOverlay;
-    public GameObject UILossOverlay;
-    public GameObject UIFinishedGameOverlay;
+    public GameObject victoryOverlayUI;
+    public GameObject lossOverlayUI;
 
     public GameObject mainScene;
 
-    public GameObject albumUIPrefab;
-
     public GameObject playerUIPrefab;
 
-    public GameObject UIVictoryBackground;
-    public GameObject UILossBackground;
+    public GameObject victoryBackgroundUI;
+    public GameObject lossBackgroundUI;
 
     private PopupScreenFunctionalities infoPoppupNeutralRef;
 
@@ -42,6 +39,12 @@ public class EndScreenFunctionalities : MonoBehaviour
     private void RestartGame()
     {
         GameGlobals.gameSceneManager.LoadStartScene();
+        //destroy stuff saved between scenes (the dontdestroyonload scene is extracted through one of the players)
+        foreach (var root in GameGlobals.players[0].GetPlayerUI().scene.GetRootGameObjects())
+        {
+            Destroy(root);
+        }
+
         Debug.Log("numGamesToSimulate: " + (GameProperties.configurableProperties.numGamesToSimulate - GameGlobals.currGameId));
     }
 
@@ -62,11 +65,18 @@ public class EndScreenFunctionalities : MonoBehaviour
         for (int i = 0; i < numPlayers; i++)
         {
             Player currPlayer = GameGlobals.players[i];
-            GameObject newTableEntry = Object.Instantiate(UIIndividualTableEntryPrefab, UIIndividualTable.transform);
+            GameObject newTableEntry = Object.Instantiate(tableEntryPrefab, economicTableUI.transform);
             newTableEntry.GetComponentsInChildren<Text>()[0].text = currPlayer.GetName();
-            newTableEntry.GetComponentsInChildren<Text>()[1].text = currPlayer.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ECONOMIC].ToString();
+            newTableEntry.GetComponentsInChildren<Text>()[1].text = currPlayer.GetMoney().ToString();
         }
-        
+        for (int i = 0; i < numPlayers; i++)
+        {
+            Player currPlayer = GameGlobals.players[i];
+            GameObject newTableEntry = Object.Instantiate(tableEntryPrefab, environmentContributionsTableUI.transform);
+            newTableEntry.GetComponentsInChildren<Text>()[0].text = currPlayer.GetName();
+            newTableEntry.GetComponentsInChildren<Text>()[1].text = currPlayer.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ENVIRONMENT].ToString();
+        }
+
         //Text UIEndGameButtonText = UIEndGameButton.GetComponentInChildren<Text>();
         Text UIRestartGameButtonText = UIRestartGameButton.GetComponentInChildren<Text>();
         if (GameProperties.configurableProperties.isAutomaticBriefing)
@@ -75,17 +85,11 @@ public class EndScreenFunctionalities : MonoBehaviour
             {
                 //infoPoppupNeutralRef.DisplayPoppup("You reached the end of the experiment. You should now fill in the first questionnaire and you need to memorize the following code and also your score.");
                 infoPoppupNeutralRef.DisplayPoppup("You reached the end of the second game. Please write down your score, as well as the following gamecode, and fill the second questionnaire to finish the experiment.");
-                //UIEndGameButton.gameObject.SetActive(true);
-                //UIEndGameButton.interactable = true;
-                //UIEndGameButtonText.text = "Final Notes";
-                UIWarningText.text = "You reached the end of the second game.Please write down your score, as well as the following gamecode, and fill the second questionnaire to finish the experiment.";
-
+                
                 UIEndGameButton.gameObject.SetActive(false);
                 UIEndGameButton.interactable = false;
                 UIRestartGameButton.gameObject.SetActive(false);
                 UIRestartGameButton.interactable = false;
-
-                UIFinishedGameOverlay.SetActive(true);
             }
             else
             {
@@ -98,8 +102,6 @@ public class EndScreenFunctionalities : MonoBehaviour
                 
                 UIEndGameButton.gameObject.SetActive(false);
                 UIEndGameButton.interactable = false;
-
-                UIFinishedGameOverlay.SetActive(false);
             }
 
         }
@@ -129,39 +131,39 @@ public class EndScreenFunctionalities : MonoBehaviour
     void Start()
     {
         //mock
-        //GameProperties.configurableProperties = new DynamicallyConfigurableGameProperties();
-        //GameProperties.configurableProperties.numSessionGames = 3;
-        //GameProperties.configurableProperties.isAutomaticBriefing = true;
-        //GameGlobals.currSessionId = System.DateTime.Now.ToString("yyyy/MM/dd/HH-mm-ss");
-        //GameGlobals.gameLogManager = new DebugLogManager();
-        //GameGlobals.gameLogManager.InitLogs();
-        //GameGlobals.players = new List<Player>(5);
-        //Player playerToBeAdded = new Player(playerUIPrefab, new GameObject(), GameGlobals.monoBehaviourFunctionalities, infoPoppupNeutralRef, Resources.Load<Sprite>("Textures/UI/Icons/" + 0), 0, "Troll");
-        //GameGlobals.players.Add(playerToBeAdded);
-        //GameGlobals.currGameState = GameProperties.GameState.VICTORY;
-        //GameGlobals.currGameId = 2;
+        GameProperties.configurableProperties = new DynamicallyConfigurableGameProperties();
+        GameProperties.configurableProperties.numSessionGames = 3;
+        GameProperties.configurableProperties.isAutomaticBriefing = true;
+        GameGlobals.currSessionId = System.DateTime.Now.ToString("yyyy/MM/dd/HH-mm-ss");
+        GameGlobals.gameLogManager = new DebugLogManager();
+        GameGlobals.gameSceneManager = new GameSceneManager();
+        GameGlobals.gameLogManager.InitLogs();
+        GameGlobals.players = new List<Player>(5);
+        Player playerToBeAdded = new Player(playerUIPrefab, new GameObject(), GameGlobals.monoBehaviourFunctionalities, infoPoppupNeutralRef, Resources.Load<Sprite>("Textures/UI/Icons/" + 0), 0, "Troll");
+        GameGlobals.players.Add(playerToBeAdded);
+        GameGlobals.currGameState = GameProperties.GameState.VICTORY;
+        GameGlobals.currGameId = 2;
 
         GameGlobals.gameLogManager.UpdateGameResultInLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameProperties.currSessionParameterization.id, GameGlobals.currGameState.ToString());
 
 
-        UIVictoryOverlay.SetActive(false);
-        UILossOverlay.SetActive(false);
-        UIFinishedGameOverlay.SetActive(false);
+        victoryOverlayUI.SetActive(false);
+        lossOverlayUI.SetActive(false);
 
-        UIVictoryBackground.SetActive(false);
-        UILossBackground.SetActive(false);
+        victoryBackgroundUI.SetActive(false);
+        lossBackgroundUI.SetActive(false);
 
         mainScene.SetActive(false);
 
         if (GameGlobals.currGameState == GameProperties.GameState.VICTORY)
         {
-            UIVictoryOverlay.SetActive(true);
-            UIVictoryBackground.SetActive(true);
+            victoryOverlayUI.SetActive(true);
+            victoryBackgroundUI.SetActive(true);
         }
         else if (GameGlobals.currGameState == GameProperties.GameState.LOSS)
         {
-            UILossOverlay.SetActive(true);
-            UILossBackground.SetActive(true);
+            lossOverlayUI.SetActive(true);
+            lossBackgroundUI.SetActive(true);
 
         }
         else

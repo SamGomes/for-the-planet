@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour {
     public GameObject playerUIPrefab;
     public GameObject investmentUIPrefab;
 
+
     public GameObject newRoundScreen;
     public Button advanceRoundButton;
     public GameObject simulateInvestmentScreen;
@@ -30,6 +31,7 @@ public class GameManager : MonoBehaviour {
     public PopupScreenFunctionalities infoPoppupLossRef;
     public PopupScreenFunctionalities infoPoppupWinRef;
 
+    public GameObject CommonAreaUI;
     public Slider environmentSliderSceneElement;
     private DynamicSlider envDynamicSlider;
     public bool isAutomaticPhaseSkipEnabled;
@@ -109,6 +111,7 @@ public class GameManager : MonoBehaviour {
 
         GameGlobals.currGameRoundId = 0; //first round
         GameGlobals.commonEnvironmentInvestment = 0;
+        DontDestroyOnLoad(CommonAreaUI);
 
         marketLimit = Mathf.FloorToInt(GameProperties.configurableProperties.numberOfAlbumsPerGame * 4.0f / 5.0f) - 1;
         currNumberOfMarketDices = GameProperties.configurableProperties.initNumberMarketDices;

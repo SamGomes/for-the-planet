@@ -63,16 +63,6 @@ public class StartScreenFunctionalities : MonoBehaviour {
         GameGlobals.diceLogic = new RandomDiceLogic();
         GameGlobals.audioManager = new AudioManager();
         GameGlobals.gameSceneManager = new GameSceneManager();
-
-        //destroy UIs if any
-        if(GameGlobals.players != null)
-        {
-            foreach (Player currPlayer in GameGlobals.players)
-            {
-                currPlayer.GetWarningScreenRef().DestroyPoppupPanel();
-                Destroy(currPlayer.GetPlayerCanvas());
-            }
-        }
         
         GameGlobals.players = new List<Player>(GameProperties.configurableProperties.numberOfPlayersPerGame);
 

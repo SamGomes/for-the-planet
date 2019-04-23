@@ -82,9 +82,11 @@ public class Fade: SceneTransitionEffect{
         {
             Debug.Log(currFadeColor.a);
             currFadeColor.a += fadeRate;
+            transitionImage = transitionScreen.GetComponentInChildren<Image>();
             transitionImage.color = currFadeColor;
             yield return new WaitForSeconds(0.0417f);
         }
+        yield return null;
     }
     IEnumerator ApplyFadeOut()
     {
