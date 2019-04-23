@@ -140,11 +140,10 @@ public class GameManager : MonoBehaviour {
 
         ContinueGame();
 
-        //players talk about the initial album
-        //currSpeakingPlayerId = Random.Range(0, GameGlobals.numberOfSpeakingPlayers);
+        // ONHOLD: @jbgrocha: Send Start of New Game to AIPlayers (call AIplayer update emotional module function)
     }
 
-    
+
     private IEnumerator BudgetExecutionPhase(Player currPlayer)
     {
         var currInvestment = currPlayer.GetCurrRoundInvestment();
@@ -217,12 +216,14 @@ public class GameManager : MonoBehaviour {
             if (environmentSliderSceneElement.value <= 0.05f)
             {
                 GameGlobals.currGameState = GameProperties.GameState.LOSS;
+                // ONHOLD @jbgrocha: Send GAME LOSS Event to AIPlayers (call AIplayer update emotional module function)
             }
             else
             {
                 if (GameGlobals.currGameRoundId > 2)
                 {
                     GameGlobals.currGameState = GameProperties.GameState.VICTORY;
+                    // ONHOLD @jbgrocha: Send GAME Victory Event to AIPlayers (call AIplayer update emotional module function)
                 }
             }
 
@@ -250,6 +251,7 @@ public class GameManager : MonoBehaviour {
             Player currPlayer = GameGlobals.players[i];
             currPlayer.SetRoundBudget(5);
         }
+        // ONHOLD: @jbgrocha: Send Start of New Round to AIPlayers (call AIplayer update emotional module function)
         StartAlocateBudgetPhase();
 
     }
