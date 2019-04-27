@@ -13,7 +13,7 @@ using UnityEngine.UI;
 using System.Text.RegularExpressions;
 
 
-public class EmotionalModule : MonoBehaviour
+public class EmotionalModule
 {
     private float speechBalloonDelayPerWordInSeconds;
 
@@ -28,32 +28,32 @@ public class EmotionalModule : MonoBehaviour
     private Player invoker; //when no speech the object is passed so that text is displayed
     private GameObject speechBalloon;
 
+    private readonly MonoBehaviourFunctionalities monoBehaviourFunctionalities;
+
     private List<string> currSpeeches;
 
-    private void Awake()
+    public EmotionalModule(MonoBehaviourFunctionalities monoBehaviourFunctionalities)
     {
-        DontDestroyOnLoad(gameObject);
-    }
 
-    void Start()
-    {
+        this.monoBehaviourFunctionalities = monoBehaviourFunctionalities;
         isStopped = false;
+        
+        foreach(IntegratedAuthoringTool.DTOs.CharacterSourceDTO rpcPath in GameGlobals.FAtiMAIat.GetAllCharacterSources())
+        {
+            rpc = RolePlayCharacterAsset.LoadFromFile(rpcPath.RelativePath);
+            rpc.LoadAssociatedAssets();
+            GameGlobals.FAtiMAIat.BindToRegistry(rpc.DynamicPropertiesRegistry);
+        }
 
-        string rpcPath = GameGlobals.FAtiMAIat.GetAllCharacterSources().FirstOrDefault().Source;
-        //Application.ExternalEval("console.log(\"rpcPath: " + rpcPath + "\")");
-        rpc = RolePlayCharacterAsset.LoadFromFile(rpcPath);
-
-        rpc.LoadAssociatedAssets();
-        GameGlobals.FAtiMAIat.BindToRegistry(rpc.DynamicPropertiesRegistry);
 
         //start update thread
-        StartCoroutine(UpdateCoroutine());
+        monoBehaviourFunctionalities.StartCoroutine(UpdateCoroutine());
 
         speechBalloonDelayPerWordInSeconds = 0.5f;
         currSpeeches = new List<string>();
 
         float speechCheckDelayInSeconds = 0.1f;
-        StartCoroutine(ConsumeSpeeches(speechCheckDelayInSeconds));
+        monoBehaviourFunctionalities.StartCoroutine(ConsumeSpeeches(speechCheckDelayInSeconds));
     }
 
     public void ReceiveInvoker(Player invoker)
@@ -71,7 +71,6 @@ public class EmotionalModule : MonoBehaviour
     {
         speechBalloon.GetComponentInChildren<Text>().text = message;
         speechBalloon.SetActive(true);
-        //yield return null;
         yield return new WaitForSeconds(delay);
         if (speechBalloon.GetComponentInChildren<Text>().text == message) //to compensate if the balloon is already spawned
         {
@@ -125,21 +124,15 @@ public class EmotionalModule : MonoBehaviour
 
     private IEnumerator UpdateCoroutine()
     {
-        string currentBelief = rpc.GetBeliefValue("State(Game)");
-
-        while (currentBelief != "Game(End)" && !isStopped)
-        {
-            rpc.Update();
-            yield return new WaitForSeconds(0.1f);
-        }
-        yield return null;
+        rpc.Update();
+        yield return new WaitForSeconds(0.1f);
     }
 
     void OnDestroy()
     {
         if (!isStopped)
         {
-            StopCoroutine(UpdateCoroutine());
+            monoBehaviourFunctionalities.StopCoroutine(UpdateCoroutine());
             isStopped = true;
         }
     }
@@ -148,19 +141,11 @@ public class EmotionalModule : MonoBehaviour
     {
         if (!isStopped)
         {
-            StopCoroutine(UpdateCoroutine());
+            monoBehaviourFunctionalities.StopCoroutine(UpdateCoroutine());
             isStopped = true;
         }
     }
-
-    public void FlushUtterance(string text)
-    {
-        if (!Speaks)
-        {
-            return;
-        }
-    }
-
+    
     public IEnumerator ConsumeSpeeches(float checkSpeechDelay)
     {
         if (currSpeeches.Count > 0 && !speechBalloon.activeSelf)
@@ -170,16 +155,11 @@ public class EmotionalModule : MonoBehaviour
             int countedWords = regex.Matches(currSpeech).Count;
 
             float displayingDelay = countedWords * this.speechBalloonDelayPerWordInSeconds;
-            StartCoroutine(DisplaySpeechBalloonForAWhile(currSpeech, displayingDelay));
+            monoBehaviourFunctionalities.StartCoroutine(DisplaySpeechBalloonForAWhile(currSpeech, displayingDelay));
             currSpeeches.Remove(currSpeech);
         }
         yield return new WaitForSeconds(checkSpeechDelay);
-        StartCoroutine(ConsumeSpeeches(checkSpeechDelay));
-    }
-
-    public void GazeAt(string target)
-    {
-        Debug.Log("agent did not gaze.");
+        monoBehaviourFunctionalities.StartCoroutine(ConsumeSpeeches(checkSpeechDelay));
     }
 }
 

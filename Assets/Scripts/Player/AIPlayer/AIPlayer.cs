@@ -12,10 +12,8 @@ public class AIPlayer : Player
     public AIPlayer(GameObject playerUIPrefab, GameObject playerCanvas, MonoBehaviourFunctionalities playerMonoBehaviourFunctionalities, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name): 
         base(playerUIPrefab, playerCanvas, playerMonoBehaviourFunctionalities, warningScreenRef, UIAvatar, id, name)
     {
-        GameObject erp = new GameObject("EmotionalRoboticPlayer");
-        emotionalModule = erp.AddComponent<EmotionalModule>();
+        emotionalModule = new EmotionalModule(playerMonoBehaviourFunctionalities);
         emotionalModule.Speaks = true;
-        emotionalModule.ReceiveInvoker(this); //only pass the invoker after it is initialized
 
         this.playerSelfDisablerUI.SetActive(true);
     }

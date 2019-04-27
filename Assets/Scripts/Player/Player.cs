@@ -51,11 +51,8 @@ public class Player
     private Text environmentHistoryDisplay;
 
     protected Button executeBudgetButton;
-
     private PopupScreenFunctionalities warningScreenRef;
-
     protected GameObject speechBalloonUI;
-
     private DynamicSlider dynamicSlider;
 
     public Player(GameObject playerUIPrefab, GameObject playerCanvas, MonoBehaviourFunctionalities playerMonoBehaviourFunctionalities, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name)
