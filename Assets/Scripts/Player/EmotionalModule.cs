@@ -17,12 +17,12 @@ public class EmotionalModule
 {
     private float speechBalloonDelayPerWordInSeconds;
 
-    private RolePlayCharacterAsset rpc;
     private bool isStopped;
 
     public int DicesValue { get; internal set; }
     public int NumDices { get; internal set; }
 
+    List<RolePlayCharacterAsset> rpcs;
 
     public bool Speaks { get; internal set; }
     private Player invoker; //when no speech the object is passed so that text is displayed
@@ -32,39 +32,41 @@ public class EmotionalModule
 
     private List<string> currSpeeches;
 
-    public EmotionalModule(MonoBehaviourFunctionalities monoBehaviourFunctionalities)
+    public EmotionalModule(Player invoker, MonoBehaviourFunctionalities monoBehaviourFunctionalities)
     {
 
         this.monoBehaviourFunctionalities = monoBehaviourFunctionalities;
         isStopped = false;
-        
+
+        rpcs = new List<RolePlayCharacterAsset>();
+
         foreach(IntegratedAuthoringTool.DTOs.CharacterSourceDTO rpcPath in GameGlobals.FAtiMAIat.GetAllCharacterSources())
         {
-            rpc = RolePlayCharacterAsset.LoadFromFile(rpcPath.RelativePath);
+            Debug.Log(rpcPath.RelativePath);
+            RolePlayCharacterAsset rpc;
+            rpc = RolePlayCharacterAsset.LoadFromFile(rpcPath.Source);
             rpc.LoadAssociatedAssets();
             GameGlobals.FAtiMAIat.BindToRegistry(rpc.DynamicPropertiesRegistry);
+            rpcs.Add(rpc);
         }
 
 
         //start update thread
-        monoBehaviourFunctionalities.StartCoroutine(UpdateCoroutine());
+        monoBehaviourFunctionalities.StartCoroutine(Update());
 
+        speechBalloon = invoker.GetSpeechBaloonUI();
         speechBalloonDelayPerWordInSeconds = 0.5f;
         currSpeeches = new List<string>();
-
         float speechCheckDelayInSeconds = 0.1f;
         monoBehaviourFunctionalities.StartCoroutine(ConsumeSpeeches(speechCheckDelayInSeconds));
     }
-
-    public void ReceiveInvoker(Player invoker)
-    {
-        this.invoker = invoker;
-        speechBalloon = invoker.GetSpeechBaloonUI();
-    }
-
+    
     public void Perceive(Name[] events)
     {
-        rpc.Perceive(events);
+        foreach(RolePlayCharacterAsset rpc in rpcs)
+        {
+            rpc.Perceive(events);
+        }
     }
 
     public IEnumerator DisplaySpeechBalloonForAWhile(string message, float delay)
@@ -89,7 +91,12 @@ public class EmotionalModule
 
     public void Decide()
     {
-        IEnumerable<ActionLibrary.IAction> possibleActions = rpc.Decide();
+        //not sure of this...
+        List<ActionLibrary.IAction> possibleActions = new List<ActionLibrary.IAction>();
+        foreach (RolePlayCharacterAsset rpc in rpcs)
+        {
+            possibleActions.AddRange(rpc.Decide());
+        }
         ActionLibrary.IAction chosenAction = possibleActions.FirstOrDefault();
 
         if (chosenAction == null)
@@ -122,28 +129,13 @@ public class EmotionalModule
         }
     }
 
-    private IEnumerator UpdateCoroutine()
+    private IEnumerator Update()
     {
-        rpc.Update();
-        yield return new WaitForSeconds(0.1f);
-    }
-
-    void OnDestroy()
-    {
-        if (!isStopped)
+        foreach (RolePlayCharacterAsset rpc in rpcs)
         {
-            monoBehaviourFunctionalities.StopCoroutine(UpdateCoroutine());
-            isStopped = true;
+            rpc.Update();
         }
-    }
-
-    void OnApplicationQuit()
-    {
-        if (!isStopped)
-        {
-            monoBehaviourFunctionalities.StopCoroutine(UpdateCoroutine());
-            isStopped = true;
-        }
+        yield return null;
     }
     
     public IEnumerator ConsumeSpeeches(float checkSpeechDelay)

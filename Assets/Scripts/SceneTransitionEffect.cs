@@ -80,7 +80,7 @@ public class Fade: SceneTransitionEffect{
     IEnumerator ApplyFadeIn() {
         while (!(currFadeColor.a > 1.0f))
         {
-            Debug.Log(currFadeColor.a);
+            //Debug.Log(currFadeColor.a);
             currFadeColor.a += fadeRate;
             transitionImage = transitionScreen.GetComponentInChildren<Image>();
             transitionImage.color = currFadeColor;

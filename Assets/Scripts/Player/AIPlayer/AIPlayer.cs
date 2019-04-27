@@ -12,7 +12,7 @@ public class AIPlayer : Player
     public AIPlayer(GameObject playerUIPrefab, GameObject playerCanvas, MonoBehaviourFunctionalities playerMonoBehaviourFunctionalities, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name): 
         base(playerUIPrefab, playerCanvas, playerMonoBehaviourFunctionalities, warningScreenRef, UIAvatar, id, name)
     {
-        emotionalModule = new EmotionalModule(playerMonoBehaviourFunctionalities);
+        emotionalModule = new EmotionalModule(this, playerMonoBehaviourFunctionalities);
         emotionalModule.Speaks = true;
 
         this.playerSelfDisablerUI.SetActive(true);
