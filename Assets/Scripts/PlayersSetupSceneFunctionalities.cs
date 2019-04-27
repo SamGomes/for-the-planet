@@ -38,12 +38,20 @@ public class PlayersSetupSceneFunctionalities : MonoBehaviour {
                     GameGlobals.players.Add(new Player(playerUIPrefab, playerCanvas, GameGlobals.monoBehaviourFunctionalities, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/"+ currParam.spriteIndex), currPlayerId++, currParam.name));
                     break;
 
-                case "AI_COOPERATIVE":
-                    GameGlobals.players.Add(new AIPlayerCooperative(playerUIPrefab, playerCanvas, GameGlobals.monoBehaviourFunctionalities, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/"+ currParam.spriteIndex), currPlayerId++, currParam.name));
+                case "AI_COOPERATOR":
+                    GameGlobals.players.Add(new AIPlayerCooperator(playerUIPrefab, playerCanvas, GameGlobals.monoBehaviourFunctionalities, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
+                    break;
+
+                case "AI_BALANCED_COOPERATOR":
+                    GameGlobals.players.Add(new AIPlayerBalancedCooperator(playerUIPrefab, playerCanvas, GameGlobals.monoBehaviourFunctionalities, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
                     break;
 
                 case "AI_DEFECTOR":
                     GameGlobals.players.Add(new AIPlayerDefector(playerUIPrefab, playerCanvas, GameGlobals.monoBehaviourFunctionalities, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
+                    break;
+
+                case "AI_BALANCED_DEFECTOR":
+                    GameGlobals.players.Add(new AIPlayerBalancedDefector(playerUIPrefab, playerCanvas, GameGlobals.monoBehaviourFunctionalities, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
                     break;
 
                 default:

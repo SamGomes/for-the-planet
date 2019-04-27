@@ -137,9 +137,9 @@ public class AIPlayer : Player
 
 
 
-public class AIPlayerCooperative : AIPlayer
+public class AIPlayerCooperator : AIPlayer
 {
-    public AIPlayerCooperative(GameObject playerUIPrefab, GameObject playerCanvas, MonoBehaviourFunctionalities playerMonoBehaviourFunctionalities, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
+    public AIPlayerCooperator(GameObject playerUIPrefab, GameObject playerCanvas, MonoBehaviourFunctionalities playerMonoBehaviourFunctionalities, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
         base(playerUIPrefab, playerCanvas, playerMonoBehaviourFunctionalities, warningScreenRef, UIAvatar, id, name)
     { }
 
@@ -179,6 +179,90 @@ public class AIPlayerDefector : AIPlayer
     {
         // @jbgrocha: Fatima Speech Act (emotional engine call) - Start of Budget Allocation
         yield return InvestAllInEconomy();
+        // @jbgrocha: Fatima Speech Act (emotional engine call) - Before ending Budget Allocation
+        yield return EndBudgetAllocationPhase();
+        // @jbgrocha: Fatima Speech Act (emotional engine call) - End of Budget Allocation
+    }
+    public override IEnumerator AutoHistoryDisplay()
+    {
+        yield return new WaitForSeconds(3.0f);
+        yield return emotionalModule.DisplaySpeechBalloonForAWhile("Mock Warning! This is not a fatima call!", 2.0f);
+        // @jbgrocha: Fatima Speech Act (emotional engine call) - History Display
+    }
+    public override IEnumerator AutoBudgetExecution()
+    {
+        // @jbgrocha: Fatima Speech Act (emotional engine call) - Before Budget Dice Rolls
+        yield return ApplyInvestments();
+        // @jbgrocha: Fatima Speech Act (emotional engine call) - After Budget Dice Rolls
+    }
+    public override IEnumerator AutoInvestmentExecution()
+    {
+        // @jbgrocha: Fatima Speech Act (emotional engine call) - Before Decay
+        yield return null;
+        // @jbgrocha: Fatima Speech Act (emotional engine call) - After Decay
+    }
+
+}
+
+public class AIPlayerBalancedCooperator: AIPlayer
+{
+    public AIPlayerBalancedCooperator(GameObject playerUIPrefab, GameObject playerCanvas, MonoBehaviourFunctionalities playerMonoBehaviourFunctionalities, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
+        base(playerUIPrefab, playerCanvas, playerMonoBehaviourFunctionalities, warningScreenRef, UIAvatar, id, name)
+    { }
+
+    public override IEnumerator AutoBudgetAlocation()
+    {
+
+        int environmentInvestment = roundBudget / 2 + roundBudget % 2;
+        int economyInvestment = roundBudget / 2;
+
+        // @jbgrocha: Fatima Speech Act (emotional engine call) - Start of Budget Allocation
+        yield return InvestInEconomy(economyInvestment);
+
+        yield return InvestInEnvironment(environmentInvestment);
+
+        // @jbgrocha: Fatima Speech Act (emotional engine call) - Before ending Budget Allocation
+        yield return EndBudgetAllocationPhase();
+        // @jbgrocha: Fatima Speech Act (emotional engine call) - End of Budget Allocation
+    }
+    public override IEnumerator AutoHistoryDisplay()
+    {
+        yield return new WaitForSeconds(3.0f);
+        yield return emotionalModule.DisplaySpeechBalloonForAWhile("Mock Warning! This is not a fatima call!", 2.0f);
+        // @jbgrocha: Fatima Speech Act (emotional engine call) - History Display
+    }
+    public override IEnumerator AutoBudgetExecution()
+    {
+        // @jbgrocha: Fatima Speech Act (emotional engine call) - Before Budget Dice Rolls
+        yield return ApplyInvestments();
+        // @jbgrocha: Fatima Speech Act (emotional engine call) - After Budget Dice Rolls
+    }
+    public override IEnumerator AutoInvestmentExecution()
+    {
+        // @jbgrocha: Fatima Speech Act (emotional engine call) - Before Decay
+        yield return null;
+        // @jbgrocha: Fatima Speech Act (emotional engine call) - After Decay
+    }
+
+}
+
+public class AIPlayerBalancedDefector : AIPlayer
+{
+    public AIPlayerBalancedDefector(GameObject playerUIPrefab, GameObject playerCanvas, MonoBehaviourFunctionalities playerMonoBehaviourFunctionalities, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
+        base(playerUIPrefab, playerCanvas, playerMonoBehaviourFunctionalities, warningScreenRef, UIAvatar, id, name)
+    { }
+
+    public override IEnumerator AutoBudgetAlocation()
+    {
+
+        int environmentInvestment = roundBudget / 2;
+        int economyInvestment = roundBudget / 2 + roundBudget % 2;
+
+        // @jbgrocha: Fatima Speech Act (emotional engine call) - Start of Budget Allocation
+        yield return InvestInEconomy(economyInvestment);
+
+        yield return InvestInEnvironment(environmentInvestment);
+
         // @jbgrocha: Fatima Speech Act (emotional engine call) - Before ending Budget Allocation
         yield return EndBudgetAllocationPhase();
         // @jbgrocha: Fatima Speech Act (emotional engine call) - End of Budget Allocation
