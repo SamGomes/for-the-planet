@@ -140,6 +140,14 @@ public class GameManager : MonoBehaviour {
 
         ContinueGame();
 
+        // @jbgrocha: Auto Continue for Batch Mode
+        if (GameGlobals.autoPlay)
+        {
+            newRoundScreen.SetActive(false);
+            StartGameRoundForAllPlayers();
+            Debug.Log("In BatchMode : Start Next Round");
+        }
+
         // ONHOLD: @jbgrocha: Send Start of New Game to AIPlayers (call AIplayer update emotional module function)
     }
 
@@ -191,6 +199,13 @@ public class GameManager : MonoBehaviour {
         {
             simulateInvestmentScreen.SetActive(true); //StartInvestmentSimulationPhase(); is called in this screen
             numPlayersToExecuteBudget = GameGlobals.players.Count;
+
+            if(GameGlobals.autoPlay)
+            {
+                simulateInvestmentScreen.SetActive(false);
+                StartInvestmentSimulationPhase();
+            }
+            
         }
 
         //end of forth phase
@@ -200,8 +215,8 @@ public class GameManager : MonoBehaviour {
 
             string diceOverlayTitle = "Simulating environment growth ...";
             yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, 2));
-            //yield return StartCoroutine(envDynamicSlider.UpdateSliderValue(environmentSliderSceneElement.value - ((float)diceManager.GetCurrDiceTotal() / 100.0f)));
-            yield return StartCoroutine(envDynamicSlider.UpdateSliderValue(environmentSliderSceneElement.value - (0.8f)));
+            yield return StartCoroutine(envDynamicSlider.UpdateSliderValue(environmentSliderSceneElement.value - ((float)diceManager.GetCurrDiceTotal() / 100.0f)));
+            //yield return StartCoroutine(envDynamicSlider.UpdateSliderValue(environmentSliderSceneElement.value - (0.8f)));
 
             foreach (Player player in GameGlobals.players)
             {
@@ -233,6 +248,15 @@ public class GameManager : MonoBehaviour {
             }
 
             newRoundScreen.SetActive(true);
+
+            // @jbgrocha: Auto Continue for Batch Mode
+            if (GameGlobals.autoPlay)
+            {
+                newRoundScreen.SetActive(false);
+                StartGameRoundForAllPlayers();
+                Debug.Log("In BatchMode : Start Next Round");
+            }
+
         }
 
     }

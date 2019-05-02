@@ -196,6 +196,14 @@ public class StartScreenFunctionalities : MonoBehaviour {
         DontDestroyOnLoad(monoBehaviourDummy);
         GameGlobals.monoBehaviourFunctionalities = monoBehaviourDummy.GetComponent<MonoBehaviourFunctionalities>();
         GameGlobals.monoBehaviourFunctionalities.StartCoroutine(InitGameGlobals());
+
+        // @jbgrocha: auto start if on batchmode
+        if (GameGlobals.autoPlay)
+        {
+            StartGame();
+            Debug.Log("In BatchMode");
+        }
+        
     }
 
 

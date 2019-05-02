@@ -34,6 +34,9 @@ public static class GameGlobals
     //fatima stuff
     public static string FAtiMAScenarioPath;
     public static IntegratedAuthoringToolAsset FAtiMAIat;
+
+    // @jbgrocha: Auto play if batchmode (or explicitly set it to true);
+    public static bool autoPlay = true || Application.isBatchMode;
 }
 
 public static class GameProperties

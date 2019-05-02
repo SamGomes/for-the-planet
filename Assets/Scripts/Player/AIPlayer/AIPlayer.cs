@@ -70,7 +70,10 @@ public class AIPlayer : Player
 
     public IEnumerator ClickEconomyInvestmentButton()
     {
-        yield return new WaitForSeconds(1.0f);
+        if (!GameGlobals.autoPlay)
+        {
+            yield return new WaitForSeconds(1.0f);
+        }
         yield return SimulateMouseClick(this.spendTokenInEconomicGrowthButtonUI, 0.5f);
     }
 
@@ -96,7 +99,10 @@ public class AIPlayer : Player
 
     public IEnumerator ClickEnvironmentInvestmentButton()
     {
-        yield return new WaitForSeconds(1.0f);
+        if (!GameGlobals.autoPlay)
+        {
+            yield return new WaitForSeconds(1.0f);
+        }
         yield return SimulateMouseClick(this.spendTokenInEnvironmentButtonUI, 0.5f);
     }
 
@@ -122,13 +128,19 @@ public class AIPlayer : Player
 
     public IEnumerator EndBudgetAllocationPhase()
     {
-        yield return new WaitForSeconds(3.0f);
+        if (!GameGlobals.autoPlay)
+        {
+            yield return new WaitForSeconds(3.0f);
+        }
         yield return SimulateMouseClick(this.playerActionButtonUI, 0.5f);
     }
 
     public IEnumerator ApplyInvestments()
     {
-        yield return new WaitForSeconds(3.0f);
+        if (!GameGlobals.autoPlay)
+        {
+            yield return new WaitForSeconds(3.0f);
+        }
         yield return SimulateMouseClick(this.executeBudgetButton, 0.5f);
     }
 
@@ -151,7 +163,10 @@ public class AIPlayerCooperator : AIPlayer
         // @jbgrocha: Fatima Speech Act (emotional engine call) - End of Budget Allocation
     }
     public override IEnumerator AutoHistoryDisplay() {
-        yield return new WaitForSeconds(3.0f);
+        if (!GameGlobals.autoPlay)
+        {
+            yield return new WaitForSeconds(3.0f);
+        }
         yield return emotionalModule.DisplaySpeechBalloonForAWhile("Mock Warning! This is not a fatima call!", 2.0f);
         // @jbgrocha: Fatima Speech Act (emotional engine call) - History Display
     }
@@ -185,7 +200,10 @@ public class AIPlayerDefector : AIPlayer
     }
     public override IEnumerator AutoHistoryDisplay()
     {
-        yield return new WaitForSeconds(3.0f);
+        if (!GameGlobals.autoPlay)
+        {
+            yield return new WaitForSeconds(3.0f);
+        }
         yield return emotionalModule.DisplaySpeechBalloonForAWhile("Mock Warning! This is not a fatima call!", 2.0f);
         // @jbgrocha: Fatima Speech Act (emotional engine call) - History Display
     }
@@ -227,7 +245,10 @@ public class AIPlayerBalancedCooperator: AIPlayer
     }
     public override IEnumerator AutoHistoryDisplay()
     {
-        yield return new WaitForSeconds(3.0f);
+        if (!GameGlobals.autoPlay)
+        {
+            yield return new WaitForSeconds(3.0f);
+        }
         yield return emotionalModule.DisplaySpeechBalloonForAWhile("Mock Warning! This is not a fatima call!", 2.0f);
         // @jbgrocha: Fatima Speech Act (emotional engine call) - History Display
     }
@@ -269,7 +290,10 @@ public class AIPlayerBalancedDefector : AIPlayer
     }
     public override IEnumerator AutoHistoryDisplay()
     {
-        yield return new WaitForSeconds(3.0f);
+        if (!GameGlobals.autoPlay)
+        {
+            yield return new WaitForSeconds(3.0f);
+        }
         yield return emotionalModule.DisplaySpeechBalloonForAWhile("Mock Warning! This is not a fatima call!", 2.0f);
         // @jbgrocha: Fatima Speech Act (emotional engine call) - History Display
     }
