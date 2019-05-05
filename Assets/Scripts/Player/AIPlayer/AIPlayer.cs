@@ -73,8 +73,14 @@ public class AIPlayer : Player
         if (!GameGlobals.autoPlay)
         {
             yield return new WaitForSeconds(1.0f);
+            yield return SimulateMouseClick(this.spendTokenInEconomicGrowthButtonUI, 0.5f);
         }
-        yield return SimulateMouseClick(this.spendTokenInEconomicGrowthButtonUI, 0.5f);
+        else
+        {
+            yield return new WaitForSeconds(0.0f);
+            spendTokenInEconomicGrowth();
+        }
+
     }
 
     public IEnumerator ClickEconomyInvestmentButton(int quantity)
@@ -102,8 +108,13 @@ public class AIPlayer : Player
         if (!GameGlobals.autoPlay)
         {
             yield return new WaitForSeconds(1.0f);
+            yield return SimulateMouseClick(this.spendTokenInEnvironmentButtonUI, 0.5f);
         }
-        yield return SimulateMouseClick(this.spendTokenInEnvironmentButtonUI, 0.5f);
+        else
+        {
+            yield return new WaitForSeconds(0.0f);
+            spendTokenInEnvironment();
+        }
     }
 
     public IEnumerator ClickEnvironmentInvestmentButton(int quantity)
@@ -131,8 +142,15 @@ public class AIPlayer : Player
         if (!GameGlobals.autoPlay)
         {
             yield return new WaitForSeconds(3.0f);
+            yield return SimulateMouseClick(this.playerActionButtonUI, 0.5f);
         }
-        yield return SimulateMouseClick(this.playerActionButtonUI, 0.5f);
+        else
+        {
+            yield return new WaitForSeconds(0.0f);
+            SendBudgetAllocationPhaseResponse();
+
+        }
+        
     }
 
     public IEnumerator ApplyInvestments()
@@ -140,8 +158,14 @@ public class AIPlayer : Player
         if (!GameGlobals.autoPlay)
         {
             yield return new WaitForSeconds(3.0f);
+            yield return SimulateMouseClick(this.executeBudgetButton, 0.5f);
         }
-        yield return SimulateMouseClick(this.executeBudgetButton, 0.5f);
+        else
+        {
+            yield return new WaitForSeconds(0.0f);
+            SendBudgetExecutionPhaseResponse();
+        }
+        
     }
 
 }
