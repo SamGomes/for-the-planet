@@ -167,6 +167,10 @@ public class EndScreenFunctionalities : MonoBehaviour
             {
                 RestartGame();
             }
+            else
+            {
+                Application.Quit();
+            }
         }
         else
         {
