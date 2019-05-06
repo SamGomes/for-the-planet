@@ -16,7 +16,13 @@ public abstract class SceneTransitionEffect
     }
     public abstract void LoadSceneWithEffect(string sceneName, LoadSceneMode mode);
 }
-
+public class Instant : SceneTransitionEffect
+{
+    public override void  LoadSceneWithEffect(string sceneName, LoadSceneMode mode)
+    {
+        SceneManager.LoadScene(sceneName, mode);
+    }
+}
 
 public class Fade: SceneTransitionEffect{
 

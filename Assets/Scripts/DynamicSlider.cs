@@ -22,6 +22,11 @@ public class DynamicSlider
 
     public IEnumerator UpdateSliderValue(float targetSliderValue)
     {
+        if (GameGlobals.autoPlay)
+        {
+            sliderUI.value = targetSliderValue;
+            yield return null;
+        }
 
         //make sure that the target value is within the slider range
         targetSliderValue = Mathf.Clamp01(targetSliderValue);

@@ -138,11 +138,14 @@ public class StartScreenFunctionalities : MonoBehaviour {
             }
         }
         GameGlobals.gameLogManager.WriteGameToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameProperties.currSessionParameterization.id, GameGlobals.currGameState.ToString());
-        
-        if (GameProperties.configurableProperties.isSimulation) //start game right after getting the condition
+
+        // @jbgrocha: auto start if on batchmode
+        if (GameGlobals.autoPlay)
         {
             StartGame();
+            Debug.Log("In BatchMode");
         }
+
         return 0;
     }
 
@@ -196,13 +199,6 @@ public class StartScreenFunctionalities : MonoBehaviour {
         DontDestroyOnLoad(monoBehaviourDummy);
         GameGlobals.monoBehaviourFunctionalities = monoBehaviourDummy.GetComponent<MonoBehaviourFunctionalities>();
         GameGlobals.monoBehaviourFunctionalities.StartCoroutine(InitGameGlobals());
-
-        // @jbgrocha: auto start if on batchmode
-        if (GameGlobals.autoPlay)
-        {
-            StartGame();
-            Debug.Log("In BatchMode");
-        }
         
     }
 

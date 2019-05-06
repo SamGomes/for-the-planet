@@ -190,8 +190,8 @@ public class AIPlayerCooperator : AIPlayer
         if (!GameGlobals.autoPlay)
         {
             yield return new WaitForSeconds(3.0f);
+            yield return emotionalModule.DisplaySpeechBalloonForAWhile("Mock Warning! This is not a fatima call!", 2.0f);
         }
-        yield return emotionalModule.DisplaySpeechBalloonForAWhile("Mock Warning! This is not a fatima call!", 2.0f);
         // @jbgrocha: Fatima Speech Act (emotional engine call) - History Display
     }
     public override IEnumerator AutoBudgetExecution()
@@ -227,8 +227,9 @@ public class AIPlayerDefector : AIPlayer
         if (!GameGlobals.autoPlay)
         {
             yield return new WaitForSeconds(3.0f);
+            yield return emotionalModule.DisplaySpeechBalloonForAWhile("Mock Warning! This is not a fatima call!", 2.0f);
         }
-        yield return emotionalModule.DisplaySpeechBalloonForAWhile("Mock Warning! This is not a fatima call!", 2.0f);
+        
         // @jbgrocha: Fatima Speech Act (emotional engine call) - History Display
     }
     public override IEnumerator AutoBudgetExecution()
@@ -272,8 +273,9 @@ public class AIPlayerBalancedCooperator: AIPlayer
         if (!GameGlobals.autoPlay)
         {
             yield return new WaitForSeconds(3.0f);
+            yield return emotionalModule.DisplaySpeechBalloonForAWhile("Mock Warning! This is not a fatima call!", 2.0f);
         }
-        yield return emotionalModule.DisplaySpeechBalloonForAWhile("Mock Warning! This is not a fatima call!", 2.0f);
+        
         // @jbgrocha: Fatima Speech Act (emotional engine call) - History Display
     }
     public override IEnumerator AutoBudgetExecution()
@@ -317,8 +319,9 @@ public class AIPlayerBalancedDefector : AIPlayer
         if (!GameGlobals.autoPlay)
         {
             yield return new WaitForSeconds(3.0f);
+            yield return emotionalModule.DisplaySpeechBalloonForAWhile("Mock Warning! This is not a fatima call!", 2.0f);
         }
-        yield return emotionalModule.DisplaySpeechBalloonForAWhile("Mock Warning! This is not a fatima call!", 2.0f);
+
         // @jbgrocha: Fatima Speech Act (emotional engine call) - History Display
     }
     public override IEnumerator AutoBudgetExecution()

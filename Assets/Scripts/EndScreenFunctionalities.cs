@@ -131,74 +131,69 @@ public class EndScreenFunctionalities : MonoBehaviour
     void Start()
     {
         //mock
-        GameProperties.configurableProperties = new DynamicallyConfigurableGameProperties();
-        GameProperties.configurableProperties.numSessionGames = 3;
-        GameProperties.configurableProperties.isAutomaticBriefing = true;
-        GameGlobals.currSessionId = System.DateTime.Now.ToString("yyyy/MM/dd/HH-mm-ss");
-        GameGlobals.gameLogManager = new DebugLogManager();
-        GameGlobals.gameSceneManager = new GameSceneManager();
-        GameGlobals.gameLogManager.InitLogs();
-        GameGlobals.players = new List<Player>(5);
-        Player playerToBeAdded = new Player(playerUIPrefab, new GameObject(), GameGlobals.monoBehaviourFunctionalities, infoPoppupNeutralRef, Resources.Load<Sprite>("Textures/UI/Icons/" + 0), 0, "Sam. G.");
-        StartCoroutine(playerToBeAdded.SetMoney(0.3f));
-        playerToBeAdded.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ENVIRONMENT] = 8;
-        GameGlobals.players.Add(playerToBeAdded);
-        playerToBeAdded = new Player(playerUIPrefab, new GameObject(), GameGlobals.monoBehaviourFunctionalities, infoPoppupNeutralRef, Resources.Load<Sprite>("Textures/UI/Icons/" + 0), 0, "Zé");
-        StartCoroutine(playerToBeAdded.SetMoney(0.5f));
-        playerToBeAdded.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ENVIRONMENT] = 5;
-        GameGlobals.players.Add(playerToBeAdded);
-        playerToBeAdded = new Player(playerUIPrefab, new GameObject(), GameGlobals.monoBehaviourFunctionalities, infoPoppupNeutralRef, Resources.Load<Sprite>("Textures/UI/Icons/" + 0), 0, "Player");
-        StartCoroutine(playerToBeAdded.SetMoney(0.7f));
-        playerToBeAdded.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ENVIRONMENT] = 2;
-        GameGlobals.players.Add(playerToBeAdded);
-        GameGlobals.currGameState = GameProperties.GameState.VICTORY;
-        GameGlobals.currGameId = 2;
+        //GameProperties.configurableProperties = new DynamicallyConfigurableGameProperties();
+        //GameProperties.configurableProperties.numSessionGames = 3;
+        //GameProperties.configurableProperties.isAutomaticBriefing = true;
+        //GameGlobals.currSessionId = System.DateTime.Now.ToString("yyyy/MM/dd/HH-mm-ss");
+        //GameGlobals.gameLogManager = new DebugLogManager();
+        //GameGlobals.gameSceneManager = new GameSceneManager();
+        //GameGlobals.gameLogManager.InitLogs();
+        //GameGlobals.players = new List<Player>(5);
+        //Player playerToBeAdded = new Player(playerUIPrefab, new GameObject(), GameGlobals.monoBehaviourFunctionalities, infoPoppupNeutralRef, Resources.Load<Sprite>("Textures/UI/Icons/" + 0), 0, "Sam. G.");
+        //StartCoroutine(playerToBeAdded.SetMoney(0.3f));
+        //playerToBeAdded.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ENVIRONMENT] = 8;
+        //GameGlobals.players.Add(playerToBeAdded);
+        //playerToBeAdded = new Player(playerUIPrefab, new GameObject(), GameGlobals.monoBehaviourFunctionalities, infoPoppupNeutralRef, Resources.Load<Sprite>("Textures/UI/Icons/" + 0), 0, "Zé");
+        //StartCoroutine(playerToBeAdded.SetMoney(0.5f));
+        //playerToBeAdded.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ENVIRONMENT] = 5;
+        //GameGlobals.players.Add(playerToBeAdded);
+        //playerToBeAdded = new Player(playerUIPrefab, new GameObject(), GameGlobals.monoBehaviourFunctionalities, infoPoppupNeutralRef, Resources.Load<Sprite>("Textures/UI/Icons/" + 0), 0, "Player");
+        //StartCoroutine(playerToBeAdded.SetMoney(0.7f));
+        //playerToBeAdded.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ENVIRONMENT] = 2;
+        //GameGlobals.players.Add(playerToBeAdded);
+        //GameGlobals.currGameState = GameProperties.GameState.VICTORY;
+        //GameGlobals.currGameId = 2;
+
+       
 
         GameGlobals.gameLogManager.UpdateGameResultInLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameProperties.currSessionParameterization.id, GameGlobals.currGameState.ToString());
-
-
-        victoryOverlayUI.SetActive(false);
-        lossOverlayUI.SetActive(false);
-
-        victoryBackgroundUI.SetActive(false);
-        lossBackgroundUI.SetActive(false);
-
-        mainScene.SetActive(false);
-
-        if (GameGlobals.currGameState == GameProperties.GameState.VICTORY)
-        {
-            victoryOverlayUI.SetActive(true);
-            victoryBackgroundUI.SetActive(true);
-        }
-        else if (GameGlobals.currGameState == GameProperties.GameState.LOSS)
-        {
-            lossOverlayUI.SetActive(true);
-            lossBackgroundUI.SetActive(true);
-
-        }
-        else
-        {
-            Debug.Log("[ERROR]: Game state returned NON FINISHED on game end!");
-            return;
-        }
-
-
-
-        //GameGlobals.gameLogManager.WriteGameToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameProperties.currGameParameterization.id, GameGlobals.currGameState.ToString());
+        //GameGlobals.gameLogManager.WriteGameToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), "-", GameGlobals.currGameState.ToString());
         GameGlobals.gameLogManager.EndLogs();
 
 
-
-        if (GameProperties.configurableProperties.isSimulation)
+        if (GameGlobals.autoPlay)
         {
             if (GameGlobals.currGameId < GameProperties.configurableProperties.numGamesToSimulate)
             {
                 RestartGame();
             }
-            return;
         }
         else
         {
+            victoryOverlayUI.SetActive(false);
+            lossOverlayUI.SetActive(false);
+
+            victoryBackgroundUI.SetActive(false);
+            lossBackgroundUI.SetActive(false);
+
+            mainScene.SetActive(false);
+
+            if (GameGlobals.currGameState == GameProperties.GameState.VICTORY)
+            {
+                victoryOverlayUI.SetActive(true);
+                victoryBackgroundUI.SetActive(true);
+            }
+            else if (GameGlobals.currGameState == GameProperties.GameState.LOSS)
+            {
+                lossOverlayUI.SetActive(true);
+                lossBackgroundUI.SetActive(true);
+
+            }
+            else
+            {
+                Debug.Log("[ERROR]: Game state returned NON FINISHED on game end!");
+                return;
+            }
 
             StartCoroutine(LoadMainScreenAfterDelay(5.0f));
         }

@@ -108,8 +108,7 @@ public class GameManager : MonoBehaviour {
         envDynamicSlider = new DynamicSlider(environmentSliderSceneElement.gameObject);
 
         StartCoroutine(envDynamicSlider.UpdateSliderValue(0.1f));
-
-        GameGlobals.currGameRoundId = 0; //first round
+        
         GameGlobals.commonEnvironmentInvestment = 0;
         DontDestroyOnLoad(CommonAreaUI);
 
@@ -190,7 +189,10 @@ public class GameManager : MonoBehaviour {
         if (numPlayersToDisplayHistory == 0)
         {
             numPlayersToDisplayHistory = GameGlobals.players.Count;
-            yield return new WaitForSeconds(phaseEndDelay);
+            if (!GameGlobals.autoPlay)
+            {
+                yield return new WaitForSeconds(phaseEndDelay);
+            }
             StartExecuteBudgetPhase();
         }
 
@@ -226,7 +228,10 @@ public class GameManager : MonoBehaviour {
 
             }
 
-            yield return new WaitForSeconds(phaseEndDelay);
+            if (!GameGlobals.autoPlay)
+            {
+                yield return new WaitForSeconds(phaseEndDelay);
+            }
             //check for game end to stop the game instead of loading new round
             if (environmentSliderSceneElement.value <= 0.05f)
             {
@@ -247,6 +252,7 @@ public class GameManager : MonoBehaviour {
                 GameGlobals.gameSceneManager.LoadEndScene();
             }
 
+            GameGlobals.currGameRoundId++;
             newRoundScreen.SetActive(true);
 
             // @jbgrocha: Auto Continue for Batch Mode
