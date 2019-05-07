@@ -93,33 +93,19 @@ public class MongoDBLogManager : ILogManager
             www.SetRequestHeader("Content-Type", "application/json"); //in order to be recognized by the mongo server
         }
     }
-    private IEnumerator ConsumePendingCalls(UnityWebRequestAsyncOperation currConnection)
+    private IEnumerator ExecuteCall(UnityWebRequestAsyncOperation currConnection, PendingCall call)
     {
         //Debug.Log("number of pending calls: " + pendingCalls.Count);
-        List<PendingCall> currList = new List<PendingCall>(pendingCalls); //in order to not access main list while being updated
-        if (!isGameRunning && currList.Count == 0)
+        yield return currConnection;
+        currConnection = call.www.SendWebRequest();
+        yield return currConnection;
+        Debug.Log("remote call error code returned (no return means no error): "+ call.www.error);
+        if (call.yieldedReaction != null)
         {
-            //finish monitorizing calls
-            yield return null;
+            call.yieldedReaction(call.www.downloadHandler.text);
         }
-        else
-        {
-            foreach (PendingCall call in currList)
-            {
-                yield return currConnection;
-                currConnection = call.www.SendWebRequest();
-                yield return currConnection;
-                Debug.Log("remote call error code returned (no return means no error): "+call.www.error);
-                if (call.yieldedReaction != null)
-                {
-                    call.yieldedReaction(call.www.downloadHandler.text);
-                }
-                pendingCalls.Remove(call);
-            }
-            yield return currConnection;
-            yield return new WaitForSeconds(0.05f);
-            GameGlobals.monoBehaviourFunctionalities.StartCoroutine(ConsumePendingCalls(currRequest));
-        }
+        pendingCalls.Remove(call);
+        yield return currConnection;
     }
 
     public void InitLogs()
@@ -129,7 +115,6 @@ public class MongoDBLogManager : ILogManager
 
         pendingCalls = new List<PendingCall>();
         isGameRunning = true;
-        GameGlobals.monoBehaviourFunctionalities.StartCoroutine(ConsumePendingCalls(currRequest));
     }
 
     private UnityWebRequest ConvertEntityToPostRequest(System.Object entity, string database, string collection)
@@ -159,7 +144,7 @@ public class MongoDBLogManager : ILogManager
     }
 
 
-    public void WritePlayerToLog(string sessionId, string currGameId, string playerId, string playerName, string type)
+    public IEnumerator WritePlayerToLog(string sessionId, string currGameId, string playerId, string playerName, string type)
     {
         var entity = new DataEntryPlayerLog
         {
@@ -169,10 +154,13 @@ public class MongoDBLogManager : ILogManager
             playerName = playerName,
             type = type
         };
-        pendingCalls.Add(new PendingCall(ConvertEntityToPostRequest(entity, databaseName, "playerslog"), null));
+        PendingCall call = new PendingCall(ConvertEntityToPostRequest(entity, databaseName, "playerslog"), null);
+        pendingCalls.Add(call);
+        yield return GameGlobals.monoBehaviourFunctionalities.StartCoroutine(ExecuteCall(currRequest,call));
+        pendingCalls.Remove(call);
     }
 
-    public void WriteGameToLog(string sessionId, string currGameId, string condition, string result)
+    public IEnumerator WriteGameToLog(string sessionId, string currGameId, string condition, string result)
     {
         var entity = new DataEntryGameResultLog
         {
@@ -181,9 +169,13 @@ public class MongoDBLogManager : ILogManager
             condition = condition,
             result = result
         };
-        pendingCalls.Add(new PendingCall(ConvertEntityToPostRequest(entity, databaseName, "gameresultslog"), null));
+
+        PendingCall call = new PendingCall(ConvertEntityToPostRequest(entity, databaseName, "gameresultslog"), null);
+        pendingCalls.Add(call);
+        yield return GameGlobals.monoBehaviourFunctionalities.StartCoroutine(ExecuteCall(currRequest, call));
+        pendingCalls.Remove(call);
     }
-    public void UpdateGameResultInLog(string sessionId, string currGameId, string condition, string result)
+    public IEnumerator UpdateGameResultInLog(string sessionId, string currGameId, string condition, string result)
     {
         var entity = new DataEntryGameResultLog
         {
@@ -194,24 +186,14 @@ public class MongoDBLogManager : ILogManager
         };
         string collection = "gameresultslog";
         string query = "&q={\"currGameId\": \"" + currGameId + "\", \"sessionId\":\"" + sessionId + "\"}";
-        
-        pendingCalls.Add(new PendingCall(ConvertEntityToPutRequest(entity, databaseName, collection, query), null));
 
+        PendingCall call = new PendingCall(ConvertEntityToPutRequest(entity, databaseName, collection, query), null);
+        pendingCalls.Add(call);
+        yield return GameGlobals.monoBehaviourFunctionalities.StartCoroutine(ExecuteCall(currRequest, call));
+        pendingCalls.Remove(call);
     }
-    public void WriteAlbumResultsToLog(string sessionId, string currGameId, string currGameRoundId, string currAlbumId, string currAlbumName, string marktingState)
-    {
-        var entity = new DataEntryAlbumResultLog
-        {
-            sessionId = sessionId,
-            currGameId = currGameId,
-            currGameRoundId = currGameRoundId,
-            currAlbumId = currAlbumId,
-            currAlbumName = currAlbumName,
-            marktingState = marktingState
-        };
-        pendingCalls.Add(new PendingCall(ConvertEntityToPostRequest(entity, databaseName, "albumresultslog"), null));
-    }
-    public void WritePlayerResultsToLog(string sessionId, string currGameId, string currGameRoundId, string playerId, string playerName, string money)
+
+    public IEnumerator WritePlayerResultsToLog(string sessionId, string currGameId, string currGameRoundId, string playerId, string playerName, string money)
     {
         var entity = new DataEntryPlayerResultLog
         {
@@ -222,9 +204,13 @@ public class MongoDBLogManager : ILogManager
             playerName = playerName,
             money = money
         };
-        pendingCalls.Add(new PendingCall(ConvertEntityToPostRequest(entity, databaseName, "playerresultslog"), null));
+        PendingCall call = new PendingCall(ConvertEntityToPostRequest(entity, databaseName, "playerresultslog"), null);
+        pendingCalls.Add(call);
+        yield return GameGlobals.monoBehaviourFunctionalities.StartCoroutine(ExecuteCall(currRequest, call));
+        pendingCalls.Remove(call);
     }
-    public void WriteEventToLog(string sessionId, string currGameId, string currGameRoundId, string playerId, string playerName,
+
+    public IEnumerator WriteEventToLog(string sessionId, string currGameId, string currGameRoundId, string playerId, string playerName,
         string eventType, string skill, string coins)
     {
         var entity = new DataEntryEventLog
@@ -238,34 +224,40 @@ public class MongoDBLogManager : ILogManager
             skill = skill,
             coins = coins
         };
-        pendingCalls.Add(new PendingCall(ConvertEntityToPostRequest(entity, databaseName, "eventslog"), null));
+        PendingCall call = new PendingCall(ConvertEntityToPostRequest(entity, databaseName, "eventslog"), null);
+        pendingCalls.Add(call);
+        yield return GameGlobals.monoBehaviourFunctionalities.StartCoroutine(ExecuteCall(currRequest, call));
+        pendingCalls.Remove(call);
     }
 
-    public void GetLastSessionConditionFromLog(Func<string, int> yieldedReactionToGet)
+    public IEnumerator GetLastSessionConditionFromLog(Func<string, int> yieldedReactionToGet)
     {
-        string query = "&s={\"_id\": -1}&l=1"; //query which returns the last game result
+       string query = "&s={\"_id\": -1}&l=1"; //query which returns the last game result
+       PendingCall call = new PendingCall(ConvertEntityToGetRequest(databaseName, "gameresultslog", query), 
+            delegate (string lastGameEntry){
+                string lastConditionString = "";
 
-        pendingCalls.Add(new PendingCall(ConvertEntityToGetRequest(databaseName, "gameresultslog", query), delegate (string lastGameEntry)
-        {
-            string lastConditionString = "";
-
-            lastGameEntry = "{ \"results\": " + lastGameEntry + "}";
-            DataEntryGameResultLogQueryResult lastGameEntriesObject = JsonUtility.FromJson<DataEntryGameResultLogQueryResult>(lastGameEntry);
-            if (lastGameEntriesObject.results.Count > 0)
-            {
-                lastConditionString = ((DataEntryGameResultLog)(lastGameEntriesObject.results[lastGameEntriesObject.results.Count - 1])).condition;
+                lastGameEntry = "{ \"results\": " + lastGameEntry + "}";
+                DataEntryGameResultLogQueryResult lastGameEntriesObject = JsonUtility.FromJson<DataEntryGameResultLogQueryResult>(lastGameEntry);
+                if (lastGameEntriesObject.results.Count > 0)
+                {
+                    lastConditionString = ((DataEntryGameResultLog)(lastGameEntriesObject.results[lastGameEntriesObject.results.Count - 1])).condition;
+                }
+                yieldedReactionToGet(lastConditionString);
+                return 0;
             }
-            return yieldedReactionToGet(lastConditionString);
-        }));
+        );
+        pendingCalls.Add(call);
+        yield return GameGlobals.monoBehaviourFunctionalities.StartCoroutine(ExecuteCall(currRequest, call));
+        pendingCalls.Remove(call);
     }
 
     public IEnumerator EndLogs()
     {
-        while(pendingCalls.Count > 0)
+        while (pendingCalls.Count > 0)
         {
             yield return null;
         }
-
         Debug.Log("Log Closed.");
     }
 }

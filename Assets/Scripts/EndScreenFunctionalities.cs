@@ -130,12 +130,12 @@ public class EndScreenFunctionalities : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        StartCoroutine(GameStartCoroutine());
+        StartCoroutine(YieldedStart());
     }
 
-    IEnumerator GameStartCoroutine()
+    IEnumerator YieldedStart()
     {
-        GameGlobals.gameLogManager.UpdateGameResultInLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameProperties.currSessionParameterization.id, GameGlobals.currGameState.ToString());
+        yield return GameGlobals.gameLogManager.UpdateGameResultInLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameProperties.currSessionParameterization.id, GameGlobals.currGameState.ToString());
 
         if (GameGlobals.autoPlay)
         {

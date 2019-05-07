@@ -77,7 +77,7 @@ public class Player
         InitUI(playerUIPrefab, playerCanvas, warningScreenRef, UIAvatar);
     }
 
-    public void spendTokenInEconomicGrowth()
+    public void SpendTokenInEconomicGrowth()
     {
         if (currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT] == 0)
         {
@@ -86,9 +86,11 @@ public class Player
         }
         this.RemoveInvestment(GameProperties.InvestmentTarget.ENVIRONMENT, 1);
         this.AddInvestment(GameProperties.InvestmentTarget.ECONOMIC, 1);
+
+        playerMonoBehaviourFunctionalities.StartCoroutine(GameGlobals.gameLogManager.WriteEventToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameGlobals.currGameRoundId.ToString(), this.id.ToString(), this.name, "ADDED_INVESTMENT", "ECONOMY", "-"));
     }
 
-    public void spendTokenInEnvironment()
+    public void SpendTokenInEnvironment()
     {
         if (currRoundInvestment[GameProperties.InvestmentTarget.ECONOMIC] == 0)
         {
@@ -97,7 +99,7 @@ public class Player
         }
         this.RemoveInvestment(GameProperties.InvestmentTarget.ECONOMIC, 1);
         this.AddInvestment(GameProperties.InvestmentTarget.ENVIRONMENT, 1);
-        
+        playerMonoBehaviourFunctionalities.StartCoroutine(GameGlobals.gameLogManager.WriteEventToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameGlobals.currGameRoundId.ToString(), this.id.ToString(), this.name, "ADDED_INVESTMENT", "ENVIRONMENT", "-"));
     }
 
     public virtual void InitUI(GameObject playerUIPrefab, GameObject canvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar)
@@ -126,11 +128,11 @@ public class Player
 
 
         this.spendTokenInEconomicGrowthButtonUI = playerUI.transform.Find("playerActionSection/budgetAllocationUI/tokenSelection/alocateEconomicGrowth/Button").gameObject.GetComponent<Button>();
-        this.spendTokenInEconomicGrowthButtonUI.onClick.AddListener(spendTokenInEconomicGrowth);
+        this.spendTokenInEconomicGrowthButtonUI.onClick.AddListener(SpendTokenInEconomicGrowth);
         this.economicGrowthTokensDisplayUI = playerUI.transform.Find("playerActionSection/budgetAllocationUI/tokenSelection/alocateEconomicGrowth/display").gameObject.GetComponent<Text>();
 
         this.spendTokenInEnvironmentButtonUI = playerUI.transform.Find("playerActionSection/budgetAllocationUI/tokenSelection/alocateEnvironment/Button").gameObject.GetComponent<Button>();
-        this.spendTokenInEnvironmentButtonUI.onClick.AddListener(spendTokenInEnvironment);
+        this.spendTokenInEnvironmentButtonUI.onClick.AddListener(SpendTokenInEnvironment);
         this.environmentTokensDisplayUI = playerUI.transform.Find("playerActionSection/budgetAllocationUI/tokenSelection/alocateEnvironment/display").gameObject.GetComponent<Text>();
 
         this.economicGrowthHistoryDisplay = playerUI.transform.Find("playerActionSection/displayHistoryUI/tokenSelection/alocateEconomicGrowth/display").gameObject.GetComponent<Text>();
@@ -170,11 +172,6 @@ public class Player
 
     public void ReceiveGameManager(GameManager gameManagerRef) {
         this.gameManagerRef = gameManagerRef;
-    }
-
-    public virtual void RegisterMeOnPlayersLog()
-    {
-        GameGlobals.gameLogManager.WritePlayerToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), this.id.ToString(), this.name, "-");
     }
 
     //public abstract void InformChoosePreferredInstrument(Player nextPlayer);
@@ -348,7 +345,6 @@ public class Player
         currRoundInvestment[target]+=amount;
         investmentHistory[target]+=amount;
 
-        GameGlobals.gameLogManager.WriteEventToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameGlobals.currGameRoundId.ToString(), this.id.ToString(), this.name,"ADDED_INVESTMENT", target.ToString() , "-");
         UpdateTokensUI();
         UpdateHistoryUI();
     }
@@ -363,7 +359,6 @@ public class Player
         currRoundInvestment[target]-=amount;
         investmentHistory[target]-=amount;
 
-        GameGlobals.gameLogManager.WriteEventToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameGlobals.currGameRoundId.ToString(), this.id.ToString(), this.name, "REMOVED_INVESTMENT", target.ToString(), "-");
         UpdateTokensUI();
         UpdateHistoryUI();
     }
@@ -376,7 +371,7 @@ public class Player
     public IEnumerator SetMoney(float money)
     {
         this.money = money;
-        GameGlobals.gameLogManager.WriteEventToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameGlobals.currGameRoundId.ToString(), this.id.ToString(), this.name,"SET_MONEY", "-" , money.ToString());
+        playerMonoBehaviourFunctionalities.StartCoroutine(GameGlobals.gameLogManager.WriteEventToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameGlobals.currGameRoundId.ToString(), this.id.ToString(), this.name,"SET_MONEY", "-" , money.ToString()));
         if (this.dynamicSlider != null)
         {
             yield return playerMonoBehaviourFunctionalities.StartCoroutine(this.dynamicSlider.UpdateSliderValue(money));

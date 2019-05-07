@@ -218,7 +218,7 @@ public class PlayersSetupSceneFunctionalities : MonoBehaviour {
         for (int i = 0; i < GameProperties.configurableProperties.numberOfPlayersPerGame; i++)
         {
             currPlayer = GameGlobals.players[i];
-            currPlayer.RegisterMeOnPlayersLog();
+            StartCoroutine(GameGlobals.gameLogManager.WritePlayerToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), currPlayer.GetId().ToString(), currPlayer.GetName(), "-"));
         }
 
         string json = JsonUtility.ToJson(GameProperties.configurableProperties);

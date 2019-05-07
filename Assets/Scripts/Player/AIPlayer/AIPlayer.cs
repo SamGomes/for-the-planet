@@ -78,7 +78,7 @@ public class AIPlayer : Player
         else
         {
             yield return new WaitForSeconds(0.0f);
-            spendTokenInEconomicGrowth();
+            SpendTokenInEconomicGrowth();
         }
 
     }
@@ -113,7 +113,7 @@ public class AIPlayer : Player
         else
         {
             yield return new WaitForSeconds(0.0f);
-            spendTokenInEnvironment();
+            SpendTokenInEnvironment();
         }
     }
 

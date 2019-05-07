@@ -97,7 +97,7 @@ public class StartScreenFunctionalities : MonoBehaviour {
 
         if (GameProperties.configurableProperties.isAutomaticBriefing) //generate condition automatically (asynchronous)
         {
-            GameGlobals.gameLogManager.GetLastSessionConditionFromLog(YieldedActionsAfterGet); //changes session code
+            StartCoroutine(GameGlobals.gameLogManager.GetLastSessionConditionFromLog(YieldedActionsAfterGet)); //changes session code
         }
         else
         {
@@ -137,7 +137,7 @@ public class StartScreenFunctionalities : MonoBehaviour {
                 this.UIStartGameButton.interactable = false;
             }
         }
-        GameGlobals.gameLogManager.WriteGameToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameProperties.currSessionParameterization.id, GameGlobals.currGameState.ToString());
+        StartCoroutine(GameGlobals.gameLogManager.WriteGameToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameProperties.currSessionParameterization.id, GameGlobals.currGameState.ToString()));
 
         // @jbgrocha: auto start if on batchmode
         if (GameGlobals.autoPlay)
