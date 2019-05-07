@@ -259,8 +259,13 @@ public class MongoDBLogManager : ILogManager
         }));
     }
 
-    public void EndLogs()
+    public IEnumerator EndLogs()
     {
+        while(pendingCalls.Count > 0)
+        {
+            yield return null;
+        }
+
         Debug.Log("Log Closed.");
     }
 }

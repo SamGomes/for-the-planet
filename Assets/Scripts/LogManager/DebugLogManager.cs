@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 
 //Debug log manager
@@ -39,9 +40,10 @@ public class DebugLogManager : ILogManager
         yieldedReactionToGet("B");
     }
 
-    public void EndLogs()
+    public IEnumerator EndLogs()
     {
         Debug.Log("Log Closed.");
+        yield return null;
     }
 }
 

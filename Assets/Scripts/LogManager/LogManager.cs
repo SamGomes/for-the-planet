@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.IO;
 using UnityEngine;
 
@@ -13,5 +14,5 @@ public interface ILogManager
     void WriteEventToLog(string sessionId, string currGameId, string currGameRoundId, string playerId, string playerName, string eventType, string instrument, string coins);
 
     void GetLastSessionConditionFromLog(Func<string,int> yieldedReactionToGet);
-    void EndLogs();
+    IEnumerator EndLogs();
 }
