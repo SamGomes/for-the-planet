@@ -1,0 +1,87 @@
+{
+	"root":
+		{
+			"classId": 0,
+			"Description": null,
+			"AppraisalRules":
+				{
+					"AppraisalWeight": 1,
+					"Rules": [
+						{
+							"EventName": "Event(Action-End, World, Start(Round), -)",
+							"Conditions":
+								{
+									"Set": ["Math(0.5, Times, State(Environment)) = [env]", "Math(0.5, Times, State(Economy)) = [eco]", "Math(Math([env], Plus, [eco]), Times, 20) = [aux]", "Math([aux], Minus, 10) = [desirability]", "Math(Math(State(Environment), Plus, 20), Minus, 10) = [goalSuccess]"]
+								},
+							"AppraisalVariables":
+								{
+									"AppraisalVariables": [
+										{
+											"Name": "Desirability",
+											"Value": "[desirability]",
+											"Target": "-"
+										}, 
+										{
+											"Name": "Praiseworthiness",
+											"Value": 0,
+											"Target": "-"
+										}]
+								}
+						}, 
+						{
+							"EventName": "Event(Action-End, World, End(Round), -)",
+							"Conditions":
+								{
+									"Set": ["Math(0.5, Times, State(Environment)) = [env]", "Math(0.5, Times, State(Economy)) = [eco]", "Math(Math([env], Plus, [eco]), Times, 20) = [aux]", "Math([aux], Minus, 10) = [desirability]", "Math(Math(State(Environment), Plus, 20), Minus, 10) = [goalSuccess]"]
+								},
+							"AppraisalVariables":
+								{
+									"AppraisalVariables": [
+										{
+											"Name": "Desirability",
+											"Value": "[desirability]",
+											"Target": "-"
+										}, 
+										{
+											"Name": "Praiseworthiness",
+											"Value": 0,
+											"Target": "-"
+										}]
+								}
+						}, 
+						{
+							"EventName": "Event(Property-Change, *, Increase(Namely, Economy), -)",
+							"Conditions":
+								{
+									"Set": ["Math(Math(Increase, Minus, ExpectedIncrease), Times, 10) = [desirability]"]
+								},
+							"AppraisalVariables":
+								{
+									"AppraisalVariables": [
+										{
+											"Name": "Desirability",
+											"Value": "[d]",
+											"Target": "-"
+										}, 
+										{
+											"Name": "Praiseworthiness",
+											"Value": "[p]",
+											"Target": "-"
+										}]
+								}
+						}]
+				},
+			"EmotionDispositions": [
+				{
+					"Emotion": "*",
+					"Decay": 1,
+					"Threshold": 1
+				}],
+			"Goals": []
+		},
+	"types": [
+		{
+			"TypeId": 0,
+			"ClassName": "EmotionalAppraisal.EmotionalAppraisalAsset, EmotionalAppraisal, Version=1.4.1.0, Culture=neutral, PublicKeyToken=null"
+		}]
+}

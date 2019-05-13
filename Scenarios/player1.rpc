@@ -9,15 +9,25 @@
 						{
 							"SELF":
 								{
-									"State(Environment)": "1, 1",
-									"State(Economy)": "1, 1",
-									"Weight(Env)": "0.5, 1"
+									"Weight(Env)": "0.5, 1",
+									"ExpectedResult(Nameless, Economy)": "0.5, 1",
+									"ExpectedResult(Nameless, Environment)": "0.5, 1",
+									"ExpectedResult(Other, Economy)": "0.5, 1",
+									"ExpectedResult(Other, Environment)": "0.5, 1",
+									"Increase(Nameless, Environment)": "0.5, 1",
+									"Increase(Nameless, Economy)": "0.5, 1",
+									"Increase(Other, Environment)": "0.5, 1",
+									"Increase(Other, Economy)": "0.5, 1",
+									"State(Nameless, Environment)": "0.5, 1",
+									"State(Nameless, Economy)": "0.5, 1",
+									"State(Other, Environment)": "0.5, 1",
+									"State(Other, Economy)": "0.5, 1"
 								}
 						}
 				},
 			"BodyName": null,
 			"VoiceName": null,
-			"EmotionalAppraisalAssetSource": "GenericAppraisal.ea",
+			"EmotionalAppraisalAssetSource": "GenericAppraisalSamG.ea",
 			"EmotionalDecisionMakingSource": null,
 			"SocialImportanceAssetSource": null,
 			"CommeillFautAssetSource": null,
