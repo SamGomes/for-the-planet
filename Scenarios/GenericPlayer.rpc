@@ -4,7 +4,7 @@
 			"classId": 0,
 			"KnowledgeBase":
 				{
-					"Perspective": "NormalPlayer",
+					"Perspective": "Nameless",
 					"Knowledge":
 						{
 
@@ -13,7 +13,7 @@
 			"BodyName": null,
 			"VoiceName": null,
 			"EmotionalAppraisalAssetSource": null,
-			"EmotionalDecisionMakingSource": "NormalPlayer.edm",
+			"EmotionalDecisionMakingSource": null,
 			"SocialImportanceAssetSource": null,
 			"CommeillFautAssetSource": null,
 			"EmotionalState":
@@ -29,6 +29,13 @@
 							"MinimumMoodValueForInfluencingEmotions": 0.5,
 							"EmotionalHalfLifeDecayTime": 15,
 							"MoodHalfLifeDecayTime": 60
+						}
+				},
+			"WorkingMemory":
+				{
+					"Values":
+						{
+
 						}
 				},
 			"AutobiographicMemory":
