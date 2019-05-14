@@ -53,7 +53,7 @@
 							"EventName": "Event(Property-Change, *, Increase(Namely, Economy), -)",
 							"Conditions":
 								{
-									"Set": ["Math(Math(Increase, Minus, ExpectedIncrease), Times, 10) = [desirability]"]
+									"Set": ["Math(Math(Increase(P1, Economy), Minus, Increase(Other, Economy)), Times, 10) = [d]", "Math(Math(Math(Math(Increase(P1, Environment), Minus, Increase(Other, Environment)), Plus, Math(Increase(P1, Economy), Minus, Increase(Other, Economy))), Times, 10), Minus, 20) = [p]", "Math(Math(Increase(P1, Environment), Times, 20), Minus, 10) = [L]"]
 								},
 							"AppraisalVariables":
 								{
@@ -66,6 +66,89 @@
 										{
 											"Name": "Praiseworthiness",
 											"Value": "[p]",
+											"Target": "-"
+										}, 
+										{
+											"Name": "Like",
+											"Value": "[L]",
+											"Target": "-"
+										}]
+								}
+						}, 
+						{
+							"EventName": "Event(Property-Change, *, Increase(Namely, Environment), -)",
+							"Conditions":
+								{
+									"Set": ["Math(Math(Increase(P1, Environment), Minus, Increase(Other, Environment)), Times, 10) = [d]", "Math(Math(Math(Math(Increase(P1, Environment), Minus, Increase(Other, Environment)), Plus, Math(Increase(P1, Economy), Minus, Increase(Other, Economy))), Times, 10), Minus, 20) = [p]", "Math(Math(Increase(P1, Environment), Times, 20), Minus, 10) = [L]"]
+								},
+							"AppraisalVariables":
+								{
+									"AppraisalVariables": [
+										{
+											"Name": "Desirability",
+											"Value": "[d]",
+											"Target": "-"
+										}, 
+										{
+											"Name": "Praiseworthiness",
+											"Value": "[p]",
+											"Target": "-"
+										}, 
+										{
+											"Name": "Like",
+											"Value": "[L]",
+											"Target": "-"
+										}]
+								}
+						}, 
+						{
+							"EventName": "Event(Property-Change, *, SimulationDecay(Namely, Environment), -)",
+							"Conditions":
+								{
+									"Set": ["Math(Math(1, Minus, Math(Increase(P1, Environment), Minus, Increase(Other, Environment))), Times, 10) = [d]", "Math(Math(Math(Math(1, Minus, Math(Increase(P1, Environment), Minus, Increase(Other, Environment)), Plus, Math(Increase(P1, Economy), Minus, Increase(Other, Economy)))), Times, 10), Minus, 20) = [p]", "Math(Math(1, Minus, Math(Increase(P1, Environment), Times, 20)), Minus, 10) = [L]"]
+								},
+							"AppraisalVariables":
+								{
+									"AppraisalVariables": [
+										{
+											"Name": "Desirability",
+											"Value": "[d]",
+											"Target": "-"
+										}, 
+										{
+											"Name": "Praiseworthiness",
+											"Value": "[p]",
+											"Target": "-"
+										}, 
+										{
+											"Name": "Like",
+											"Value": "[L]",
+											"Target": "-"
+										}]
+								}
+						}, 
+						{
+							"EventName": "Event(Property-Change, *, SimulationDecay(Namely, Economy), -)",
+							"Conditions":
+								{
+									"Set": ["Math(Math(1, Minus, Math(Increase(P1, Economy), Minus, Increase(Other, Economy))), Times, 10) = [d]", "Math(Math(Math(Math(1, Minus, Math(Increase(P1, Environment), Minus, Increase(Other, Environment)), Plus, Math(Increase(P1, Economy), Minus, Increase(Other, Economy)))), Times, 10), Minus, 20) = [p]", "Math(Math(1, Minus, Math(Increase(P1, Environment), Times, 20)), Minus, 10) = [L]"]
+								},
+							"AppraisalVariables":
+								{
+									"AppraisalVariables": [
+										{
+											"Name": "Desirability",
+											"Value": "[d]",
+											"Target": "-"
+										}, 
+										{
+											"Name": "Praiseworthiness",
+											"Value": "[p]",
+											"Target": "-"
+										}, 
+										{
+											"Name": "Like",
+											"Value": "[L]",
 											"Target": "-"
 										}]
 								}

@@ -4,24 +4,28 @@
 			"classId": 0,
 			"KnowledgeBase":
 				{
-					"Perspective": "Nameless",
+					"Perspective": "P1",
 					"Knowledge":
 						{
 							"SELF":
 								{
 									"Weight(Env)": "0.5, 1",
-									"ExpectedResult(Nameless, Economy)": "0.5, 1",
-									"ExpectedResult(Nameless, Environment)": "0.5, 1",
+									"ExpectedResult(P1, Economy)": "0.5, 1",
+									"ExpectedResult(P1, Environment)": "0.5, 1",
 									"ExpectedResult(Other, Economy)": "0.5, 1",
 									"ExpectedResult(Other, Environment)": "0.5, 1",
-									"Increase(Nameless, Environment)": "0.5, 1",
-									"Increase(Nameless, Economy)": "0.5, 1",
-									"Increase(Other, Environment)": "0.5, 1",
-									"Increase(Other, Economy)": "0.5, 1",
-									"State(Nameless, Environment)": "0.5, 1",
-									"State(Nameless, Economy)": "0.5, 1",
+									"State(P1, Environment)": "0.5, 1",
+									"State(P1, Economy)": "0.5, 1",
 									"State(Other, Environment)": "0.5, 1",
-									"State(Other, Economy)": "0.5, 1"
+									"State(Other, Economy)": "0.5, 1",
+									"InvestmentIncrease(P1, Environment)": "0.5, 1",
+									"InvestmentIncrease(P1, Economy)": "0.5, 1",
+									"InvestmentIncrease(Other, Environment)": "0.5, 1",
+									"InvestmentIncrease(Other, Economy)": "0.5, 1",
+									"SimulationDecay(P1, Environment)": "0.5, 1",
+									"SimulationDecay(P1, Economy)": "0.5, 1",
+									"SimulationDecay(Other, Environment)": "0.5, 1",
+									"SimulationDecay(Other, Economy)": "0.5, 1"
 								}
 						}
 				},

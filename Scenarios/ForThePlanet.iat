@@ -5,7 +5,7 @@
 			"ScenarioName": "For-the-planet",
 			"Description": null,
 			"WorldModelSource": "",
-			"CharacterSources": ["player1.rpc"]
+			"CharacterSources": ["player1.rpc", "GenericPlayer.rpc"]
 		},
 	"types": [
 		{
