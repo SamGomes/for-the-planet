@@ -274,7 +274,8 @@ public class GameManager : MonoBehaviour {
 
                 var decideResult = player.rpc.Decide().ToList<ActionLibrary.IAction>();
                 var emot = player.rpc.GetStrongestActiveEmotion();
-                StartCoroutine(GameGlobals.gameLogManager.WriteEventToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameGlobals.currGameRoundId.ToString(), player.GetId().ToString(), player.GetName(), "FATIMA_EMOTION_CHECK", "-", emot.ToString()));
+                string printedEmot = (emot!=null)? emot.ToString(): "null";
+                StartCoroutine(GameGlobals.gameLogManager.WriteEventToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameGlobals.currGameRoundId.ToString(), player.GetId().ToString(), player.GetName(), "FATIMA_EMOTION_CHECK", "-", printedEmot));
                 StartCoroutine(GameGlobals.gameLogManager.WriteEventToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameGlobals.currGameRoundId.ToString(), player.GetId().ToString(), player.GetName(), "FATIMA_DECIDE_CALLED", "-", decideResult.ToArray().ToString()));
             }
 
