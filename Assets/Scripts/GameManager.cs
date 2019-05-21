@@ -274,7 +274,7 @@ public class GameManager : MonoBehaviour {
 
                 var decideResult = player.rpc.Decide().ToList<ActionLibrary.IAction>();
                 var emot = player.rpc.GetStrongestActiveEmotion();
-                string printedEmot = (emot!=null)? emot.ToString(): "null";
+                string printedEmot = (emot != null)? "{ EmotionType: "+emot.EmotionType+"; Valence: "+emot.Valence+"; Intensity: "+emot.Intensity + " }": "null";
                 StartCoroutine(GameGlobals.gameLogManager.WriteEventToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameGlobals.currGameRoundId.ToString(), player.GetId().ToString(), player.GetName(), "FATIMA_EMOTION_CHECK", "-", printedEmot));
                 StartCoroutine(GameGlobals.gameLogManager.WriteEventToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameGlobals.currGameRoundId.ToString(), player.GetId().ToString(), player.GetName(), "FATIMA_DECIDE_CALLED", "-", decideResult.ToArray().ToString()));
             }
@@ -328,12 +328,19 @@ public class GameManager : MonoBehaviour {
     public void StartGameRoundForAllPlayers()
     {
         int numPlayers = GameGlobals.players.Count;
-        for (int i = 0; i < numPlayers; i++)
+        //Fatima updates
+        foreach (Player player in GameGlobals.players)
         {
-            Player currPlayer = GameGlobals.players[i];
-            currPlayer.SetRoundBudget(5);
+            List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
+
+            //players see the results of dice roll and think
+            events.Add(RolePlayCharacter.EventHelper.ActionEnd("World", "Start(Round)", player.GetName()));
+            player.rpc.Perceive(events);
+
+
+
+            player.SetRoundBudget(5);
         }
-        // ONHOLD: @jbgrocha: Send Start of New Round to AIPlayers (call AIplayer update emotional module function)
         StartAlocateBudgetPhase();
 
     }
