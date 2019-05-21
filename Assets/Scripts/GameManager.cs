@@ -1,10 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿
+using System.Linq;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour {
     
+
     public GameObject canvas;
 
     private int numPlayersToAllocateBudget;
@@ -42,8 +45,7 @@ public class GameManager : MonoBehaviour {
 
     private int currPlayerIndex;
     private int currSpeakingPlayerId;
-
-    private float diceRollDelay;
+    
     private float phaseEndDelay;
 
     private int marketLimit;
@@ -62,6 +64,13 @@ public class GameManager : MonoBehaviour {
         return 0;
     }
 
+    void OnApplicationQuit()
+    {
+        foreach (Player player in GameGlobals.players)
+        {
+            player.rpc.SaveToFile(Application.streamingAssetsPath+ "/Runtimed/"+ player.GetName()+".rpc");
+        }
+    }
 
     void Start()
     {
@@ -89,7 +98,6 @@ public class GameManager : MonoBehaviour {
         
 
         gameMainSceneFinished = false;
-        diceRollDelay = 4.0f;
         phaseEndDelay = 2.0f;
 
         int numPlayers = GameGlobals.players.Count;
@@ -199,6 +207,21 @@ public class GameManager : MonoBehaviour {
         //end of third phase
         if (numPlayersToExecuteBudget == 0)
         {
+            //Fatima updates
+            foreach (Player player in GameGlobals.players)
+            {
+                List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
+
+                //players see the results of dice roll and think
+                events.Add(RolePlayCharacter.EventHelper.PropertyChange("Increase(Environment)", System.Math.Round(envDynamicSlider.GetSliderValue(), 2).ToString(), "World"));
+                events.Add(RolePlayCharacter.EventHelper.PropertyChange("Increase(" + player.GetName() + ", Economy)", System.Math.Round(envDynamicSlider.GetSliderValue(), 2).ToString(), "World"));
+
+                events.Add(RolePlayCharacter.EventHelper.PropertyChange("State(Environment)", System.Math.Round(envDynamicSlider.GetSliderValue(), 2).ToString(), "World"));
+                events.Add(RolePlayCharacter.EventHelper.PropertyChange("State(" + player.GetName() + ",Economy)", System.Math.Round(player.GetMoney(), 2).ToString(), "World"));
+
+                player.rpc.Perceive(events);
+            }
+
             simulateInvestmentScreen.SetActive(true); //StartInvestmentSimulationPhase(); is called in this screen
             numPlayersToExecuteBudget = GameGlobals.players.Count;
 
@@ -217,16 +240,44 @@ public class GameManager : MonoBehaviour {
 
             string diceOverlayTitle = "Simulating environment growth ...";
             yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, 2));
-            yield return StartCoroutine(envDynamicSlider.UpdateSliderValue(environmentSliderSceneElement.value - ((float)diceManager.GetCurrDiceTotal() / 100.0f)));
-            //yield return StartCoroutine(envDynamicSlider.UpdateSliderValue(environmentSliderSceneElement.value - (0.8f)));
 
+            float envDecay = ((float)diceManager.GetCurrDiceTotal() / 100.0f);
+            yield return StartCoroutine(envDynamicSlider.UpdateSliderValue(environmentSliderSceneElement.value - envDecay));
+
+            //Fatima updates
             foreach (Player player in GameGlobals.players)
             {
                 diceOverlayTitle = "Simulating economic growth ...";
                 yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, 2));
-                yield return StartCoroutine(player.SetMoney(player.GetMoney() - ((float)diceManager.GetCurrDiceTotal() / 100.0f)));
 
+                float economicDecay = ((float)diceManager.GetCurrDiceTotal() / 100.0f);
+                yield return StartCoroutine(player.SetMoney(player.GetMoney() - economicDecay));
+
+                List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
+
+                //players see the results of dice roll and think
+                events.Add(RolePlayCharacter.EventHelper.PropertyChange("SimulationDecay(Environment)", envDecay.ToString(), "World"));
+                events.Add(RolePlayCharacter.EventHelper.PropertyChange("SimulationDecay(" + player.GetName() + ", Economy)", economicDecay.ToString(), "World"));
+
+                events.Add(RolePlayCharacter.EventHelper.PropertyChange("State(Environment)", System.Math.Round(envDynamicSlider.GetSliderValue(), 2).ToString(), "World"));
+                events.Add(RolePlayCharacter.EventHelper.PropertyChange("State(" + player.GetName() + ",Economy)", System.Math.Round(player.GetMoney(), 2).ToString(), "World"));
+            
+                foreach (Player otherPlayer in GameGlobals.players)
+                {
+                    if (otherPlayer == player)
+                    {
+                        continue;
+                    }
+                    events.Add(RolePlayCharacter.EventHelper.PropertyChange("State(" + otherPlayer.GetName() + ",Economy)", System.Math.Round(player.GetMoney(), 2).ToString(), "World"));
+                }
+                player.rpc.Perceive(events);
+
+                var decideResult = player.rpc.Decide().ToList<ActionLibrary.IAction>();
+                var emot = player.rpc.GetStrongestActiveEmotion();
+                StartCoroutine(GameGlobals.gameLogManager.WriteEventToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameGlobals.currGameRoundId.ToString(), player.GetId().ToString(), player.GetName(), "FATIMA_EMOTION_CHECK", "-", emot.ToString()));
+                StartCoroutine(GameGlobals.gameLogManager.WriteEventToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameGlobals.currGameRoundId.ToString(), player.GetId().ToString(), player.GetName(), "FATIMA_DECIDE_CALLED", "-", decideResult.ToArray().ToString()));
             }
+
 
             if (!GameGlobals.autoPlay)
             {

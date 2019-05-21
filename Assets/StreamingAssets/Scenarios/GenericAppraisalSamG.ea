@@ -8,49 +8,39 @@
 					"AppraisalWeight": 1,
 					"Rules": [
 						{
-							"EventName": "Event(Action-End, World, Start(Round), -)",
+							"EventName": "Event(Action-End, World, Start(Round), *)",
 							"Conditions":
 								{
-									"Set": ["Math(0.5, Times, State(Environment)) = [env]", "Math(0.5, Times, State(Economy)) = [eco]", "Math(Math([env], Plus, [eco]), Times, 20) = [aux]", "Math([aux], Minus, 10) = [desirability]", "Math(Math(State(Environment), Plus, 20), Minus, 10) = [goalSuccess]"]
+									"Set": ["Math(0.5, Times, State(P1, Environment)) = [env]", "Math(0.5, Times, State(P1, Economy)) = [eco]", "Math(Math([env], Plus, [eco]), Times, 20) = [aux]", "Math([aux], Minus, 10) = [d]"]
 								},
 							"AppraisalVariables":
 								{
 									"AppraisalVariables": [
 										{
 											"Name": "Desirability",
-											"Value": "[desirability]",
-											"Target": "-"
-										}, 
-										{
-											"Name": "Praiseworthiness",
-											"Value": 0,
+											"Value": "[d]",
 											"Target": "-"
 										}]
 								}
 						}, 
 						{
-							"EventName": "Event(Action-End, World, End(Round), -)",
+							"EventName": "Event(Action-End, World, End(Round), *)",
 							"Conditions":
 								{
-									"Set": ["Math(0.5, Times, State(Environment)) = [env]", "Math(0.5, Times, State(Economy)) = [eco]", "Math(Math([env], Plus, [eco]), Times, 20) = [aux]", "Math([aux], Minus, 10) = [desirability]", "Math(Math(State(Environment), Plus, 20), Minus, 10) = [goalSuccess]"]
+									"Set": ["Math(0.5, Times, State(P1, Environment)) = [env]", "Math(0.5, Times, State(P1, Economy)) = [eco]", "Math(Math([env], Plus, [eco]), Times, 20) = [aux]", "Math([aux], Minus, 10) = [d]"]
 								},
 							"AppraisalVariables":
 								{
 									"AppraisalVariables": [
 										{
 											"Name": "Desirability",
-											"Value": "[desirability]",
-											"Target": "-"
-										}, 
-										{
-											"Name": "Praiseworthiness",
-											"Value": 0,
+											"Value": "[d]",
 											"Target": "-"
 										}]
 								}
 						}, 
 						{
-							"EventName": "Event(Property-Change, *, Increase(Namely, Economy), -)",
+							"EventName": "Event(Property-Change, *, Increase(P1, Economy), *)",
 							"Conditions":
 								{
 									"Set": ["Math(Math(Increase(P1, Economy), Minus, Increase(Other, Economy)), Times, 10) = [d]", "Math(Math(Math(Math(Increase(P1, Environment), Minus, Increase(Other, Environment)), Plus, Math(Increase(P1, Economy), Minus, Increase(Other, Economy))), Times, 10), Minus, 20) = [p]", "Math(Math(Increase(P1, Environment), Times, 20), Minus, 10) = [L]"]
@@ -76,7 +66,7 @@
 								}
 						}, 
 						{
-							"EventName": "Event(Property-Change, *, Increase(Namely, Environment), -)",
+							"EventName": "Event(Property-Change, *, Increase(P1, Environment), *)",
 							"Conditions":
 								{
 									"Set": ["Math(Math(Increase(P1, Environment), Minus, Increase(Other, Environment)), Times, 10) = [d]", "Math(Math(Math(Math(Increase(P1, Environment), Minus, Increase(Other, Environment)), Plus, Math(Increase(P1, Economy), Minus, Increase(Other, Economy))), Times, 10), Minus, 20) = [p]", "Math(Math(Increase(P1, Environment), Times, 20), Minus, 10) = [L]"]
@@ -102,7 +92,7 @@
 								}
 						}, 
 						{
-							"EventName": "Event(Property-Change, *, SimulationDecay(Namely, Environment), -)",
+							"EventName": "Event(Property-Change, *, SimulationDecay(P1, Environment), *)",
 							"Conditions":
 								{
 									"Set": ["Math(Math(1, Minus, Math(Increase(P1, Environment), Minus, Increase(Other, Environment))), Times, 10) = [d]", "Math(Math(Math(Math(1, Minus, Math(Increase(P1, Environment), Minus, Increase(Other, Environment)), Plus, Math(Increase(P1, Economy), Minus, Increase(Other, Economy)))), Times, 10), Minus, 20) = [p]", "Math(Math(1, Minus, Math(Increase(P1, Environment), Times, 20)), Minus, 10) = [L]"]
@@ -128,7 +118,7 @@
 								}
 						}, 
 						{
-							"EventName": "Event(Property-Change, *, SimulationDecay(Namely, Economy), -)",
+							"EventName": "Event(Property-Change, *, SimulationDecay(P1, Economy), *)",
 							"Conditions":
 								{
 									"Set": ["Math(Math(1, Minus, Math(Increase(P1, Economy), Minus, Increase(Other, Economy))), Times, 10) = [d]", "Math(Math(Math(Math(1, Minus, Math(Increase(P1, Environment), Minus, Increase(Other, Environment)), Plus, Math(Increase(P1, Economy), Minus, Increase(Other, Economy)))), Times, 10), Minus, 20) = [p]", "Math(Math(1, Minus, Math(Increase(P1, Environment), Times, 20)), Minus, 10) = [L]"]

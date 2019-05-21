@@ -9,35 +9,34 @@
 						{
 							"SELF":
 								{
-									"Weight(Env)": "0.5, 1",
 									"ExpectedResult(P1, Economy)": "0.5, 1",
 									"ExpectedResult(P1, Environment)": "0.5, 1",
 									"ExpectedResult(Other, Economy)": "0.5, 1",
 									"ExpectedResult(Other, Environment)": "0.5, 1",
-									"State(P1, Environment)": "0.5, 1",
-									"State(P1, Economy)": "0.5, 1",
+									"State(P1, Environment)": "0.2, 1",
+									"State(P1, Economy)": "0.1, 1",
 									"State(Other, Environment)": "0.5, 1",
 									"State(Other, Economy)": "0.5, 1",
-									"InvestmentIncrease(P1, Environment)": "0.5, 1",
-									"InvestmentIncrease(P1, Economy)": "0.5, 1",
-									"InvestmentIncrease(Other, Environment)": "0.5, 1",
-									"InvestmentIncrease(Other, Economy)": "0.5, 1",
 									"SimulationDecay(P1, Environment)": "0.5, 1",
 									"SimulationDecay(P1, Economy)": "0.5, 1",
 									"SimulationDecay(Other, Environment)": "0.5, 1",
-									"SimulationDecay(Other, Economy)": "0.5, 1"
+									"SimulationDecay(Other, Economy)": "0.5, 1",
+									"Investment(P1, Environment)": "0.5, 1",
+									"Investment(P1, Economy)": "0.5, 1",
+									"Investment(Other, Environment)": "0.5, 1",
+									"Investment(Other, Economy)": "0.5, 1"
 								}
 						}
 				},
 			"BodyName": null,
 			"VoiceName": null,
-			"EmotionalAppraisalAssetSource": "GenericAppraisalSamG.ea",
-			"EmotionalDecisionMakingSource": null,
+			"EmotionalAppraisalAssetSource": "/Scenarios/GenericAppraisalSamG.ea",
+			"EmotionalDecisionMakingSource": "/Scenarios/NormalPlayer.edm",
 			"SocialImportanceAssetSource": null,
 			"CommeillFautAssetSource": null,
 			"EmotionalState":
 				{
-					"Mood": 0,
+					"Mood": -8,
 					"initialTick": 0,
 					"EmotionalPool": [],
 					"AppraisalConfiguration":

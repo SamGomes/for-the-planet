@@ -6,15 +6,9 @@ using UnityEngine.UI;
 
 public class AIPlayer : Player
 {
-    protected EmotionalModule emotionalModule;
-
-
     public AIPlayer(GameObject playerUIPrefab, GameObject playerCanvas, MonoBehaviourFunctionalities playerMonoBehaviourFunctionalities, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name): 
         base(playerUIPrefab, playerCanvas, playerMonoBehaviourFunctionalities, warningScreenRef, UIAvatar, id, name)
     {
-        emotionalModule = new EmotionalModule(this, playerMonoBehaviourFunctionalities);
-        emotionalModule.Speaks = true;
-
         this.playerSelfDisablerUI.SetActive(true);
     }
 
@@ -190,7 +184,7 @@ public class AIPlayerCooperator : AIPlayer
         if (!GameGlobals.autoPlay)
         {
             yield return new WaitForSeconds(3.0f);
-            yield return emotionalModule.DisplaySpeechBalloonForAWhile("Mock Warning! This is not a fatima call!", 2.0f);
+            yield return DisplaySpeechBalloonForAWhile("Mock Warning! This is not a fatima call!", 2.0f);
         }
         // @jbgrocha: Fatima Speech Act (emotional engine call) - History Display
     }
@@ -227,7 +221,7 @@ public class AIPlayerDefector : AIPlayer
         if (!GameGlobals.autoPlay)
         {
             yield return new WaitForSeconds(3.0f);
-            yield return emotionalModule.DisplaySpeechBalloonForAWhile("Mock Warning! This is not a fatima call!", 2.0f);
+            yield return DisplaySpeechBalloonForAWhile("Mock Warning! This is not a fatima call!", 2.0f);
         }
         
         // @jbgrocha: Fatima Speech Act (emotional engine call) - History Display
@@ -273,7 +267,7 @@ public class AIPlayerBalancedCooperator: AIPlayer
         if (!GameGlobals.autoPlay)
         {
             yield return new WaitForSeconds(3.0f);
-            yield return emotionalModule.DisplaySpeechBalloonForAWhile("Mock Warning! This is not a fatima call!", 2.0f);
+            yield return DisplaySpeechBalloonForAWhile("Mock Warning! This is not a fatima call!", 2.0f);
         }
         
         // @jbgrocha: Fatima Speech Act (emotional engine call) - History Display
@@ -319,7 +313,7 @@ public class AIPlayerBalancedDefector : AIPlayer
         if (!GameGlobals.autoPlay)
         {
             yield return new WaitForSeconds(3.0f);
-            yield return emotionalModule.DisplaySpeechBalloonForAWhile("Mock Warning! This is not a fatima call!", 2.0f);
+            yield return DisplaySpeechBalloonForAWhile("Mock Warning! This is not a fatima call!", 2.0f);
         }
 
         // @jbgrocha: Fatima Speech Act (emotional engine call) - History Display

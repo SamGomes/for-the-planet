@@ -1,13 +1,22 @@
-﻿using System.Collections;
+﻿using RolePlayCharacter;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
+using System.Linq;
+using System.Text.RegularExpressions;
 
 public class Player
 {
+    //Emotional stuff
+    public RolePlayCharacterAsset rpc;
+    private List<string> currSpeeches;
+    private float speechBalloonDelayPerWordInSeconds;
+    protected GameObject speechBalloonUI;
+
     //General Stuff
     protected GameProperties.PlayerType type;
 
@@ -51,7 +60,6 @@ public class Player
 
     protected Button executeBudgetButton;
     private PopupScreenFunctionalities warningScreenRef;
-    protected GameObject speechBalloonUI;
     private DynamicSlider dynamicSlider;
 
     public Player(GameObject playerUIPrefab, GameObject playerCanvas, MonoBehaviourFunctionalities playerMonoBehaviourFunctionalities, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name)
@@ -74,7 +82,10 @@ public class Player
         currRoundInvestment[GameProperties.InvestmentTarget.ECONOMIC] = 0;
         currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT] = 0;
 
+        this.speechBalloonDelayPerWordInSeconds = 0.5f;
+
         InitUI(playerUIPrefab, playerCanvas, warningScreenRef, UIAvatar);
+        InitRPC();
     }
 
     public void SpendTokenInEconomicGrowth()
@@ -102,7 +113,58 @@ public class Player
         playerMonoBehaviourFunctionalities.StartCoroutine(GameGlobals.gameLogManager.WriteEventToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameGlobals.currGameRoundId.ToString(), this.id.ToString(), this.name, "ADDED_INVESTMENT", "ENVIRONMENT", "-"));
     }
 
-    public virtual void InitUI(GameObject playerUIPrefab, GameObject canvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar)
+    public void InitRPC()
+    {
+        //rpc.Update();
+        currSpeeches = new List<string>();
+
+        IntegratedAuthoringTool.DTOs.CharacterSourceDTO rpcPath = GameGlobals.FAtiMAIat.GetAllCharacterSources().FirstOrDefault<IntegratedAuthoringTool.DTOs.CharacterSourceDTO>();
+        Debug.Log(rpcPath.RelativePath);
+        rpc = RolePlayCharacterAsset.LoadFromFile(rpcPath.Source);
+        rpc.LoadAssociatedAssets();
+        GameGlobals.FAtiMAIat.BindToRegistry(rpc.DynamicPropertiesRegistry);
+    }
+
+    public void Update()
+    {
+        ConsumeSpeechesOnUpdate();
+        rpc.Update();
+    }
+    
+    public IEnumerator DisplaySpeechBalloonForAWhile(string message, float delay)
+    {
+        this.speechBalloonUI.GetComponentInChildren<Text>().text = message;
+        speechBalloonUI.SetActive(true);
+        yield return new WaitForSeconds(delay);
+        if (speechBalloonUI.GetComponentInChildren<Text>().text == message) //to compensate if the balloon is already spawned
+        {
+            speechBalloonUI.SetActive(false);
+        }
+    }
+    //public string StripSpeechSentence(string rawMessage)
+    //{
+    //    var strippedDialog = rawMessage;
+    //    strippedDialog = strippedDialog.Replace("|dicesValue|", DicesValue.ToString());
+    //    strippedDialog = strippedDialog.Replace("|numDices|", NumDices.ToString());
+    //    strippedDialog = Regex.Replace(strippedDialog, @"<.*?>\s+|\s+<.*?>|\s+<.*?>\s+", "");
+    //    return strippedDialog;
+    //}
+    public void ConsumeSpeechesOnUpdate()
+    {
+        if (currSpeeches.Count > 0 && !speechBalloonUI.activeSelf)
+        {
+            string currSpeech = currSpeeches[0];
+            Regex regex = new Regex("\\w+");
+            int countedWords = regex.Matches(currSpeech).Count;
+
+            float displayingDelay = countedWords * this.speechBalloonDelayPerWordInSeconds;
+            playerMonoBehaviourFunctionalities.StartCoroutine(DisplaySpeechBalloonForAWhile(currSpeech, displayingDelay));
+            currSpeeches.Remove(currSpeech);
+        }
+    }
+
+
+    public void InitUI(GameObject playerUIPrefab, GameObject canvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar)
     {
         this.canvas = canvas;
 

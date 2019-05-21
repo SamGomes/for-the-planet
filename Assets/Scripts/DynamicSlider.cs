@@ -20,6 +20,11 @@ public class DynamicSlider
         valueUpdateUIdown.SetActive(false);
     }
 
+    public float GetSliderValue()
+    {
+        return sliderUI.value;
+    }
+
     public IEnumerator UpdateSliderValue(float targetSliderValue)
     {
         if (GameGlobals.autoPlay)

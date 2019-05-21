@@ -1,0 +1,155 @@
+{
+	"root":
+		{
+			"classId": 1,
+			"KnowledgeBase":
+				{
+					"Perspective": "P1",
+					"Knowledge":
+						{
+							"SELF":
+								{
+									"ExpectedResult(P1, Economy)": "0.5, 1",
+									"ExpectedResult(P1, Environment)": "0.5, 1",
+									"ExpectedResult(Other, Economy)": "0.5, 1",
+									"ExpectedResult(Other, Environment)": "0.5, 1",
+									"State(P1, Environment)": "0.2, 1",
+									"State(P1, Economy)": "0.1, 1",
+									"State(Other, Environment)": "0.5, 1",
+									"State(Other, Economy)": "0.5, 1",
+									"State(SamG, Economy)": "-0.02, 1",
+									"State(SamG2, Economy)": "-0.02, 1",
+									"State(SamG3, Economy)": "-0.02, 1",
+									"SimulationDecay(P1, Environment)": "0.5, 1",
+									"SimulationDecay(P1, Economy)": "0.5, 1",
+									"SimulationDecay(Other, Environment)": "0.5, 1",
+									"SimulationDecay(Other, Economy)": "0.5, 1",
+									"Investment(P1, Environment)": "0.5, 1",
+									"Investment(P1, Economy)": "0.5, 1",
+									"Investment(Other, Environment)": "0.5, 1",
+									"Investment(Other, Economy)": "0.5, 1",
+									"Increase(P1, Environment)": "0.66, 1",
+									"Increase(P1, Economy)": "0.66, 1"
+								}
+						}
+				},
+			"BodyName": null,
+			"VoiceName": null,
+			"EmotionalAppraisalAssetSource": "/Scenarios/GenericAppraisalSamG.ea",
+			"EmotionalDecisionMakingSource": "/Scenarios/NormalPlayer.edm",
+			"SocialImportanceAssetSource": null,
+			"CommeillFautAssetSource": null,
+			"EmotionalState":
+				{
+					"Mood": -8,
+					"initialTick": 0,
+					"EmotionalPool": [],
+					"AppraisalConfiguration":
+						{
+							"HalfLifeDecayConstant": 0.5,
+							"EmotionInfluenceOnMoodFactor": 0.3,
+							"MoodInfluenceOnEmotionFactor": 0.3,
+							"MinimumMoodValueForInfluencingEmotions": 0.5,
+							"EmotionalHalfLifeDecayTime": 15,
+							"MoodHalfLifeDecayTime": 60
+						}
+				},
+			"WorkingMemory":
+				{
+					"Values":
+						{
+
+						}
+				},
+			"AutobiographicMemory":
+				{
+					"Tick": 0,
+					"records": [
+						{
+							"classId": 0,
+							"Id": 1,
+							"Type": "Property-Change",
+							"Subject": "World",
+							"Timestamp": 0,
+							"Property": "Increase(P1, Environment)",
+							"NewValue": 0.66
+						}, 
+						{
+							"classId": 0,
+							"Id": 2,
+							"Type": "Property-Change",
+							"Subject": "World",
+							"Timestamp": 0,
+							"Property": "Increase(P1, Economy)",
+							"NewValue": 0.66
+						}, 
+						{
+							"classId": 0,
+							"Id": 3,
+							"Type": "Property-Change",
+							"Subject": "World",
+							"Timestamp": 0,
+							"Property": "State(SamG, Economy)",
+							"NewValue": -0.02
+						}, 
+						{
+							"classId": 0,
+							"Id": 4,
+							"Type": "Property-Change",
+							"Subject": "World",
+							"Timestamp": 0,
+							"Property": "State(SamG, Economy)",
+							"NewValue": -0.02
+						}, 
+						{
+							"classId": 0,
+							"Id": 5,
+							"Type": "Property-Change",
+							"Subject": "World",
+							"Timestamp": 0,
+							"Property": "State(SamG2, Economy)",
+							"NewValue": -0.02
+						}, 
+						{
+							"classId": 0,
+							"Id": 6,
+							"Type": "Property-Change",
+							"Subject": "World",
+							"Timestamp": 0,
+							"Property": "State(SamG2, Economy)",
+							"NewValue": -0.02
+						}, 
+						{
+							"classId": 0,
+							"Id": 7,
+							"Type": "Property-Change",
+							"Subject": "World",
+							"Timestamp": 0,
+							"Property": "State(SamG3, Economy)",
+							"NewValue": -0.02
+						}, 
+						{
+							"classId": 0,
+							"Id": 8,
+							"Type": "Property-Change",
+							"Subject": "World",
+							"Timestamp": 0,
+							"Property": "State(SamG3, Economy)",
+							"NewValue": -0.02
+						}]
+				},
+			"OtherAgents":
+				{
+					"dictionary": []
+				}
+		},
+	"types": [
+		{
+			"TypeId": 0,
+			"ClassName": "AutobiographicMemory.AM+PropertyChangeEvent, AutobiographicMemory, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+		}, 
+		{
+			"TypeId": 1,
+			"ClassName": "RolePlayCharacter.RolePlayCharacterAsset, RolePlayCharacter, Version=1.5.0.0, Culture=neutral, PublicKeyToken=null"
+		}]
+}

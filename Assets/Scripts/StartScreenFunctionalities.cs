@@ -110,10 +110,11 @@ public class StartScreenFunctionalities : MonoBehaviour {
         }
 
         //init fatima strings
-        GameGlobals.FAtiMAScenarioPath = "/Scenarios/ForTheRecord-EN.iat";
+        GameGlobals.FAtiMAScenarioPath = "/Scenarios/ForThePlanet.iat";
 
         AssetManager.Instance.Bridge = new AssetManagerBridge();
         GameGlobals.FAtiMAIat = IntegratedAuthoringToolAsset.LoadFromFile(GameGlobals.FAtiMAScenarioPath);
+
     }
 
 

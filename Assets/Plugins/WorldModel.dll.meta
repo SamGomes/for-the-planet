@@ -1,17 +1,20 @@
 fileFormatVersion: 2
-guid: f477c72ce97bc5c4b8e3356415a15d24
+guid: 45ffb992797c3b04fb1b48a2cd845ff9
 PluginImporter:
   externalObjects: {}
   serializedVersion: 2
   iconMap: {}
   executionOrder: {}
+  defineConstraints: []
   isPreloaded: 0
   isOverridable: 0
+  isExplicitlyReferenced: 0
+  validateReferences: 1
   platformData:
   - first:
       Any: 
     second:
-      enabled: 0
+      enabled: 1
       settings: {}
   - first:
       Editor: Editor
@@ -20,15 +23,11 @@ PluginImporter:
       settings:
         DefaultValueInitialized: true
   - first:
-      Facebook: WebGL
+      Windows Store Apps: WindowsStoreApps
     second:
-      enabled: 1
-      settings: {}
-  - first:
-      WebGL: WebGL
-    second:
-      enabled: 1
-      settings: {}
+      enabled: 0
+      settings:
+        CPU: AnyCPU
   userData: 
   assetBundleName: 
   assetBundleVariant: 
