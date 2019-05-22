@@ -274,9 +274,15 @@ public class GameManager : MonoBehaviour {
 
                 var decideResult = player.rpc.Decide().ToList<ActionLibrary.IAction>();
                 var emot = player.rpc.GetStrongestActiveEmotion();
-                string printedEmot = (emot != null)? "{ EmotionType: "+emot.EmotionType+"; Valence: "+emot.Valence+"; Intensity: "+emot.Intensity + " }": "null";
-                StartCoroutine(GameGlobals.gameLogManager.WriteEventToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameGlobals.currGameRoundId.ToString(), player.GetId().ToString(), player.GetName(), "FATIMA_EMOTION_CHECK", "-", printedEmot));
-                StartCoroutine(GameGlobals.gameLogManager.WriteEventToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameGlobals.currGameRoundId.ToString(), player.GetId().ToString(), player.GetName(), "FATIMA_DECIDE_CALLED", "-", decideResult.ToArray().ToString()));
+                Dictionary<string, string> additionalEventArgs = new Dictionary<string, string>();
+                if (emot != null)
+                {
+                    additionalEventArgs.Add("EmotionType", emot.EmotionType);
+                    additionalEventArgs.Add("Valence", emot.Valence.ToString());
+                    additionalEventArgs.Add("Intensity", emot.Intensity.ToString());
+                }
+                StartCoroutine(GameGlobals.gameLogManager.WriteEventToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameGlobals.currGameRoundId.ToString(), player.GetId().ToString(), player.GetName(), "FATIMA_EMOTION_CHECK", additionalEventArgs));
+                StartCoroutine(GameGlobals.gameLogManager.WriteEventToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameGlobals.currGameRoundId.ToString(), player.GetId().ToString(), player.GetName(), "FATIMA_DECIDE_CALLED", additionalEventArgs));
             }
 
 

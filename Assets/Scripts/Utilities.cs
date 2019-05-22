@@ -22,7 +22,7 @@ public static class GameGlobals
 
     public static IDiceLogic diceLogic;
 
-    public static ILogManager gameLogManager;
+    public static LogManager gameLogManager;
     public static AudioManager audioManager;
     public static GameManager gameManager;
 

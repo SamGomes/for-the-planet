@@ -11,7 +11,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 using System.Runtime.InteropServices;
-
+using UnityEngine.Networking;
 
 public class StartScreenFunctionalities : MonoBehaviour {
     private StreamReader fileReader;
@@ -45,9 +45,9 @@ public class StartScreenFunctionalities : MonoBehaviour {
         string path = Application.streamingAssetsPath + "/config.cfg";
         if (path.Contains("://") || path.Contains(":///")) //url instead of path
         {
-            WWW www = new WWW(path);
-            yield return www;
-            configText = www.text;
+            UnityWebRequest www = UnityWebRequest.Get(path);
+            yield return www.SendWebRequest();
+            configText = www.downloadHandler.text;
         }
         else
         {

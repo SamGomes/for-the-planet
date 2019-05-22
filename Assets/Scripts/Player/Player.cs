@@ -98,7 +98,9 @@ public class Player
         this.RemoveInvestment(GameProperties.InvestmentTarget.ENVIRONMENT, 1);
         this.AddInvestment(GameProperties.InvestmentTarget.ECONOMIC, 1);
 
-        playerMonoBehaviourFunctionalities.StartCoroutine(GameGlobals.gameLogManager.WriteEventToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameGlobals.currGameRoundId.ToString(), this.id.ToString(), this.name, "ADDED_INVESTMENT", "ECONOMY", "-"));
+        Dictionary<string, string> additionalEventArgs = new Dictionary<string, string>();
+        additionalEventArgs.Add("InvestmentTarget", "ECONOMY");
+        playerMonoBehaviourFunctionalities.StartCoroutine(GameGlobals.gameLogManager.WriteEventToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameGlobals.currGameRoundId.ToString(), this.id.ToString(), this.name, "ADDED_INVESTMENT", additionalEventArgs));
     }
 
     public void SpendTokenInEnvironment()
@@ -110,7 +112,10 @@ public class Player
         }
         this.RemoveInvestment(GameProperties.InvestmentTarget.ECONOMIC, 1);
         this.AddInvestment(GameProperties.InvestmentTarget.ENVIRONMENT, 1);
-        playerMonoBehaviourFunctionalities.StartCoroutine(GameGlobals.gameLogManager.WriteEventToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameGlobals.currGameRoundId.ToString(), this.id.ToString(), this.name, "ADDED_INVESTMENT", "ENVIRONMENT", "-"));
+
+        Dictionary<string, string> additionalEventArgs = new Dictionary<string, string>();
+        additionalEventArgs.Add("InvestmentTarget", "ENVIRONMENT");
+        playerMonoBehaviourFunctionalities.StartCoroutine(GameGlobals.gameLogManager.WriteEventToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameGlobals.currGameRoundId.ToString(), this.id.ToString(), this.name, "ADDED_INVESTMENT", additionalEventArgs));
     }
 
     public void InitRPC()
@@ -433,7 +438,11 @@ public class Player
     public IEnumerator SetMoney(float money)
     {
         this.money = money;
-        playerMonoBehaviourFunctionalities.StartCoroutine(GameGlobals.gameLogManager.WriteEventToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameGlobals.currGameRoundId.ToString(), this.id.ToString(), this.name,"SET_MONEY", "-" , money.ToString()));
+
+        Dictionary<string, string> additionalEventArgs = new Dictionary<string, string>();
+        additionalEventArgs.Add("Money", money.ToString());
+        playerMonoBehaviourFunctionalities.StartCoroutine(GameGlobals.gameLogManager.WriteEventToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameGlobals.currGameRoundId.ToString(), this.id.ToString(), this.name,"SET_MONEY", additionalEventArgs));
+
         if (this.dynamicSlider != null)
         {
             yield return playerMonoBehaviourFunctionalities.StartCoroutine(this.dynamicSlider.UpdateSliderValue(money));

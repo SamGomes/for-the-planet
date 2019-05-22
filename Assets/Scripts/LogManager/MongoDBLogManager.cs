@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 //Debug log manager
-public class MongoDBLogManager : ILogManager
+public class MongoDBLogManager : LogManager
 {
     private bool isGameRunning;
 
@@ -71,8 +71,7 @@ public class MongoDBLogManager : ILogManager
         public string playerId;
         public string playerName;
         public string eventType;
-        public string skill;
-        public string coins;
+        public string description;
     }
 
     [Serializable]
@@ -108,7 +107,7 @@ public class MongoDBLogManager : ILogManager
         yield return currConnection;
     }
 
-    public void InitLogs()
+    public override void InitLogs()
     {
         databaseName = "fortheplanetlogs";
         myApiKey = "skgyQ8WGQIP6tfmjytmcjzlgZDU2jWBD";
@@ -144,7 +143,7 @@ public class MongoDBLogManager : ILogManager
     }
 
 
-    public IEnumerator WritePlayerToLog(string sessionId, string currGameId, string playerId, string playerName, string type)
+    public override IEnumerator WritePlayerToLog(string sessionId, string currGameId, string playerId, string playerName, string type)
     {
         var entity = new DataEntryPlayerLog
         {
@@ -160,7 +159,7 @@ public class MongoDBLogManager : ILogManager
         pendingCalls.Remove(call);
     }
 
-    public IEnumerator WriteGameToLog(string sessionId, string currGameId, string condition, string result)
+    public override IEnumerator WriteGameToLog(string sessionId, string currGameId, string condition, string result)
     {
         var entity = new DataEntryGameResultLog
         {
@@ -175,7 +174,7 @@ public class MongoDBLogManager : ILogManager
         yield return GameGlobals.monoBehaviourFunctionalities.StartCoroutine(ExecuteCall(currRequest, call));
         pendingCalls.Remove(call);
     }
-    public IEnumerator UpdateGameResultInLog(string sessionId, string currGameId, string condition, string result)
+    public override IEnumerator UpdateGameResultInLog(string sessionId, string currGameId, string condition, string result)
     {
         var entity = new DataEntryGameResultLog
         {
@@ -193,7 +192,7 @@ public class MongoDBLogManager : ILogManager
         pendingCalls.Remove(call);
     }
 
-    public IEnumerator WritePlayerResultsToLog(string sessionId, string currGameId, string currGameRoundId, string playerId, string playerName, string money)
+    public override IEnumerator WritePlayerResultsToLog(string sessionId, string currGameId, string currGameRoundId, string playerId, string playerName, string money)
     {
         var entity = new DataEntryPlayerResultLog
         {
@@ -210,9 +209,10 @@ public class MongoDBLogManager : ILogManager
         pendingCalls.Remove(call);
     }
 
-    public IEnumerator WriteEventToLog(string sessionId, string currGameId, string currGameRoundId, string playerId, string playerName,
-        string eventType, string skill, string coins)
+    public override IEnumerator WriteEventToLog(string sessionId, string currGameId, string currGameRoundId, string playerId, string playerName,
+        string eventType, Dictionary<string, string> descriptionElements)
     {
+        string description = StringifyDictionaryForLogs(descriptionElements);
         var entity = new DataEntryEventLog
         {
             sessionId = sessionId,
@@ -221,8 +221,7 @@ public class MongoDBLogManager : ILogManager
             playerId = playerId,
             playerName = playerName,
             eventType = eventType,
-            skill = skill,
-            coins = coins
+            description = description
         };
         PendingCall call = new PendingCall(ConvertEntityToPostRequest(entity, databaseName, "eventslog"), null);
         pendingCalls.Add(call);
@@ -230,7 +229,7 @@ public class MongoDBLogManager : ILogManager
         pendingCalls.Remove(call);
     }
 
-    public IEnumerator GetLastSessionConditionFromLog(Func<string, int> yieldedReactionToGet)
+    public override IEnumerator GetLastSessionConditionFromLog(Func<string, int> yieldedReactionToGet)
     {
        string query = "&s={\"_id\": -1}&l=1"; //query which returns the last game result
        PendingCall call = new PendingCall(ConvertEntityToGetRequest(databaseName, "gameresultslog", query), 
@@ -252,7 +251,7 @@ public class MongoDBLogManager : ILogManager
         pendingCalls.Remove(call);
     }
 
-    public IEnumerator EndLogs()
+    public override IEnumerator EndLogs()
     {
         while (pendingCalls.Count > 0)
         {

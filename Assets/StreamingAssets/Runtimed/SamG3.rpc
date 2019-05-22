@@ -21,13 +21,13 @@
 									"SimulationDecay(P1, Economy)": "0.5, 1",
 									"SimulationDecay(Other, Environment)": "0.5, 1",
 									"SimulationDecay(Other, Economy)": "0.5, 1",
-									"SimulationDecay(SamG3, Economy)": "0.08, 1",
+									"SimulationDecay(SamG3, Economy)": "0.1, 1",
 									"Investment(P1, Environment)": "4, 1",
 									"Investment(P1, Economy)": "1, 1",
 									"Increase(SamG3, Economy)": "1, 1",
-									"State(Environment)": "0.93, 1",
+									"State(Environment)": "0.95, 1",
 									"Increase(Environment)": "1, 1",
-									"SimulationDecay(Environment)": "0.07, 1"
+									"SimulationDecay(Environment)": "0.05, 1"
 								}
 						}
 				},
@@ -124,7 +124,7 @@
 							"Subject": "World",
 							"Timestamp": 0,
 							"Property": "Increase(Environment)",
-							"NewValue": 0.61
+							"NewValue": 0.71
 						}, 
 						{
 							"classId": 1,
@@ -133,7 +133,7 @@
 							"Subject": "World",
 							"Timestamp": 0,
 							"Property": "Increase(SamG3, Economy)",
-							"NewValue": 0.61
+							"NewValue": 0.71
 						}, 
 						{
 							"classId": 1,
@@ -142,7 +142,7 @@
 							"Subject": "World",
 							"Timestamp": 0,
 							"Property": "State(Environment)",
-							"NewValue": 0.61
+							"NewValue": 0.71
 						}, 
 						{
 							"classId": 1,
@@ -160,7 +160,7 @@
 							"Subject": "World",
 							"Timestamp": 0,
 							"Property": "SimulationDecay(Environment)",
-							"NewValue": 0.09
+							"NewValue": 0.06
 						}, 
 						{
 							"classId": 1,
@@ -169,7 +169,7 @@
 							"Subject": "World",
 							"Timestamp": 0,
 							"Property": "SimulationDecay(SamG3, Economy)",
-							"NewValue": 0.04
+							"NewValue": 0.03
 						}, 
 						{
 							"classId": 1,
@@ -178,7 +178,7 @@
 							"Subject": "World",
 							"Timestamp": 0,
 							"Property": "State(Environment)",
-							"NewValue": 0.52
+							"NewValue": 0.65
 						}, 
 						{
 							"classId": 1,
@@ -187,7 +187,7 @@
 							"Subject": "World",
 							"Timestamp": 0,
 							"Property": "State(SamG3, Economy)",
-							"NewValue": 0.06
+							"NewValue": 0.07
 						}, 
 						{
 							"classId": 1,
@@ -196,7 +196,7 @@
 							"Subject": "World",
 							"Timestamp": 0,
 							"Property": "State(SamG, Economy)",
-							"NewValue": 0.06
+							"NewValue": 0.07
 						}, 
 						{
 							"classId": 1,
@@ -205,7 +205,7 @@
 							"Subject": "World",
 							"Timestamp": 0,
 							"Property": "State(SamG2, Economy)",
-							"NewValue": 0.06
+							"NewValue": 0.07
 						}, 
 						{
 							"classId": 0,
@@ -224,7 +224,7 @@
 							"Subject": "World",
 							"Timestamp": 0,
 							"Property": "Increase(Environment)",
-							"NewValue": 0.98
+							"NewValue": 1
 						}, 
 						{
 							"classId": 1,
@@ -233,7 +233,7 @@
 							"Subject": "World",
 							"Timestamp": 0,
 							"Property": "Increase(SamG3, Economy)",
-							"NewValue": 0.98
+							"NewValue": 1
 						}, 
 						{
 							"classId": 1,
@@ -242,7 +242,7 @@
 							"Subject": "World",
 							"Timestamp": 0,
 							"Property": "State(Environment)",
-							"NewValue": 0.98
+							"NewValue": 1
 						}, 
 						{
 							"classId": 1,
@@ -251,7 +251,7 @@
 							"Subject": "World",
 							"Timestamp": 0,
 							"Property": "State(SamG3, Economy)",
-							"NewValue": 0.06
+							"NewValue": 0.07
 						}, 
 						{
 							"classId": 1,
@@ -260,7 +260,7 @@
 							"Subject": "World",
 							"Timestamp": 0,
 							"Property": "SimulationDecay(Environment)",
-							"NewValue": 0.07
+							"NewValue": 0.05
 						}, 
 						{
 							"classId": 1,
@@ -269,7 +269,7 @@
 							"Subject": "World",
 							"Timestamp": 0,
 							"Property": "SimulationDecay(SamG3, Economy)",
-							"NewValue": 0.08
+							"NewValue": 0.07
 						}, 
 						{
 							"classId": 1,
@@ -278,7 +278,7 @@
 							"Subject": "World",
 							"Timestamp": 0,
 							"Property": "State(Environment)",
-							"NewValue": 0.91
+							"NewValue": 0.95
 						}, 
 						{
 							"classId": 1,
@@ -287,7 +287,7 @@
 							"Subject": "World",
 							"Timestamp": 0,
 							"Property": "State(SamG3, Economy)",
-							"NewValue": -0.02
+							"NewValue": 0
 						}, 
 						{
 							"classId": 1,
@@ -296,7 +296,7 @@
 							"Subject": "World",
 							"Timestamp": 0,
 							"Property": "State(SamG, Economy)",
-							"NewValue": -0.02
+							"NewValue": 0
 						}, 
 						{
 							"classId": 1,
@@ -305,7 +305,7 @@
 							"Subject": "World",
 							"Timestamp": 0,
 							"Property": "State(SamG2, Economy)",
-							"NewValue": -0.02
+							"NewValue": 0
 						}, 
 						{
 							"classId": 0,
@@ -351,7 +351,7 @@
 							"Subject": "World",
 							"Timestamp": 0,
 							"Property": "State(SamG3, Economy)",
-							"NewValue": -0.02
+							"NewValue": 0
 						}, 
 						{
 							"classId": 1,
@@ -360,7 +360,7 @@
 							"Subject": "World",
 							"Timestamp": 0,
 							"Property": "SimulationDecay(Environment)",
-							"NewValue": 0.07
+							"NewValue": 0.05
 						}, 
 						{
 							"classId": 1,
@@ -369,7 +369,7 @@
 							"Subject": "World",
 							"Timestamp": 0,
 							"Property": "SimulationDecay(SamG3, Economy)",
-							"NewValue": 0.08
+							"NewValue": 0.1
 						}, 
 						{
 							"classId": 1,
@@ -378,7 +378,7 @@
 							"Subject": "World",
 							"Timestamp": 0,
 							"Property": "State(Environment)",
-							"NewValue": 0.93
+							"NewValue": 0.95
 						}, 
 						{
 							"classId": 1,
