@@ -14,19 +14,23 @@
 									"ExpectedResult(Other, Economy)": "0.5, 1",
 									"ExpectedResult(Other, Environment)": "0.5, 1",
 									"State(P1, Economy)": "0.1, 1",
-									"State(World, Environment)": "1, 1",
+									"State(World, Environment)": "0.59, 1",
 									"State(SamG2, Economy)": "0.04, 1",
-									"State(SamG, Economy)": "0.04, 1",
-									"State(SamG3, Economy)": "0.04, 1",
+									"State(Others, Economy)": "0.03, 1",
 									"SimulationDecay(P1, Environment)": "0.5, 1",
 									"SimulationDecay(P1, Economy)": "0.5, 1",
 									"SimulationDecay(Other, Environment)": "0.5, 1",
 									"SimulationDecay(Other, Economy)": "0.5, 1",
-									"SimulationDecay(World, Environment)": "0.06, 1",
+									"SimulationDecay(World, Environment)": "0.05, 1",
 									"SimulationDecay(SamG2, Economy)": "0.06, 1",
 									"Investment(P1, Environment)": "4, 1",
 									"Investment(P1, Economy)": "1, 1",
-									"Increase(World, Environment)": "1, 1",
+									"AllocatedBudgetPoints(SamG2, Environment)": "5, 1",
+									"AllocatedBudgetPoints(SamG2, Economic)": "0, 1",
+									"AllocatedBudgetPoints(SamG, Environment)": "5, 1",
+									"AllocatedBudgetPoints(SamG, Economic)": "0, 1",
+									"AllocatedBudgetPoints(SamG3, Environment)": "5, 1",
+									"AllocatedBudgetPoints(SamG3, Economic)": "0, 1",
 									"State(Environment)": "0.2, 1"
 								}
 						}
@@ -39,7 +43,7 @@
 			"CommeillFautAssetSource": null,
 			"EmotionalState":
 				{
-					"Mood": -3.24901,
+					"Mood": -4.756828,
 					"initialTick": 0,
 					"EmotionalPool": [],
 					"AppraisalConfiguration":
@@ -61,7 +65,7 @@
 				},
 			"AutobiographicMemory":
 				{
-					"Tick": 78,
+					"Tick": 45,
 					"records": [
 						{
 							"classId": 0,
@@ -77,40 +81,85 @@
 							"Id": 2,
 							"Type": "Property-Change",
 							"Subject": "World",
-							"Timestamp": 33,
-							"Property": "Increase(World, Environment)",
-							"NewValue": 0.51
+							"Timestamp": 11,
+							"Property": "AllocatedBudgetPoints(SamG2, Environment)",
+							"NewValue": 5
 						}, 
 						{
 							"classId": 1,
 							"Id": 3,
 							"Type": "Property-Change",
 							"Subject": "World",
-							"Timestamp": 33,
-							"Property": "State(World, Environment)",
-							"NewValue": 0.51
+							"Timestamp": 11,
+							"Property": "AllocatedBudgetPoints(SamG2, Economic)",
+							"NewValue": 0
 						}, 
 						{
 							"classId": 1,
 							"Id": 4,
 							"Type": "Property-Change",
 							"Subject": "World",
-							"Timestamp": 33,
-							"Property": "State(SamG2, Economy)",
-							"NewValue": 0.1
+							"Timestamp": 11,
+							"Property": "AllocatedBudgetPoints(SamG, Environment)",
+							"NewValue": 5
 						}, 
 						{
 							"classId": 1,
 							"Id": 5,
 							"Type": "Property-Change",
 							"Subject": "World",
-							"Timestamp": 42,
-							"Property": "SimulationDecay(World, Environment)",
-							"NewValue": 0.06
+							"Timestamp": 11,
+							"Property": "AllocatedBudgetPoints(SamG, Economic)",
+							"NewValue": 0
 						}, 
 						{
 							"classId": 1,
 							"Id": 6,
+							"Type": "Property-Change",
+							"Subject": "World",
+							"Timestamp": 11,
+							"Property": "AllocatedBudgetPoints(SamG2, Environment)",
+							"NewValue": 5
+						}, 
+						{
+							"classId": 1,
+							"Id": 7,
+							"Type": "Property-Change",
+							"Subject": "World",
+							"Timestamp": 11,
+							"Property": "AllocatedBudgetPoints(SamG2, Economic)",
+							"NewValue": 0
+						}, 
+						{
+							"classId": 1,
+							"Id": 8,
+							"Type": "Property-Change",
+							"Subject": "World",
+							"Timestamp": 11,
+							"Property": "AllocatedBudgetPoints(SamG3, Environment)",
+							"NewValue": 5
+						}, 
+						{
+							"classId": 1,
+							"Id": 9,
+							"Type": "Property-Change",
+							"Subject": "World",
+							"Timestamp": 11,
+							"Property": "AllocatedBudgetPoints(SamG3, Economic)",
+							"NewValue": 0
+						}, 
+						{
+							"classId": 1,
+							"Id": 10,
+							"Type": "Property-Change",
+							"Subject": "World",
+							"Timestamp": 42,
+							"Property": "SimulationDecay(World, Environment)",
+							"NewValue": 0.05
+						}, 
+						{
+							"classId": 1,
+							"Id": 11,
 							"Type": "Property-Change",
 							"Subject": "World",
 							"Timestamp": 42,
@@ -119,75 +168,30 @@
 						}, 
 						{
 							"classId": 1,
-							"Id": 7,
+							"Id": 12,
 							"Type": "Property-Change",
 							"Subject": "World",
 							"Timestamp": 42,
 							"Property": "State(World, Environment)",
-							"NewValue": 0.45
-						}, 
-						{
-							"classId": 1,
-							"Id": 8,
-							"Type": "Property-Change",
-							"Subject": "World",
-							"Timestamp": 42,
-							"Property": "State(SamG2, Economy)",
-							"NewValue": 0.04
-						}, 
-						{
-							"classId": 1,
-							"Id": 9,
-							"Type": "Property-Change",
-							"Subject": "World",
-							"Timestamp": 42,
-							"Property": "State(SamG, Economy)",
-							"NewValue": 0.04
-						}, 
-						{
-							"classId": 1,
-							"Id": 10,
-							"Type": "Property-Change",
-							"Subject": "World",
-							"Timestamp": 42,
-							"Property": "State(SamG3, Economy)",
-							"NewValue": 0.04
-						}, 
-						{
-							"classId": 0,
-							"Id": 11,
-							"Type": "Action-End",
-							"Subject": "World",
-							"Timestamp": 45,
-							"Action": "State(Round, Start)",
-							"Target": "SamG2"
-						}, 
-						{
-							"classId": 1,
-							"Id": 12,
-							"Type": "Property-Change",
-							"Subject": "World",
-							"Timestamp": 77,
-							"Property": "Increase(World, Environment)",
-							"NewValue": 1
+							"NewValue": 0.59
 						}, 
 						{
 							"classId": 1,
 							"Id": 13,
 							"Type": "Property-Change",
 							"Subject": "World",
-							"Timestamp": 77,
-							"Property": "State(World, Environment)",
-							"NewValue": 1
+							"Timestamp": 42,
+							"Property": "State(SamG2, Economy)",
+							"NewValue": 0.04
 						}, 
 						{
 							"classId": 1,
 							"Id": 14,
 							"Type": "Property-Change",
 							"Subject": "World",
-							"Timestamp": 77,
-							"Property": "State(SamG2, Economy)",
-							"NewValue": 0.04
+							"Timestamp": 42,
+							"Property": "State(Others, Economy)",
+							"NewValue": 0.03
 						}]
 				},
 			"OtherAgents":

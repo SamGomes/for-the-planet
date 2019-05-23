@@ -36,7 +36,7 @@ public static class GameGlobals
     public static IntegratedAuthoringToolAsset FAtiMAIat;
 
     // @jbgrocha: Auto play if batchmode (or explicitly set it to true);
-    public static bool autoPlay = true || Application.isBatchMode;
+    public static bool autoPlay;
 }
 
 public static class GameProperties
@@ -78,8 +78,6 @@ public static class GameProperties
     public static SessionParameterization currSessionParameterization; //assigned automatically when isAutomaticDebriefing or isSimulation is assigned
     
     public static DynamicallyConfigurableGameProperties configurableProperties;
-
-    public static bool displayFetchExternalConfigFileOption = false;
 }
 
 //configurations classes

@@ -28,16 +28,12 @@ public class StartScreenFunctionalities : MonoBehaviour {
     [DllImport("__Internal")]
     private static extern void EnableFileLoad(string fileText);
 
-    private void UpdateGameConfig(string configText)
-    {
-        DynamicallyConfigurableGameProperties configs = JsonUtility.FromJson<DynamicallyConfigurableGameProperties>(configText);
-        GameProperties.configurableProperties = configs;
-    }
 
     private IEnumerator InitGameGlobals()
     {
         string configText = "";
         GameProperties.configurableProperties = new DynamicallyConfigurableGameProperties();
+
 
         //Assign configurable game properties from file if any
         //Application.ExternalEval("console.log('streaming assets: "+ Application.streamingAssetsPath + "')");
@@ -54,7 +50,12 @@ public class StartScreenFunctionalities : MonoBehaviour {
             configText = File.ReadAllText(path);
         }
 
-        UpdateGameConfig(configText);
+        DynamicallyConfigurableGameProperties configs = JsonUtility.FromJson<DynamicallyConfigurableGameProperties>(configText);
+        GameProperties.configurableProperties = configs;
+
+
+
+        GameGlobals.autoPlay = configs.isSimulation || Application.isBatchMode;
 
         GameGlobals.numberOfSpeakingPlayers = 0;
         GameGlobals.currGameId++;
@@ -66,7 +67,7 @@ public class StartScreenFunctionalities : MonoBehaviour {
         
         GameGlobals.players = new List<Player>(GameProperties.configurableProperties.numberOfPlayersPerGame);
 
-        GameGlobals.gameLogManager = new MongoDBLogManager();
+        GameGlobals.gameLogManager = new DebugLogManager();
         GameGlobals.gameLogManager.InitLogs();
 
         //only generate session data in the first game

@@ -8,16 +8,10 @@ using UnityEngine.UI;
 
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Globalization;
 
 public class Player
 {
-    //Emotional stuff
-    private RolePlayCharacterAsset rpc;
-    private List<string> currSpeeches;
-    private float speechBalloonDelayPerWordInSeconds;
-    protected GameObject speechBalloonUI;
-    List<WellFormedNames.Name> unperceivedEvents;
-    List<ActionLibrary.IAction> whatICanDo;
 
     //General Stuff
     protected GameProperties.PlayerType type;
@@ -38,7 +32,7 @@ public class Player
     private Sprite UIAvatar;
 
     private GameObject canvas;
-    private GameObject playerUI;
+    protected GameObject playerUI;
     private GameObject playerMarkerUI;
     private GameObject playerDisablerUI;
     protected GameObject playerSelfDisablerUI;
@@ -64,10 +58,9 @@ public class Player
     private PopupScreenFunctionalities warningScreenRef;
     private DynamicSlider dynamicSlider;
 
-    public Player(GameObject playerUIPrefab, GameObject playerCanvas, MonoBehaviourFunctionalities playerMonoBehaviourFunctionalities, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name)
+    public Player(GameObject playerCanvas, MonoBehaviourFunctionalities playerMonoBehaviourFunctionalities, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name)
     {
-
-
+        
         this.gameManagerRef = GameGlobals.gameManager;
         this.id = id;
         this.name = name;
@@ -86,14 +79,10 @@ public class Player
         currRoundInvestment[GameProperties.InvestmentTarget.ECONOMIC] = 0;
         currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT] = 0;
 
-        this.speechBalloonDelayPerWordInSeconds = 0.5f;
 
-        unperceivedEvents = new List<WellFormedNames.Name>();
-        whatICanDo = new List<ActionLibrary.IAction>();
-
-        InitUI(playerUIPrefab, playerCanvas, warningScreenRef, UIAvatar);
-        InitRPC();
+        InitUI(playerCanvas, warningScreenRef, UIAvatar);
     }
+
 
     public void SpendTokenInEconomicGrowth()
     {
@@ -125,86 +114,14 @@ public class Player
         playerMonoBehaviourFunctionalities.StartCoroutine(GameGlobals.gameLogManager.WriteEventToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameGlobals.currGameRoundId.ToString(), this.id.ToString(), this.name, "ADDED_INVESTMENT", additionalEventArgs));
     }
 
-    public void InitRPC()
-    {
-        //rpc.Update();
-        currSpeeches = new List<string>();
-
-        IntegratedAuthoringTool.DTOs.CharacterSourceDTO rpcPath = GameGlobals.FAtiMAIat.GetAllCharacterSources().FirstOrDefault<IntegratedAuthoringTool.DTOs.CharacterSourceDTO>();
-        Debug.Log(rpcPath.RelativePath);
-        rpc = RolePlayCharacterAsset.LoadFromFile(rpcPath.Source);
-        rpc.LoadAssociatedAssets();
-        GameGlobals.FAtiMAIat.BindToRegistry(rpc.DynamicPropertiesRegistry);
-    }
-
-    public void Perceive(List<WellFormedNames.Name> events)
-    {
-        unperceivedEvents.AddRange(events);
-    }
-    public List<ActionLibrary.IAction> GetWhatICanDo()
-    {
-        return this.whatICanDo;
-    }
-    public RolePlayCharacterAsset GetRPC()
-    {
-        return this.rpc;
-    }
-    public EmotionalAppraisal.IActiveEmotion GetMyStrongestEmotion()
-    {
-        return this.rpc.GetStrongestActiveEmotion();
-    }
-
-
-    public void Update()
-    {
-        ConsumeSpeechesOnUpdate();
-        if (unperceivedEvents.Count > 0)
-        {
-            rpc.Perceive(unperceivedEvents);
-            unperceivedEvents.Clear();
-        }
-        whatICanDo = rpc.Decide().ToList<ActionLibrary.IAction>();
-        rpc.Update();
-    }
     
-    public IEnumerator DisplaySpeechBalloonForAWhile(string message, float delay)
-    {
-        this.speechBalloonUI.GetComponentInChildren<Text>().text = message;
-        speechBalloonUI.SetActive(true);
-        yield return new WaitForSeconds(delay);
-        if (speechBalloonUI.GetComponentInChildren<Text>().text == message) //to compensate if the balloon is already spawned
-        {
-            speechBalloonUI.SetActive(false);
-        }
-    }
-    //public string StripSpeechSentence(string rawMessage)
-    //{
-    //    var strippedDialog = rawMessage;
-    //    strippedDialog = strippedDialog.Replace("|dicesValue|", DicesValue.ToString());
-    //    strippedDialog = strippedDialog.Replace("|numDices|", NumDices.ToString());
-    //    strippedDialog = Regex.Replace(strippedDialog, @"<.*?>\s+|\s+<.*?>|\s+<.*?>\s+", "");
-    //    return strippedDialog;
-    //}
-    public void ConsumeSpeechesOnUpdate()
-    {
-        if (currSpeeches.Count > 0 && !speechBalloonUI.activeSelf)
-        {
-            string currSpeech = currSpeeches[0];
-            Regex regex = new Regex("\\w+");
-            int countedWords = regex.Matches(currSpeech).Count;
-
-            float displayingDelay = countedWords * this.speechBalloonDelayPerWordInSeconds;
-            playerMonoBehaviourFunctionalities.StartCoroutine(DisplaySpeechBalloonForAWhile(currSpeech, displayingDelay));
-            currSpeeches.Remove(currSpeech);
-        }
-    }
 
 
-    public void InitUI(GameObject playerUIPrefab, GameObject canvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar)
+    public void InitUI(GameObject canvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar)
     {
         this.canvas = canvas;
 
-        this.playerUI = Object.Instantiate(playerUIPrefab, canvas.transform);
+        this.playerUI = Object.Instantiate(Resources.Load<GameObject>("Prefabs/PlayerUI/playerUI"), canvas.transform);
 
         this.playerMarkerUI = playerUI.transform.Find("marker").gameObject;
         this.playerDisablerUI = playerUI.transform.Find("disabler").gameObject;
@@ -212,12 +129,6 @@ public class Player
         playerSelfDisablerUI.SetActive(false); //provide interaction by default
 
         this.UIAvatar = UIAvatar;
-
-        GameObject UISpeechBalloonLeft = playerUI.transform.Find("speechBalloonLeft").gameObject;
-        GameObject UISpeechBalloonRight = playerUI.transform.Find("speechBalloonRight").gameObject;
-        this.speechBalloonUI = (this.id % 2 == 0) ? UISpeechBalloonLeft : UISpeechBalloonRight;
-        UISpeechBalloonLeft.SetActive(false);
-        UISpeechBalloonRight.SetActive(false);
 
         this.playerActionButtonUI = playerUI.transform.Find("playerActionSection/playerActionButton").gameObject.GetComponent<Button>();
 
@@ -471,7 +382,7 @@ public class Player
         this.money = money;
 
         Dictionary<string, string> additionalEventArgs = new Dictionary<string, string>();
-        additionalEventArgs.Add("Money", money.ToString());
+        additionalEventArgs.Add("Money", money.ToString("0.00", CultureInfo.InvariantCulture));
         playerMonoBehaviourFunctionalities.StartCoroutine(GameGlobals.gameLogManager.WriteEventToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameGlobals.currGameRoundId.ToString(), this.id.ToString(), this.name,"SET_MONEY", additionalEventArgs));
 
         if (this.dynamicSlider != null)
@@ -513,13 +424,16 @@ public class Player
     {
         return this.playerDisablerUI;
     }
-    public GameObject GetSpeechBaloonUI()
-    {
-        return this.speechBalloonUI;
-    }
     public Sprite GetAvatarUI()
     {
         return this.UIAvatar;
     }
+
+
+
+
+    public virtual void Perceive(List<WellFormedNames.Name> events) { }
+    public virtual List<ActionLibrary.IAction> GetWhatICanDo() { return new List<ActionLibrary.IAction>(); }
+    public virtual EmotionalAppraisal.IActiveEmotion GetMyStrongestEmotion() { return null; }
 
 }

@@ -6,10 +6,34 @@ using UnityEngine.UI;
 
 public class AIPlayer : Player
 {
-    public AIPlayer(GameObject playerUIPrefab, GameObject playerCanvas, MonoBehaviourFunctionalities playerMonoBehaviourFunctionalities, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name): 
-        base(playerUIPrefab, playerCanvas, playerMonoBehaviourFunctionalities, warningScreenRef, UIAvatar, id, name)
+
+    protected GameObject speechBalloonUI;
+    private float speechBalloonDelayPerWordInSeconds;
+
+    public AIPlayer(GameObject playerCanvas, MonoBehaviourFunctionalities playerMonoBehaviourFunctionalities, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name): 
+        base(playerCanvas, playerMonoBehaviourFunctionalities, warningScreenRef, UIAvatar, id, name)
     {
         this.playerSelfDisablerUI.SetActive(true);
+        this.speechBalloonDelayPerWordInSeconds = 0.5f;
+        
+        this.speechBalloonUI = (this.id % 2 == 0) ? Object.Instantiate(Resources.Load<GameObject>("Prefabs/PlayerUI/speechBalloonLeft"), playerUI.transform) : Object.Instantiate(Resources.Load<GameObject>("Prefabs/PlayerUI/speechBalloonRight"), playerUI.transform);
+        speechBalloonUI.SetActive(false);
+    }
+    
+    public GameObject GetSpeechBaloonUI()
+    {
+        return this.speechBalloonUI;
+    }
+
+    public IEnumerator DisplaySpeechBalloonForAWhile(string message, float delay)
+    {
+        this.speechBalloonUI.GetComponentInChildren<Text>().text = message;
+        speechBalloonUI.SetActive(true);
+        yield return new WaitForSeconds(delay);
+        if (speechBalloonUI.GetComponentInChildren<Text>().text == message) //to compensate if the balloon is already spawned
+        {
+            speechBalloonUI.SetActive(false);
+        }
     }
 
     //simulate button clicks
@@ -169,8 +193,8 @@ public class AIPlayer : Player
 
 public class AIPlayerCooperator : AIPlayer
 {
-    public AIPlayerCooperator(GameObject playerUIPrefab, GameObject playerCanvas, MonoBehaviourFunctionalities playerMonoBehaviourFunctionalities, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
-        base(playerUIPrefab, playerCanvas, playerMonoBehaviourFunctionalities, warningScreenRef, UIAvatar, id, name)
+    public AIPlayerCooperator(GameObject playerCanvas, MonoBehaviourFunctionalities playerMonoBehaviourFunctionalities, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
+        base(playerCanvas, playerMonoBehaviourFunctionalities, warningScreenRef, UIAvatar, id, name)
     { }
 
     public override IEnumerator AutoBudgetAlocation() {
@@ -204,8 +228,8 @@ public class AIPlayerCooperator : AIPlayer
 
 public class AIPlayerDefector : AIPlayer
 {
-    public AIPlayerDefector(GameObject playerUIPrefab, GameObject playerCanvas, MonoBehaviourFunctionalities playerMonoBehaviourFunctionalities, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
-        base(playerUIPrefab, playerCanvas, playerMonoBehaviourFunctionalities, warningScreenRef, UIAvatar, id, name)
+    public AIPlayerDefector(GameObject playerCanvas, MonoBehaviourFunctionalities playerMonoBehaviourFunctionalities, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
+        base(playerCanvas, playerMonoBehaviourFunctionalities, warningScreenRef, UIAvatar, id, name)
     { }
 
     public override IEnumerator AutoBudgetAlocation()
@@ -243,8 +267,8 @@ public class AIPlayerDefector : AIPlayer
 
 public class AIPlayerBalancedCooperator: AIPlayer
 {
-    public AIPlayerBalancedCooperator(GameObject playerUIPrefab, GameObject playerCanvas, MonoBehaviourFunctionalities playerMonoBehaviourFunctionalities, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
-        base(playerUIPrefab, playerCanvas, playerMonoBehaviourFunctionalities, warningScreenRef, UIAvatar, id, name)
+    public AIPlayerBalancedCooperator(GameObject playerCanvas, MonoBehaviourFunctionalities playerMonoBehaviourFunctionalities, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
+        base(playerCanvas, playerMonoBehaviourFunctionalities, warningScreenRef, UIAvatar, id, name)
     { }
 
     public override IEnumerator AutoBudgetAlocation()
@@ -289,8 +313,8 @@ public class AIPlayerBalancedCooperator: AIPlayer
 
 public class AIPlayerBalancedDefector : AIPlayer
 {
-    public AIPlayerBalancedDefector(GameObject playerUIPrefab, GameObject playerCanvas, MonoBehaviourFunctionalities playerMonoBehaviourFunctionalities, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
-        base(playerUIPrefab, playerCanvas, playerMonoBehaviourFunctionalities, warningScreenRef, UIAvatar, id, name)
+    public AIPlayerBalancedDefector(GameObject playerCanvas, MonoBehaviourFunctionalities playerMonoBehaviourFunctionalities, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
+        base(playerCanvas, playerMonoBehaviourFunctionalities, warningScreenRef, UIAvatar, id, name)
     { }
 
     public override IEnumerator AutoBudgetAlocation()
