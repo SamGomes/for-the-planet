@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class AIPlayer : Player
 {
-    public AIPlayer(GameObject playerUIPrefab, GameObject playerCanvas, MonoBehaviourFunctionalities playerMonoBehaviourFunctionalities, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name): 
+    public AIPlayer(GameObject playerUIPrefab, GameObject playerCanvas, MonoBehaviourFunctionalities playerMonoBehaviourFunctionalities, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
         base(playerUIPrefab, playerCanvas, playerMonoBehaviourFunctionalities, warningScreenRef, UIAvatar, id, name)
     {
         this.playerSelfDisablerUI.SetActive(true);
@@ -35,7 +35,14 @@ public class AIPlayer : Player
 
     public virtual IEnumerator AutoBudgetAlocation() { yield return null; }
     public virtual IEnumerator AutoHistoryDisplay() { yield return null; }
-    public virtual IEnumerator AutoBudgetExecution() { yield return null; }
+
+    public virtual IEnumerator AutoBudgetExecution()
+    {
+        // @jbgrocha: Fatima Speech Act (emotional engine call) - Before Budget Dice Rolls
+        yield return ApplyInvestments();
+        // @jbgrocha: Fatima Speech Act (emotional engine call) - After Budget Dice Rolls
+    }
+
     public virtual IEnumerator AutoInvestmentExecution() { yield return null; }
 
     public override void BudgetAllocationPhaseRequest()
@@ -144,7 +151,7 @@ public class AIPlayer : Player
             SendBudgetAllocationPhaseResponse();
 
         }
-        
+
     }
 
     public IEnumerator ApplyInvestments()
@@ -159,7 +166,7 @@ public class AIPlayer : Player
             yield return new WaitForSeconds(0.0f);
             SendBudgetExecutionPhaseResponse();
         }
-        
+
     }
 
 }
@@ -173,31 +180,13 @@ public class AIPlayerCooperator : AIPlayer
         base(playerUIPrefab, playerCanvas, playerMonoBehaviourFunctionalities, warningScreenRef, UIAvatar, id, name)
     { }
 
-    public override IEnumerator AutoBudgetAlocation() {
+    public override IEnumerator AutoBudgetAlocation()
+    {
         // @jbgrocha: Fatima Speech Act (emotional engine call) - Start of Budget Allocation
         yield return InvestAllInEvironment();
         // @jbgrocha: Fatima Speech Act (emotional engine call) - Before ending Budget Allocation
         yield return EndBudgetAllocationPhase();
         // @jbgrocha: Fatima Speech Act (emotional engine call) - End of Budget Allocation
-    }
-    public override IEnumerator AutoHistoryDisplay() {
-        if (!GameGlobals.autoPlay)
-        {
-            yield return new WaitForSeconds(3.0f);
-            yield return DisplaySpeechBalloonForAWhile("Mock Warning! This is not a fatima call!", 2.0f);
-        }
-        // @jbgrocha: Fatima Speech Act (emotional engine call) - History Display
-    }
-    public override IEnumerator AutoBudgetExecution()
-    {
-        // @jbgrocha: Fatima Speech Act (emotional engine call) - Before Budget Dice Rolls
-        yield return ApplyInvestments();
-        // @jbgrocha: Fatima Speech Act (emotional engine call) - After Budget Dice Rolls
-    }
-    public override IEnumerator AutoInvestmentExecution() {
-        // @jbgrocha: Fatima Speech Act (emotional engine call) - Before Decay
-        yield return null;
-        // @jbgrocha: Fatima Speech Act (emotional engine call) - After Decay
     }
 
 }
@@ -216,32 +205,9 @@ public class AIPlayerDefector : AIPlayer
         yield return EndBudgetAllocationPhase();
         // @jbgrocha: Fatima Speech Act (emotional engine call) - End of Budget Allocation
     }
-    public override IEnumerator AutoHistoryDisplay()
-    {
-        if (!GameGlobals.autoPlay)
-        {
-            yield return new WaitForSeconds(3.0f);
-            yield return DisplaySpeechBalloonForAWhile("Mock Warning! This is not a fatima call!", 2.0f);
-        }
-        
-        // @jbgrocha: Fatima Speech Act (emotional engine call) - History Display
-    }
-    public override IEnumerator AutoBudgetExecution()
-    {
-        // @jbgrocha: Fatima Speech Act (emotional engine call) - Before Budget Dice Rolls
-        yield return ApplyInvestments();
-        // @jbgrocha: Fatima Speech Act (emotional engine call) - After Budget Dice Rolls
-    }
-    public override IEnumerator AutoInvestmentExecution()
-    {
-        // @jbgrocha: Fatima Speech Act (emotional engine call) - Before Decay
-        yield return null;
-        // @jbgrocha: Fatima Speech Act (emotional engine call) - After Decay
-    }
-
 }
 
-public class AIPlayerBalancedCooperator: AIPlayer
+public class AIPlayerBalancedCooperator : AIPlayer
 {
     public AIPlayerBalancedCooperator(GameObject playerUIPrefab, GameObject playerCanvas, MonoBehaviourFunctionalities playerMonoBehaviourFunctionalities, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
         base(playerUIPrefab, playerCanvas, playerMonoBehaviourFunctionalities, warningScreenRef, UIAvatar, id, name)
@@ -261,28 +227,6 @@ public class AIPlayerBalancedCooperator: AIPlayer
         // @jbgrocha: Fatima Speech Act (emotional engine call) - Before ending Budget Allocation
         yield return EndBudgetAllocationPhase();
         // @jbgrocha: Fatima Speech Act (emotional engine call) - End of Budget Allocation
-    }
-    public override IEnumerator AutoHistoryDisplay()
-    {
-        if (!GameGlobals.autoPlay)
-        {
-            yield return new WaitForSeconds(3.0f);
-            yield return DisplaySpeechBalloonForAWhile("Mock Warning! This is not a fatima call!", 2.0f);
-        }
-        
-        // @jbgrocha: Fatima Speech Act (emotional engine call) - History Display
-    }
-    public override IEnumerator AutoBudgetExecution()
-    {
-        // @jbgrocha: Fatima Speech Act (emotional engine call) - Before Budget Dice Rolls
-        yield return ApplyInvestments();
-        // @jbgrocha: Fatima Speech Act (emotional engine call) - After Budget Dice Rolls
-    }
-    public override IEnumerator AutoInvestmentExecution()
-    {
-        // @jbgrocha: Fatima Speech Act (emotional engine call) - Before Decay
-        yield return null;
-        // @jbgrocha: Fatima Speech Act (emotional engine call) - After Decay
     }
 
 }
@@ -307,28 +251,6 @@ public class AIPlayerBalancedDefector : AIPlayer
         // @jbgrocha: Fatima Speech Act (emotional engine call) - Before ending Budget Allocation
         yield return EndBudgetAllocationPhase();
         // @jbgrocha: Fatima Speech Act (emotional engine call) - End of Budget Allocation
-    }
-    public override IEnumerator AutoHistoryDisplay()
-    {
-        if (!GameGlobals.autoPlay)
-        {
-            yield return new WaitForSeconds(3.0f);
-            yield return DisplaySpeechBalloonForAWhile("Mock Warning! This is not a fatima call!", 2.0f);
-        }
-
-        // @jbgrocha: Fatima Speech Act (emotional engine call) - History Display
-    }
-    public override IEnumerator AutoBudgetExecution()
-    {
-        // @jbgrocha: Fatima Speech Act (emotional engine call) - Before Budget Dice Rolls
-        yield return ApplyInvestments();
-        // @jbgrocha: Fatima Speech Act (emotional engine call) - After Budget Dice Rolls
-    }
-    public override IEnumerator AutoInvestmentExecution()
-    {
-        // @jbgrocha: Fatima Speech Act (emotional engine call) - Before Decay
-        yield return null;
-        // @jbgrocha: Fatima Speech Act (emotional engine call) - After Decay
     }
 
 }
