@@ -1,9 +1,8 @@
-using System;
 using CookComputing.XmlRpc;
 
-public interface IFRTMessagesRpc : IFRTMessages, IXmlRpcProxy { }
+public interface IFTRMessagesRpc : IFTRMessages, IXmlRpcProxy { }
 
-public interface IFRTMessages
+public interface IFTRMessages
 {
     void Dispose();
 

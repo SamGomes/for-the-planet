@@ -14,20 +14,20 @@
 									"ExpectedResult(Other, Economy)": "0.5, 1",
 									"ExpectedResult(Other, Environment)": "0.5, 1",
 									"State(P1, Economy)": "0.1, 1",
-									"State(SamG, Economy)": "-0.1, 1",
-									"State(SamG2, Economy)": "-0.1, 1",
-									"State(SamG3, Economy)": "-0.1, 1",
+									"State(World, Environment)": "1, 1",
+									"State(SamG, Economy)": "0.05, 1",
+									"State(SamG2, Economy)": "0.05, 1",
+									"State(SamG3, Economy)": "0.05, 1",
 									"SimulationDecay(P1, Environment)": "0.5, 1",
 									"SimulationDecay(P1, Economy)": "0.5, 1",
 									"SimulationDecay(Other, Environment)": "0.5, 1",
 									"SimulationDecay(Other, Economy)": "0.5, 1",
-									"SimulationDecay(SamG, Economy)": "0.07, 1",
+									"SimulationDecay(World, Environment)": "0.06, 1",
+									"SimulationDecay(SamG, Economy)": "0.05, 1",
 									"Investment(P1, Environment)": "4, 1",
 									"Investment(P1, Economy)": "1, 1",
-									"Increase(SamG, Economy)": "1, 1",
-									"State(Environment)": "0.95, 1",
-									"Increase(Environment)": "1, 1",
-									"SimulationDecay(Environment)": "0.05, 1"
+									"Increase(World, Environment)": "1, 1",
+									"State(Environment)": "0.2, 1"
 								}
 						}
 				},
@@ -39,53 +39,9 @@
 			"CommeillFautAssetSource": null,
 			"EmotionalState":
 				{
-					"Mood": -10,
+					"Mood": -3.24901,
 					"initialTick": 0,
-					"EmotionalPool": [
-						{
-							"Intensity": 8.4,
-							"Decay": 1,
-							"Threshold": 1,
-							"CauseId": 1,
-							"EventName": "Event(Action-End, World, Start(Round), SamG)",
-							"EmotionType": "Distress",
-							"Valence": "Negative",
-							"AppraisalVariables": ["Desirability"],
-							"InfluenceMood": true
-						}, 
-						{
-							"Intensity": 9,
-							"Decay": 1,
-							"Threshold": 1,
-							"CauseId": 12,
-							"EventName": "Event(Action-End, World, Start(Round), SamG)",
-							"EmotionType": "Distress",
-							"Valence": "Negative",
-							"AppraisalVariables": ["Desirability"],
-							"InfluenceMood": true
-						}, 
-						{
-							"Intensity": 9,
-							"Decay": 1,
-							"Threshold": 1,
-							"CauseId": 23,
-							"EventName": "Event(Action-End, World, Start(Round), SamG)",
-							"EmotionType": "Distress",
-							"Valence": "Negative",
-							"AppraisalVariables": ["Desirability"],
-							"InfluenceMood": true
-						}, 
-						{
-							"Intensity": 9,
-							"Decay": 1,
-							"Threshold": 1,
-							"CauseId": 34,
-							"EventName": "Event(Action-End, World, Start(Round), SamG)",
-							"EmotionType": "Distress",
-							"Valence": "Negative",
-							"AppraisalVariables": ["Desirability"],
-							"InfluenceMood": true
-						}],
+					"EmotionalPool": [],
 					"AppraisalConfiguration":
 						{
 							"HalfLifeDecayConstant": 0.5,
@@ -105,7 +61,7 @@
 				},
 			"AutobiographicMemory":
 				{
-					"Tick": 0,
+					"Tick": 78,
 					"records": [
 						{
 							"classId": 0,
@@ -113,8 +69,7 @@
 							"Type": "Action-End",
 							"Subject": "World",
 							"Timestamp": 0,
-							"LinkedEmotions": ["Distress"],
-							"Action": "Start(Round)",
+							"Action": "State(Round, Start)",
 							"Target": "SamG"
 						}, 
 						{
@@ -122,108 +77,107 @@
 							"Id": 2,
 							"Type": "Property-Change",
 							"Subject": "World",
-							"Timestamp": 0,
-							"Property": "Increase(Environment)",
-							"NewValue": 0.71
+							"Timestamp": 33,
+							"Property": "Increase(World, Environment)",
+							"NewValue": 0.51
 						}, 
 						{
 							"classId": 1,
 							"Id": 3,
 							"Type": "Property-Change",
 							"Subject": "World",
-							"Timestamp": 0,
-							"Property": "Increase(SamG, Economy)",
-							"NewValue": 0.71
+							"Timestamp": 33,
+							"Property": "State(World, Environment)",
+							"NewValue": 0.51
 						}, 
 						{
 							"classId": 1,
 							"Id": 4,
 							"Type": "Property-Change",
 							"Subject": "World",
-							"Timestamp": 0,
-							"Property": "State(Environment)",
-							"NewValue": 0.71
+							"Timestamp": 33,
+							"Property": "State(SamG, Economy)",
+							"NewValue": 0.1
 						}, 
 						{
 							"classId": 1,
 							"Id": 5,
 							"Type": "Property-Change",
 							"Subject": "World",
-							"Timestamp": 0,
-							"Property": "State(SamG, Economy)",
-							"NewValue": 0.1
+							"Timestamp": 39,
+							"Property": "SimulationDecay(World, Environment)",
+							"NewValue": 0.06
 						}, 
 						{
 							"classId": 1,
 							"Id": 6,
 							"Type": "Property-Change",
 							"Subject": "World",
-							"Timestamp": 0,
-							"Property": "SimulationDecay(Environment)",
-							"NewValue": 0.06
+							"Timestamp": 39,
+							"Property": "SimulationDecay(SamG, Economy)",
+							"NewValue": 0.05
 						}, 
 						{
 							"classId": 1,
 							"Id": 7,
 							"Type": "Property-Change",
 							"Subject": "World",
-							"Timestamp": 0,
-							"Property": "SimulationDecay(SamG, Economy)",
-							"NewValue": 0.08
+							"Timestamp": 39,
+							"Property": "State(World, Environment)",
+							"NewValue": 0.45
 						}, 
 						{
 							"classId": 1,
 							"Id": 8,
 							"Type": "Property-Change",
 							"Subject": "World",
-							"Timestamp": 0,
-							"Property": "State(Environment)",
-							"NewValue": 0.65
+							"Timestamp": 39,
+							"Property": "State(SamG, Economy)",
+							"NewValue": 0.05
 						}, 
 						{
 							"classId": 1,
 							"Id": 9,
 							"Type": "Property-Change",
 							"Subject": "World",
-							"Timestamp": 0,
-							"Property": "State(SamG, Economy)",
-							"NewValue": 0.02
+							"Timestamp": 39,
+							"Property": "State(SamG2, Economy)",
+							"NewValue": 0.05
 						}, 
 						{
 							"classId": 1,
 							"Id": 10,
 							"Type": "Property-Change",
 							"Subject": "World",
-							"Timestamp": 0,
-							"Property": "State(SamG2, Economy)",
-							"NewValue": 0.02
-						}, 
-						{
-							"classId": 1,
-							"Id": 11,
-							"Type": "Property-Change",
-							"Subject": "World",
-							"Timestamp": 0,
+							"Timestamp": 39,
 							"Property": "State(SamG3, Economy)",
-							"NewValue": 0.02
+							"NewValue": 0.05
 						}, 
 						{
 							"classId": 0,
-							"Id": 12,
+							"Id": 11,
 							"Type": "Action-End",
 							"Subject": "World",
-							"Timestamp": 0,
-							"LinkedEmotions": ["Distress"],
-							"Action": "Start(Round)",
+							"Timestamp": 45,
+							"Action": "State(Round, Start)",
 							"Target": "SamG"
+						}, 
+						{
+							"classId": 1,
+							"Id": 12,
+							"Type": "Property-Change",
+							"Subject": "World",
+							"Timestamp": 77,
+							"Property": "Increase(World, Environment)",
+							"NewValue": 1
 						}, 
 						{
 							"classId": 1,
 							"Id": 13,
 							"Type": "Property-Change",
 							"Subject": "World",
-							"Timestamp": 0,
-							"Property": "Increase(Environment)",
+							"Timestamp": 77,
+							"Property": "State(World, Environment)",
 							"NewValue": 1
 						}, 
 						{
@@ -231,191 +185,9 @@
 							"Id": 14,
 							"Type": "Property-Change",
 							"Subject": "World",
-							"Timestamp": 0,
-							"Property": "Increase(SamG, Economy)",
-							"NewValue": 1
-						}, 
-						{
-							"classId": 1,
-							"Id": 15,
-							"Type": "Property-Change",
-							"Subject": "World",
-							"Timestamp": 0,
-							"Property": "State(Environment)",
-							"NewValue": 1
-						}, 
-						{
-							"classId": 1,
-							"Id": 16,
-							"Type": "Property-Change",
-							"Subject": "World",
-							"Timestamp": 0,
+							"Timestamp": 77,
 							"Property": "State(SamG, Economy)",
-							"NewValue": 0.02
-						}, 
-						{
-							"classId": 1,
-							"Id": 17,
-							"Type": "Property-Change",
-							"Subject": "World",
-							"Timestamp": 0,
-							"Property": "SimulationDecay(Environment)",
 							"NewValue": 0.05
-						}, 
-						{
-							"classId": 1,
-							"Id": 18,
-							"Type": "Property-Change",
-							"Subject": "World",
-							"Timestamp": 0,
-							"Property": "SimulationDecay(SamG, Economy)",
-							"NewValue": 0.05
-						}, 
-						{
-							"classId": 1,
-							"Id": 19,
-							"Type": "Property-Change",
-							"Subject": "World",
-							"Timestamp": 0,
-							"Property": "State(Environment)",
-							"NewValue": 0.95
-						}, 
-						{
-							"classId": 1,
-							"Id": 20,
-							"Type": "Property-Change",
-							"Subject": "World",
-							"Timestamp": 0,
-							"Property": "State(SamG, Economy)",
-							"NewValue": -0.03
-						}, 
-						{
-							"classId": 1,
-							"Id": 21,
-							"Type": "Property-Change",
-							"Subject": "World",
-							"Timestamp": 0,
-							"Property": "State(SamG2, Economy)",
-							"NewValue": -0.03
-						}, 
-						{
-							"classId": 1,
-							"Id": 22,
-							"Type": "Property-Change",
-							"Subject": "World",
-							"Timestamp": 0,
-							"Property": "State(SamG3, Economy)",
-							"NewValue": -0.03
-						}, 
-						{
-							"classId": 0,
-							"Id": 23,
-							"Type": "Action-End",
-							"Subject": "World",
-							"Timestamp": 0,
-							"LinkedEmotions": ["Distress"],
-							"Action": "Start(Round)",
-							"Target": "SamG"
-						}, 
-						{
-							"classId": 1,
-							"Id": 24,
-							"Type": "Property-Change",
-							"Subject": "World",
-							"Timestamp": 0,
-							"Property": "Increase(Environment)",
-							"NewValue": 1
-						}, 
-						{
-							"classId": 1,
-							"Id": 25,
-							"Type": "Property-Change",
-							"Subject": "World",
-							"Timestamp": 0,
-							"Property": "Increase(SamG, Economy)",
-							"NewValue": 1
-						}, 
-						{
-							"classId": 1,
-							"Id": 26,
-							"Type": "Property-Change",
-							"Subject": "World",
-							"Timestamp": 0,
-							"Property": "State(Environment)",
-							"NewValue": 1
-						}, 
-						{
-							"classId": 1,
-							"Id": 27,
-							"Type": "Property-Change",
-							"Subject": "World",
-							"Timestamp": 0,
-							"Property": "State(SamG, Economy)",
-							"NewValue": -0.03
-						}, 
-						{
-							"classId": 1,
-							"Id": 28,
-							"Type": "Property-Change",
-							"Subject": "World",
-							"Timestamp": 0,
-							"Property": "SimulationDecay(Environment)",
-							"NewValue": 0.05
-						}, 
-						{
-							"classId": 1,
-							"Id": 29,
-							"Type": "Property-Change",
-							"Subject": "World",
-							"Timestamp": 0,
-							"Property": "SimulationDecay(SamG, Economy)",
-							"NewValue": 0.07
-						}, 
-						{
-							"classId": 1,
-							"Id": 30,
-							"Type": "Property-Change",
-							"Subject": "World",
-							"Timestamp": 0,
-							"Property": "State(Environment)",
-							"NewValue": 0.95
-						}, 
-						{
-							"classId": 1,
-							"Id": 31,
-							"Type": "Property-Change",
-							"Subject": "World",
-							"Timestamp": 0,
-							"Property": "State(SamG, Economy)",
-							"NewValue": -0.1
-						}, 
-						{
-							"classId": 1,
-							"Id": 32,
-							"Type": "Property-Change",
-							"Subject": "World",
-							"Timestamp": 0,
-							"Property": "State(SamG2, Economy)",
-							"NewValue": -0.1
-						}, 
-						{
-							"classId": 1,
-							"Id": 33,
-							"Type": "Property-Change",
-							"Subject": "World",
-							"Timestamp": 0,
-							"Property": "State(SamG3, Economy)",
-							"NewValue": -0.1
-						}, 
-						{
-							"classId": 0,
-							"Id": 34,
-							"Type": "Action-End",
-							"Subject": "World",
-							"Timestamp": 0,
-							"LinkedEmotions": ["Distress"],
-							"Action": "Start(Round)",
-							"Target": "SamG"
 						}]
 				},
 			"OtherAgents":

@@ -12,10 +12,12 @@ using System.Text.RegularExpressions;
 public class Player
 {
     //Emotional stuff
-    public RolePlayCharacterAsset rpc;
+    private RolePlayCharacterAsset rpc;
     private List<string> currSpeeches;
     private float speechBalloonDelayPerWordInSeconds;
     protected GameObject speechBalloonUI;
+    List<WellFormedNames.Name> unperceivedEvents;
+    List<ActionLibrary.IAction> whatICanDo;
 
     //General Stuff
     protected GameProperties.PlayerType type;
@@ -29,7 +31,7 @@ public class Player
 
     protected Dictionary<GameProperties.InvestmentTarget, int> currRoundInvestment;
     protected Dictionary<GameProperties.InvestmentTarget, int> investmentHistory;
-
+   
 
     //UI Stuff
     protected MonoBehaviourFunctionalities playerMonoBehaviourFunctionalities;
@@ -64,6 +66,8 @@ public class Player
 
     public Player(GameObject playerUIPrefab, GameObject playerCanvas, MonoBehaviourFunctionalities playerMonoBehaviourFunctionalities, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name)
     {
+
+
         this.gameManagerRef = GameGlobals.gameManager;
         this.id = id;
         this.name = name;
@@ -83,6 +87,9 @@ public class Player
         currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT] = 0;
 
         this.speechBalloonDelayPerWordInSeconds = 0.5f;
+
+        unperceivedEvents = new List<WellFormedNames.Name>();
+        whatICanDo = new List<ActionLibrary.IAction>();
 
         InitUI(playerUIPrefab, playerCanvas, warningScreenRef, UIAvatar);
         InitRPC();
@@ -130,9 +137,33 @@ public class Player
         GameGlobals.FAtiMAIat.BindToRegistry(rpc.DynamicPropertiesRegistry);
     }
 
+    public void Perceive(List<WellFormedNames.Name> events)
+    {
+        unperceivedEvents.AddRange(events);
+    }
+    public List<ActionLibrary.IAction> GetWhatICanDo()
+    {
+        return this.whatICanDo;
+    }
+    public RolePlayCharacterAsset GetRPC()
+    {
+        return this.rpc;
+    }
+    public EmotionalAppraisal.IActiveEmotion GetMyStrongestEmotion()
+    {
+        return this.rpc.GetStrongestActiveEmotion();
+    }
+
+
     public void Update()
     {
         ConsumeSpeechesOnUpdate();
+        if (unperceivedEvents.Count > 0)
+        {
+            rpc.Perceive(unperceivedEvents);
+            unperceivedEvents.Clear();
+        }
+        whatICanDo = rpc.Decide().ToList<ActionLibrary.IAction>();
         rpc.Update();
     }
     
