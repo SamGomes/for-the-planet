@@ -66,7 +66,7 @@ public class ThalamusConnector : IFTRMessages
         _remotePort = remotePort;
         _localPort = _remotePort + 1;
         _remoteUri = String.Format("http://{0}:{1}/", _remoteAddress, _remotePort);
-        Debug.Log("ThalamusSueca endpoint set to " + _remoteUri);
+        Debug.Log("Thalamus endpoint set to " + _remoteUri);
         _rpcProxy = XmlRpcProxyGen.Create<IFTRMessagesRpc>();
         _rpcProxy.Timeout = 1000;
         _rpcProxy.Url = _remoteUri;

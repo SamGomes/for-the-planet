@@ -39,19 +39,19 @@ public class PlayersSetupSceneFunctionalities : MonoBehaviour {
                     break;
 
                 case "AI_COOPERATOR":
-                    GameGlobals.players.Add(new AIPlayerCooperator(playerCanvas, GameGlobals.monoBehaviourFunctionalities, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
+                    GameGlobals.players.Add(new AIPlayerCooperator(new RobotInteractionModule(), playerCanvas, GameGlobals.monoBehaviourFunctionalities, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
                     break;
 
                 case "AI_BALANCED_COOPERATOR":
-                    GameGlobals.players.Add(new AIPlayerBalancedCooperator(playerCanvas, GameGlobals.monoBehaviourFunctionalities, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
+                    GameGlobals.players.Add(new AIPlayerBalancedCooperator(new LegendsInteractionModule(), playerCanvas, GameGlobals.monoBehaviourFunctionalities, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
                     break;
 
                 case "AI_DEFECTOR":
-                    GameGlobals.players.Add(new AIPlayerDefector(playerCanvas, GameGlobals.monoBehaviourFunctionalities, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
+                    GameGlobals.players.Add(new AIPlayerDefector(new LegendsInteractionModule(), playerCanvas, GameGlobals.monoBehaviourFunctionalities, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
                     break;
 
                 case "AI_BALANCED_DEFECTOR":
-                    GameGlobals.players.Add(new AIPlayerBalancedDefector(playerCanvas, GameGlobals.monoBehaviourFunctionalities, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
+                    GameGlobals.players.Add(new AIPlayerBalancedDefector(new LegendsInteractionModule(), playerCanvas, GameGlobals.monoBehaviourFunctionalities, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
                     break;
 
                 default:

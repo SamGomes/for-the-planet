@@ -12,7 +12,6 @@ using System.Globalization;
 
 public class Player
 {
-
     //General Stuff
     protected GameProperties.PlayerType type;
 
@@ -60,7 +59,6 @@ public class Player
 
     public Player(GameObject playerCanvas, MonoBehaviourFunctionalities playerMonoBehaviourFunctionalities, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name)
     {
-        
         this.gameManagerRef = GameGlobals.gameManager;
         this.id = id;
         this.name = name;
@@ -429,11 +427,9 @@ public class Player
         return this.UIAvatar;
     }
 
-
-
+    
 
     public virtual void Perceive(List<WellFormedNames.Name> events) { }
     public virtual List<ActionLibrary.IAction> GetWhatICanDo() { return new List<ActionLibrary.IAction>(); }
     public virtual EmotionalAppraisal.IActiveEmotion GetMyStrongestEmotion() { return null; }
-
 }

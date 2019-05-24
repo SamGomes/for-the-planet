@@ -4,13 +4,13 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class RoboticPlayer : AIPlayer
+public class RoboticPlayer : EmotionalAIPlayer
 {
 
     private ThalamusConnector thalamusConnector = null;
 
-    public RoboticPlayer(GameObject playerCanvas, MonoBehaviourFunctionalities playerMonoBehaviourFunctionalities, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
-        base(playerCanvas, playerMonoBehaviourFunctionalities, warningScreenRef, UIAvatar, id, name)
+    public RoboticPlayer(IInteractionModule interactionModule, GameObject playerCanvas, MonoBehaviourFunctionalities playerMonoBehaviourFunctionalities, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
+        base(interactionModule, playerCanvas, playerMonoBehaviourFunctionalities, warningScreenRef, UIAvatar, id, name)
     {
         this.playerSelfDisablerUI.SetActive(true);
         this.InitThalamusConnectorOnPort(7000, name);
@@ -27,7 +27,7 @@ public class RoboticPlayer : AIPlayer
         thalamusConnector.PerformUtterance(text, tags, values);
     }
 
-    public void FlushRobotUtterance(string text)
+    public void Speak(string text)
     {
        PerformUtterance(text, new string[] { }, new string[] { });
     }
@@ -35,26 +35,6 @@ public class RoboticPlayer : AIPlayer
     public void GazeAt(string target)
     {
         thalamusConnector.GazeAt(target);
-    }
-
-    // Investment
-    public override IEnumerator AutoBudgetAlocation() {
-        // Execute Emotional Engine Decision for Investment
-
-        // Get Environment Investment from emotional decision
-        int environmentInvestment = roundBudget / 2;
-
-        // Get Economy Investment from emotional decision
-        int economyInvestment = roundBudget / 2 + roundBudget % 2;
-
-        // @jbgrocha: Fatima Speech Act (emotional engine call) - Start of Budget Allocation
-        yield return InvestInEconomy(economyInvestment);
-
-        yield return InvestInEnvironment(environmentInvestment);
-
-        FlushRobotUtterance("OlÁ!!!!");
-
-        yield return EndBudgetAllocationPhase();
     }
 
 }
