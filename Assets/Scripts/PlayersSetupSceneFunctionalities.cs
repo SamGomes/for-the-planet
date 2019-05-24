@@ -39,7 +39,7 @@ public class PlayersSetupSceneFunctionalities : MonoBehaviour {
                     break;
 
                 case "AI_COOPERATOR":
-                    GameGlobals.players.Add(new AIPlayerCooperator(new RobotInteractionModule(), playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
+                    GameGlobals.players.Add(new EmotionalAIPlayer(new RobotInteractionModule(), playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
                     break;
 
                 case "AI_BALANCED_COOPERATOR":

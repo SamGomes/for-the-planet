@@ -4,7 +4,7 @@
 			"classId": 0,
 			"ActionTendencies": [
 				{
-					"Action": "Speak(P1)",
+					"Action": "Speak(P1, Cheguei)",
 					"Target": "-",
 					"Layer": "-",
 					"Conditions":
@@ -19,7 +19,17 @@
 					"Layer": "-",
 					"Conditions":
 						{
-							"Set": ["StrongestEmotion(SELF) = Anger"]
+							"Set": ["Math(EmotionIntensity(StrongestEmotion(SELF), Joy), Times, 0.5) = [env]", "Math(5, Minus, [env]) = [econ]"]
+						},
+					"Priority": 3
+				}, 
+				{
+					"Action": "Invest([env], [econ])",
+					"Target": "-",
+					"Layer": "-",
+					"Conditions":
+						{
+							"Set": ["4 = [env]", "1 = [econ]"]
 						},
 					"Priority": 3
 				}]
