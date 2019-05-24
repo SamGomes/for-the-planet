@@ -15,8 +15,8 @@ public class EmotionalAIPlayer: AIPlayer
     List<WellFormedNames.Name> unperceivedEvents;
     List<ActionLibrary.IAction> whatICanDo;
 
-    public EmotionalAIPlayer(IInteractionModule interactionModule, GameObject playerCanvas, MonoBehaviourFunctionalities playerMonoBehaviourFunctionalities, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
-        base(interactionModule, playerCanvas, playerMonoBehaviourFunctionalities, warningScreenRef, UIAvatar, id, name)
+    public EmotionalAIPlayer(IInteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
+        base(interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name)
     {
         unperceivedEvents = new List<WellFormedNames.Name>();
         whatICanDo = new List<ActionLibrary.IAction>();

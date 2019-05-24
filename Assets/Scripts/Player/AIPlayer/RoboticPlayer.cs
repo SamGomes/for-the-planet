@@ -9,8 +9,8 @@ public class RoboticPlayer : EmotionalAIPlayer
 
     private ThalamusConnector thalamusConnector = null;
 
-    public RoboticPlayer(IInteractionModule interactionModule, GameObject playerCanvas, MonoBehaviourFunctionalities playerMonoBehaviourFunctionalities, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
-        base(interactionModule, playerCanvas, playerMonoBehaviourFunctionalities, warningScreenRef, UIAvatar, id, name)
+    public RoboticPlayer(IInteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
+        base(interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name)
     {
         this.playerSelfDisablerUI.SetActive(true);
         this.InitThalamusConnectorOnPort(7000, name);

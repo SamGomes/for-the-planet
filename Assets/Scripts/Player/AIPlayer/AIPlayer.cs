@@ -10,8 +10,8 @@ public class AIPlayer : Player
 
     protected IInteractionModule interactionModule;
 
-    public AIPlayer(IInteractionModule interactionModule, GameObject playerCanvas, MonoBehaviourFunctionalities playerMonoBehaviourFunctionalities, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name): 
-        base(playerCanvas, playerMonoBehaviourFunctionalities, warningScreenRef, UIAvatar, id, name)
+    public AIPlayer(IInteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name): 
+        base(playerCanvas, warningScreenRef, UIAvatar, id, name)
     {
         this.interactionModule = interactionModule;
         this.playerSelfDisablerUI.SetActive(true);
@@ -184,13 +184,12 @@ public class AIPlayer : Player
 
 public class AIPlayerCooperator : AIPlayer
 {
-    public AIPlayerCooperator(IInteractionModule interactionModule, GameObject playerCanvas, MonoBehaviourFunctionalities playerMonoBehaviourFunctionalities, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
-        base(interactionModule, playerCanvas, playerMonoBehaviourFunctionalities, warningScreenRef, UIAvatar, id, name)
+    public AIPlayerCooperator(IInteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
+        base(interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name)
     { }
 
     public override IEnumerator AutoBudgetAlocation()
     {
-        interactionModule.Speak("I am actually retarded!");
         // @jbgrocha: Fatima Speech Act (emotional engine call) - Start of Budget Allocation
         yield return InvestAllInEvironment();
         // @jbgrocha: Fatima Speech Act (emotional engine call) - Before ending Budget Allocation
@@ -202,8 +201,8 @@ public class AIPlayerCooperator : AIPlayer
 
 public class AIPlayerDefector : AIPlayer
 {
-    public AIPlayerDefector(IInteractionModule interactionModule, GameObject playerCanvas, MonoBehaviourFunctionalities playerMonoBehaviourFunctionalities, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
-        base(interactionModule, playerCanvas, playerMonoBehaviourFunctionalities, warningScreenRef, UIAvatar, id, name)
+    public AIPlayerDefector(IInteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
+        base(interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name)
     { }
 
     public override IEnumerator AutoBudgetAlocation()
@@ -218,8 +217,8 @@ public class AIPlayerDefector : AIPlayer
 
 public class AIPlayerBalancedCooperator : AIPlayer
 {
-    public AIPlayerBalancedCooperator(IInteractionModule interactionModule, GameObject playerCanvas, MonoBehaviourFunctionalities playerMonoBehaviourFunctionalities, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
-        base(interactionModule, playerCanvas, playerMonoBehaviourFunctionalities, warningScreenRef, UIAvatar, id, name)
+    public AIPlayerBalancedCooperator(IInteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
+        base(interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name)
     { }
 
     public override IEnumerator AutoBudgetAlocation()
@@ -242,8 +241,8 @@ public class AIPlayerBalancedCooperator : AIPlayer
 
 public class AIPlayerBalancedDefector : AIPlayer
 {
-    public AIPlayerBalancedDefector(IInteractionModule interactionModule, GameObject playerCanvas, MonoBehaviourFunctionalities playerMonoBehaviourFunctionalities, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
-        base(interactionModule, playerCanvas, playerMonoBehaviourFunctionalities, warningScreenRef, UIAvatar, id, name)
+    public AIPlayerBalancedDefector(IInteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
+        base(interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name)
     { }
 
     public override IEnumerator AutoBudgetAlocation()

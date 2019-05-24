@@ -24,7 +24,7 @@ public class Player
 
     protected Dictionary<GameProperties.InvestmentTarget, int> currRoundInvestment;
     protected Dictionary<GameProperties.InvestmentTarget, int> investmentHistory;
-   
+
 
     //UI Stuff
     protected MonoBehaviourFunctionalities playerMonoBehaviourFunctionalities;
@@ -57,12 +57,12 @@ public class Player
     private PopupScreenFunctionalities warningScreenRef;
     private DynamicSlider dynamicSlider;
 
-    public Player(GameObject playerCanvas, MonoBehaviourFunctionalities playerMonoBehaviourFunctionalities, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name)
+    public Player(GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name)
     {
         this.gameManagerRef = GameGlobals.gameManager;
         this.id = id;
         this.name = name;
-        this.playerMonoBehaviourFunctionalities = playerMonoBehaviourFunctionalities;
+        this.playerMonoBehaviourFunctionalities = GameGlobals.monoBehaviourFunctionalities;
         this.warningScreenRef = warningScreenRef;
 
         this.money = 0.0f;
@@ -76,7 +76,6 @@ public class Player
         currRoundInvestment = new Dictionary<GameProperties.InvestmentTarget, int>();
         currRoundInvestment[GameProperties.InvestmentTarget.ECONOMIC] = 0;
         currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT] = 0;
-
 
         InitUI(playerCanvas, warningScreenRef, UIAvatar);
     }
