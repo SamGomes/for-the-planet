@@ -7,7 +7,9 @@ using System.Collections.Generic;
 using System.Globalization;
 
 public class GameManager : MonoBehaviour {
-    
+
+
+    public float lastEnvDecay;
 
     public GameObject canvas;
 
@@ -164,13 +166,20 @@ public class GameManager : MonoBehaviour {
         //roll dice for GameProperties.InvestmentTarget.ECONOMIC
         string diceOverlayTitle = currPlayer.GetName() + " rolling " + numTokensForEconomy + " dice for economic growth ...";
         yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, numTokensForEconomy));
-        yield return StartCoroutine(currPlayer.SetMoney(currPlayer.GetMoney() + ((float)diceManager.GetCurrDiceTotal() / 100.0f)));
+        float economicIncrease = (float)diceManager.GetCurrDiceTotal() / 100.0f;
+
+        yield return StartCoroutine(currPlayer.SetEconomicResult(economicIncrease));
 
         //roll dice for GameProperties.InvestmentTarget.ENVIRONMENT       
         diceOverlayTitle = currPlayer.GetName() + " rolling " + numTokensForEnvironment + " dice for environment ...";
         yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, numTokensForEnvironment));
-        yield return StartCoroutine(envDynamicSlider.UpdateSliderValue(environmentSliderSceneElement.value + ((float)diceManager.GetCurrDiceTotal() / 100.0f)));
+        float envIncrease = (float)diceManager.GetCurrDiceTotal() / 100.0f;
+
+        yield return GameGlobals.monoBehaviourFunctionalities.StartCoroutine(envDynamicSlider.UpdateSliderValue(environmentSliderSceneElement.value + envIncrease));
+        currPlayer.SetEnvironmentResult(envIncrease);
     }
+
+
 
     private IEnumerator YieldedGameUpdateLoop()
     {
@@ -227,50 +236,19 @@ public class GameManager : MonoBehaviour {
             yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, 2));
 
             float envDecay = ((float)diceManager.GetCurrDiceTotal() / 100.0f);
+
+            lastEnvDecay = envDecay;
             yield return StartCoroutine(envDynamicSlider.UpdateSliderValue(environmentSliderSceneElement.value - envDecay));
-            
+
+
             foreach (Player player in GameGlobals.players)
             {
                 diceOverlayTitle = "Simulating economic growth ...";
                 yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, 2));
 
                 float economicDecay = ((float)diceManager.GetCurrDiceTotal() / 100.0f);
-                yield return StartCoroutine(player.SetMoney(player.GetMoney() - economicDecay));
-
-                //----------------------- Fatima updates ----------------------------------
-                List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
-
-                //players see the results of dice roll and think
-                events.Add(RolePlayCharacter.EventHelper.PropertyChange("SimulationDecay(World, Environment)", envDecay.ToString("0.00", CultureInfo.InvariantCulture), "World"));
-                events.Add(RolePlayCharacter.EventHelper.PropertyChange("SimulationDecay(" + player.GetName() + ", Economy)", economicDecay.ToString("0.00", CultureInfo.InvariantCulture), "World"));
-
-                events.Add(RolePlayCharacter.EventHelper.PropertyChange("State(World, Environment)", envDynamicSlider.GetSliderValue().ToString("0.00", CultureInfo.InvariantCulture), "World"));
-                events.Add(RolePlayCharacter.EventHelper.PropertyChange("State(" + player.GetName() + ", Economy)", player.GetMoney().ToString("0.00", CultureInfo.InvariantCulture), "World"));
-
-                double othersAvgMoney = 0.0;
-                foreach (Player otherPlayer in GameGlobals.players)
-                {
-                    if (otherPlayer == player)
-                    {
-                        continue;
-                    }
-                    othersAvgMoney += player.GetMoney() / GameGlobals.players.Count;
-                }
-                events.Add(RolePlayCharacter.EventHelper.PropertyChange("State(Others,Economy)", othersAvgMoney.ToString("0.00", CultureInfo.InvariantCulture), "World"));
-                player.Perceive(events);
-
-                var decideResult = player.GetWhatICanDo();
-                EmotionalAppraisal.IActiveEmotion emot = player.GetMyStrongestEmotion();
-                Dictionary<string, string> additionalEventArgs = new Dictionary<string, string>();
-                if (emot != null)
-                {
-                    additionalEventArgs.Add("EmotionType", emot.EmotionType);
-                    additionalEventArgs.Add("Valence", emot.Valence.ToString());
-                    additionalEventArgs.Add("Intensity", emot.Intensity.ToString());
-                }
-                StartCoroutine(GameGlobals.gameLogManager.WriteEventToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameGlobals.currGameRoundId.ToString(), player.GetId().ToString(), player.GetName(), "FATIMA_EMOTION_CHECK", additionalEventArgs));
-                StartCoroutine(GameGlobals.gameLogManager.WriteEventToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameGlobals.currGameRoundId.ToString(), player.GetId().ToString(), player.GetName(), "FATIMA_DECIDE_CALLED", additionalEventArgs));
-                //----------------------------------------------------------
+                StartCoroutine(player.SetEconomicDecay(economicDecay));
+                
             }
 
             if (!GameGlobals.autoPlay)

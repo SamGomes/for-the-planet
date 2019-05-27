@@ -8,44 +8,18 @@
 					"AppraisalWeight": 1,
 					"Rules": [
 						{
-							"EventName": "Event(Action-End, World, State(Round, Start), *)",
-							"Conditions":
-								{
-									"Set": ["Math(0.5, Times, State(World, Environment)) = [env]", "Math(0.5, Times, State(P1, Economy)) = [eco]", "Math(Math([env], Plus, [eco]), Times, 20) = [aux]", "Math([aux], Minus, 10) = [d]"]
-								},
-							"AppraisalVariables":
-								{
-									"AppraisalVariables": [
-										{
-											"Name": "Desirability",
-											"Value": "[d]",
-											"Target": "-"
-										}]
-								}
-						}, 
-						{
 							"EventName": "Event(Property-Change, *, SimulationDecay(World, Environment), *)",
 							"Conditions":
 								{
-									"Set": ["Math(Math(AllocatedBudgetPoints(SELF, Economy), Minus, AllocatedBudgetPoints(Others, Economy)), Times, 10) = [d]", "Math(Math(Math(Math(AllocatedBudgetPoints(SELF, Environment), Minus, AllocatedBudgetPoints(World, Environment)), Plus, Math(AllocatedBudgetPoints(SELF, Economy), Minus, AllocatedBudgetPoints(Others, Economy))), Times, 10), Minus, 20) = [p]", "Math(Math(AllocatedBudgetPoints(SELF, Environment), Times, 20), Minus, 10) = [L]"]
+									"Set": ["Math([winProb], Plus, InvestmentResults(*, Environment)) = [winProb]"]
 								},
 							"AppraisalVariables":
 								{
 									"AppraisalVariables": [
 										{
-											"Name": "Desirability",
-											"Value": "[d]",
-											"Target": "-"
-										}, 
-										{
-											"Name": "Praiseworthiness",
-											"Value": "[p]",
-											"Target": "-"
-										}, 
-										{
-											"Name": "Like",
-											"Value": "[L]",
-											"Target": "-"
+											"Name": "Goal Success Probablity",
+											"Value": 0,
+											"Target": "WinGame"
 										}]
 								}
 						}, 
@@ -53,78 +27,38 @@
 							"EventName": "Event(Property-Change, *, SimulationDecay(*, Economy), *)",
 							"Conditions":
 								{
-									"Set": ["Math(Math(AllocatedBudgetPoints(SELF, Economy), Minus, AllocatedBudgetPoints(Others, Economy)), Times, 10) = [d]", "Math(Math(Math(Math(AllocatedBudgetPoints(SELF, Environment), Minus, AllocatedBudgetPoints(World, Environment)), Plus, Math(AllocatedBudgetPoints(SELF, Economy), Minus, AllocatedBudgetPoints(Others, Economy))), Times, 10), Minus, 20) = [p]", "Math(Math(AllocatedBudgetPoints(SELF, Environment), Times, 20), Minus, 10) = [L]"]
+									"Set": []
+								},
+							"AppraisalVariables":
+								{
+									"AppraisalVariables": []
+								}
+						}, 
+						{
+							"EventName": "Event(Property-Change, *, InvestmentResults(*, Environment), *)",
+							"Conditions":
+								{
+									"Set": ["Math([winProb], Plus, InvestmentResults(*, Environment)) = [winProb]"]
 								},
 							"AppraisalVariables":
 								{
 									"AppraisalVariables": [
 										{
-											"Name": "Desirability",
-											"Value": "[d]",
-											"Target": "-"
-										}, 
-										{
-											"Name": "Praiseworthiness",
-											"Value": "[p]",
-											"Target": "-"
-										}, 
-										{
-											"Name": "Like",
-											"Value": "[L]",
-											"Target": "-"
+											"Name": "Goal Success Probablity",
+											"Value": 0,
+											"Target": "WinGame"
 										}]
 								}
 						}, 
 						{
-							"EventName": "Event(Property-Change, *, AllocatedBudgetPoints(World, Environment), *)",
+							"EventName": "Event(Property-Change, *, InvestmentResults(*, Economy), *)",
 							"Conditions":
 								{
-									"Set": ["Math(Math(AllocatedBudgetPoints(SELF, Economy), Minus, AllocatedBudgetPoints(Others, Economy)), Times, 10) = [d]", "Math(Math(Math(Math(AllocatedBudgetPoints(SELF, Environment), Minus, AllocatedBudgetPoints(World, Environment)), Plus, Math(AllocatedBudgetPoints(SELF, Economy), Minus, AllocatedBudgetPoints(Others, Economy))), Times, 10), Minus, 20) = [p]", "Math(Math(AllocatedBudgetPoints(SELF, Environment), Times, 20), Minus, 10) = [L]"]
+									"Set": []
 								},
 							"AppraisalVariables":
 								{
-									"AppraisalVariables": [
-										{
-											"Name": "Desirability",
-											"Value": "[d]",
-											"Target": "-"
-										}, 
-										{
-											"Name": "Praiseworthiness",
-											"Value": "[p]",
-											"Target": "-"
-										}, 
-										{
-											"Name": "Like",
-											"Value": "[L]",
-											"Target": "-"
-										}]
-								}
-						}, 
-						{
-							"EventName": "Event(Property-Change, *, AllocatedBudgetPoints(*, Economy), *)",
-							"Conditions":
-								{
-									"Set": ["Math(Math(AllocatedBudgetPoints(SELF, Economy), Minus, AllocatedBudgetPoints(Others, Economy)), Times, 10) = [d]", "Math(Math(Math(Math(AllocatedBudgetPoints(SELF, Environment), Minus, AllocatedBudgetPoints(World, Environment)), Plus, Math(AllocatedBudgetPoints(SELF, Economy), Minus, AllocatedBudgetPoints(Others, Economy))), Times, 10), Minus, 20) = [p]", "Math(Math(AllocatedBudgetPoints(SELF, Environment), Times, 20), Minus, 10) = [L]"]
-								},
-							"AppraisalVariables":
-								{
-									"AppraisalVariables": [
-										{
-											"Name": "Desirability",
-											"Value": "[d]",
-											"Target": "-"
-										}, 
-										{
-											"Name": "Praiseworthiness",
-											"Value": "[p]",
-											"Target": "-"
-										}, 
-										{
-											"Name": "Like",
-											"Value": "[L]",
-											"Target": "-"
-										}]
+									"AppraisalVariables": []
 								}
 						}]
 				},
@@ -134,7 +68,15 @@
 					"Decay": 1,
 					"Threshold": 1
 				}],
-			"Goals": []
+			"Goals": [
+				{
+					"Name": "WinGame",
+					"Significance": 1
+				}, 
+				{
+					"Name": "LoseGame",
+					"Significance": -1
+				}]
 		},
 	"types": [
 		{

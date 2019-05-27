@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -101,5 +102,29 @@ public class EmotionalAIPlayer: AIPlayer
         yield return EndBudgetAllocationPhase();
     }
 
+    public override IEnumerator AutoBudgetExecution()
+    {
+        // @jbgrocha: Fatima Speech Act (emotional engine call) - Before Budget Dice Rolls
+        yield return ApplyInvestments();
 
+        List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
+        foreach(Player player in GameGlobals.players)
+        {
+            events.Add(RolePlayCharacter.EventHelper.PropertyChange("InvestmentResult("+ player.GetName() + ", Environment)", player.lastEnvironmentResult.ToString("0.00", CultureInfo.InvariantCulture), "World"));
+            events.Add(RolePlayCharacter.EventHelper.PropertyChange("InvestmentResult(" + player.GetName() + ", Economy)", player.lastEconomicResult.ToString("0.00", CultureInfo.InvariantCulture), "World"));
+        }
+       Perceive(events);
+        // @jbgrocha: Fatima Speech Act (emotional engine call) - After Budget Dice Rolls
+    }
+
+    public override IEnumerator AutoInvestmentExecution()
+    {
+        base.AutoInvestmentExecution();
+        List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
+        events.Add(RolePlayCharacter.EventHelper.PropertyChange("SimulationDecay(World, Environment)", gameManagerRef.lastEnvDecay.ToString("0.00", CultureInfo.InvariantCulture), "World"));
+        events.Add(RolePlayCharacter.EventHelper.PropertyChange("SimulationDecay(" + name + ", Economy)", lastEconomicDecay.ToString("0.00", CultureInfo.InvariantCulture), "World"));
+        Perceive(events);
+
+        yield return null;
+    }
 }

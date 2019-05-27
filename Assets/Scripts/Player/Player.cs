@@ -12,6 +12,11 @@ using System.Globalization;
 
 public class Player
 {
+
+    public float lastEconomicDecay;
+    public float lastEconomicResult;
+    public float lastEnvironmentResult;
+
     //General Stuff
     protected GameProperties.PlayerType type;
 
@@ -427,6 +432,22 @@ public class Player
     }
 
     
+    public IEnumerator SetEconomicDecay(float economicDecay)
+    {
+        this.lastEconomicDecay = economicDecay;
+        yield return GameGlobals.monoBehaviourFunctionalities.StartCoroutine(SetMoney(money - economicDecay));
+    }
+
+    public IEnumerator SetEconomicResult(float economicIncrease)
+    {
+        this.lastEconomicResult = economicIncrease;
+        yield return GameGlobals.monoBehaviourFunctionalities.StartCoroutine(SetMoney(money + economicIncrease));
+    }
+    public void SetEnvironmentResult(float environmentResult)
+    {
+        this.lastEconomicResult = environmentResult;
+    }
+
 
     public virtual void Perceive(List<WellFormedNames.Name> events) { }
     public virtual List<ActionLibrary.IAction> GetWhatICanDo() { return new List<ActionLibrary.IAction>(); }

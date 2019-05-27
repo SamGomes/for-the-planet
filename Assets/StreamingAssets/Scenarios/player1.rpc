@@ -32,7 +32,7 @@
 			"CommeillFautAssetSource": null,
 			"EmotionalState":
 				{
-					"Mood": -8,
+					"Mood": 0,
 					"initialTick": 0,
 					"EmotionalPool": [],
 					"AppraisalConfiguration":

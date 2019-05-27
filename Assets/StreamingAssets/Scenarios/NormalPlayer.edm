@@ -4,12 +4,12 @@
 			"classId": 0,
 			"ActionTendencies": [
 				{
-					"Action": "Speak(P1, Cheguei)",
+					"Action": "Speak(P1, [speech])",
 					"Target": "-",
 					"Layer": "-",
 					"Conditions":
 						{
-							"Set": []
+							"Set": ["StrongestEmotion(SELF) = [speech]"]
 						},
 					"Priority": 3
 				}, 
