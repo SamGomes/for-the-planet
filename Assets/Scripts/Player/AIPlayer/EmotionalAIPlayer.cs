@@ -86,8 +86,30 @@ public class EmotionalAIPlayer: AIPlayer
         }
         List<ActionLibrary.IAction> newActionList = rpc.Decide().ToList<ActionLibrary.IAction>();
 
+        bool listsAreEqual = true;
+
+        if(actionList.Count != newActionList.Count)
+        {
+            listsAreEqual = false;
+        }
+        else
+        {
+            foreach (ActionLibrary.IAction action1 in newActionList)
+            {
+                foreach (ActionLibrary.IAction action2 in actionList)
+                {
+                    if(action1.Name != action2.Name)
+                    {
+                        listsAreEqual = false;
+                    }
+                }
+            }
+        }
+        
+        
+
         // Update Actions and Act only if It is a different actionList
-        if(!actionList.TrueForAll(newActionList.Contains))
+        if (!listsAreEqual)
         {
             actionList = newActionList;
             Act();
