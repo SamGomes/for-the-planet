@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using UnityEngine;
+using Utilities;
 
 public class EmotionalAIPlayer: AIPlayer
 {
@@ -57,6 +58,33 @@ public class EmotionalAIPlayer: AIPlayer
         return this.rpc.GetStrongestActiveEmotion();
     }
 
+    private string ReplaceVariablesInDialogue(string dialog)
+    {
+        var tokens = Regex.Split(dialog, @"|");
+
+        var result = string.Empty;
+        bool process = false;
+        foreach (var t in tokens)
+        {
+            if (process)
+            {
+                var beliefValue = "aaaa";// rpc.GetBeliefValue(t);
+                result += beliefValue;
+                process = false;
+            }
+            else if (t == string.Empty)
+            {
+                process = true;
+                continue;
+            }
+            else
+            {
+                result += t;
+            }
+        }
+        return result;
+    }
+
 
     public void Act()
     {
@@ -65,7 +93,24 @@ public class EmotionalAIPlayer: AIPlayer
             switch (action.Key.ToString())
             {
                 case "Speak":
-                    interactionModule.Speak(action.Parameters[1].ToString());
+                    WellFormedNames.Name cs = action.Parameters[0];
+                    WellFormedNames.Name ns = action.Parameters[1];
+                    //WellFormedNames.Name m = action.Parameters[2];
+                    //WellFormedNames.Name m = (WellFormedNames.Name) "happy-for";// (WellFormedNames.Name) rpc.GetStrongestActiveEmotion().EmotionType;
+                    WellFormedNames.Name m = (WellFormedNames.Name) "-";
+                    if (rpc.GetStrongestActiveEmotion()!= null)
+                    {
+                        m = (WellFormedNames.Name) rpc.GetStrongestActiveEmotion().EmotionType;
+                    }
+                        
+                    WellFormedNames.Name s = action.Parameters[3];
+                    var dialogs = GameGlobals.FAtiMAIat.GetDialogueActions(cs, ns, m, s);
+                    if(dialogs.Count <= 0)
+                    {
+                        break;
+                    }
+                    var dialog = dialogs.Shuffle().FirstOrDefault();
+                    interactionModule.Speak(ReplaceVariablesInDialogue(dialog.Utterance));
                     break;
                 case "Invest":
                     investmentIntentions[GameProperties.InvestmentTarget.ECONOMIC] =  int.Parse(action.Parameters[0].ToString());

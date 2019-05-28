@@ -13,17 +13,31 @@
 								{
 									"Set": ["Math([winProb], Plus, InvestmentResults(*, Environment)) = [winProb]"]
 								},
-							"Desirability": 0,
-							"Praiseworthiness": 0
+							"AppraisalVariables":
+								{
+									"AppraisalVariables": [
+										{
+											"Name": "Goal Success Probablity",
+											"Value": 0,
+											"Target": "WinGame"
+										}]
+								}
 						}, 
 						{
 							"EventName": "Event(Property-Change, *, SimulationDecay(*, Economy), *)",
 							"Conditions":
 								{
-									"Set": []
+									"Set": ["8 = [d]"]
 								},
-							"Desirability": 0,
-							"Praiseworthiness": 0
+							"AppraisalVariables":
+								{
+									"AppraisalVariables": [
+										{
+											"Name": "Desirability",
+											"Value": "[d]",
+											"Target": "-"
+										}]
+								}
 						}, 
 						{
 							"EventName": "Event(Property-Change, *, InvestmentResults(*, Environment), *)",
@@ -31,8 +45,15 @@
 								{
 									"Set": ["Math([winProb], Plus, InvestmentResults(*, Environment)) = [winProb]"]
 								},
-							"Desirability": 0,
-							"Praiseworthiness": 0
+							"AppraisalVariables":
+								{
+									"AppraisalVariables": [
+										{
+											"Name": "Goal Success Probablity",
+											"Value": 0,
+											"Target": "WinGame"
+										}]
+								}
 						}, 
 						{
 							"EventName": "Event(Property-Change, *, InvestmentResults(*, Economy), *)",
@@ -40,8 +61,10 @@
 								{
 									"Set": []
 								},
-							"Desirability": 0,
-							"Praiseworthiness": 0
+							"AppraisalVariables":
+								{
+									"AppraisalVariables": []
+								}
 						}]
 				},
 			"EmotionDispositions": [
