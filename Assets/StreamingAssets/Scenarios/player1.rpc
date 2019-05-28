@@ -45,13 +45,6 @@
 							"MoodHalfLifeDecayTime": 60
 						}
 				},
-			"WorkingMemory":
-				{
-					"Values":
-						{
-
-						}
-				},
 			"AutobiographicMemory":
 				{
 					"Tick": 0,
