@@ -1,0 +1,86 @@
+// Emotionally Transparent Agent
+// Expresses Dominant Emotion 
+
+express happy-for(target)
+- I am happy for you, |target|!
+
+express resentment(target)
+- I resent you, |target|!
+
+express gloating(target)
+- I am better than you, |target|!
+- I Win, |target| loses! AH AH!
+
+express pity(target)
+- I am sorry |target| didn't succeed
+
+express hope
+- I am going to Win!
+- We are going to save the environment!
+
+express fear
+- I am going to Lose...
+- We will not succeed in saving the environment...
+
+express satisfaction
+- I did it!
+- We did it!
+
+express relief
+- Phew! I managed to avoid losing!
+- Phew! We managed to save the Environment!
+
+express fear-confirmed
+- I told you I was going to lose!
+- I told you we were going to lose!
+
+express disappointment
+- I snatched defeat from the jaws of victory...
+- We managed to screw it up!
+
+express joy
+- I am happy!
+
+express distress
+- I am in distress...
+
+express pride
+- I am proud of myself!
+
+express shame
+- I am ashamed of myself...
+
+express admiration(target)
+- I admire |target|!
+
+express reproach(target)
+- You need to change your behaviour, |target|...
+
+express gratification ??
+- DAMN! I am good!
+
+express remorse ??
+-  I should have procceed diferently...
+
+express gratitude(target)
+- Thanks |target|!
+
+express anger(target)
+- I am mad at |target|
+
+express love(target)
+- I love |target|
+
+express hate(target)
+- I hate |target|
+
+// Exposed Fatima Emotions
+admiration
+anger
+gratitude
+Distress
+gratification
+joy
+pride
+reproach
+shame
