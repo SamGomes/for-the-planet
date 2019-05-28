@@ -14,15 +14,15 @@ public class EmotionalAIPlayer: AIPlayer
     //Emotional stuff
     private RolePlayCharacterAsset rpc;
     List<WellFormedNames.Name> unperceivedEvents;
-    List<ActionLibrary.IAction> whatICanDo;
+    List<ActionLibrary.IAction> actionList;
 
     private Dictionary<GameProperties.InvestmentTarget, int> investmentIntentions;
 
-    public EmotionalAIPlayer(IInteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
+    public EmotionalAIPlayer(IInteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name, float updateDelay) :
         base(interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name)
     {
         unperceivedEvents = new List<WellFormedNames.Name>();
-        whatICanDo = new List<ActionLibrary.IAction>();
+        actionList = new List<ActionLibrary.IAction>();
         InitRPC();
 
         investmentIntentions = new Dictionary<GameProperties.InvestmentTarget, int>();
@@ -32,7 +32,7 @@ public class EmotionalAIPlayer: AIPlayer
         investmentIntentions[GameProperties.InvestmentTarget.ENVIRONMENT] = 2;
 
 
-        playerMonoBehaviourFunctionalities.StartCoroutine(EmotionalUpdateLoop(0.2f));
+        playerMonoBehaviourFunctionalities.StartCoroutine(EmotionalUpdateLoop(updateDelay));
     }
 
     public void InitRPC()
@@ -48,9 +48,9 @@ public class EmotionalAIPlayer: AIPlayer
     {
         unperceivedEvents.AddRange(events);
     }
-    public override List<ActionLibrary.IAction> GetWhatICanDo()
+    public override List<ActionLibrary.IAction> GetActionList()
     {
-        return this.whatICanDo;
+        return this.actionList;
     }
     public override EmotionalAppraisal.IActiveEmotion GetMyStrongestEmotion()
     {
@@ -58,15 +58,15 @@ public class EmotionalAIPlayer: AIPlayer
     }
 
 
-    public void Act(List<ActionLibrary.IAction> whatICanDo)
+    public void Act()
     {
-        foreach(ActionLibrary.IAction action in whatICanDo)
+        foreach(ActionLibrary.IAction action in actionList)
         {
             switch (action.Key.ToString())
             {
-                //case "Speak":
-                //    interactionModule.Speak(action.Parameters[1].ToString());
-                //    break;
+                case "Speak":
+                    interactionModule.Speak(action.Parameters[1].ToString());
+                    break;
                 case "Invest":
                     investmentIntentions[GameProperties.InvestmentTarget.ECONOMIC] =  int.Parse(action.Parameters[0].ToString());
                     investmentIntentions[GameProperties.InvestmentTarget.ENVIRONMENT] =  int.Parse(action.Parameters[1].ToString());
@@ -84,8 +84,15 @@ public class EmotionalAIPlayer: AIPlayer
             rpc.Perceive(unperceivedEvents);
             unperceivedEvents.Clear();
         }
-        whatICanDo = rpc.Decide().ToList<ActionLibrary.IAction>();
-        Act(whatICanDo);
+        List<ActionLibrary.IAction> newActionList = rpc.Decide().ToList<ActionLibrary.IAction>();
+
+        // Update Actions and Act only if It is a different actionList
+        if(!actionList.TrueForAll(newActionList.Contains))
+        {
+            actionList = newActionList;
+            Act();
+        }
+
         rpc.Update();
         yield return new WaitForSeconds(delay);
         playerMonoBehaviourFunctionalities.StartCoroutine(EmotionalUpdateLoop(delay));
