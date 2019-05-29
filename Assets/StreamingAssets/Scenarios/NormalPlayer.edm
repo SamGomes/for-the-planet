@@ -4,12 +4,12 @@
 			"classId": 0,
 			"ActionTendencies": [
 				{
-					"Action": "Speak(-, -, *, -)",
-					"Target": "-",
+					"Action": "Speak(-, -, [e], -)",
+					"Target": "You",
 					"Layer": "-",
 					"Conditions":
 						{
-							"Set": []
+							"Set": ["StrongestEmotion(SELF) = [e]", "LastEventId(Action-End, SELF, Speak(-, -, [e], -), You) = -1"]
 						},
 					"Priority": 3
 				}, 

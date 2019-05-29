@@ -34,6 +34,14 @@
 				{
 					"CurrentState": "-",
 					"NextState": "-",
+					"Meaning": "pity",
+					"Style": "-",
+					"Utterance": "I am sorry |target| didn't succeed...",
+					"UtteranceId": "TTS-5E962657689FC13245377B6BC5620BDD"
+				}, 
+				{
+					"CurrentState": "-",
+					"NextState": "-",
 					"Meaning": "hope",
 					"Style": "-",
 					"Utterance": "I am going to Win!",
@@ -174,14 +182,6 @@
 					"Style": "-",
 					"Utterance": "I hate |target|",
 					"UtteranceId": "TTS-3062C537B7B393ADA7324CBF9BAC3FDE"
-				}, 
-				{
-					"CurrentState": "-",
-					"NextState": "-",
-					"Meaning": "pitty",
-					"Style": "-",
-					"Utterance": "I am sorry |target| didn't succeed...",
-					"UtteranceId": "TTS-5E962657689FC13245377B6BC5620BDD"
 				}]
 		},
 	"types": [

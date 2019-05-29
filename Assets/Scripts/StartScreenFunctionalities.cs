@@ -12,6 +12,7 @@ using UnityEngine.UI;
 
 using System.Runtime.InteropServices;
 using UnityEngine.Networking;
+using System.Globalization;
 
 public class StartScreenFunctionalities : MonoBehaviour {
     private StreamReader fileReader;
@@ -207,6 +208,9 @@ public class StartScreenFunctionalities : MonoBehaviour {
 
     private void Start()
     {
+        CultureInfo.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
+
+
         // Make the game perform as good as possible
         Application.targetFrameRate = 40;
         UIStartScreen = GameObject.Find("Canvas/StartScreen").transform;

@@ -15,7 +15,6 @@ public class EmotionalAIPlayer: AIPlayer
     //Emotional stuff
     private RolePlayCharacterAsset rpc;
     List<WellFormedNames.Name> unperceivedEvents;
-    List<ActionLibrary.IAction> actionList;
 
     private Dictionary<GameProperties.InvestmentTarget, int> investmentIntentions;
 
@@ -23,7 +22,6 @@ public class EmotionalAIPlayer: AIPlayer
         base(interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name)
     {
         unperceivedEvents = new List<WellFormedNames.Name>();
-        actionList = new List<ActionLibrary.IAction>();
         InitRPC();
 
         investmentIntentions = new Dictionary<GameProperties.InvestmentTarget, int>();
@@ -43,15 +41,13 @@ public class EmotionalAIPlayer: AIPlayer
         rpc = RolePlayCharacterAsset.LoadFromFile(rpcPath.Source);
         rpc.LoadAssociatedAssets();
         GameGlobals.FAtiMAIat.BindToRegistry(rpc.DynamicPropertiesRegistry);
+
+        //rpc.CharacterName = (WellFormedNames.Name) this.name;
     }
 
     public override void Perceive(List<WellFormedNames.Name> events)
     {
         unperceivedEvents.AddRange(events);
-    }
-    public override List<ActionLibrary.IAction> GetActionList()
-    {
-        return this.actionList;
     }
     public override EmotionalAppraisal.IActiveEmotion GetMyStrongestEmotion()
     {
@@ -86,7 +82,7 @@ public class EmotionalAIPlayer: AIPlayer
     }
 
 
-    public void Act()
+    public void Act(List<ActionLibrary.IAction> actionList)
     {
         foreach(ActionLibrary.IAction action in actionList)
         {
@@ -124,41 +120,31 @@ public class EmotionalAIPlayer: AIPlayer
 
     public IEnumerator EmotionalUpdateLoop(float delay)
     {
+        string print = "Player: " + this.name + " feels ";
+        EmotionalAppraisal.IEmotion strongestEmotion = rpc.GetStrongestActiveEmotion();
+        if (strongestEmotion != null) {
+            print += strongestEmotion.EmotionType;
+        } else {
+            print += "nothing";
+        }
+        Debug.Log(print);
+
         if (unperceivedEvents.Count > 0)
         {
             rpc.Perceive(unperceivedEvents);
             unperceivedEvents.Clear();
         }
-        List<ActionLibrary.IAction> newActionList = rpc.Decide().ToList<ActionLibrary.IAction>();
 
-        bool listsAreEqual = true;
+        try
+        {
+            List<ActionLibrary.IAction> actionList = rpc.Decide().ToList<ActionLibrary.IAction>();
+            Act(actionList);
+        }
+        catch(Exception e)
+        {
+            int y = 2;
+        }
 
-        if(actionList.Count != newActionList.Count)
-        {
-            listsAreEqual = false;
-        }
-        else
-        {
-            foreach (ActionLibrary.IAction action1 in newActionList)
-            {
-                foreach (ActionLibrary.IAction action2 in actionList)
-                {
-                    if(action1.Name != action2.Name)
-                    {
-                        listsAreEqual = false;
-                    }
-                }
-            }
-        }
-        
-        
-
-        // Update Actions and Act only if It is a different actionList
-        if (!listsAreEqual)
-        {
-            actionList = newActionList;
-            Act();
-        }
 
         rpc.Update();
         yield return new WaitForSeconds(delay);
@@ -184,8 +170,8 @@ public class EmotionalAIPlayer: AIPlayer
         List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
         foreach(Player player in GameGlobals.players)
         {
-            events.Add(RolePlayCharacter.EventHelper.PropertyChange("InvestmentResult("+ player.GetName() + ", Environment)", player.lastEnvironmentResult.ToString("0.00", CultureInfo.InvariantCulture), "World"));
-            events.Add(RolePlayCharacter.EventHelper.PropertyChange("InvestmentResult(" + player.GetName() + ", Economy)", player.lastEconomicResult.ToString("0.00", CultureInfo.InvariantCulture), "World"));
+            events.Add(RolePlayCharacter.EventHelper.PropertyChange("InvestmentResults("+ player.GetName() + ", Environment)", player.lastEnvironmentResult.ToString("0.00", CultureInfo.InvariantCulture), "World"));
+            events.Add(RolePlayCharacter.EventHelper.PropertyChange("InvestmentResults(" + player.GetName() + ", Economy)", player.lastEconomicResult.ToString("0.00", CultureInfo.InvariantCulture), "World"));
         }
        Perceive(events);
         // @jbgrocha: Fatima Speech Act (emotional engine call) - After Budget Dice Rolls

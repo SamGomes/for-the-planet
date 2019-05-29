@@ -8,62 +8,87 @@
 					"AppraisalWeight": 1,
 					"Rules": [
 						{
-							"EventName": "Event(Property-Change, *, SimulationDecay(World, Environment), *)",
+							"EventName": "Event(Property-Change, *, InvestmentResults([target], Economy), [newValue])",
 							"Conditions":
 								{
-									"Set": ["Math([winProb], Plus, InvestmentResults(*, Environment)) = [winProb]"]
+									"Set": ["Math([gs], Plus, Math([newValue], Div, 200)) = [gs]", "Math(Math(Math([newValue], Div, 31), Times, 20), Minus, 10) = [d]"]
 								},
 							"AppraisalVariables":
 								{
 									"AppraisalVariables": [
 										{
 											"Name": "Goal Success Probablity",
-											"Value": 0,
-											"Target": "WinGame"
-										}]
-								}
-						}, 
-						{
-							"EventName": "Event(Property-Change, *, SimulationDecay(*, Economy), *)",
-							"Conditions":
-								{
-									"Set": ["8 = [d]"]
-								},
-							"AppraisalVariables":
-								{
-									"AppraisalVariables": [
+											"Value": "[gs]",
+											"Target": "EconomicGoal"
+										}, 
 										{
 											"Name": "Desirability",
 											"Value": "[d]",
-											"Target": "-"
+											"Target": "[target]"
 										}]
 								}
 						}, 
 						{
-							"EventName": "Event(Property-Change, *, InvestmentResults(*, Environment), *)",
+							"EventName": "Event(Property-Change, *, InvestmentResults([target], Environment), [newValue])",
 							"Conditions":
 								{
-									"Set": ["Math([winProb], Plus, InvestmentResults(*, Environment)) = [winProb]"]
+									"Set": ["Math([gs], Plus, Math([newValue], Div, 200)) = [gs]", "Math(Math(Math([newValue], Div, 31), Times, 20), Minus, 10) = [d]"]
 								},
 							"AppraisalVariables":
 								{
 									"AppraisalVariables": [
 										{
 											"Name": "Goal Success Probablity",
-											"Value": 0,
-											"Target": "WinGame"
+											"Value": "[gs]",
+											"Target": "EnvironmentalGoal"
+										}, 
+										{
+											"Name": "Desirability",
+											"Value": "[d]",
+											"Target": "[target]"
 										}]
 								}
 						}, 
 						{
-							"EventName": "Event(Property-Change, *, InvestmentResults(*, Economy), *)",
+							"EventName": "Event(Property-Change, *, SimulationDecay([target], Economy), [newValue])",
 							"Conditions":
 								{
-									"Set": []
+									"Set": ["Math([gs], Plus, Math(1, Minus, Math([newValue], Div, 200))) = [gs]", "Math(Math(Math([newValue], Div, 31), Times, -20), Plus, 10) = [d]"]
 								},
 							"AppraisalVariables":
 								{
-									"AppraisalVariables": []
+									"AppraisalVariables": [
+										{
+											"Name": "Goal Success Probablity",
+											"Value": "[gs]",
+											"Target": "EconomicGoal"
+										}, 
+										{
+											"Name": "Desirability",
+											"Value": "[d]",
+											"Target": "[target]"
+										}]
+								}
+						}, 
+						{
+							"EventName": "Event(Property-Change, *, SimulationDecay([target], Environment), [newValue])",
+							"Conditions":
+								{
+									"Set": ["Math([gs], Plus, Math(1, Minus, Math([newValue], Div, 200))) = [gs]", "Math(Math(Math([newValue], Div, 31), Times, -20), Plus, 10) = [d]"]
+								},
+							"AppraisalVariables":
+								{
+									"AppraisalVariables": [
+										{
+											"Name": "Goal Success Probablity",
+											"Value": "[gs]",
+											"Target": "EnvironmentalGoal"
+										}, 
+										{
+											"Name": "Desirability",
+											"Value": "[d]",
+											"Target": "[target]"
+										}]
 								}
 						}]
 				},
@@ -75,12 +100,14 @@
 				}],
 			"Goals": [
 				{
-					"Name": "WinGame",
-					"Significance": 1
+					"Name": "EconomicGoal",
+					"Significance": 5,
+					"Likelihood": 0.1
 				}, 
 				{
-					"Name": "LoseGame",
-					"Significance": -1
+					"Name": "EnvironmentalGoal",
+					"Significance": 10,
+					"Likelihood": 0.1
 				}]
 		},
 	"types": [
