@@ -7,21 +7,7 @@
 					"Perspective": "P1",
 					"Knowledge":
 						{
-							"SELF":
-								{
-									"ExpectedResult(P1, Economy)": "0.5, 1",
-									"ExpectedResult(P1, Environment)": "0.5, 1",
-									"ExpectedResult(Other, Economy)": "0.5, 1",
-									"ExpectedResult(Other, Environment)": "0.5, 1",
-									"State(P1, Economy)": "0.1, 1",
-									"SimulationDecay(P1, Environment)": "0.5, 1",
-									"SimulationDecay(P1, Economy)": "0.5, 1",
-									"SimulationDecay(Other, Environment)": "0.5, 1",
-									"SimulationDecay(Other, Economy)": "0.5, 1",
-									"Investment(P1, Environment)": "4, 1",
-									"Investment(P1, Economy)": "1, 1",
-									"State(Environment)": "0.2, 1"
-								}
+
 						}
 				},
 			"BodyName": null,

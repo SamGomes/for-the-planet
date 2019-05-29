@@ -4,22 +4,22 @@
 			"classId": 0,
 			"ActionTendencies": [
 				{
-					"Action": "Speak(-, -, [e], -)",
-					"Target": "You",
-					"Layer": "-",
-					"Conditions":
-						{
-							"Set": ["StrongestEmotion(SELF) = [e]", "LastEventId(Action-End, -, Speak(-, -, [e], -), You) = -1"]
-						},
-					"Priority": 3
-				}, 
-				{
 					"Action": "Invest([env], [econ])",
 					"Target": "-",
 					"Layer": "-",
 					"Conditions":
 						{
 							"Set": ["Math(EmotionIntensity(StrongestEmotion(SELF), Joy), Times, 0.5) = [env]", "Math(5, Minus, [env]) = [econ]"]
+						},
+					"Priority": 3
+				}, 
+				{
+					"Action": "Speak(-, -, [e], -)",
+					"Target": "P1",
+					"Layer": "-",
+					"Conditions":
+						{
+							"Set": ["happy-for = [e]", "LastEventId(Action-End, SELF, Speak(-, -, [e], -), *) = -1"]
 						},
 					"Priority": 3
 				}]

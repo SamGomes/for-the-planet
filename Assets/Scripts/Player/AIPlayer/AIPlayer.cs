@@ -150,7 +150,7 @@ public class AIPlayer : Player
     {
         if (!GameGlobals.autoPlay)
         {
-            yield return new WaitForSeconds(3.0f);
+            yield return new WaitForSeconds(1.0f);
             yield return SimulateMouseClick(this.playerActionButtonUI, 0.5f);
         }
         else
