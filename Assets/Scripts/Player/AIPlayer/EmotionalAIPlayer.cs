@@ -54,31 +54,18 @@ public class EmotionalAIPlayer: AIPlayer
         return this.rpc.GetStrongestActiveEmotion();
     }
 
-    private string ReplaceVariablesInDialogue(string dialog)
+    private string ReplaceVariablesInDialogue(string dialog, Dictionary<string, string> tags)
     {
-        var tokens = Regex.Split(dialog, @"|");
+        var tokens = Regex.Matches(dialog, @"\|.*?\|");
 
         var result = string.Empty;
-        bool process = false;
-        foreach (var t in tokens)
+        foreach (Match t in tokens)
         {
-            if (process)
-            {
-                var beliefValue = "aaaa";// rpc.GetBeliefValue(t);
-                result += beliefValue;
-                process = false;
-            }
-            else if (t == string.Empty)
-            {
-                process = true;
-                continue;
-            }
-            else
-            {
-                result += t;
-            }
+            string strippedT = t.Value.Replace(@"|", "");
+            var valueToReplace = tags[strippedT];// rpc.GetBeliefValue(t);
+            dialog = dialog.Replace(t.Value, valueToReplace);
         }
-        return result;
+        return dialog;
     }
 
 
@@ -106,7 +93,7 @@ public class EmotionalAIPlayer: AIPlayer
                         break;
                     }
                     var dialog = dialogs.Shuffle().FirstOrDefault();
-                    interactionModule.Speak(ReplaceVariablesInDialogue(dialog.Utterance));
+                    interactionModule.Speak(ReplaceVariablesInDialogue(dialog.Utterance, new Dictionary<string, string>() { { "target", action.Target.ToString() }}));
                     break;
                 case "Invest":
                     investmentIntentions[GameProperties.InvestmentTarget.ECONOMIC] =  int.Parse(action.Parameters[0].ToString());

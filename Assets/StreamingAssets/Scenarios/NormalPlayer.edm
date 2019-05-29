@@ -9,7 +9,7 @@
 					"Layer": "-",
 					"Conditions":
 						{
-							"Set": ["StrongestEmotion(SELF) = [e]", "LastEventId(Action-End, SELF, Speak(-, -, [e], -), You) = -1"]
+							"Set": ["StrongestEmotion(SELF) = [e]", "LastEventId(Action-End, -, Speak(-, -, [e], -), You) = -1"]
 						},
 					"Priority": 3
 				}, 
