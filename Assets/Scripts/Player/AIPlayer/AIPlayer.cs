@@ -41,22 +41,15 @@ public class AIPlayer : Player
         SimulateMouseUp(button);
     }
 
-    public virtual IEnumerator AutoBudgetAlocation() { yield return null; }
+    public virtual IEnumerator AutoBudgetAllocation() { yield return null; }
     public virtual IEnumerator AutoHistoryDisplay() { yield return null; }
-
-    public virtual IEnumerator AutoBudgetExecution()
-    {
-        // @jbgrocha: Fatima Speech Act (emotional engine call) - Before Budget Dice Rolls
-        yield return ApplyInvestments();
-        // @jbgrocha: Fatima Speech Act (emotional engine call) - After Budget Dice Rolls
-    }
-
+    public virtual IEnumerator AutoBudgetExecution() { yield return null; }
     public virtual IEnumerator AutoInvestmentExecution() { yield return null; }
 
     public override void BudgetAllocationPhaseRequest()
     {
         base.BudgetAllocationPhaseRequest();
-        playerMonoBehaviourFunctionalities.StartCoroutine(AutoBudgetAlocation());
+        playerMonoBehaviourFunctionalities.StartCoroutine(AutoBudgetAllocation());
     }
 
     public override void HistoryDisplayPhaseRequest()
@@ -188,7 +181,7 @@ public class AIPlayerCooperator : AIPlayer
         base(interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name)
     { }
 
-    public override IEnumerator AutoBudgetAlocation()
+    public override IEnumerator AutoBudgetAllocation()
     {
         // @jbgrocha: Fatima Speech Act (emotional engine call) - Start of Budget Allocation
         yield return InvestAllInEvironment();
@@ -205,7 +198,7 @@ public class AIPlayerDefector : AIPlayer
         base(interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name)
     { }
 
-    public override IEnumerator AutoBudgetAlocation()
+    public override IEnumerator AutoBudgetAllocation()
     {
         // @jbgrocha: Fatima Speech Act (emotional engine call) - Start of Budget Allocation
         yield return InvestAllInEconomy();
@@ -221,7 +214,7 @@ public class AIPlayerBalancedCooperator : AIPlayer
         base(interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name)
     { }
 
-    public override IEnumerator AutoBudgetAlocation()
+    public override IEnumerator AutoBudgetAllocation()
     {
 
         int environmentInvestment = roundBudget / 2 + roundBudget % 2;
@@ -245,7 +238,7 @@ public class AIPlayerBalancedDefector : AIPlayer
         base(interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name)
     { }
 
-    public override IEnumerator AutoBudgetAlocation()
+    public override IEnumerator AutoBudgetAllocation()
     {
 
         int environmentInvestment = roundBudget / 2;

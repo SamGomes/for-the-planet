@@ -42,7 +42,7 @@ public class EmotionalAIPlayer: AIPlayer
         rpc.LoadAssociatedAssets();
         GameGlobals.FAtiMAIat.BindToRegistry(rpc.DynamicPropertiesRegistry);
 
-        //rpc.CharacterName = (WellFormedNames.Name) this.name;
+        rpc.CharacterName = (WellFormedNames.Name) this.name;
     }
 
     public override void Perceive(List<WellFormedNames.Name> events)
@@ -86,14 +86,22 @@ public class EmotionalAIPlayer: AIPlayer
                         m = (WellFormedNames.Name) rpc.GetStrongestActiveEmotion().EmotionType;
                     }
                         
-                    WellFormedNames.Name s = action.Parameters[3];
+                    WellFormedNames.Name s = (WellFormedNames.Name) this.name; //ESTA MAL
                     var dialogs = GameGlobals.FAtiMAIat.GetDialogueActions(cs, ns, m, s);
                     if(dialogs.Count <= 0)
                     {
                         break;
                     }
                     var dialog = dialogs.Shuffle().FirstOrDefault();
+                    
                     interactionModule.Speak(ReplaceVariablesInDialogue(dialog.Utterance, new Dictionary<string, string>() { { "target", action.Target.ToString() }}));
+
+                    Debug.Log(rpc.GetStrongestActiveEmotion().ToString());
+                    //rpc.TellWorkingMemory("emotionTarget", rpc.GetStrongestActiveEmotion().ToString());
+
+                    WellFormedNames.Name speakEvent = RolePlayCharacter.EventHelper.ActionEnd(this.name,"Speak("+cs+","+ns+"," + m + ","+ s + ")", this.name);
+                    Perceive(new List<WellFormedNames.Name>() { speakEvent });
+
                     break;
                 case "Invest":
                     investmentIntentions[GameProperties.InvestmentTarget.ECONOMIC] =  int.Parse(action.Parameters[0].ToString());
@@ -142,34 +150,70 @@ public class EmotionalAIPlayer: AIPlayer
     //{
     //    this.rpc.SaveToFile(Application.streamingAssetsPath + "/Runtimed/" + name + ".rpc");
     //}
-    public override IEnumerator AutoBudgetAlocation()
+    public override IEnumerator AutoBudgetAllocation()
     {
-        yield return InvestInEconomy(investmentIntentions[GameProperties.InvestmentTarget.ECONOMIC]);
-        yield return InvestInEnvironment(investmentIntentions[GameProperties.InvestmentTarget.ENVIRONMENT]);
+        base.AutoBudgetAllocation();
+
+        int econ = investmentIntentions[GameProperties.InvestmentTarget.ECONOMIC];
+        int env = investmentIntentions[GameProperties.InvestmentTarget.ENVIRONMENT];
+
+        yield return InvestInEconomy(econ);
+        yield return InvestInEnvironment(env);
         yield return EndBudgetAllocationPhase();
+
+        List<WellFormedNames.Name> events = new List<WellFormedNames.Name>(){ RolePlayCharacter.EventHelper.PropertyChange("AllocateBudget(" + econ.ToString("0.00", CultureInfo.InvariantCulture) + "," + env.ToString("0.00", CultureInfo.InvariantCulture) + ")", this.name, this.name)  };
+        Perceive(events);
+    }
+
+    public override IEnumerator AutoHistoryDisplay()
+    {
+        base.AutoHistoryDisplay();
+
+
+        List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
+        foreach (Player player in GameGlobals.players)
+        {
+            string econ = player.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ECONOMIC].ToString("0.00", CultureInfo.InvariantCulture);
+            string env = player.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ENVIRONMENT].ToString("0.00", CultureInfo.InvariantCulture);
+            events.Add(RolePlayCharacter.EventHelper.PropertyChange("InvestmentHistory(" + econ + ","+ env +")", player.GetName(), this.name));
+        }
+        Perceive(events);
+
+        yield return null;
     }
 
     public override IEnumerator AutoBudgetExecution()
     {
+        base.AutoBudgetExecution();
+
+
         // @jbgrocha: Fatima Speech Act (emotional engine call) - Before Budget Dice Rolls
         yield return ApplyInvestments();
 
         List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
         foreach(Player player in GameGlobals.players)
         {
-            events.Add(RolePlayCharacter.EventHelper.PropertyChange("InvestmentResults("+ player.GetName() + ", Environment)", player.lastEnvironmentResult.ToString("0.00", CultureInfo.InvariantCulture), "World"));
-            events.Add(RolePlayCharacter.EventHelper.PropertyChange("InvestmentResults(" + player.GetName() + ", Economy)", player.lastEconomicResult.ToString("0.00", CultureInfo.InvariantCulture), "World"));
+            string econ = player.lastEnvironmentResult.ToString("0.00", CultureInfo.InvariantCulture);
+            string env = player.lastEconomicResult.ToString("0.00", CultureInfo.InvariantCulture);
+            //goal success probability should be obtained using a method which could be overriden according to the personality of the agent
+            events.Add(RolePlayCharacter.EventHelper.PropertyChange("InvestmentResults(" + econ + ","+ env +"," + env + ")", player.GetName(), this.name));
         }
-       Perceive(events);
+        Perceive(events);
         // @jbgrocha: Fatima Speech Act (emotional engine call) - After Budget Dice Rolls
     }
 
     public override IEnumerator AutoInvestmentExecution()
     {
         base.AutoInvestmentExecution();
+
         List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
-        events.Add(RolePlayCharacter.EventHelper.PropertyChange("SimulationDecay(World, Environment)", gameManagerRef.lastEnvDecay.ToString("0.00", CultureInfo.InvariantCulture), "World"));
-        events.Add(RolePlayCharacter.EventHelper.PropertyChange("SimulationDecay(" + name + ", Economy)", lastEconomicDecay.ToString("0.00", CultureInfo.InvariantCulture), "World"));
+        foreach (Player player in GameGlobals.players)
+        {
+            string econ = player.lastEnvironmentResult.ToString("0.00", CultureInfo.InvariantCulture);
+            string env = player.lastEconomicResult.ToString("0.00", CultureInfo.InvariantCulture);
+            //goal success probability should be obtained using a method which could be overriden according to the personality of the agent
+            events.Add(RolePlayCharacter.EventHelper.PropertyChange("Decay(" + econ + "," + env + "," + env + ")", player.GetName(), this.name));
+        }
         Perceive(events);
 
         yield return null;
