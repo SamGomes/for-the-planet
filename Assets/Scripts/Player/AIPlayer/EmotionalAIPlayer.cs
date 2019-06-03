@@ -104,8 +104,8 @@ public class EmotionalAIPlayer: AIPlayer
 
                     break;
                 case "Invest":
-                    investmentIntentions[GameProperties.InvestmentTarget.ECONOMIC] =  int.Parse(action.Parameters[0].ToString());
-                    investmentIntentions[GameProperties.InvestmentTarget.ENVIRONMENT] =  int.Parse(action.Parameters[1].ToString());
+                    investmentIntentions[GameProperties.InvestmentTarget.ENVIRONMENT] =  int.Parse(action.Parameters[0].ToString());
+                    investmentIntentions[GameProperties.InvestmentTarget.ECONOMIC] =  int.Parse(action.Parameters[1].ToString());
                     break;
             }
 
@@ -161,8 +161,8 @@ public class EmotionalAIPlayer: AIPlayer
         yield return InvestInEnvironment(env);
         yield return EndBudgetAllocationPhase();
 
-        List<WellFormedNames.Name> events = new List<WellFormedNames.Name>(){ RolePlayCharacter.EventHelper.PropertyChange("AllocateBudget(" + econ.ToString("0.00", CultureInfo.InvariantCulture) + "," + env.ToString("0.00", CultureInfo.InvariantCulture) + ")", this.name, this.name)  };
-        Perceive(events);
+        //List<WellFormedNames.Name> events = new List<WellFormedNames.Name>(){ RolePlayCharacter.EventHelper.PropertyChange("AllocateBudget(" + econ.ToString("0.00", CultureInfo.InvariantCulture) + "," + env.ToString("0.00", CultureInfo.InvariantCulture) + ")", this.name, this.name)  };
+        //Perceive(events);
     }
 
     public override IEnumerator AutoHistoryDisplay()
