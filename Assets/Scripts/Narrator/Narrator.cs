@@ -23,9 +23,10 @@ public class Narrator
 
 
         CanvasUI = narratorCanvas;
-        NarratorUI = Object.Instantiate(Resources.Load<GameObject>("Prefabs/NarratorUI"), CanvasUI.transform);
+        NarratorUI = Resources.Load<GameObject>("Prefabs/NarratorUI");
 
         InteractionModule = new LegendsInteractionModule();
+        InteractionModule.Init(NarratorUI, CanvasUI);
     }
 
     public List<PlayerRoundInvestment> getInvestments(Player player)
@@ -87,7 +88,7 @@ public class Narrator
         text += "\n" + playerRoundInvestment;
 
         // Output Narrator Text
-        Debug.Log(text);
+        InteractionModule.Speak(text);
 
         yield return null;
     }
@@ -108,7 +109,7 @@ public class Narrator
         // Output Narrator Text
         if(economyResult != 0)
         {
-            Debug.Log(text);
+            InteractionModule.Speak(text);
         }
 
         yield return null;
@@ -130,7 +131,7 @@ public class Narrator
         // Output Narrator Text
         if (environmentResult != 0)
         {
-            Debug.Log(text);
+            InteractionModule.Speak(text);
         }
 
         yield return null;
@@ -151,7 +152,7 @@ public class Narrator
         // Output Narrator Text
         if (decay != 0)
         {
-            Debug.Log(text);
+            InteractionModule.Speak(text);
         }
 
         yield return null;
@@ -172,7 +173,7 @@ public class Narrator
         // Output Narrator Text
         if (decay != 0)
         {
-            Debug.Log(text);
+            InteractionModule.Speak(text);
         }
 
         yield return null;
@@ -185,7 +186,7 @@ public class Narrator
         string text = "Narrator: Game Start";
 
         // Output Narrator Text
-        Debug.Log(text);
+        InteractionModule.Speak(text);
 
         yield return null;
     }
@@ -197,7 +198,7 @@ public class Narrator
         string text = "Narrator: Round Start";
 
         // Output Narrator Text
-        Debug.Log(text);
+        InteractionModule.Speak(text);
 
         yield return null;
     }
@@ -209,7 +210,7 @@ public class Narrator
         string text = "Narrator: Game End";
 
         // Output Narrator Text
-        Debug.Log(text);
+        InteractionModule.Speak(text);
 
         yield return null;
     }
