@@ -17,7 +17,8 @@ public class AIPlayer : Player
         this.playerSelfDisablerUI.SetActive(true);
 
 
-        interactionModule.Init(this);
+        GameObject speechBaloonPrefab = (this.GetId() % 2 == 0) ? Resources.Load<GameObject>("Prefabs/PlayerUI/speechBalloonLeft") : Resources.Load<GameObject>("Prefabs/PlayerUI/speechBalloonRight");
+        interactionModule.Init(speechBaloonPrefab, playerUI);
     }
 
     //simulate button clicks

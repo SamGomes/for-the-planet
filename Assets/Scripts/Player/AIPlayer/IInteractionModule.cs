@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public interface IInteractionModule
 {
-    void Init(Player owner);
+    void Init(GameObject uiPrefab, GameObject uiContainer);
     void Speak(string utterance);
     void Move();
 }
@@ -14,7 +14,7 @@ public interface IInteractionModule
 
 public class AutisticInteractionModule : IInteractionModule
 {
-    public void Init(Player owner) { }
+    public void Init(GameObject uiPrefab, GameObject uiContainer) { }
     public void Speak(string utterance) { }
     public void Move() { }
 }
@@ -27,9 +27,9 @@ public class LegendsInteractionModule: IInteractionModule
 
     MonoBehaviourFunctionalities monoBehaviourFunctionalities;
 
-    public void Init(Player owner) {
+    public void Init(GameObject uiPrefab, GameObject uiContainer) {
 
-        this.speechBalloonUI = (owner.GetId() % 2 == 0) ? Object.Instantiate(Resources.Load<GameObject>("Prefabs/PlayerUI/speechBalloonLeft"), owner.GetPlayerUI().transform) : Object.Instantiate(Resources.Load<GameObject>("Prefabs/PlayerUI/speechBalloonRight"), owner.GetPlayerUI().transform);
+        this.speechBalloonUI = Object.Instantiate(uiPrefab, uiContainer.transform);
         speechBalloonUI.SetActive(false);
 
         this.monoBehaviourFunctionalities = GameGlobals.monoBehaviourFunctionalities;
@@ -90,7 +90,7 @@ public class RobotInteractionModule : IInteractionModule
 {
     private ThalamusConnector thalamusConnector = null;
 
-    public void Init(Player player)
+    public void Init(GameObject uiPrefab, GameObject uiContainer)
     {
         thalamusConnector = new ThalamusConnector(7000);
     }
