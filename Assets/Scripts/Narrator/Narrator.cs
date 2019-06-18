@@ -9,12 +9,23 @@ public class Narrator
     public List<PlayerRoundEconomyDecay> playerRoundEconomyDecays;
     public List<RoundEnvironmentDecay> roundEnvironmentDecays;
 
+    private GameObject NarratorUI;
+    private GameObject CanvasUI;
 
-    public Narrator()
+    private LegendsInteractionModule InteractionModule;
+
+
+    public Narrator(GameObject narratorCanvas)
     {
         playerRoundInvestments = new List<PlayerRoundInvestment>();
         playerRoundEconomyDecays = new List<PlayerRoundEconomyDecay>();
         roundEnvironmentDecays = new List<RoundEnvironmentDecay>();
+
+
+        CanvasUI = narratorCanvas;
+        NarratorUI = Object.Instantiate(Resources.Load<GameObject>("Prefabs/NarratorUI"), CanvasUI.transform);
+
+        InteractionModule = new LegendsInteractionModule();
     }
 
     public List<PlayerRoundInvestment> getInvestments(Player player)
