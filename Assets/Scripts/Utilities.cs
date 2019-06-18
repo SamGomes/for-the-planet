@@ -11,6 +11,9 @@ public static class GameGlobals
 
     public static List<Player> players;
 
+    // Narrator
+    public static Narrator narrator;
+
     public static string currSessionId;
     public static int currGameId;
     public static int currGameRoundId;

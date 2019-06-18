@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayersSetupSceneFunctionalities : MonoBehaviour {
+public class GameSetupFunctionalities : MonoBehaviour {
 
     private bool isErrorEncountered;
     private GameObject customizeLabel;

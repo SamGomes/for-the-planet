@@ -117,6 +117,9 @@ public class StartScreenFunctionalities : MonoBehaviour {
         AssetManager.Instance.Bridge = new AssetManagerBridge();
         GameGlobals.FAtiMAIat = IntegratedAuthoringToolAsset.LoadFromFile(GameGlobals.FAtiMAScenarioPath);
 
+        // Init Narrator
+        GameGlobals.narrator = new Narrator();
+
     }
 
 

@@ -141,6 +141,10 @@ public class GameManager : MonoBehaviour {
             });
         }
 
+        // Narrator (function is ienumerator)
+        StartCoroutine(GameGlobals.narrator.GameStart());
+
+
         ContinueGame();
 
         // @jbgrocha: Auto Continue for Batch Mode
@@ -166,17 +170,34 @@ public class GameManager : MonoBehaviour {
         //roll dice for GameProperties.InvestmentTarget.ECONOMIC
         string diceOverlayTitle = currPlayer.GetName() + " rolling " + numTokensForEconomy + " dice for economic growth ...";
         yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, numTokensForEconomy));
-        float economicIncrease = (float)diceManager.GetCurrDiceTotal() / 100.0f;
+
+        int economyResult = diceManager.GetCurrDiceTotal();
+
+        float economicIncrease = (float) economyResult / 100.0f;
 
         yield return StartCoroutine(currPlayer.SetEconomicResult(economicIncrease));
+
+        // Narrator - Budget Execution Economy
+        yield return GameGlobals.narrator.EconomyBudgetExecution(currPlayer, GameGlobals.currGameRoundId, economyResult);
 
         //roll dice for GameProperties.InvestmentTarget.ENVIRONMENT       
         diceOverlayTitle = currPlayer.GetName() + " rolling " + numTokensForEnvironment + " dice for environment ...";
         yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, numTokensForEnvironment));
-        float envIncrease = (float)diceManager.GetCurrDiceTotal() / 100.0f;
+
+        int environmentResult = diceManager.GetCurrDiceTotal();
+
+        float envIncrease = (float) environmentResult / 100.0f;
 
         yield return GameGlobals.monoBehaviourFunctionalities.StartCoroutine(envDynamicSlider.UpdateSliderValue(environmentSliderSceneElement.value + envIncrease));
         currPlayer.SetEnvironmentResult(envIncrease);
+
+        // Narrator - Budget Execution Environment
+        yield return GameGlobals.narrator.EnvironmentBudgetExecution(currPlayer, GameGlobals.currGameRoundId, environmentResult);
+
+        // Narrator (function is ienumerator)
+        // Should Receive a Player (or results)
+        // Should have 2 calls, one for environment and one for economy???
+        //yield return GameGlobals.narrator.BudgetExecution(currPlayer, GameGlobals.currGameRoundId, economyResult, environmentResult);
     }
 
 
@@ -235,10 +256,14 @@ public class GameManager : MonoBehaviour {
             string diceOverlayTitle = "Simulating environment growth ...";
             yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, 2));
 
-            float envDecay = ((float)diceManager.GetCurrDiceTotal() / 100.0f);
+            int environmentDecay = diceManager.GetCurrDiceTotal();
+            float envDecay = ((float) environmentDecay / 100.0f);
 
             lastEnvDecay = envDecay;
             yield return StartCoroutine(envDynamicSlider.UpdateSliderValue(environmentSliderSceneElement.value - envDecay));
+
+            // Narrator - Environmental Decay
+            StartCoroutine(GameGlobals.narrator.EnvironmentDecaySimulation(GameGlobals.currGameRoundId, environmentDecay));
 
 
             foreach (Player player in GameGlobals.players)
@@ -246,9 +271,12 @@ public class GameManager : MonoBehaviour {
                 diceOverlayTitle = "Simulating economic growth ...";
                 yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, 2));
 
-                float economicDecay = ((float)diceManager.GetCurrDiceTotal() / 100.0f);
+                int economyDecay = diceManager.GetCurrDiceTotal();
+                float economicDecay = ((float) economyDecay / 100.0f);
                 StartCoroutine(player.SetEconomicDecay(economicDecay));
-                
+                // Narrator - Player Economic Decay
+                StartCoroutine(GameGlobals.narrator.EconomyDecaySimulation(player, GameGlobals.currGameRoundId, economyDecay));
+
             }
 
             if (!GameGlobals.autoPlay)
@@ -310,6 +338,10 @@ public class GameManager : MonoBehaviour {
 
             player.SetRoundBudget(5);
         }
+
+        // Narrator (function is ienumerator)
+        StartCoroutine(GameGlobals.narrator.RoundStart());
+
         StartAlocateBudgetPhase();
 
     }
@@ -342,6 +374,9 @@ public class GameManager : MonoBehaviour {
                 events.Add(RolePlayCharacter.EventHelper.PropertyChange("AllocatedBudgetPoints(" + otherPlayer.GetName() + ", Economic)", otherPlayer.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ECONOMIC].ToString("0", CultureInfo.InvariantCulture), "World"));
             }
             player.Perceive(events);
+
+            // Narrator (function is ienumerator)
+            StartCoroutine(GameGlobals.narrator.DisplayHistory(player, GameGlobals.currGameRoundId));
         }
         
     }
@@ -376,6 +411,10 @@ public class GameManager : MonoBehaviour {
         Player nextPlayer = ChangeToNextPlayer(currPlayer);
 
         numPlayersToAllocateBudget--;
+
+        // Narrator (function is ienumerator)
+        StartCoroutine(GameGlobals.narrator.BudgetAllocation(currPlayer, GameGlobals.currGameRoundId));
+
         if (numPlayersToAllocateBudget > 0)
         {
             nextPlayer.BudgetAllocationPhaseRequest();
