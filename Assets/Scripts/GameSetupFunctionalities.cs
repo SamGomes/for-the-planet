@@ -26,6 +26,12 @@ public class GameSetupFunctionalities : MonoBehaviour {
     public void SetUpParameterization(GameParameterization parameterization)
     {
         GameGlobals.players.Clear();
+
+
+        // Init Narrator
+        GameGlobals.narrator = new Narrator(playerCanvas);
+
+
         int currPlayerId = 0;
         for (int i = 0; i < parameterization.playerParameterizations.Count; i++)
         {
