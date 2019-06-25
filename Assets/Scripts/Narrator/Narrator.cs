@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 // Does this need a game manager reference like the player?
@@ -47,34 +48,61 @@ public class Narrator
         NarrativeFragment gameStart = new NarrativeFragment
         {
             Type = "GAME_START",
-            ActionText = text
+            Action = text
         };
         narrativeFragments.Add(gameStart);
     }
 
     public void InitRoundStartNarrativeFragments()
     {
-
+        // To be Implemented
     }
 
     public void InitEnvironmentInvestmentNarrativeFragments()
     {
-
+        // To be Implemented
     }
 
     public void InitEconomyInvestmentNarrativeFragments()
     {
-
+        // To be Implemented
     }
 
+    // Placeholders
     public void InitEnvironmentDecayNarrativeFragments()
     {
+        string text = "ENVIRONMENT_DECAY_ACTION";
+        NarrativeFragment environmentDecay = new NarrativeFragment
+        {
+            Type = "ENVIRONMENT_DECAY",
+            Action = text,
+            Outcome = new Dictionary<string, string>()
+        };
 
+        environmentDecay.Outcome["LOW"] = "ENVIRONMENT_DECAY_OUTCOME_LOW";
+        environmentDecay.Outcome["MEDIUM"] = "ENVIRONMENT_DECAY_OUTCOME_MEDIUM";
+        environmentDecay.Outcome["HIGH"] = "ENVIRONMENT_DECAY_OUTCOME_HIGH";
+
+
+        narrativeFragments.Add(environmentDecay);
     }
 
     public void InitEconomyDecayNarrativeFragments()
     {
+        string text = "ECONOMY_DECAY_ACTION";
+        NarrativeFragment economyDecay = new NarrativeFragment
+        {
+            Type = "ECONOMY_DECAY",
+            Action = text,
+            Outcome = new Dictionary<string, string>()
+        };
 
+        economyDecay.Outcome["LOW"] = "ECONOMY_DECAY_OUTCOME_LOW";
+        economyDecay.Outcome["MEDIUM"] = "ECONOMY_DECAY_OUTCOME_MEDIUM";
+        economyDecay.Outcome["HIGH"] = "ECONOMY_DECAY_OUTCOME_HIGH";
+
+
+        narrativeFragments.Add(economyDecay);
     }
 
     public NarrativeFragment GetGameStartNarrativeFragment()
@@ -82,29 +110,29 @@ public class Narrator
         return narrativeFragments.Find(x => x.Type == "GAME_START");
     }
 
-    public NarrativeFragment GetRoundStartNarrativeFragments()
+    public List<NarrativeFragment> GetRoundStartNarrativeFragments()
     {
-        return narrativeFragments.Find(x => x.Type == "ROUND_START");
+        return narrativeFragments.FindAll(x => x.Type == "ROUND_START");
     }
 
-    public NarrativeFragment GetEnvironmentInvestmentNarrativeFragments()
+    public List<NarrativeFragment> GetEnvironmentInvestmentNarrativeFragments()
     {
-        return narrativeFragments.Find(x => x.Type == "ENVIRONMENT_INVESTMENT");
+        return narrativeFragments.FindAll(x => x.Type == "ENVIRONMENT_INVESTMENT");
     }
 
-    public NarrativeFragment GetEconomyInvestmentNarrativeFragments()
+    public List<NarrativeFragment> GetEconomyInvestmentNarrativeFragments()
     {
-        return narrativeFragments.Find(x => x.Type == "ECONOMY_INVESTMENT");
+        return narrativeFragments.FindAll(x => x.Type == "ECONOMY_INVESTMENT");
     }
 
-    public NarrativeFragment GetEnvironmentDecayNarrativeFragments()
+    public List<NarrativeFragment> GetEnvironmentDecayNarrativeFragments()
     {
-        return narrativeFragments.Find(x => x.Type == "ENVIRONMENT_DECAY");
+        return narrativeFragments.FindAll(x => x.Type == "ENVIRONMENT_DECAY");
     }
 
-    public NarrativeFragment GetEconomyDecayNarrativeFragments()
+    public List<NarrativeFragment> GetEconomyDecayNarrativeFragments()
     {
-        return narrativeFragments.Find(x => x.Type == "ECONOMY_DECAY");
+        return narrativeFragments.FindAll(x => x.Type == "ECONOMY_DECAY");
     }
 
     public List<NarrativeFragment> GetNarrativeFragments()
@@ -140,6 +168,40 @@ public class Narrator
         return narrativeInterpretations.FindAll(x => x.Type == type).FindAll(x => x.Round == round);
     }
 
+    // Narrator Actions during Game Start
+    // should give game setting context
+    public IEnumerator GameStart()
+    {
+        // Sorta Delayed Initialization of the Narrative Fragments
+        InitNarrativeFragments();
+
+        NarrativeFragment gameStart = GetGameStartNarrativeFragment();
+
+        // Add NarrativeInterpretation?
+        // Does this make sense at game start?
+
+        // Compute Narrator Text
+        string text = gameStart.Action;
+
+        // Output Narrator Text
+        InteractionModule.Speak(text);
+
+        yield return null;
+    }
+
+    // Narrator Actions during Round Start
+    // should give game status context
+    public IEnumerator RoundStart()
+    {
+        // Compute Narrator Text
+        string text = "Narrator: Round Start";
+
+        // Output Narrator Text
+        InteractionModule.Speak(text);
+
+        yield return null;
+    }
+
     // Narrator Actions during Budget Allocation
     // can potentially receive a player and the budget allocated
     public IEnumerator BudgetAllocation(Player player, int round)
@@ -161,6 +223,16 @@ public class Narrator
         // Register NarrativeInterpretation for Environment Investment
         narrativeInterpretations.Add(environmentInvestmentNarrativeInterpretation);
 
+        // Economy Investment Fragment
+        // Compute Narrator Text (symbol interpretation)
+        // Should fetch a random
+        List<NarrativeFragment> environmentInvestmentFragments = GetEnvironmentInvestmentNarrativeFragments();
+        NarrativeFragment environmentInvestmentFragment = environmentInvestmentFragments.FirstOrDefault();
+
+        environmentInvestmentNarrativeInterpretation.Narrative = environmentInvestmentFragment;
+
+
+
         // Create NarrativeInterpretation for Environment Investment
         NarrativeInterpretation economyInvestmentNarrativeInterpretation = new NarrativeInterpretation
         {
@@ -172,6 +244,16 @@ public class Narrator
 
         // Register NarrativeInterpretation for Environment Investment
         narrativeInterpretations.Add(economyInvestmentNarrativeInterpretation);
+
+        // Environment Investment Fragment
+        // Compute Narrator Text (symbol interpretation)
+        // Should fetch a random
+        List<NarrativeFragment> economyInvestmentFragments = GetEconomyInvestmentNarrativeFragments();
+        NarrativeFragment economyInvestmentFragment = economyInvestmentFragments.FirstOrDefault();
+
+        environmentInvestmentNarrativeInterpretation.Narrative = environmentInvestmentFragment;
+
+
 
         yield return null;
     }
@@ -246,8 +328,14 @@ public class Narrator
         narrativeInterpretations.Add(economyDecayNarrativeInterpretation);
 
         // Compute Narrator Text (symbol interpretation)
-        string text = "Narrator: Economy Decay Simulation";
-        text += "\n" + economyDecayNarrativeInterpretation.ToString();
+        // Should fetch a random
+        List<NarrativeFragment> economyDecayFragments = GetEconomyDecayNarrativeFragments();
+        NarrativeFragment economyDecayFragment = economyDecayFragments.FirstOrDefault();
+
+        economyDecayNarrativeInterpretation.Narrative = economyDecayFragment;
+
+        // Compute Narrator Text
+        string text = player.GetName() + " : " + economyDecayNarrativeInterpretation.Outcome();
 
 
         // Output Narrator Text
@@ -274,48 +362,20 @@ public class Narrator
         narrativeInterpretations.Add(environmentDecayNarrativeInterpretation);
 
         // Compute Narrator Text (symbol interpretation)
-        string text = "Narrator: Environment Decay Simulation";
-        text += "\n" + environmentDecayNarrativeInterpretation.ToString();
+        // Should fetch a random
+        List<NarrativeFragment> environmentDecayFragments = GetEnvironmentDecayNarrativeFragments();
+        NarrativeFragment environmentDecayFragment = environmentDecayFragments.FirstOrDefault();
+
+        environmentDecayNarrativeInterpretation.Narrative = environmentDecayFragment;
+
+        // Compute Narrator Text
+        string text = environmentDecayNarrativeInterpretation.Outcome();
 
         // Output Narrator Text
         if (decay != 0)
         {
             InteractionModule.Speak(text);
         }
-
-        yield return null;
-    }
-
-    // Narrator Actions during Game Start
-    // should give game setting context
-    public IEnumerator GameStart()
-    {
-        // Sorta Delayed Initialization of the Narrative Fragments
-        InitNarrativeFragments();
-
-        NarrativeFragment gameStart = GetGameStartNarrativeFragment();
-
-        // Add NarrativeInterpretation?
-        // Does this make sense at game start?
-
-        // Compute Narrator Text
-        string text = gameStart.ActionText;
-
-        // Output Narrator Text
-        InteractionModule.Speak(text);
-
-        yield return null;
-    }
-
-    // Narrator Actions during Round Start
-    // should give game status context
-    public IEnumerator RoundStart()
-    {
-        // Compute Narrator Text
-        string text = "Narrator: Round Start";
-
-        // Output Narrator Text
-        InteractionModule.Speak(text);
 
         yield return null;
     }
@@ -351,6 +411,8 @@ public class NarrativeInterpretation
     public int? Value { get; set; }
     public int? Result { get; set; }
 
+    public NarrativeFragment Narrative { get; set; }
+
     public override string ToString()
     {
         string result = "Round " + Round + ": "
@@ -364,10 +426,28 @@ public class NarrativeInterpretation
 
         return result;
     }
+
+    public string Outcome()
+    {
+
+        // Assuming 6 sided dice
+        Dictionary<int, string> resultClassification = new Dictionary<int, string>();
+        resultClassification[1] = "LOW";
+        resultClassification[2] = "LOW";
+        resultClassification[3] = "MEDIUM";
+        resultClassification[4] = "MEDIUM";
+        resultClassification[5] = "HIGH";
+        resultClassification[6] = "HIGH";
+
+        int diceRollNormalization = (int) Result / (int) Value;
+
+        return Narrative.Outcome[resultClassification[diceRollNormalization]];
+    }
 }
 
 public class NarrativeFragment
 {
     public string Type { get; set; }
-    public string ActionText { get; set; }
+    public string Action { get; set; }
+    public Dictionary<string, string> Outcome {get; set;}
 }
