@@ -29,6 +29,14 @@ public class Narrator
     public void InitNarrativeFragments()
     {
         InitGameStartNarrativeFragment();
+
+        InitRoundStartNarrativeFragments();
+
+        InitEnvironmentInvestmentNarrativeFragments();
+        InitEconomyInvestmentNarrativeFragments();
+
+        InitEnvironmentDecayNarrativeFragments();
+        InitEconomyDecayNarrativeFragments();
     }
 
     public void InitGameStartNarrativeFragment()
@@ -44,9 +52,59 @@ public class Narrator
         narrativeFragments.Add(gameStart);
     }
 
+    public void InitRoundStartNarrativeFragments()
+    {
+
+    }
+
+    public void InitEnvironmentInvestmentNarrativeFragments()
+    {
+
+    }
+
+    public void InitEconomyInvestmentNarrativeFragments()
+    {
+
+    }
+
+    public void InitEnvironmentDecayNarrativeFragments()
+    {
+
+    }
+
+    public void InitEconomyDecayNarrativeFragments()
+    {
+
+    }
+
     public NarrativeFragment GetGameStartNarrativeFragment()
     {
         return narrativeFragments.Find(x => x.Type == "GAME_START");
+    }
+
+    public NarrativeFragment GetRoundStartNarrativeFragments()
+    {
+        return narrativeFragments.Find(x => x.Type == "ROUND_START");
+    }
+
+    public NarrativeFragment GetEnvironmentInvestmentNarrativeFragments()
+    {
+        return narrativeFragments.Find(x => x.Type == "ENVIRONMENT_INVESTMENT");
+    }
+
+    public NarrativeFragment GetEconomyInvestmentNarrativeFragments()
+    {
+        return narrativeFragments.Find(x => x.Type == "ECONOMY_INVESTMENT");
+    }
+
+    public NarrativeFragment GetEnvironmentDecayNarrativeFragments()
+    {
+        return narrativeFragments.Find(x => x.Type == "ENVIRONMENT_DECAY");
+    }
+
+    public NarrativeFragment GetEconomyDecayNarrativeFragments()
+    {
+        return narrativeFragments.Find(x => x.Type == "ECONOMY_DECAY");
     }
 
     public List<NarrativeFragment> GetNarrativeFragments()
