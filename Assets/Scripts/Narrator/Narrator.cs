@@ -58,14 +58,41 @@ public class Narrator
         // To be Implemented
     }
 
+    // Placeholders
     public void InitEnvironmentInvestmentNarrativeFragments()
     {
-        // To be Implemented
+        string text = "ENVIRONMENT_INVEST_ACTION";
+        NarrativeFragment environmentInvestment = new NarrativeFragment
+        {
+            Type = "ENVIRONMENT_INVESTMENT",
+            Action = text,
+            Outcome = new Dictionary<string, string>()
+        };
+
+        environmentInvestment.Outcome["LOW"] = "ENVIRONMENT_INVEST_OUTCOME_LOW";
+        environmentInvestment.Outcome["MEDIUM"] = "ENVIRONMENT_INVEST_OUTCOME_MEDIUM";
+        environmentInvestment.Outcome["HIGH"] = "ENVIRONMENT_INVEST_OUTCOME_HIGH";
+
+
+        narrativeFragments.Add(environmentInvestment);
     }
 
     public void InitEconomyInvestmentNarrativeFragments()
     {
-        // To be Implemented
+        string text = "ECONOMY_INVEST_ACTION";
+        NarrativeFragment economyInvestment = new NarrativeFragment
+        {
+            Type = "ECONOMY_INVESTMENT",
+            Action = text,
+            Outcome = new Dictionary<string, string>()
+        };
+
+        economyInvestment.Outcome["LOW"] = "ECONOMY_INVEST_OUTCOME_LOW";
+        economyInvestment.Outcome["MEDIUM"] = "ECONOMY_INVEST_OUTCOME_MEDIUM";
+        economyInvestment.Outcome["HIGH"] = "ECONOMY_INVEST_OUTCOME_HIGH";
+
+
+        narrativeFragments.Add(economyInvestment);
     }
 
     // Placeholders
@@ -211,49 +238,51 @@ public class Narrator
         int economy = investment[GameProperties.InvestmentTarget.ECONOMIC];
         int environment = investment[GameProperties.InvestmentTarget.ENVIRONMENT];
 
-        // Create NarrativeInterpretation for Environment Investment
-        NarrativeInterpretation environmentInvestmentNarrativeInterpretation = new NarrativeInterpretation
+        if(environment != 0)
         {
-            Player = player,
-            Round = round,
-            Value = environment,
-            Type = "ENVIRONMENT_INVESTMENT"
-        };
+            // Create NarrativeInterpretation for Environment Investment
+            NarrativeInterpretation environmentInvestmentNarrativeInterpretation = new NarrativeInterpretation
+            {
+                Player = player,
+                Round = round,
+                Value = environment,
+                Type = "ENVIRONMENT_INVESTMENT"
+            };
 
-        // Register NarrativeInterpretation for Environment Investment
-        narrativeInterpretations.Add(environmentInvestmentNarrativeInterpretation);
+            // Register NarrativeInterpretation for Environment Investment
+            narrativeInterpretations.Add(environmentInvestmentNarrativeInterpretation);
 
-        // Economy Investment Fragment
-        // Compute Narrator Text (symbol interpretation)
-        // Should fetch a random
-        List<NarrativeFragment> environmentInvestmentFragments = GetEnvironmentInvestmentNarrativeFragments();
-        NarrativeFragment environmentInvestmentFragment = environmentInvestmentFragments.FirstOrDefault();
+            // Economy Investment Fragment
+            // Compute Narrator Text (symbol interpretation)
+            // Should fetch a random
+            List<NarrativeFragment> environmentInvestmentFragments = GetEnvironmentInvestmentNarrativeFragments();
+            NarrativeFragment environmentInvestmentFragment = environmentInvestmentFragments.FirstOrDefault();
 
-        environmentInvestmentNarrativeInterpretation.Narrative = environmentInvestmentFragment;
+            environmentInvestmentNarrativeInterpretation.Narrative = environmentInvestmentFragment;
+        }
 
-
-
-        // Create NarrativeInterpretation for Environment Investment
-        NarrativeInterpretation economyInvestmentNarrativeInterpretation = new NarrativeInterpretation
+        if(economy != 0)
         {
-            Player = player,
-            Round = round,
-            Value = economy,
-            Type = "ECONOMY_INVESTMENT"
-        };
+            // Create NarrativeInterpretation for Economy Investment
+            NarrativeInterpretation economyInvestmentNarrativeInterpretation = new NarrativeInterpretation
+            {
+                Player = player,
+                Round = round,
+                Value = economy,
+                Type = "ECONOMY_INVESTMENT"
+            };
 
-        // Register NarrativeInterpretation for Environment Investment
-        narrativeInterpretations.Add(economyInvestmentNarrativeInterpretation);
+            // Register NarrativeInterpretation for Economy Investment
+            narrativeInterpretations.Add(economyInvestmentNarrativeInterpretation);
 
-        // Environment Investment Fragment
-        // Compute Narrator Text (symbol interpretation)
-        // Should fetch a random
-        List<NarrativeFragment> economyInvestmentFragments = GetEconomyInvestmentNarrativeFragments();
-        NarrativeFragment economyInvestmentFragment = economyInvestmentFragments.FirstOrDefault();
+            // Economy Investment Fragment
+            // Compute Narrator Text (symbol interpretation)
+            // Should fetch a random
+            List<NarrativeFragment> economyInvestmentFragments = GetEconomyInvestmentNarrativeFragments();
+            NarrativeFragment economyInvestmentFragment = economyInvestmentFragments.FirstOrDefault();
 
-        environmentInvestmentNarrativeInterpretation.Narrative = environmentInvestmentFragment;
-
-
+            economyInvestmentNarrativeInterpretation.Narrative = economyInvestmentFragment;
+        }
 
         yield return null;
     }
@@ -265,7 +294,8 @@ public class Narrator
 
         GetNarrativeInterpretations(player, round).ForEach(delegate (NarrativeInterpretation interpretation)
         {
-            text += interpretation.ToString() + "\n";
+            //text += interpretation.ToString() + "\n";
+            text += player.GetName() + " : " + interpretation.Narrative.Action + "\n";
         });
 
         // Output Narrator Text
@@ -278,17 +308,21 @@ public class Narrator
     public IEnumerator EconomyBudgetExecution(Player player, int round, int economyResult)
     {
         NarrativeInterpretation narrativeInterpretation = GetNarrativeInterpretation(player, round, "ECONOMY_INVESTMENT");
-        narrativeInterpretation.Result = economyResult;
 
-        // Compute Narrator Text (symbol interpretation)
-        string text = "Narrator: Economy Budget Simulation";
-        text += "\n" + narrativeInterpretation.ToString();
-
-        // Output Narrator Text
-        if(economyResult != 0)
+        if(narrativeInterpretation != null)
         {
-            InteractionModule.Speak(text);
+            narrativeInterpretation.Result = economyResult;
+
+            // Compute Narrator Text (symbol interpretation)
+            string text = player.GetName() + " : " + narrativeInterpretation.Outcome();
+
+            // Output Narrator Text
+            if (economyResult != 0)
+            {
+                InteractionModule.Speak(text);
+            }
         }
+        
 
         yield return null;
     }
@@ -297,17 +331,21 @@ public class Narrator
     public IEnumerator EnvironmentBudgetExecution(Player player, int round, int environmentResult)
     {
         NarrativeInterpretation narrativeInterpretation = GetNarrativeInterpretation(player, round, "ENVIRONMENT_INVESTMENT");
-        narrativeInterpretation.Result = environmentResult;
 
-        // Compute Narrator Text (symbol interpretation)
-        string text = "Narrator: Environment Budget Simulation";
-        text += "\n" + narrativeInterpretation.ToString();
-
-        // Output Narrator Text
-        if (environmentResult != 0)
+        if (narrativeInterpretation != null)
         {
-            InteractionModule.Speak(text);
+            narrativeInterpretation.Result = environmentResult;
+
+            // Compute Narrator Text (symbol interpretation)
+            string text = player.GetName() + " : " + narrativeInterpretation.Outcome();
+
+            // Output Narrator Text
+            if (environmentResult != 0)
+            {
+                InteractionModule.Speak(text);
+            }
         }
+        
 
         yield return null;
     }
@@ -429,6 +467,7 @@ public class NarrativeInterpretation
 
     public string Outcome()
     {
+        string result = "";
 
         // Assuming 6 sided dice
         Dictionary<int, string> resultClassification = new Dictionary<int, string>();
