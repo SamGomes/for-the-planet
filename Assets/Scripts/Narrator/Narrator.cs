@@ -33,22 +33,22 @@ public class Narrator
         return narrativeInterpretations;
     }
 
-    public List<NarrativeInterpretation> getNarrativeInterpretations(Player player)
+    public List<NarrativeInterpretation> GetNarrativeInterpretations(Player player)
     {
         return narrativeInterpretations.FindAll(x => x.Player.GetId() == player.GetId()); ;
     }
 
-    public List<NarrativeInterpretation> getNarrativeInterpretations(Player player, int round)
+    public List<NarrativeInterpretation> GetNarrativeInterpretations(Player player, int round)
     {
         return narrativeInterpretations.FindAll(x => x.Player.GetId() == player.GetId()).FindAll(x => x.Round == round);
     }
 
-    public NarrativeInterpretation getNarrativeInterpretation(Player player, int round, string type)
+    public NarrativeInterpretation GetNarrativeInterpretation(Player player, int round, string type)
     {
         return narrativeInterpretations.FindAll(x => x.Player.GetId() == player.GetId()).FindAll(x => x.Round == round).Find(x => x.Type == type);
     }
 
-    public List<NarrativeInterpretation> getNarrativeInterpretations(int round, string type)
+    public List<NarrativeInterpretation> GetNarrativeInterpretations(int round, string type)
     {
         return narrativeInterpretations.FindAll(x => x.Type == type).FindAll(x => x.Round == round);
     }
@@ -94,7 +94,7 @@ public class Narrator
     {
         string text = "Narrator: Display History\n";
 
-        getNarrativeInterpretations(player, round).ForEach(delegate (NarrativeInterpretation interpretation)
+        GetNarrativeInterpretations(player, round).ForEach(delegate (NarrativeInterpretation interpretation)
         {
             text += interpretation.ToString() + "\n";
         });
@@ -108,7 +108,7 @@ public class Narrator
     // Narrator Actions during Economy Budget Execution
     public IEnumerator EconomyBudgetExecution(Player player, int round, int economyResult)
     {
-        NarrativeInterpretation narrativeInterpretation = getNarrativeInterpretation(player, round, "ECONOMY_INVESTMENT");
+        NarrativeInterpretation narrativeInterpretation = GetNarrativeInterpretation(player, round, "ECONOMY_INVESTMENT");
         narrativeInterpretation.Result = economyResult;
 
         // Compute Narrator Text (symbol interpretation)
@@ -127,7 +127,7 @@ public class Narrator
     // Narrator Actions during Environment Budget Execution
     public IEnumerator EnvironmentBudgetExecution(Player player, int round, int environmentResult)
     {
-        NarrativeInterpretation narrativeInterpretation = getNarrativeInterpretation(player, round, "ENVIRONMENT_INVESTMENT");
+        NarrativeInterpretation narrativeInterpretation = GetNarrativeInterpretation(player, round, "ENVIRONMENT_INVESTMENT");
         narrativeInterpretation.Result = environmentResult;
 
         // Compute Narrator Text (symbol interpretation)
