@@ -5,9 +5,7 @@ using UnityEngine;
 // Does this need a game manager reference like the player?
 public class Narrator
 {
-    public List<PlayerRoundInvestment> playerRoundInvestments;
-    public List<PlayerRoundEconomyDecay> playerRoundEconomyDecays;
-    public List<RoundEnvironmentDecay> roundEnvironmentDecays;
+    public List<NarrativeInterpretation> narrativeInterpretations;
 
     private GameObject NarratorUI;
     private GameObject CanvasUI;
@@ -17,9 +15,7 @@ public class Narrator
 
     public Narrator(GameObject narratorCanvas)
     {
-        playerRoundInvestments = new List<PlayerRoundInvestment>();
-        playerRoundEconomyDecays = new List<PlayerRoundEconomyDecay>();
-        roundEnvironmentDecays = new List<RoundEnvironmentDecay>();
+        narrativeInterpretations = new List<NarrativeInterpretation>();
 
 
         CanvasUI = narratorCanvas;
@@ -29,31 +25,33 @@ public class Narrator
         InteractionModule.Init(NarratorUI, CanvasUI);
     }
 
-    public List<PlayerRoundInvestment> getInvestments(Player player)
+
+    // Narrative Interpretations
+    // Need to validate What I will actually need, trim this as required (over-engineered implementation)
+    public List<NarrativeInterpretation> getNarrativeInterpretations()
     {
-        return playerRoundInvestments.FindAll(x => x.Player.GetId() == player.GetId());
+        return narrativeInterpretations;
     }
 
-    public PlayerRoundInvestment getInvestment(Player player, int round)
+    public List<NarrativeInterpretation> getNarrativeInterpretations(Player player)
     {
-        return playerRoundInvestments.FindAll(x => x.Player.GetId() == player.GetId()).Find(x => x.Round == round);
+        return narrativeInterpretations.FindAll(x => x.Player.GetId() == player.GetId()); ;
     }
 
-    public List<PlayerRoundEconomyDecay> getRoundEconomyDecays(Player player)
+    public List<NarrativeInterpretation> getNarrativeInterpretations(Player player, int round)
     {
-        return playerRoundEconomyDecays.FindAll(x => x.Player.GetId() == player.GetId());
+        return narrativeInterpretations.FindAll(x => x.Player.GetId() == player.GetId()).FindAll(x => x.Round == round);
     }
 
-    public PlayerRoundEconomyDecay getRoundEconomyDecays(Player player, int round)
+    public NarrativeInterpretation getNarrativeInterpretation(Player player, int round, string type)
     {
-        return playerRoundEconomyDecays.FindAll(x => x.Player.GetId() == player.GetId()).Find(x => x.Round == round);
+        return narrativeInterpretations.FindAll(x => x.Player.GetId() == player.GetId()).FindAll(x => x.Round == round).Find(x => x.Type == type);
     }
 
-    public RoundEnvironmentDecay getRoundEnvironmentDecay(int round)
+    public List<NarrativeInterpretation> getNarrativeInterpretations(int round, string type)
     {
-        return roundEnvironmentDecays.Find(x => x.Round == round);
+        return narrativeInterpretations.FindAll(x => x.Type == type).FindAll(x => x.Round == round);
     }
-
 
     // Narrator Actions during Budget Allocation
     // can potentially receive a player and the budget allocated
@@ -64,28 +62,42 @@ public class Narrator
         int economy = investment[GameProperties.InvestmentTarget.ECONOMIC];
         int environment = investment[GameProperties.InvestmentTarget.ENVIRONMENT];
 
-        // create round investment
-        PlayerRoundInvestment playerRoundInvestment = new PlayerRoundInvestment(player, round, economy, environment);
+        // Create NarrativeInterpretation for Environment Investment
+        NarrativeInterpretation environmentInvestmentNarrativeInterpretation = new NarrativeInterpretation
+        {
+            Player = player,
+            Round = round,
+            Value = environment,
+            Type = "ENVIRONMENT_INVESTMENT"
+        };
 
-        // Register the round investment
-        playerRoundInvestments.Add(playerRoundInvestment);
+        // Register NarrativeInterpretation for Environment Investment
+        narrativeInterpretations.Add(environmentInvestmentNarrativeInterpretation);
+
+        // Create NarrativeInterpretation for Environment Investment
+        NarrativeInterpretation economyInvestmentNarrativeInterpretation = new NarrativeInterpretation
+        {
+            Player = player,
+            Round = round,
+            Value = economy,
+            Type = "ECONOMY_INVESTMENT"
+        };
+
+        // Register NarrativeInterpretation for Environment Investment
+        narrativeInterpretations.Add(economyInvestmentNarrativeInterpretation);
 
         yield return null;
     }
 
     // Narrator Actions during Display History
-    // should receive a player (something like that)
     public IEnumerator DisplayHistory(Player player, int round)
     {
-        PlayerRoundInvestment playerRoundInvestment = this.getInvestment(player, round);
+        string text = "Narrator: Display History\n";
 
-        // Compute Narrator Investment Symbols
-        playerRoundInvestment.EconomyInvestmentSymbol = "DEFAULT_ECONOMY_INVESTMENT_SYMBOL";
-        playerRoundInvestment.EnvironmentInvestmentSymbol = "DEFAULT_ENVIRONMENT_INVESTMENT_SYMBOL";
-
-        // Compute Narrator Text (symbol interpretation)
-        string text = "Narrator: Display History";
-        text += "\n" + playerRoundInvestment;
+        getNarrativeInterpretations(player, round).ForEach(delegate (NarrativeInterpretation interpretation)
+        {
+            text += interpretation.ToString() + "\n";
+        });
 
         // Output Narrator Text
         InteractionModule.Speak(text);
@@ -96,15 +108,12 @@ public class Narrator
     // Narrator Actions during Economy Budget Execution
     public IEnumerator EconomyBudgetExecution(Player player, int round, int economyResult)
     {
-        PlayerRoundInvestment playerRoundInvestment = this.getInvestment(player, round);
-
-        // Compute Narrator Investment Result Symbol
-        playerRoundInvestment.EconomyResult = economyResult;
-        playerRoundInvestment.EconomyResultSymbol = "DEFAULT_ECONOMY_RESULT_SYMBOL";
+        NarrativeInterpretation narrativeInterpretation = getNarrativeInterpretation(player, round, "ECONOMY_INVESTMENT");
+        narrativeInterpretation.Result = economyResult;
 
         // Compute Narrator Text (symbol interpretation)
         string text = "Narrator: Economy Budget Simulation";
-        text += "\n" + playerRoundInvestment;
+        text += "\n" + narrativeInterpretation.ToString();
 
         // Output Narrator Text
         if(economyResult != 0)
@@ -118,15 +127,12 @@ public class Narrator
     // Narrator Actions during Environment Budget Execution
     public IEnumerator EnvironmentBudgetExecution(Player player, int round, int environmentResult)
     {
-        PlayerRoundInvestment playerRoundInvestment = this.getInvestment(player, round);
-
-        // Compute Narrator Investment Result Symbol
-        playerRoundInvestment.EnvironmentResult = environmentResult;
-        playerRoundInvestment.EnvironmentResultSymbol = "DEFAULT_ENVIRONMENT_RESULT_SYMBOL";
+        NarrativeInterpretation narrativeInterpretation = getNarrativeInterpretation(player, round, "ENVIRONMENT_INVESTMENT");
+        narrativeInterpretation.Result = environmentResult;
 
         // Compute Narrator Text (symbol interpretation)
         string text = "Narrator: Environment Budget Simulation";
-        text += "\n" + playerRoundInvestment;
+        text += "\n" + narrativeInterpretation.ToString();
 
         // Output Narrator Text
         if (environmentResult != 0)
@@ -140,14 +146,22 @@ public class Narrator
     // Narrator Actions during Economy Decay Simulation
     public IEnumerator EconomyDecaySimulation(Player player, int round, int decay)
     {
-        PlayerRoundEconomyDecay playerRoundEconomyDecay = new PlayerRoundEconomyDecay(player, round, decay);
+        NarrativeInterpretation economyDecayNarrativeInterpretation = new NarrativeInterpretation
+        {
+            Player = player,
+            Round = round,
+            Value = 2,
+            Result = decay,
+            Type = "ECONOMY_DECAY"
+        };
 
-        // Compute Narrator Investment Result Symbol
-        playerRoundEconomyDecay.DecaySymbol = "DEFAULT_ECONOMY_DECAY_SYMBOL";
+        // Register NarrativeInterpretation for Economy Decay
+        narrativeInterpretations.Add(economyDecayNarrativeInterpretation);
 
         // Compute Narrator Text (symbol interpretation)
         string text = "Narrator: Economy Decay Simulation";
-        text += "\n" + playerRoundEconomyDecay;
+        text += "\n" + economyDecayNarrativeInterpretation.ToString();
+
 
         // Output Narrator Text
         if (decay != 0)
@@ -161,14 +175,20 @@ public class Narrator
     // Narrator Actions during Environment Decay Simulation
     public IEnumerator EnvironmentDecaySimulation(int round, int decay)
     {
-        RoundEnvironmentDecay roundEnvironmentDecay = new RoundEnvironmentDecay(round, decay);
+        NarrativeInterpretation environmentDecayNarrativeInterpretation = new NarrativeInterpretation
+        {
+            Round = round,
+            Value = 2,
+            Result = decay,
+            Type = "ENVIRONMENT_DECAY"
+        };
 
-        // Compute Narrator Decay Result Symbol
-        roundEnvironmentDecay.DecaySymbol = "DEFAULT_ENVIRONMENT_DECAY_SYMBOL";
+        // Register NarrativeInterpretation for Economy Decay
+        narrativeInterpretations.Add(environmentDecayNarrativeInterpretation);
 
         // Compute Narrator Text (symbol interpretation)
         string text = "Narrator: Environment Decay Simulation";
-        text += "\n" + roundEnvironmentDecay;
+        text += "\n" + environmentDecayNarrativeInterpretation.ToString();
 
         // Output Narrator Text
         if (decay != 0)
@@ -180,10 +200,13 @@ public class Narrator
     }
 
     // Narrator Actions during Game Start
+    // should give game setting context
     public IEnumerator GameStart()
     {
         // Compute Narrator Text
-        string text = "Narrator: Game Start";
+        // Placeholder
+        string text = "Three neighbouring countries are attempting to develop their economies. " +
+            "Unfortunately, a lot of damage has already been done to the environment, and they need to make sure that the planet survives their endeavours.";
 
         // Output Narrator Text
         InteractionModule.Speak(text);
@@ -192,6 +215,7 @@ public class Narrator
     }
 
     // Narrator Actions during Round Start
+    // should give game status context
     public IEnumerator RoundStart()
     {
         // Compute Narrator Text
@@ -216,6 +240,7 @@ public class Narrator
     }
 
     // Narrator Text Bubble
+    // Don't Think I need this
     private IEnumerator DisplayNarratorText(string message, float delay)
     {
         yield return null;
@@ -223,99 +248,27 @@ public class Narrator
 
 }
 
-
-public class PlayerRoundInvestment {
-
-    public Player Player { get; set;}
-
-    public int Round { get; set; }
-
-    public int EconomyInvestment { get; set; }
-    public string EconomyInvestmentSymbol { get; set; }
-
-    public int? EconomyResult { get; set; }
-    public string EconomyResultSymbol { get; set; }
-
-    public int EnvironmentInvestment { get; set; }
-    public string EnvironmentInvestmentSymbol { get; set; }
-
-    public int? EnvironmentResult { get; set; }
-    public string EnvironmentResultSymbol { get; set; }
-
-    public PlayerRoundInvestment(Player player, int round, int economyInvestment, int environmentInvestment)
-    {
-        Player = player;
-        Round = round;
-
-        EconomyInvestment = economyInvestment;
-        EconomyInvestmentSymbol = null;
-
-        EconomyResult = null;
-        EconomyResultSymbol = null;
-
-        EnvironmentInvestment = environmentInvestment;
-        EnvironmentInvestmentSymbol = null;
-
-        EnvironmentResult = null;
-        EnvironmentResultSymbol = null;
-    }
-
-    public override string ToString()
-    {
-        // needs to be fixed so that it also outputs the symbol and the rolls
-        return "Player " + Player.GetName() + " - Round " + Round + ": " 
-            + "Economy - " + EconomyInvestmentSymbol + " (" + EconomyInvestment + ") " + EconomyResultSymbol + " (" + EconomyResult + ") "
-            +  " Environment - " + EnvironmentInvestmentSymbol + " (" + EnvironmentInvestment + ") " + EnvironmentResultSymbol + " (" + EnvironmentResult + ") ";
-    }
-}
-
-public class PlayerRoundEconomyDecay
+public class NarrativeInterpretation
 {
-
     public Player Player { get; set; }
-
     public int Round { get; set; }
 
-    public int DecayResult { get; set; }
-    public string DecaySymbol { get; set; }
+    public string Type { get; set; }
 
-    public PlayerRoundEconomyDecay(Player player, int round, int decay)
-    {
-        Player = player;
-        Round = round;
-
-        DecayResult = decay;
-        DecaySymbol = null;
-    }
+    public int? Value { get; set; }
+    public int? Result { get; set; }
 
     public override string ToString()
     {
-        // needs to be fixed so that it also outputs the symbol and the rolls
-        return "Player " + Player.GetName() + " - Round " + Round + ": "
-            + "Economy Decay - " + DecaySymbol + " (" + DecayResult + ") ";
-    }
-}
+        string result = "Round " + Round + ": "
+            + Type + " - " + Value + " (" + Result + ") ";
 
-public class RoundEnvironmentDecay
-{
+        if (Player != null)
+        {
+            result = Player.GetName() + " Round " + Round + ": "
+            + Type + " - " + Value + " (" + Result + ") ";
+        }
 
-    public int Round { get; set; }
-
-    public int DecayResult { get; set; }
-    public string DecaySymbol { get; set; }
-
-    public RoundEnvironmentDecay(int round, int decay)
-    {
-        Round = round;
-
-        DecayResult = decay;
-        DecaySymbol = null;
-    }
-
-    public override string ToString()
-    {
-        // needs to be fixed so that it also outputs the symbol and the rolls
-        return "Round " + Round + ": "
-            + "Environment Decay - " + DecaySymbol + " (" + DecayResult + ") ";
+        return result;
     }
 }
