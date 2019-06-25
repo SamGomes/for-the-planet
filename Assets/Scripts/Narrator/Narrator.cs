@@ -6,6 +6,7 @@ using UnityEngine;
 public class Narrator
 {
     public List<NarrativeInterpretation> narrativeInterpretations;
+    public List<NarrativeFragment> narrativeFragments;
 
     private GameObject NarratorUI;
     private GameObject CanvasUI;
@@ -16,13 +17,41 @@ public class Narrator
     public Narrator(GameObject narratorCanvas)
     {
         narrativeInterpretations = new List<NarrativeInterpretation>();
-
+        narrativeFragments = new List<NarrativeFragment>();
 
         CanvasUI = narratorCanvas;
         NarratorUI = Resources.Load<GameObject>("Prefabs/NarratorUI");
 
         InteractionModule = new LegendsInteractionModule();
         InteractionModule.Init(NarratorUI, CanvasUI);
+    }
+
+    public void InitNarrativeFragments()
+    {
+        InitGameStartNarrativeFragment();
+    }
+
+    public void InitGameStartNarrativeFragment()
+    {
+        //  The number of players should be fetch
+        string text = GameGlobals.players.Count + " neighbouring countries are attempting to develop their economies. " +
+            "Unfortunately, a lot of damage has already been done to the environment, and they need to make sure that the planet survives their endeavours.";
+        NarrativeFragment gameStart = new NarrativeFragment
+        {
+            Type = "GAME_START",
+            ActionText = text
+        };
+        narrativeFragments.Add(gameStart);
+    }
+
+    public NarrativeFragment GetGameStartNarrativeFragment()
+    {
+        return narrativeFragments.Find(x => x.Type == "GAME_START");
+    }
+
+    public List<NarrativeFragment> GetNarrativeFragments()
+    {
+        return narrativeFragments;
     }
 
 
@@ -203,10 +232,16 @@ public class Narrator
     // should give game setting context
     public IEnumerator GameStart()
     {
+        // Sorta Delayed Initialization of the Narrative Fragments
+        InitNarrativeFragments();
+
+        NarrativeFragment gameStart = GetGameStartNarrativeFragment();
+
+        // Add NarrativeInterpretation?
+        // Does this make sense at game start?
+
         // Compute Narrator Text
-        // Placeholder
-        string text = "Three neighbouring countries are attempting to develop their economies. " +
-            "Unfortunately, a lot of damage has already been done to the environment, and they need to make sure that the planet survives their endeavours.";
+        string text = gameStart.ActionText;
 
         // Output Narrator Text
         InteractionModule.Speak(text);
@@ -271,4 +306,10 @@ public class NarrativeInterpretation
 
         return result;
     }
+}
+
+public class NarrativeFragment
+{
+    public string Type { get; set; }
+    public string ActionText { get; set; }
 }
