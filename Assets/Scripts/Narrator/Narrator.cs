@@ -61,75 +61,95 @@ public class Narrator
     // Placeholders
     public void InitEnvironmentInvestmentNarrativeFragments()
     {
-        string text = "ENVIRONMENT_INVEST_ACTION";
-        NarrativeFragment environmentInvestment = new NarrativeFragment
+        AddEnvironmentInvestmentNarrativeFragment("ENVIRONMENT_INVEST_ACTION",
+            "ENVIRONMENT_INVEST_OUTCOME_LOW", "ENVIRONMENT_INVEST_OUTCOME_MEDIUM", "ENVIRONMENT_INVEST_OUTCOME_HIGH");
+    }
+
+    public void AddEnvironmentInvestmentNarrativeFragment(string action, string outcomeLow, string outcomeMedium, string outcomeHigh)
+    {
+        NarrativeFragment narrative = new NarrativeFragment
         {
             Type = "ENVIRONMENT_INVESTMENT",
-            Action = text,
+            Action = action,
             Outcome = new Dictionary<string, string>()
         };
 
-        environmentInvestment.Outcome["LOW"] = "ENVIRONMENT_INVEST_OUTCOME_LOW";
-        environmentInvestment.Outcome["MEDIUM"] = "ENVIRONMENT_INVEST_OUTCOME_MEDIUM";
-        environmentInvestment.Outcome["HIGH"] = "ENVIRONMENT_INVEST_OUTCOME_HIGH";
+        narrative.Outcome["LOW"] = outcomeLow;
+        narrative.Outcome["MEDIUM"] = outcomeMedium;
+        narrative.Outcome["HIGH"] = outcomeHigh;
 
-
-        narrativeFragments.Add(environmentInvestment);
+        narrativeFragments.Add(narrative);
     }
 
     public void InitEconomyInvestmentNarrativeFragments()
     {
-        string text = "ECONOMY_INVEST_ACTION";
-        NarrativeFragment economyInvestment = new NarrativeFragment
+
+        AddEconomyInvestmentNarrativeFragment("ECONOMY_INVEST_ACTION",
+            "ECONOMY_INVEST_OUTCOME_LOW", "ECONOMY_INVEST_OUTCOME_MEDIUM", "ECONOMY_INVEST_OUTCOME_HIGH");
+
+        
+    }
+
+    public void AddEconomyInvestmentNarrativeFragment(string action, string outcomeLow, string outcomeMedium, string outcomeHigh)
+    {
+        NarrativeFragment narrative = new NarrativeFragment
         {
             Type = "ECONOMY_INVESTMENT",
-            Action = text,
+            Action = action,
             Outcome = new Dictionary<string, string>()
         };
 
-        economyInvestment.Outcome["LOW"] = "ECONOMY_INVEST_OUTCOME_LOW";
-        economyInvestment.Outcome["MEDIUM"] = "ECONOMY_INVEST_OUTCOME_MEDIUM";
-        economyInvestment.Outcome["HIGH"] = "ECONOMY_INVEST_OUTCOME_HIGH";
+        narrative.Outcome["LOW"] = outcomeLow;
+        narrative.Outcome["MEDIUM"] = outcomeMedium;
+        narrative.Outcome["HIGH"] = outcomeHigh;
 
-
-        narrativeFragments.Add(economyInvestment);
+        narrativeFragments.Add(narrative);
     }
+
 
     // Placeholders
     public void InitEnvironmentDecayNarrativeFragments()
     {
-        string text = "ENVIRONMENT_DECAY_ACTION";
-        NarrativeFragment environmentDecay = new NarrativeFragment
+        AddEnvironmentDecayNarrativeFragment("ENVIRONMENT_DECAY_ACTION", 
+            "ENVIRONMENT_DECAY_OUTCOME_LOW", "ENVIRONMENT_DECAY_OUTCOME_MEDIUM", "ENVIRONMENT_DECAY_OUTCOME_HIGH");
+    }
+
+    public void AddEnvironmentDecayNarrativeFragment(string action, string outcomeLow, string outcomeMedium, string outcomeHigh)
+    {
+        NarrativeFragment narrative = new NarrativeFragment
         {
             Type = "ENVIRONMENT_DECAY",
-            Action = text,
+            Action = action,
             Outcome = new Dictionary<string, string>()
         };
 
-        environmentDecay.Outcome["LOW"] = "ENVIRONMENT_DECAY_OUTCOME_LOW";
-        environmentDecay.Outcome["MEDIUM"] = "ENVIRONMENT_DECAY_OUTCOME_MEDIUM";
-        environmentDecay.Outcome["HIGH"] = "ENVIRONMENT_DECAY_OUTCOME_HIGH";
+        narrative.Outcome["LOW"] = outcomeLow;
+        narrative.Outcome["MEDIUM"] = outcomeMedium;
+        narrative.Outcome["HIGH"] = outcomeHigh;
 
-
-        narrativeFragments.Add(environmentDecay);
+        narrativeFragments.Add(narrative);
     }
 
     public void InitEconomyDecayNarrativeFragments()
     {
-        string text = "ECONOMY_DECAY_ACTION";
-        NarrativeFragment economyDecay = new NarrativeFragment
+        AddEconomyDecayNarrativeFragment("ECONOMY_DECAY_ACTION", 
+            "ECONOMY_DECAY_OUTCOME_LOW", "ECONOMY_DECAY_OUTCOME_MEDIUM", "ECONOMY_DECAY_OUTCOME_HIGH");
+    }
+
+    public void AddEconomyDecayNarrativeFragment(string action, string outcomeLow, string outcomeMedium, string outcomeHigh)
+    {
+        NarrativeFragment narrative = new NarrativeFragment
         {
             Type = "ECONOMY_DECAY",
-            Action = text,
+            Action = action,
             Outcome = new Dictionary<string, string>()
         };
 
-        economyDecay.Outcome["LOW"] = "ECONOMY_DECAY_OUTCOME_LOW";
-        economyDecay.Outcome["MEDIUM"] = "ECONOMY_DECAY_OUTCOME_MEDIUM";
-        economyDecay.Outcome["HIGH"] = "ECONOMY_DECAY_OUTCOME_HIGH";
+        narrative.Outcome["LOW"] = outcomeLow;
+        narrative.Outcome["MEDIUM"] = outcomeMedium;
+        narrative.Outcome["HIGH"] = outcomeHigh;
 
-
-        narrativeFragments.Add(economyDecay);
+        narrativeFragments.Add(narrative);
     }
 
     public NarrativeFragment GetGameStartNarrativeFragment()
