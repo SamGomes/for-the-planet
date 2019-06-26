@@ -61,17 +61,30 @@ public class Narrator
     // Placeholders
     public void InitEnvironmentInvestmentNarrativeFragments()
     {
-        AddEnvironmentInvestmentNarrativeFragment("ENVIRONMENT_INVEST_ACTION",
-            "ENVIRONMENT_INVEST_OUTCOME_LOW", "ENVIRONMENT_INVEST_OUTCOME_MEDIUM", "ENVIRONMENT_INVEST_OUTCOME_HIGH");
+        AddEnvironmentInvestmentNarrativeFragment("ENVIRONMENT_INVEST_1_ACTION",
+            "ENVIRONMENT_INVEST_1_OUTCOME_LOW", "ENVIRONMENT_INVEST_1_OUTCOME_MEDIUM", "ENVIRONMENT_INVEST_1_OUTCOME_HIGH", 1);
+
+        AddEnvironmentInvestmentNarrativeFragment("ENVIRONMENT_INVEST_2_ACTION",
+            "ENVIRONMENT_INVEST_2_OUTCOME_LOW", "ENVIRONMENT_INVEST_2_OUTCOME_MEDIUM", "ENVIRONMENT_INVEST_2_OUTCOME_HIGH", 2);
+
+        AddEnvironmentInvestmentNarrativeFragment("ENVIRONMENT_INVEST_3_ACTION",
+            "ENVIRONMENT_INVEST_3_OUTCOME_LOW", "ENVIRONMENT_INVEST_3_OUTCOME_MEDIUM", "ENVIRONMENT_INVEST_3_OUTCOME_HIGH", 3);
+
+        AddEnvironmentInvestmentNarrativeFragment("ENVIRONMENT_INVEST_4_ACTION",
+            "ENVIRONMENT_INVEST_4_OUTCOME_LOW", "ENVIRONMENT_INVEST_4_OUTCOME_MEDIUM", "ENVIRONMENT_INVEST_4_OUTCOME_HIGH", 4);
+
+        AddEnvironmentInvestmentNarrativeFragment("ENVIRONMENT_INVEST_5_ACTION",
+            "ENVIRONMENT_INVEST_5_OUTCOME_LOW", "ENVIRONMENT_INVEST_5_OUTCOME_MEDIUM", "ENVIRONMENT_INVEST_5_OUTCOME_HIGH", 5);
     }
 
-    public void AddEnvironmentInvestmentNarrativeFragment(string action, string outcomeLow, string outcomeMedium, string outcomeHigh)
+    public void AddEnvironmentInvestmentNarrativeFragment(string action, string outcomeLow, string outcomeMedium, string outcomeHigh, int value)
     {
         NarrativeFragment narrative = new NarrativeFragment
         {
             Type = "ENVIRONMENT_INVESTMENT",
             Action = action,
-            Outcome = new Dictionary<string, string>()
+            Outcome = new Dictionary<string, string>(),
+            Value = value
         };
 
         narrative.Outcome["LOW"] = outcomeLow;
@@ -84,19 +97,32 @@ public class Narrator
     public void InitEconomyInvestmentNarrativeFragments()
     {
 
-        AddEconomyInvestmentNarrativeFragment("ECONOMY_INVEST_ACTION",
-            "ECONOMY_INVEST_OUTCOME_LOW", "ECONOMY_INVEST_OUTCOME_MEDIUM", "ECONOMY_INVEST_OUTCOME_HIGH");
+        AddEconomyInvestmentNarrativeFragment("ECONOMY_INVEST_1_ACTION",
+            "ECONOMY_INVEST_1_OUTCOME_LOW", "ECONOMY_INVEST_1_OUTCOME_MEDIUM", "ECONOMY_INVEST_1_OUTCOME_HIGH", 1);
 
-        
+        AddEconomyInvestmentNarrativeFragment("ECONOMY_INVEST_2_ACTION",
+            "ECONOMY_INVEST_2_OUTCOME_LOW", "ECONOMY_INVEST_2_OUTCOME_MEDIUM", "ECONOMY_INVEST_2_OUTCOME_HIGH", 2);
+
+        AddEconomyInvestmentNarrativeFragment("ECONOMY_INVEST_3_ACTION",
+            "ECONOMY_INVEST_3_OUTCOME_LOW", "ECONOMY_INVEST_3_OUTCOME_MEDIUM", "ECONOMY_INVEST_3_OUTCOME_HIGH", 3);
+
+        AddEconomyInvestmentNarrativeFragment("ECONOMY_INVEST_4_ACTION",
+            "ECONOMY_INVEST_4_OUTCOME_LOW", "ECONOMY_INVEST_4_OUTCOME_MEDIUM", "ECONOMY_INVEST_4_OUTCOME_HIGH", 4);
+
+        AddEconomyInvestmentNarrativeFragment("ECONOMY_INVEST_5_ACTION",
+            "ECONOMY_INVEST_5_OUTCOME_LOW", "ECONOMY_INVEST_5_OUTCOME_MEDIUM", "ECONOMY_INVEST_5_OUTCOME_HIGH", 5);
+
+
     }
 
-    public void AddEconomyInvestmentNarrativeFragment(string action, string outcomeLow, string outcomeMedium, string outcomeHigh)
+    public void AddEconomyInvestmentNarrativeFragment(string action, string outcomeLow, string outcomeMedium, string outcomeHigh, int value)
     {
         NarrativeFragment narrative = new NarrativeFragment
         {
             Type = "ECONOMY_INVESTMENT",
             Action = action,
-            Outcome = new Dictionary<string, string>()
+            Outcome = new Dictionary<string, string>(),
+            Value = value
         };
 
         narrative.Outcome["LOW"] = outcomeLow;
@@ -167,9 +193,19 @@ public class Narrator
         return narrativeFragments.FindAll(x => x.Type == "ENVIRONMENT_INVESTMENT");
     }
 
+    public List<NarrativeFragment> GetEnvironmentInvestmentNarrativeFragments(int value)
+    {
+        return narrativeFragments.FindAll(x => x.Type == "ENVIRONMENT_INVESTMENT").FindAll(x=> x.Value == value);
+    }
+
     public List<NarrativeFragment> GetEconomyInvestmentNarrativeFragments()
     {
         return narrativeFragments.FindAll(x => x.Type == "ECONOMY_INVESTMENT");
+    }
+
+    public List<NarrativeFragment> GetEconomyInvestmentNarrativeFragments(int value)
+    {
+        return narrativeFragments.FindAll(x => x.Type == "ECONOMY_INVESTMENT").FindAll(x => x.Value == value);
     }
 
     public List<NarrativeFragment> GetEnvironmentDecayNarrativeFragments()
@@ -238,6 +274,8 @@ public class Narrator
 
     // Narrator Actions during Round Start
     // should give game status context
+    // should use a narrative fragment somehow
+    // Speak about the current status of the game, environment and each player's economy ???
     public IEnumerator RoundStart()
     {
         // Compute Narrator Text
@@ -275,7 +313,7 @@ public class Narrator
             // Economy Investment Fragment
             // Compute Narrator Text (symbol interpretation)
             // Should fetch a random
-            List<NarrativeFragment> environmentInvestmentFragments = GetEnvironmentInvestmentNarrativeFragments();
+            List<NarrativeFragment> environmentInvestmentFragments = GetEnvironmentInvestmentNarrativeFragments(environment);
             NarrativeFragment environmentInvestmentFragment = environmentInvestmentFragments.FirstOrDefault();
 
             environmentInvestmentNarrativeInterpretation.Narrative = environmentInvestmentFragment;
@@ -298,7 +336,7 @@ public class Narrator
             // Economy Investment Fragment
             // Compute Narrator Text (symbol interpretation)
             // Should fetch a random
-            List<NarrativeFragment> economyInvestmentFragments = GetEconomyInvestmentNarrativeFragments();
+            List<NarrativeFragment> economyInvestmentFragments = GetEconomyInvestmentNarrativeFragments(economy);
             NarrativeFragment economyInvestmentFragment = economyInvestmentFragments.FirstOrDefault();
 
             economyInvestmentNarrativeInterpretation.Narrative = economyInvestmentFragment;
@@ -500,6 +538,7 @@ public class NarrativeInterpretation
 
         return Narrative.Outcome[resultClassification[diceRollNormalization]];
     }
+
 }
 
 public class NarrativeFragment
@@ -507,4 +546,5 @@ public class NarrativeFragment
     public string Type { get; set; }
     public string Action { get; set; }
     public Dictionary<string, string> Outcome {get; set;}
+    public int? Value { get; set; }
 }
