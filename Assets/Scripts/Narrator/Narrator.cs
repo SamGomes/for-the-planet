@@ -467,8 +467,6 @@ public class NarrativeInterpretation
 
     public string Outcome()
     {
-        string result = "";
-
         // Assuming 6 sided dice
         Dictionary<int, string> resultClassification = new Dictionary<int, string>();
         resultClassification[1] = "LOW";
