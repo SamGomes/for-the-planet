@@ -154,8 +154,11 @@ public class Narrator
     // Placeholders
     public void InitEnvironmentDecayNarrativeFragments()
     {
+        // Action text is currently unused for the decay
         AddEnvironmentDecayNarrativeFragment("ENVIRONMENT_DECAY_ACTION", 
-            "ENVIRONMENT_DECAY_OUTCOME_LOW", "ENVIRONMENT_DECAY_OUTCOME_MEDIUM", "ENVIRONMENT_DECAY_OUTCOME_HIGH");
+            "Extra plastic has been discarded due to the sudden popularity of swirly straws.",
+            "Some corporations have been contaminating the water streams.",
+            "Due to increasing power demands, there has been an increase in the burning of Fossil Fuels.");
     }
 
     public void AddEnvironmentDecayNarrativeFragment(string action, string outcomeLow, string outcomeMedium, string outcomeHigh)
@@ -177,7 +180,9 @@ public class Narrator
     public void InitEconomyDecayNarrativeFragments()
     {
         AddEconomyDecayNarrativeFragment("ECONOMY_DECAY_ACTION", 
-            "ECONOMY_DECAY_OUTCOME_LOW", "ECONOMY_DECAY_OUTCOME_MEDIUM", "ECONOMY_DECAY_OUTCOME_HIGH");
+            "Death and Taxes are inevitable, but in the Modern World, so is Inflation.", 
+            "The stock marked is now classified as a Bear Market.", 
+            "A recession has reared its head.");
     }
 
     public void AddEconomyDecayNarrativeFragment(string action, string outcomeLow, string outcomeMedium, string outcomeHigh)
