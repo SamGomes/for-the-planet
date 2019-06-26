@@ -104,31 +104,40 @@ public class Narrator
         narrativeFragments.Add(narrative);
     }
 
+    // Economy Invest Actions
+    // raw material industry (extraction)
+    // Manufacture industry
+    // Tourism industry
+    // Outsourcing industry
+    // Intellectual Property industry
+
     public void InitEconomyInvestmentNarrativeFragments()
     {
 
-        AddEconomyInvestmentNarrativeFragment("ECONOMY_INVEST_1_ACTION",
-            "ECONOMY_INVEST_1_OUTCOME_LOW",
-            "ECONOMY_INVEST_1_OUTCOME_MEDIUM",
-            "ECONOMY_INVEST_1_OUTCOME_HIGH", 1);
+        AddEconomyInvestmentNarrativeFragment("Opening an area for Rare Earth Elements Mining",
+            "Unfortunately, the price of the Rare Earth Elements has come down due to a decrease in demand, and the investment underperformed.",
+            "The market for Rare Earth Elements stayed stable, and the Mining Operation had the predicted impact in the economy.",
+            "A sudden jump in price of Rare Earth Elements has allowed the Mining Operation to have better than expected economical impact.", 1);
 
-        AddEconomyInvestmentNarrativeFragment("ECONOMY_INVEST_2_ACTION",
-            "ECONOMY_INVEST_2_OUTCOME_LOW", "ECONOMY_INVEST_2_OUTCOME_MEDIUM", "ECONOMY_INVEST_2_OUTCOME_HIGH", 2);
+        AddEconomyInvestmentNarrativeFragment("Creation of an Electronics Manufacture Plant",
+            "Due to the cheaper labour offered elsewhere, the iCreation of an Electronics Manufacture Plant has had less impact in the economy than was expected.",
+            "The Creation of an Electronics Manufacture Plant had the expected impact in the economy",
+            "Due to the recognition of the quality of the product, the Creation of an Electronics Manufacture Plant had an extremely positive impact in the economy", 2);
 
-        AddEconomyInvestmentNarrativeFragment("ECONOMY_INVEST_3_ACTION",
-            "ECONOMY_INVEST_3_OUTCOME_LOW",
-            "ECONOMY_INVEST_3_OUTCOME_MEDIUM", 
-            "ECONOMY_INVEST_3_OUTCOME_HIGH", 3);
+        AddEconomyInvestmentNarrativeFragment("Building a new Hotel",
+            "The new Hotel has been at a low occupancy rate, due to the sudden popularity of other destinations",
+            "The influx of tourists allowed the new Hotel to have the expected returns.", 
+            "The new Hotel has been getting extremely positive reviews, and has been at permanently at capacity.", 3);
 
-        AddEconomyInvestmentNarrativeFragment("ECONOMY_INVEST_4_ACTION",
-            "ECONOMY_INVEST_4_OUTCOME_LOW",
-            "ECONOMY_INVEST_4_OUTCOME_MEDIUM",
-            "ECONOMY_INVEST_4_OUTCOME_HIGH", 4);
+        AddEconomyInvestmentNarrativeFragment("Creating a new Helpdesk Center",
+            "The ease of transfering Helpdesk operations to the cheapest bidder, has made it difficult for the project to deliver on its promisses.",
+            "The new Helpdesk center managed to get enough clients for it to have the expected economical impact.",
+            "Due to the availabilty of speakers of different languages, several firms are currently outsourcing their Helpdesk to the new Center.", 4);
 
-        AddEconomyInvestmentNarrativeFragment("ECONOMY_INVEST_5_ACTION",
-            "ECONOMY_INVEST_5_OUTCOME_LOW",
-            "ECONOMY_INVEST_5_OUTCOME_MEDIUM",
-            "ECONOMY_INVEST_5_OUTCOME_HIGH", 5);
+        AddEconomyInvestmentNarrativeFragment("Research and Development of Intellectual Property",
+            "The industry has shifted in unexpected directions, and most of the solutions that have come from Research and Development were not profitable",
+            "The Research and Development of Intellectual Property has been contributing to an uptick in the economy.",
+            "Several new game changing ideas have made the returns from Research and Development of Intellectual Property to be the main driver of the economy", 5);
 
 
     }
