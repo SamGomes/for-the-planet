@@ -61,20 +61,30 @@ public class Narrator
     // Placeholders
     public void InitEnvironmentInvestmentNarrativeFragments()
     {
-        AddEnvironmentInvestmentNarrativeFragment("ENVIRONMENT_INVEST_1_ACTION",
-            "ENVIRONMENT_INVEST_1_OUTCOME_LOW", "ENVIRONMENT_INVEST_1_OUTCOME_MEDIUM", "ENVIRONMENT_INVEST_1_OUTCOME_HIGH", 1);
+        AddEnvironmentInvestmentNarrativeFragment("Implement a Plastic Recycling Program",
+            "Despite the Plastic Recycling Program, most of the Plastic still ended up in the dumps.",
+            "Some Plastic still reaches the dump, but a substancial ammount is being recycled.",
+            "The sight of Plastic in a trash bin is now a rare occurrence, and most of the Plastic comes from a recycled source.", 1);
 
-        AddEnvironmentInvestmentNarrativeFragment("ENVIRONMENT_INVEST_2_ACTION",
-            "ENVIRONMENT_INVEST_2_OUTCOME_LOW", "ENVIRONMENT_INVEST_2_OUTCOME_MEDIUM", "ENVIRONMENT_INVEST_2_OUTCOME_HIGH", 2);
+        AddEnvironmentInvestmentNarrativeFragment("River Protection and Cleanup Operation",
+            "Most of the floating debris in the River is gone, but the water is still opaque and the smell is still vomit-inducing.", 
+            "Fishes have returned to the river, but the population would still think twice about eating them.", 
+            "The once polluted river is now pristine and regular leisure spot for the population.", 2);
 
-        AddEnvironmentInvestmentNarrativeFragment("ENVIRONMENT_INVEST_3_ACTION",
-            "ENVIRONMENT_INVEST_3_OUTCOME_LOW", "ENVIRONMENT_INVEST_3_OUTCOME_MEDIUM", "ENVIRONMENT_INVEST_3_OUTCOME_HIGH", 3);
+        AddEnvironmentInvestmentNarrativeFragment("Reforestation Effort",
+            "Despite the investment, only a few symbolic gestures have had success, there are some new trees in most of the cities.", 
+            "A significant reduction in deforestation in city areas has been achieved by creating some parks.", 
+            "Several of the existing areas have been classified as protected environment and areas that were previously barren have been reforested.", 3);
 
-        AddEnvironmentInvestmentNarrativeFragment("ENVIRONMENT_INVEST_4_ACTION",
-            "ENVIRONMENT_INVEST_4_OUTCOME_LOW", "ENVIRONMENT_INVEST_4_OUTCOME_MEDIUM", "ENVIRONMENT_INVEST_4_OUTCOME_HIGH", 4);
+        AddEnvironmentInvestmentNarrativeFragment("Improving the Public Transport Infrastructure",
+            "Some new Bus Routes have been created, but due to congestion and limited offer, most people still prefer to take their private transport.",
+            "Expanding the schedule of the Public Transport Infrastructure, allowed a significant reduction of the pollution caused by traffic.",
+            "The addition of tracks to the Subway System, as well as the reinforcement of the available trains, allowed a huge reduction in commuting traffic.", 4);
 
-        AddEnvironmentInvestmentNarrativeFragment("ENVIRONMENT_INVEST_5_ACTION",
-            "ENVIRONMENT_INVEST_5_OUTCOME_LOW", "ENVIRONMENT_INVEST_5_OUTCOME_MEDIUM", "ENVIRONMENT_INVEST_5_OUTCOME_HIGH", 5);
+        AddEnvironmentInvestmentNarrativeFragment("Installation a Solar Power Plant",
+            "Due to poor planning, the location of the Solar Power Plant was badly chosen, and only allowed a slight decrease in the consumption of fossil fuels",
+            "The installation of a Solar Power Plant has allowed a significant reduction on the pollution required to generate electricity.", 
+            "Good planning and investing in a state of the art Solar Power Plant permitted the decommission of a Coal Power Plant.", 5);
     }
 
     public void AddEnvironmentInvestmentNarrativeFragment(string action, string outcomeLow, string outcomeMedium, string outcomeHigh, int value)
@@ -98,19 +108,27 @@ public class Narrator
     {
 
         AddEconomyInvestmentNarrativeFragment("ECONOMY_INVEST_1_ACTION",
-            "ECONOMY_INVEST_1_OUTCOME_LOW", "ECONOMY_INVEST_1_OUTCOME_MEDIUM", "ECONOMY_INVEST_1_OUTCOME_HIGH", 1);
+            "ECONOMY_INVEST_1_OUTCOME_LOW",
+            "ECONOMY_INVEST_1_OUTCOME_MEDIUM",
+            "ECONOMY_INVEST_1_OUTCOME_HIGH", 1);
 
         AddEconomyInvestmentNarrativeFragment("ECONOMY_INVEST_2_ACTION",
             "ECONOMY_INVEST_2_OUTCOME_LOW", "ECONOMY_INVEST_2_OUTCOME_MEDIUM", "ECONOMY_INVEST_2_OUTCOME_HIGH", 2);
 
         AddEconomyInvestmentNarrativeFragment("ECONOMY_INVEST_3_ACTION",
-            "ECONOMY_INVEST_3_OUTCOME_LOW", "ECONOMY_INVEST_3_OUTCOME_MEDIUM", "ECONOMY_INVEST_3_OUTCOME_HIGH", 3);
+            "ECONOMY_INVEST_3_OUTCOME_LOW",
+            "ECONOMY_INVEST_3_OUTCOME_MEDIUM", 
+            "ECONOMY_INVEST_3_OUTCOME_HIGH", 3);
 
         AddEconomyInvestmentNarrativeFragment("ECONOMY_INVEST_4_ACTION",
-            "ECONOMY_INVEST_4_OUTCOME_LOW", "ECONOMY_INVEST_4_OUTCOME_MEDIUM", "ECONOMY_INVEST_4_OUTCOME_HIGH", 4);
+            "ECONOMY_INVEST_4_OUTCOME_LOW",
+            "ECONOMY_INVEST_4_OUTCOME_MEDIUM",
+            "ECONOMY_INVEST_4_OUTCOME_HIGH", 4);
 
         AddEconomyInvestmentNarrativeFragment("ECONOMY_INVEST_5_ACTION",
-            "ECONOMY_INVEST_5_OUTCOME_LOW", "ECONOMY_INVEST_5_OUTCOME_MEDIUM", "ECONOMY_INVEST_5_OUTCOME_HIGH", 5);
+            "ECONOMY_INVEST_5_OUTCOME_LOW",
+            "ECONOMY_INVEST_5_OUTCOME_MEDIUM",
+            "ECONOMY_INVEST_5_OUTCOME_HIGH", 5);
 
 
     }
