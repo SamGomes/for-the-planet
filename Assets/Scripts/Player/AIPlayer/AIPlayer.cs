@@ -8,9 +8,9 @@ using UnityEngine.UI;
 public class AIPlayer : Player
 {
 
-    protected IInteractionModule interactionModule;
+    protected InteractionModule interactionModule;
 
-    public AIPlayer(IInteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name): 
+    public AIPlayer(InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name): 
         base(playerCanvas, warningScreenRef, UIAvatar, id, name)
     {
         this.interactionModule = interactionModule;
@@ -18,7 +18,7 @@ public class AIPlayer : Player
 
 
         GameObject speechBaloonPrefab = (this.GetId() % 2 == 0) ? Resources.Load<GameObject>("Prefabs/PlayerUI/speechBalloonLeft") : Resources.Load<GameObject>("Prefabs/PlayerUI/speechBalloonRight");
-        interactionModule.Init(speechBaloonPrefab, playerUI);
+        interactionModule.Init(speechBaloonPrefab, playerUI, false);
     }
 
     //simulate button clicks
@@ -37,6 +37,10 @@ public class AIPlayer : Player
     }
     protected IEnumerator SimulateMouseClick(Button button, float pressingTime)
     {
+        while (button.interactable == false)
+        {
+            yield return null;
+        }
         SimulateMouseDown(button);
         yield return new WaitForSeconds(pressingTime);
         SimulateMouseUp(button);
@@ -178,7 +182,7 @@ public class AIPlayer : Player
 
 public class AIPlayerCooperator : AIPlayer
 {
-    public AIPlayerCooperator(IInteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
+    public AIPlayerCooperator(InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
         base(interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name)
     { }
 
@@ -195,7 +199,7 @@ public class AIPlayerCooperator : AIPlayer
 
 public class AIPlayerDefector : AIPlayer
 {
-    public AIPlayerDefector(IInteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
+    public AIPlayerDefector(InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
         base(interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name)
     { }
 
@@ -211,7 +215,7 @@ public class AIPlayerDefector : AIPlayer
 
 public class AIPlayerBalancedCooperator : AIPlayer
 {
-    public AIPlayerBalancedCooperator(IInteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
+    public AIPlayerBalancedCooperator(InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
         base(interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name)
     { }
 
@@ -235,7 +239,7 @@ public class AIPlayerBalancedCooperator : AIPlayer
 
 public class AIPlayerBalancedDefector : AIPlayer
 {
-    public AIPlayerBalancedDefector(IInteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
+    public AIPlayerBalancedDefector(InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
         base(interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name)
     { }
 

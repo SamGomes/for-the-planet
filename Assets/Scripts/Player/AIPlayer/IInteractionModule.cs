@@ -4,22 +4,47 @@ using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.UI;
 
-public interface IInteractionModule
+public abstract class InteractionModule
 {
-    void Init(GameObject uiPrefab, GameObject uiContainer);
-    void Speak(string utterance);
-    void Move();
+    protected bool locksInteraction;
+    public virtual void Init(GameObject uiPrefab, GameObject uiContainer, bool locksInteraction) {
+        this.locksInteraction = locksInteraction;
+    }
+    public abstract void Speak(string utterance);
+    public abstract void Move();
+
+
+    protected void InterruptGame()
+    {
+        if (locksInteraction && GameGlobals.gameManager != null) 
+        {
+            GameGlobals.gameManager.InterruptGame();
+        }
+    }
+    protected void ContinueGame()
+    {
+        if (locksInteraction && GameGlobals.gameManager != null)
+        {
+            GameGlobals.gameManager.ContinueGame();
+        }
+    }
 }
 
 
-public class AutisticInteractionModule : IInteractionModule
+public class AutisticInteractionModule : InteractionModule
 {
-    public void Init(GameObject uiPrefab, GameObject uiContainer) { }
-    public void Speak(string utterance) { }
-    public void Move() { }
+    public override void Init(GameObject uiPrefab, GameObject uiContainer, bool locksInteraction) {
+        base.Init(uiPrefab, uiContainer, locksInteraction);
+    }
+    public override void Speak(string utterance) {
+
+    }
+    public override void Move() {
+    }
+
 }
 
-public class LegendsInteractionModule: IInteractionModule
+public class LegendsInteractionModule: InteractionModule
 {
     protected GameObject speechBalloonUI;
     private List<string> currSpeeches;
@@ -27,13 +52,13 @@ public class LegendsInteractionModule: IInteractionModule
 
     MonoBehaviourFunctionalities monoBehaviourFunctionalities;
 
-    public void Init(GameObject uiPrefab, GameObject uiContainer) {
+    public override void Init(GameObject uiPrefab, GameObject uiContainer, bool locksInteraction) {
+        base.Init(uiPrefab, uiContainer, locksInteraction);
 
         this.speechBalloonUI = Object.Instantiate(uiPrefab, uiContainer.transform);
         speechBalloonUI.SetActive(false);
 
         this.monoBehaviourFunctionalities = GameGlobals.monoBehaviourFunctionalities;
-
 
         this.speechBalloonDelayPerWordInSeconds = 0.5f;
         currSpeeches = new List<string>();
@@ -43,19 +68,21 @@ public class LegendsInteractionModule: IInteractionModule
     }
    
 
-    public void Speak(string utterance) {
+    public override void Speak(string utterance) {
         currSpeeches.Add(utterance);
     }
-    public void Move() { }
+    public override void Move() { }
 
     
     private IEnumerator DisplaySpeechBalloonForAWhile(string message, float delay)
     {
         this.speechBalloonUI.GetComponentInChildren<Text>().text = message;
         speechBalloonUI.SetActive(true);
+        InterruptGame();
         yield return new WaitForSeconds(delay);
         if (speechBalloonUI.GetComponentInChildren<Text>().text == message) //to compensate if the balloon is already spawned
         {
+            ContinueGame();
             speechBalloonUI.SetActive(false);
         }
     }
@@ -86,12 +113,13 @@ public class LegendsInteractionModule: IInteractionModule
 
 }
 
-public class RobotInteractionModule : IInteractionModule
+public class RobotInteractionModule : InteractionModule
 {
     private ThalamusConnector thalamusConnector = null;
 
-    public void Init(GameObject uiPrefab, GameObject uiContainer)
+    public override void Init(GameObject uiPrefab, GameObject uiContainer, bool locksInteraction)
     {
+        base.Init(uiPrefab, uiContainer, locksInteraction);
         thalamusConnector = new ThalamusConnector(7000);
     }
     
@@ -101,9 +129,11 @@ public class RobotInteractionModule : IInteractionModule
         thalamusConnector.GazeAt(target);
     }
 
-    public void Speak(string utterance)
+    public override void Speak(string utterance)
     {
+        InterruptGame();
         thalamusConnector.PerformUtterance(utterance, new string[] { }, new string[] { });
+        ContinueGame();
     }
-    public void Move() { }
+    public override void Move() { }
 }

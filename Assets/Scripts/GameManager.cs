@@ -200,8 +200,6 @@ public class GameManager : MonoBehaviour {
         //yield return GameGlobals.narrator.BudgetExecution(currPlayer, GameGlobals.currGameRoundId, economyResult, environmentResult);
     }
 
-
-
     private IEnumerator YieldedGameUpdateLoop()
     {
         //while (true)
@@ -210,8 +208,30 @@ public class GameManager : MonoBehaviour {
         //avoid rerun in this case because load scene is asyncronous
         if (this.gameMainSceneFinished || this.interruptionRequests > 0)
         {
-            //Debug.Log("pause...");
+            Button[] foundObjects = FindObjectsOfType<Button>();
+            foreach (Button button in foundObjects)
+            {
+                button.interactable = false;
+            }
+            //Animator[] foundAnims = FindObjectsOfType<Animator>();
+            //foreach (Animator anim in foundAnims)
+            //{
+            //    anim.speed = 0.0f;
+            //}
             yield return null;
+        }
+        else
+        {
+            Button[] foundObjects = FindObjectsOfType<Button>();
+            foreach (Button button in foundObjects)
+            {
+                button.interactable = true;
+            }
+            //Animator[] foundAnims = FindObjectsOfType<Animator>();
+            //foreach (Animator anim in foundAnims)
+            //{
+            //    anim.speed = 1.0f;
+            //}
         }
 
         //end of first phase; trigger second phase
@@ -320,7 +340,7 @@ public class GameManager : MonoBehaviour {
         //}
     }
 
-    public void Update()
+    public void FixedUpdate()
     {
         StartCoroutine(YieldedGameUpdateLoop());
     }

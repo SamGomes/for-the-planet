@@ -22,7 +22,7 @@ public class Narrator
         NarratorUI = Resources.Load<GameObject>("Prefabs/NarratorUI");
 
         InteractionModule = new LegendsInteractionModule();
-        InteractionModule.Init(NarratorUI, CanvasUI);
+        InteractionModule.Init(NarratorUI, CanvasUI, true);
     }
 
 
@@ -205,7 +205,7 @@ public class Narrator
     {
         // Compute Narrator Text
         // Placeholder
-        string text = "Three neighbouring countries are attempting to develop their economies. " +
+        string text = GameGlobals.players.Count + " neighbouring countries are attempting to develop their economies. " +
             "Unfortunately, a lot of damage has already been done to the environment, and they need to make sure that the planet survives their endeavours.";
 
         // Output Narrator Text
