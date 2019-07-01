@@ -6,8 +6,8 @@ using UnityEngine;
 // Does this need a game manager reference like the player?
 public class Narrator
 {
-    public List<NarrativeInterpretation> narrativeInterpretations;
-    public List<NarrativeFragment> narrativeFragments;
+    public List<NarrativeInterpretation> NarrativeInterpretations;
+    public List<NarrativeFragment> NarrativeFragments;
 
     private GameObject NarratorUI;
     private GameObject CanvasUI;
@@ -17,8 +17,8 @@ public class Narrator
 
     public Narrator(GameObject narratorCanvas)
     {
-        narrativeInterpretations = new List<NarrativeInterpretation>();
-        narrativeFragments = new List<NarrativeFragment>();
+        NarrativeInterpretations = new List<NarrativeInterpretation>();
+        NarrativeFragments = new List<NarrativeFragment>();
 
         CanvasUI = narratorCanvas;
         NarratorUI = Resources.Load<GameObject>("Prefabs/NarratorUI");
@@ -55,7 +55,7 @@ public class Narrator
             Type = "GAME_START",
             Action = text
         };
-        narrativeFragments.Add(gameStart);
+        NarrativeFragments.Add(gameStart);
     }
 
     private void InitRoundStartNarrativeFragments()
@@ -106,7 +106,7 @@ public class Narrator
         narrative.Outcome["MEDIUM"] = outcomeMedium;
         narrative.Outcome["HIGH"] = outcomeHigh;
 
-        narrativeFragments.Add(narrative);
+        NarrativeFragments.Add(narrative);
     }
 
     // Economy Invest Actions
@@ -125,7 +125,7 @@ public class Narrator
             "A sudden jump in price of Rare Earth Elements has allowed the Mining Operation to have better than expected economical impact.", 1);
 
         AddEconomyInvestmentNarrativeFragment("Creation of an Electronics Manufacture Plant",
-            "Due to the cheaper labour offered elsewhere, the iCreation of an Electronics Manufacture Plant has had less impact in the economy than was expected.",
+            "Due to the cheaper labour offered elsewhere, the Creation of an Electronics Manufacture Plant has had less impact in the economy than was expected.",
             "The Creation of an Electronics Manufacture Plant had the expected impact in the economy",
             "Due to the recognition of the quality of the product, the Creation of an Electronics Manufacture Plant had an extremely positive impact in the economy", 2);
 
@@ -161,7 +161,7 @@ public class Narrator
         narrative.Outcome["MEDIUM"] = outcomeMedium;
         narrative.Outcome["HIGH"] = outcomeHigh;
 
-        narrativeFragments.Add(narrative);
+        NarrativeFragments.Add(narrative);
     }
 
 
@@ -188,7 +188,7 @@ public class Narrator
         narrative.Outcome["MEDIUM"] = outcomeMedium;
         narrative.Outcome["HIGH"] = outcomeHigh;
 
-        narrativeFragments.Add(narrative);
+        NarrativeFragments.Add(narrative);
     }
 
     private void InitEconomyDecayNarrativeFragments()
@@ -212,80 +212,83 @@ public class Narrator
         narrative.Outcome["MEDIUM"] = outcomeMedium;
         narrative.Outcome["HIGH"] = outcomeHigh;
 
-        narrativeFragments.Add(narrative);
+        NarrativeFragments.Add(narrative);
     }
 
     private NarrativeFragment GetGameStartNarrativeFragment()
     {
-        return narrativeFragments.Find(x => x.Type == "GAME_START");
+        return NarrativeFragments.Find(x => x.Type == "GAME_START");
     }
 
     private List<NarrativeFragment> GetRoundStartNarrativeFragments()
     {
-        return narrativeFragments.FindAll(x => x.Type == "ROUND_START");
+        return NarrativeFragments.FindAll(x => x.Type == "ROUND_START");
     }
 
     private List<NarrativeFragment> GetEnvironmentInvestmentNarrativeFragments()
     {
-        return narrativeFragments.FindAll(x => x.Type == "ENVIRONMENT_INVESTMENT");
+        return NarrativeFragments.FindAll(x => x.Type == "ENVIRONMENT_INVESTMENT");
     }
 
     private List<NarrativeFragment> GetEnvironmentInvestmentNarrativeFragments(int value)
     {
-        return narrativeFragments.FindAll(x => x.Type == "ENVIRONMENT_INVESTMENT").FindAll(x=> x.Value == value);
+        return NarrativeFragments.FindAll(x => x.Type == "ENVIRONMENT_INVESTMENT").FindAll(x=> x.Value == value);
     }
 
     private List<NarrativeFragment> GetEconomyInvestmentNarrativeFragments()
     {
-        return narrativeFragments.FindAll(x => x.Type == "ECONOMY_INVESTMENT");
+        return NarrativeFragments.FindAll(x => x.Type == "ECONOMY_INVESTMENT");
     }
 
     private List<NarrativeFragment> GetEconomyInvestmentNarrativeFragments(int value)
     {
-        return narrativeFragments.FindAll(x => x.Type == "ECONOMY_INVESTMENT").FindAll(x => x.Value == value);
+        return NarrativeFragments.FindAll(x => x.Type == "ECONOMY_INVESTMENT").FindAll(x => x.Value == value);
     }
 
     private List<NarrativeFragment> GetEnvironmentDecayNarrativeFragments()
     {
-        return narrativeFragments.FindAll(x => x.Type == "ENVIRONMENT_DECAY");
+        return NarrativeFragments.FindAll(x => x.Type == "ENVIRONMENT_DECAY");
     }
 
     private List<NarrativeFragment> GetEconomyDecayNarrativeFragments()
     {
-        return narrativeFragments.FindAll(x => x.Type == "ECONOMY_DECAY");
+        return NarrativeFragments.FindAll(x => x.Type == "ECONOMY_DECAY");
     }
 
     private List<NarrativeFragment> GetNarrativeFragments()
     {
-        return narrativeFragments;
+        return NarrativeFragments;
     }
 
 
     // Narrative Interpretations
     // Need to validate What I will actually need, trim this as required (over-engineered implementation)
-    private List<NarrativeInterpretation> getNarrativeInterpretations()
+    private List<NarrativeInterpretation> GetNarrativeInterpretations()
     {
-        return narrativeInterpretations;
+        return NarrativeInterpretations;
     }
 
     private List<NarrativeInterpretation> GetNarrativeInterpretations(Player player)
     {
-        return narrativeInterpretations.FindAll(x => x.Player.GetId() == player.GetId()); ;
+        return NarrativeInterpretations.FindAll(x => x.Player != null)
+            .FindAll(x => x.Player.GetId() == player.GetId()); ;
     }
 
     private List<NarrativeInterpretation> GetNarrativeInterpretations(Player player, int round)
     {
-        return narrativeInterpretations.FindAll(x => x.Player.GetId() == player.GetId()).FindAll(x => x.Round == round);
+        return NarrativeInterpretations.FindAll(x => x.Player != null)
+            .FindAll(x => x.Player.GetId() == player.GetId()).FindAll(x => x.Round == round);
     }
 
     private NarrativeInterpretation GetNarrativeInterpretation(Player player, int round, string type)
     {
-        return narrativeInterpretations.FindAll(x => x.Player.GetId() == player.GetId()).FindAll(x => x.Round == round).Find(x => x.Type == type);
+        return NarrativeInterpretations.FindAll(x => x.Player != null)
+            .FindAll(x => x.Player.GetId() == player.GetId()).FindAll(x => x.Round == round).Find(x => x.Type == type);
     }
 
     private List<NarrativeInterpretation> GetNarrativeInterpretations(int round, string type)
     {
-        return narrativeInterpretations.FindAll(x => x.Type == type).FindAll(x => x.Round == round);
+        return NarrativeInterpretations.FindAll(x => x.Type == type).FindAll(x => x.Round == round);
     }
 
     // Narrator Actions during Game Start
@@ -345,7 +348,7 @@ public class Narrator
             };
 
             // Register NarrativeInterpretation for Environment Investment
-            narrativeInterpretations.Add(environmentInvestmentNarrativeInterpretation);
+            NarrativeInterpretations.Add(environmentInvestmentNarrativeInterpretation);
 
             // Economy Investment Fragment
             // Compute Narrator Text (symbol interpretation)
@@ -368,7 +371,7 @@ public class Narrator
             };
 
             // Register NarrativeInterpretation for Economy Investment
-            narrativeInterpretations.Add(economyInvestmentNarrativeInterpretation);
+            NarrativeInterpretations.Add(economyInvestmentNarrativeInterpretation);
 
             // Economy Investment Fragment
             // Compute Narrator Text (symbol interpretation)
@@ -458,7 +461,7 @@ public class Narrator
         };
 
         // Register NarrativeInterpretation for Economy Decay
-        narrativeInterpretations.Add(economyDecayNarrativeInterpretation);
+        NarrativeInterpretations.Add(economyDecayNarrativeInterpretation);
 
         // Compute Narrator Text (symbol interpretation)
         // Should fetch a random
@@ -492,7 +495,7 @@ public class Narrator
         };
 
         // Register NarrativeInterpretation for Economy Decay
-        narrativeInterpretations.Add(environmentDecayNarrativeInterpretation);
+        NarrativeInterpretations.Add(environmentDecayNarrativeInterpretation);
 
         // Compute Narrator Text (symbol interpretation)
         // Should fetch a random
