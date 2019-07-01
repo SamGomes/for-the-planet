@@ -55,8 +55,7 @@ public class StartScreenFunctionalities : MonoBehaviour {
         GameProperties.configurableProperties = configs;
 
 
-
-        GameGlobals.autoPlay = configs.isSimulation || Application.isBatchMode;
+        GameGlobals.isSimulation = configs.isSimulation || Application.isBatchMode;
 
         GameGlobals.numberOfSpeakingPlayers = 0;
         GameGlobals.currGameId++;
@@ -142,7 +141,7 @@ public class StartScreenFunctionalities : MonoBehaviour {
         StartCoroutine(GameGlobals.gameLogManager.WriteGameToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameProperties.currSessionParameterization.id, GameGlobals.currGameState.ToString()));
 
         // @jbgrocha: auto start if on batchmode
-        if (GameGlobals.autoPlay)
+        if (GameGlobals.isSimulation)
         {
             StartGame();
             Debug.Log("In BatchMode");

@@ -44,7 +44,7 @@ public class DiceManager
         for (int i = 0; i < numRolls; i++)
         {
             int randomResult = diceLogic.RollTheDice(6, numRolls);
-            if (!GameGlobals.autoPlay)
+            if (!GameGlobals.isSimulation)
             {
                 monobehaviorFunctionalities.StartCoroutine(PlayDiceUI(randomResult, i, numRolls, diceUIPrefab, "Animations/RollDiceOverlay/dice6/sprites_3/endingAlternatives/"));
             }

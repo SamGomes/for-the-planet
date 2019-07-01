@@ -27,10 +27,12 @@ public class GameSetupFunctionalities : MonoBehaviour {
     {
         GameGlobals.players.Clear();
 
-
+        GameGlobals.isNarrated = parameterization.isNarrated;
         // Init Narrator
-        GameGlobals.narrator = new Narrator(playerCanvas);
-
+        if (GameGlobals.isNarrated)
+        {
+            GameGlobals.narrator = new Narrator(playerCanvas);
+        }
 
         int currPlayerId = 0;
         for (int i = 0; i < parameterization.playerParameterizations.Count; i++)

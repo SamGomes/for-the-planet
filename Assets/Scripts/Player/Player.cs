@@ -115,7 +115,6 @@ public class Player
         additionalEventArgs.Add("InvestmentTarget", "ENVIRONMENT");
         playerMonoBehaviourFunctionalities.StartCoroutine(GameGlobals.gameLogManager.WriteEventToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameGlobals.currGameRoundId.ToString(), this.id.ToString(), this.name, "ADDED_INVESTMENT", additionalEventArgs));
     }
-
     
 
 

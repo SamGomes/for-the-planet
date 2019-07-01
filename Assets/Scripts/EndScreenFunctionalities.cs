@@ -137,7 +137,7 @@ public class EndScreenFunctionalities : MonoBehaviour
     {
         yield return GameGlobals.gameLogManager.UpdateGameResultInLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameProperties.currSessionParameterization.id, GameGlobals.currGameState.ToString());
 
-        if (GameGlobals.autoPlay)
+        if (GameGlobals.isSimulation)
         {
             yield return GameGlobals.gameLogManager.EndLogs();
 

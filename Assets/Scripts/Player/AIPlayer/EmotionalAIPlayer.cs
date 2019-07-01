@@ -167,7 +167,7 @@ public class EmotionalAIPlayer: AIPlayer
 
     public override IEnumerator AutoHistoryDisplay()
     {
-        base.AutoHistoryDisplay();
+        yield return base.AutoHistoryDisplay();
 
 
         List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
@@ -184,11 +184,10 @@ public class EmotionalAIPlayer: AIPlayer
 
     public override IEnumerator AutoBudgetExecution()
     {
-        base.AutoBudgetExecution();
+        yield return base.AutoBudgetExecution();
 
-
-        // @jbgrocha: Fatima Speech Act (emotional engine call) - Before Budget Dice Rolls
-        yield return ApplyInvestments();
+        //// @jbgrocha: Fatima Speech Act (emotional engine call) - Before Budget Dice Rolls
+        //yield return ApplyInvestments();
 
         List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
         foreach(Player player in GameGlobals.players)
@@ -204,7 +203,7 @@ public class EmotionalAIPlayer: AIPlayer
 
     public override IEnumerator AutoInvestmentExecution()
     {
-        base.AutoInvestmentExecution();
+        yield return base.AutoInvestmentExecution();
 
         List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
         foreach (Player player in GameGlobals.players)

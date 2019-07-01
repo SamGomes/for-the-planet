@@ -37,10 +37,6 @@ public class AIPlayer : Player
     }
     protected IEnumerator SimulateMouseClick(Button button, float pressingTime)
     {
-        while (button.interactable == false)
-        {
-            yield return null;
-        }
         SimulateMouseDown(button);
         yield return new WaitForSeconds(pressingTime);
         SimulateMouseUp(button);
@@ -48,7 +44,7 @@ public class AIPlayer : Player
 
     public virtual IEnumerator AutoBudgetAllocation() { yield return null; }
     public virtual IEnumerator AutoHistoryDisplay() { yield return null; }
-    public virtual IEnumerator AutoBudgetExecution() { yield return null; }
+    public virtual IEnumerator AutoBudgetExecution() { yield return ApplyInvestments(); }
     public virtual IEnumerator AutoInvestmentExecution() { yield return null; }
 
     public override void BudgetAllocationPhaseRequest()
@@ -77,7 +73,7 @@ public class AIPlayer : Player
 
     public IEnumerator ClickEconomyInvestmentButton()
     {
-        if (!GameGlobals.autoPlay)
+        if (!GameGlobals.isSimulation)
         {
             yield return new WaitForSeconds(1.0f);
             yield return SimulateMouseClick(this.spendTokenInEconomicGrowthButtonUI, 0.5f);
@@ -112,7 +108,7 @@ public class AIPlayer : Player
 
     public IEnumerator ClickEnvironmentInvestmentButton()
     {
-        if (!GameGlobals.autoPlay)
+        if (!GameGlobals.isSimulation)
         {
             yield return new WaitForSeconds(1.0f);
             yield return SimulateMouseClick(this.spendTokenInEnvironmentButtonUI, 0.5f);
@@ -146,7 +142,7 @@ public class AIPlayer : Player
 
     public IEnumerator EndBudgetAllocationPhase()
     {
-        if (!GameGlobals.autoPlay)
+        if (!GameGlobals.isSimulation)
         {
             yield return new WaitForSeconds(1.0f);
             yield return SimulateMouseClick(this.playerActionButtonUI, 0.5f);
@@ -162,7 +158,7 @@ public class AIPlayer : Player
 
     public IEnumerator ApplyInvestments()
     {
-        if (!GameGlobals.autoPlay)
+        if (!GameGlobals.isSimulation)
         {
             yield return new WaitForSeconds(3.0f);
             yield return SimulateMouseClick(this.executeBudgetButton, 0.5f);

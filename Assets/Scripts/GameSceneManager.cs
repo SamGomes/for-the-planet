@@ -10,7 +10,7 @@ public class GameSceneManager{
 
     public GameSceneManager()
     {
-        if (GameGlobals.autoPlay)
+        if (GameGlobals.isSimulation)
         {
             this.transitionEffect = new Instant();
         }

@@ -13,6 +13,7 @@ public static class GameGlobals
 
     // Narrator
     public static Narrator narrator;
+    public static bool isNarrated;
 
     public static string currSessionId;
     public static int currGameId;
@@ -39,7 +40,7 @@ public static class GameGlobals
     public static IntegratedAuthoringToolAsset FAtiMAIat;
 
     // @jbgrocha: Auto play if batchmode (or explicitly set it to true);
-    public static bool autoPlay;
+    public static bool isSimulation;
 }
 
 public static class GameProperties
@@ -140,11 +141,13 @@ public struct GameParameterization
 {
     public List<PlayerParameterization> playerParameterizations;
     public string ngType;
+    public bool isNarrated;
 
-    public GameParameterization(string id, List<PlayerParameterization> playerParameterizations, string ngType)
+    public GameParameterization(string id, List<PlayerParameterization> playerParameterizations, string ngType, bool isNarrated)
     {
         this.playerParameterizations = playerParameterizations;
         this.ngType = ngType;
+        this.isNarrated = isNarrated;
     }
 
 }
@@ -152,7 +155,6 @@ public struct GameParameterization
 [Serializable]
 public struct PlayerParameterization
 {
-
     public string name;
     public string playerType;
     public bool isSpeechAllowed;

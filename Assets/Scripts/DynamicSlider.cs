@@ -27,7 +27,7 @@ public class DynamicSlider
 
     public IEnumerator UpdateSliderValue(float targetSliderValue)
     {
-        if (GameGlobals.autoPlay)
+        if (GameGlobals.isSimulation)
         {
             sliderUI.value = targetSliderValue;
             yield return null;

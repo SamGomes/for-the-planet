@@ -52,6 +52,8 @@ public class LegendsInteractionModule: InteractionModule
 
     MonoBehaviourFunctionalities monoBehaviourFunctionalities;
 
+    private bool isSpeaking;
+
     public override void Init(GameObject uiPrefab, GameObject uiContainer, bool locksInteraction) {
         base.Init(uiPrefab, uiContainer, locksInteraction);
 
@@ -65,6 +67,8 @@ public class LegendsInteractionModule: InteractionModule
 
         float updateDelay = 0.2f;
         monoBehaviourFunctionalities.StartCoroutine(FixedTimeUpdate(updateDelay));
+
+        this.isSpeaking = false;
     }
    
 
@@ -74,8 +78,15 @@ public class LegendsInteractionModule: InteractionModule
     public override void Move() { }
 
     
+    public bool IsSpeaking()
+    {
+        return this.isSpeaking;
+    }
+
     private IEnumerator DisplaySpeechBalloonForAWhile(string message, float delay)
     {
+        this.isSpeaking = true;
+
         this.speechBalloonUI.GetComponentInChildren<Text>().text = message;
         speechBalloonUI.SetActive(true);
         InterruptGame();
@@ -84,6 +95,8 @@ public class LegendsInteractionModule: InteractionModule
         {
             ContinueGame();
             speechBalloonUI.SetActive(false);
+
+            this.isSpeaking = false;
         }
     }
 
@@ -108,7 +121,7 @@ public class LegendsInteractionModule: InteractionModule
     {
         ConsumeSpeechesOnUpdate();
         yield return new WaitForSeconds(updateDelay);
-        monoBehaviourFunctionalities.StartCoroutine(FixedTimeUpdate(updateDelay)); ;
+        monoBehaviourFunctionalities.StartCoroutine(FixedTimeUpdate(updateDelay));
     }
 
 }
