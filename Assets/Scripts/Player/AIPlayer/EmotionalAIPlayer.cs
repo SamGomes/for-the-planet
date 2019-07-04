@@ -247,7 +247,7 @@ public class DisruptiveConstructiveEmotionalAIPlayer : EmotionalAIPlayer
                 econ++;
             }
         }
-        int env = 5 - econ;
+        int env = GameGlobals.roundBudget - econ;
 
         investmentIntentions[GameProperties.InvestmentTarget.ENVIRONMENT] = env;
         investmentIntentions[GameProperties.InvestmentTarget.ECONOMIC] = econ;

@@ -70,6 +70,8 @@ public class StartScreenFunctionalities : MonoBehaviour {
         GameGlobals.gameLogManager = new DebugLogManager();
         GameGlobals.gameLogManager.InitLogs();
 
+        GameGlobals.roundBudget = configs.roundBudget;
+
         //only generate session data in the first game
         if (GameGlobals.currGameId == 1)
         {

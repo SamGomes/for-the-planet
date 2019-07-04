@@ -41,6 +41,8 @@ public static class GameGlobals
 
     // @jbgrocha: Auto play if batchmode (or explicitly set it to true);
     public static bool isSimulation;
+
+    public static int roundBudget;
 }
 
 public static class GameProperties
@@ -103,6 +105,8 @@ public class DynamicallyConfigurableGameProperties
     public int numGamesToSimulate = 1;
 
     public List<SessionParameterization> possibleParameterizations = new List<SessionParameterization>(); //only used when generating the AI types automatically (for example when "isSimulation=true or isAutomaticBriefing==true")
+
+    public int roundBudget = 5;
 }
 
 [Serializable]

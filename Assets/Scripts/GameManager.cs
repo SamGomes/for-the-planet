@@ -342,7 +342,7 @@ public class GameManager : MonoBehaviour {
             events.Add(RolePlayCharacter.EventHelper.ActionEnd("World", "State(Round,Start)", player.GetName()));
             player.Perceive(events);
 
-            player.SetRoundBudget(5);
+            player.SetRoundBudget(GameGlobals.roundBudget);
         }
 
         if (GameGlobals.isNarrated)
