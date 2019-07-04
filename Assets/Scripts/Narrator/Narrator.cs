@@ -12,7 +12,7 @@ public class Narrator
     private GameObject NarratorUI;
     private GameObject CanvasUI;
 
-    private LegendsInteractionModule InteractionModule;
+    private SpeechBaloonInteractionModule InteractionModule;
 
 
     public Narrator(GameObject narratorCanvas)
@@ -23,11 +23,11 @@ public class Narrator
         CanvasUI = narratorCanvas;
         NarratorUI = Resources.Load<GameObject>("Prefabs/NarratorUI");
 
-        InteractionModule = new LegendsInteractionModule();
+        InteractionModule = new SpeechBaloonInteractionModule();
         InteractionModule.Init(NarratorUI, CanvasUI, true);
     }
 
-    public LegendsInteractionModule GetInteractionModule()
+    public SpeechBaloonInteractionModule GetInteractionModule()
     {
         return this.InteractionModule;
     }

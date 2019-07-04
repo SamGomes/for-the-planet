@@ -13,10 +13,10 @@ using Utilities;
 public class EmotionalAIPlayer: AIPlayer
 {
     //Emotional stuff
-    private RolePlayCharacterAsset rpc;
-    List<WellFormedNames.Name> unperceivedEvents;
+    protected RolePlayCharacterAsset rpc;
+    private List<WellFormedNames.Name> unperceivedEvents;
 
-    private Dictionary<GameProperties.InvestmentTarget, int> investmentIntentions;
+    protected Dictionary<GameProperties.InvestmentTarget, int> investmentIntentions;
 
     public EmotionalAIPlayer(InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name, float updateDelay) :
         base(interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name)
@@ -29,7 +29,6 @@ public class EmotionalAIPlayer: AIPlayer
         //default investment intention
         investmentIntentions[GameProperties.InvestmentTarget.ECONOMIC] = 3;
         investmentIntentions[GameProperties.InvestmentTarget.ENVIRONMENT] = 2;
-
 
         playerMonoBehaviourFunctionalities.StartCoroutine(EmotionalUpdateLoop(updateDelay));
     }
@@ -49,12 +48,12 @@ public class EmotionalAIPlayer: AIPlayer
     {
         unperceivedEvents.AddRange(events);
     }
-    public override EmotionalAppraisal.IActiveEmotion GetMyStrongestEmotion()
+    public List<EmotionalAppraisal.DTOs.EmotionDTO> GetAllActiveEmotions()
     {
-        return this.rpc.GetStrongestActiveEmotion();
+        return this.rpc.GetAllActiveEmotions().ToList();
     }
 
-    private string ReplaceVariablesInDialogue(string dialog, Dictionary<string, string> tags)
+    protected string ReplaceVariablesInDialogue(string dialog, Dictionary<string, string> tags)
     {
         var tokens = Regex.Matches(dialog, @"\|.*?\|");
 
@@ -69,71 +68,19 @@ public class EmotionalAIPlayer: AIPlayer
     }
 
 
-    public void Act(List<ActionLibrary.IAction> actionList)
-    {
-        foreach(ActionLibrary.IAction action in actionList)
-        {
-            switch (action.Key.ToString())
-            {
-                case "Speak":
-                    WellFormedNames.Name cs = action.Parameters[0];
-                    WellFormedNames.Name ns = action.Parameters[1];
-                    //WellFormedNames.Name m = action.Parameters[2];
-                    //WellFormedNames.Name m = (WellFormedNames.Name) "happy-for";// (WellFormedNames.Name) rpc.GetStrongestActiveEmotion().EmotionType;
-                    WellFormedNames.Name m = (WellFormedNames.Name) "-";
-                    if (rpc.GetStrongestActiveEmotion()!= null)
-                    {
-                        m = (WellFormedNames.Name) rpc.GetStrongestActiveEmotion().EmotionType;
-                    }
-                        
-                    WellFormedNames.Name s = (WellFormedNames.Name) this.name; //ESTA MAL
-                    var dialogs = GameGlobals.FAtiMAIat.GetDialogueActions(cs, ns, m, s);
-                    if(dialogs.Count <= 0)
-                    {
-                        break;
-                    }
-                    var dialog = dialogs.Shuffle().FirstOrDefault();
-                    
-                    interactionModule.Speak(ReplaceVariablesInDialogue(dialog.Utterance, new Dictionary<string, string>() { { "target", action.Target.ToString() }}));
-
-                    Debug.Log(rpc.GetStrongestActiveEmotion().ToString());
-                    //rpc.TellWorkingMemory("emotionTarget", rpc.GetStrongestActiveEmotion().ToString());
-
-                    WellFormedNames.Name speakEvent = RolePlayCharacter.EventHelper.ActionEnd(this.name,"Speak("+cs+","+ns+"," + m + ","+ s + ")", this.name);
-                    Perceive(new List<WellFormedNames.Name>() { speakEvent });
-
-                    break;
-                case "Invest":
-                    investmentIntentions[GameProperties.InvestmentTarget.ENVIRONMENT] =  int.Parse(action.Parameters[0].ToString());
-                    investmentIntentions[GameProperties.InvestmentTarget.ECONOMIC] =  int.Parse(action.Parameters[1].ToString());
-                    break;
-            }
-
-        }
-    }
+    public virtual void Act() { }
 
 
     public IEnumerator EmotionalUpdateLoop(float delay)
     {
-        string print = "Player: " + this.name + " feels ";
-        EmotionalAppraisal.IEmotion strongestEmotion = rpc.GetStrongestActiveEmotion();
-        if (strongestEmotion != null) {
-            print += strongestEmotion.EmotionType;
-        } else {
-            print += "nothing";
-        }
-        Debug.Log(print);
-
         if (unperceivedEvents.Count > 0)
         {
             rpc.Perceive(unperceivedEvents);
             unperceivedEvents.Clear();
         }
-
         try
         {
-            List<ActionLibrary.IAction> actionList = rpc.Decide().ToList<ActionLibrary.IAction>();
-            Act(actionList);
+            Act();
         }
         catch(Exception e)
         {
@@ -168,7 +115,6 @@ public class EmotionalAIPlayer: AIPlayer
     public override IEnumerator AutoHistoryDisplay()
     {
         yield return base.AutoHistoryDisplay();
-
 
         List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
         foreach (Player player in GameGlobals.players)
@@ -216,5 +162,96 @@ public class EmotionalAIPlayer: AIPlayer
         Perceive(events);
 
         yield return null;
+    }
+}
+
+public class TableEmotionalAIPlayer : EmotionalAIPlayer
+{
+
+    public TableEmotionalAIPlayer(InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name, float updateDelay) :
+        base(interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name, updateDelay)
+    {
+        
+    }
+
+
+    public override void Act()
+    {
+        List<ActionLibrary.IAction> actionList = rpc.Decide().ToList<ActionLibrary.IAction>();
+        foreach (ActionLibrary.IAction action in actionList)
+        {
+            switch (action.Key.ToString())
+            {
+                case "Speak":
+                    WellFormedNames.Name cs = action.Parameters[0];
+                    WellFormedNames.Name ns = action.Parameters[1];
+                    //WellFormedNames.Name m = action.Parameters[2];
+                    //WellFormedNames.Name m = (WellFormedNames.Name) "happy-for";// (WellFormedNames.Name) rpc.GetStrongestActiveEmotion().EmotionType;
+                    WellFormedNames.Name m = (WellFormedNames.Name)"-";
+                    if (rpc.GetStrongestActiveEmotion() != null)
+                    {
+                        m = (WellFormedNames.Name)rpc.GetStrongestActiveEmotion().EmotionType;
+                    }
+
+                    WellFormedNames.Name s = (WellFormedNames.Name)this.name; //ESTA MAL
+                    var dialogs = GameGlobals.FAtiMAIat.GetDialogueActions(cs, ns, m, s);
+                    if (dialogs.Count <= 0)
+                    {
+                        break;
+                    }
+                    var dialog = dialogs.Shuffle().FirstOrDefault();
+
+                    interactionModule.Speak(ReplaceVariablesInDialogue(dialog.Utterance, new Dictionary<string, string>() { { "target", action.Target.ToString() } }));
+
+                    Debug.Log(rpc.GetStrongestActiveEmotion().ToString());
+                    //rpc.TellWorkingMemory("emotionTarget", rpc.GetStrongestActiveEmotion().ToString());
+
+                    WellFormedNames.Name speakEvent = RolePlayCharacter.EventHelper.ActionEnd(this.name, "Speak(" + cs + "," + ns + "," + m + "," + s + ")", this.name);
+                    Perceive(new List<WellFormedNames.Name>() { speakEvent });
+
+                    break;
+                case "Invest":
+                    investmentIntentions[GameProperties.InvestmentTarget.ENVIRONMENT] = int.Parse(action.Parameters[0].ToString());
+                    investmentIntentions[GameProperties.InvestmentTarget.ECONOMIC] = int.Parse(action.Parameters[1].ToString());
+                    break;
+            }
+
+        }
+    }
+}
+
+public class DisruptiveConstructiveEmotionalAIPlayer : EmotionalAIPlayer
+{
+    float pDisrupt;
+    Dictionary<string, float> pDeltas;
+
+
+    public DisruptiveConstructiveEmotionalAIPlayer(InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name, float updateDelay) :
+       base(interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name, updateDelay)
+    {
+        pDisrupt = 0.0f;
+    }
+
+    public override void Act()
+    {
+        List<EmotionalAppraisal.DTOs.EmotionDTO> emotionList = this.GetAllActiveEmotions();
+        foreach (EmotionalAppraisal.DTOs.EmotionDTO dto in emotionList)
+        {
+            pDisrupt += pDeltas[dto.Type];
+        }
+
+        int econ = 0;
+        for (int i=0; i < 5; i++){
+            if (UnityEngine.Random.Range(0.0f, 1.0f) < pDisrupt)
+            {
+                econ++;
+            }
+        }
+        int env = 5 - econ;
+
+        investmentIntentions[GameProperties.InvestmentTarget.ENVIRONMENT] = env;
+        investmentIntentions[GameProperties.InvestmentTarget.ECONOMIC] = econ;
+
+        pDisrupt = 0.0f;
     }
 }

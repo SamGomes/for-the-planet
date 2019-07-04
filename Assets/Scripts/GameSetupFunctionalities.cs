@@ -39,6 +39,18 @@ public class GameSetupFunctionalities : MonoBehaviour {
         {
             PlayerParameterization currParam = parameterization.playerParameterizations[i];
 
+            InteractionModule chosenIM = new AutisticInteractionModule();
+            switch (currParam.interactionType)
+            {
+                case "BALOON":
+                    chosenIM = new SpeechBaloonInteractionModule();
+                    break;
+
+                case "ROBOT":
+                    chosenIM = new RobotInteractionModule();
+                    break;
+
+            }
             
             switch (currParam.playerType)
             {
@@ -46,24 +58,32 @@ public class GameSetupFunctionalities : MonoBehaviour {
                     GameGlobals.players.Add(new Player(playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/"+ currParam.spriteIndex), currPlayerId++, currParam.name));
                     break;
 
-                case "AI_EMOTIONAL":
-                    GameGlobals.players.Add(new EmotionalAIPlayer(new RobotInteractionModule(), playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name, 1.0f));
+                case "AI_EMOTIONAL_TABLE":
+                    GameGlobals.players.Add(new TableEmotionalAIPlayer(chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name, 1.0f));
+                    break;
+
+                case "AI_EMOTIONAL_DISRUPTIVECONSTRUCTIVE":
+                    GameGlobals.players.Add(new DisruptiveConstructiveEmotionalAIPlayer(chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name, 1.0f));
+                    break;
+
+                case "AI_RANDOM":
+                    GameGlobals.players.Add(new AIPlayerRandom(chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
                     break;
 
                 case "AI_COOPERATOR":
-                    GameGlobals.players.Add(new AIPlayerCooperator(new RobotInteractionModule(), playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
+                    GameGlobals.players.Add(new AIPlayerCooperator(chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
                     break;
 
                 case "AI_BALANCED_COOPERATOR":
-                    GameGlobals.players.Add(new AIPlayerBalancedCooperator(new LegendsInteractionModule(), playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
+                    GameGlobals.players.Add(new AIPlayerBalancedCooperator(chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
                     break;
 
                 case "AI_DEFECTOR":
-                    GameGlobals.players.Add(new AIPlayerDefector(new LegendsInteractionModule(), playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
+                    GameGlobals.players.Add(new AIPlayerDefector(chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
                     break;
 
                 case "AI_BALANCED_DEFECTOR":
-                    GameGlobals.players.Add(new AIPlayerBalancedDefector(new LegendsInteractionModule(), playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
+                    GameGlobals.players.Add(new AIPlayerBalancedDefector(chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
                     break;
 
                 default:
@@ -144,7 +164,7 @@ public class GameSetupFunctionalities : MonoBehaviour {
 
             UIStartGameButton.onClick.AddListener(delegate { StartGame(); });
             UIAddPlayerButton.onClick.AddListener(delegate {
-                manualGameParam.playerParameterizations.Add(new PlayerParameterization("Sam", "HUMAN"));
+                manualGameParam.playerParameterizations.Add(new PlayerParameterization("Sam", "HUMAN", "BALOON"));
                 CheckForAllPlayersRegistered(manualGameParam);
             });
 
@@ -163,19 +183,19 @@ public class GameSetupFunctionalities : MonoBehaviour {
                         //    manualGameParam.playerParameterizations.Add(new PlayerParameterization("Sam", "SIMPLE", false));
                         //    break;
                         case GameProperties.PlayerType.COOPERATIVE:
-                            manualGameParam.playerParameterizations.Add(new PlayerParameterization("Cristoph", "COOPERATIVE", false));
+                            manualGameParam.playerParameterizations.Add(new PlayerParameterization("Cristoph", "COOPERATIVE", "BALOON", false));
                             break;
                         case GameProperties.PlayerType.GREEDY:
-                            manualGameParam.playerParameterizations.Add(new PlayerParameterization("Giovanni", "GREEDY", false));
+                            manualGameParam.playerParameterizations.Add(new PlayerParameterization("Giovanni", "GREEDY", "BALOON", false));
                             break;
                         case GameProperties.PlayerType.BALANCED:
-                            manualGameParam.playerParameterizations.Add(new PlayerParameterization("Brian", "BALANCED", false));
+                            manualGameParam.playerParameterizations.Add(new PlayerParameterization("Brian", "BALANCED", "BALOON", false));
                             break;
                         case GameProperties.PlayerType.UNBALANCED:
-                            manualGameParam.playerParameterizations.Add(new PlayerParameterization("Ulrich", "UNBALANCED", false));
+                            manualGameParam.playerParameterizations.Add(new PlayerParameterization("Ulrich", "UNBALANCED", "BALOON", false));
                             break;
                         case GameProperties.PlayerType.TITFORTAT:
-                            manualGameParam.playerParameterizations.Add(new PlayerParameterization("Tim", "TITFORTAT", false));
+                            manualGameParam.playerParameterizations.Add(new PlayerParameterization("Tim", "TITFORTAT", "BALOON", false));
                             break;
                     }
                     CheckForAllPlayersRegistered(manualGameParam);
@@ -189,16 +209,16 @@ public class GameSetupFunctionalities : MonoBehaviour {
                 {
                     if (button.gameObject.name.EndsWith("1"))
                     {
-                        manualGameParam.playerParameterizations.Add(new PlayerParameterization("Player", "HUMAN"));
-                        manualGameParam.playerParameterizations.Add(new PlayerParameterization("Player", "HUMAN"));
-                        manualGameParam.playerParameterizations.Add(new PlayerParameterization("Player", "HUMAN"));
+                        manualGameParam.playerParameterizations.Add(new PlayerParameterization("Player", "HUMAN", "BALOON"));
+                        manualGameParam.playerParameterizations.Add(new PlayerParameterization("Player", "HUMAN", "BALOON"));
+                        manualGameParam.playerParameterizations.Add(new PlayerParameterization("Player", "HUMAN", "BALOON"));
                         manualGameParam.ngType = "RANDOM";
                     }
                     else if (button.gameObject.name.EndsWith("2"))
                     {
-                        manualGameParam.playerParameterizations.Add(new PlayerParameterization("Player", "COOPERATIVE", false));
-                        manualGameParam.playerParameterizations.Add(new PlayerParameterization("Player", "GREEDY", false));
-                        manualGameParam.playerParameterizations.Add(new PlayerParameterization("Player", "HUMAN"));
+                        manualGameParam.playerParameterizations.Add(new PlayerParameterization("Player", "COOPERATIVE", "BALOON", false));
+                        manualGameParam.playerParameterizations.Add(new PlayerParameterization("Player", "GREEDY", "BALOON", false));
+                        manualGameParam.playerParameterizations.Add(new PlayerParameterization("Player", "HUMAN", "BALOON"));
                         manualGameParam.ngType = "RANDOM";
                     }
                     button.interactable = false;

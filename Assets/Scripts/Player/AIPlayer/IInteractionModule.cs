@@ -44,7 +44,7 @@ public class AutisticInteractionModule : InteractionModule
 
 }
 
-public class LegendsInteractionModule: InteractionModule
+public class SpeechBaloonInteractionModule: InteractionModule
 {
     protected GameObject speechBalloonUI;
     private List<string> currSpeeches;

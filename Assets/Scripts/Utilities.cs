@@ -157,6 +157,7 @@ public struct PlayerParameterization
 {
     public string name;
     public string playerType;
+    public string interactionType;
     public bool isSpeechAllowed;
 
     //used when the the game ngType is not RANDOM
@@ -165,18 +166,19 @@ public struct PlayerParameterization
     
     public int spriteIndex;
 
-    public PlayerParameterization(string name, string playerType, bool isSpeechAllowed, int[] fixedEnvironmentDiceResults, int[] fixedEconomicDiceResults, int spriteIndex)
+    public PlayerParameterization(string name, string playerType, string interactionType, bool isSpeechAllowed, int[] fixedEnvironmentDiceResults, int[] fixedEconomicDiceResults, int spriteIndex)
     {
         this.name = name;
         this.isSpeechAllowed = isSpeechAllowed;
         this.playerType = playerType;
+        this.interactionType = interactionType;
 
         this.fixedEnvironmentDiceResults = fixedEnvironmentDiceResults;
         this.fixedEconomicDiceResults = fixedEconomicDiceResults;
 
         this.spriteIndex = spriteIndex;
     }
-    public PlayerParameterization(string name, string playerType, bool isSpeechAllowed, int[] fixedInstrumentDiceResults, int[] fixedMarketingDiceResults) : this(name, playerType, isSpeechAllowed, fixedInstrumentDiceResults, fixedMarketingDiceResults, 0) { }
-    public PlayerParameterization(string name, string playerType, bool isSpeechAllowed) : this(name, playerType, isSpeechAllowed, new int[] { }, new int[] { }) { }
-    public PlayerParameterization(string name, string playerType) : this(name, playerType, false) { }
+    public PlayerParameterization(string name, string playerType, string interactionType, bool isSpeechAllowed, int[] fixedInstrumentDiceResults, int[] fixedMarketingDiceResults) : this(name, playerType, interactionType, isSpeechAllowed, fixedInstrumentDiceResults, fixedMarketingDiceResults, 0) { }
+    public PlayerParameterization(string name, string playerType, string interactionType, bool isSpeechAllowed) : this(name, playerType, interactionType, isSpeechAllowed, new int[] { }, new int[] { }) { }
+    public PlayerParameterization(string name, string playerType, string interactionType) : this(name, playerType, interactionType, false) { }
 }

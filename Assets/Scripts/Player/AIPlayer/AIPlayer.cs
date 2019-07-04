@@ -254,5 +254,27 @@ public class AIPlayerBalancedDefector : AIPlayer
         yield return EndBudgetAllocationPhase();
         // @jbgrocha: Fatima Speech Act (emotional engine call) - End of Budget Allocation
     }
+}
+
+public class AIPlayerRandom : AIPlayer
+{
+    public AIPlayerRandom(InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
+        base(interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name)
+    { }
+
+    public override IEnumerator AutoBudgetAllocation()
+    {
+
+        int environmentInvestment = UnityEngine.Random.Range(1,5);
+        int economyInvestment = 1 - environmentInvestment;
+
+        // @jbgrocha: Fatima Speech Act (emotional engine call) - Start of Budget Allocation
+        yield return InvestInEconomy(economyInvestment);
+        yield return InvestInEnvironment(environmentInvestment);
+
+        // @jbgrocha: Fatima Speech Act (emotional engine call) - Before ending Budget Allocation
+        yield return EndBudgetAllocationPhase();
+        // @jbgrocha: Fatima Speech Act (emotional engine call) - End of Budget Allocation
+    }
 
 }
