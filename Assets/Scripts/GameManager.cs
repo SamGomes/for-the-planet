@@ -115,9 +115,6 @@ public class GameManager : MonoBehaviour {
         
         GameGlobals.commonEnvironmentInvestment = 0;
         DontDestroyOnLoad(CommonAreaUI);
-
-        marketLimit = Mathf.FloorToInt(GameProperties.configurableProperties.numberOfAlbumsPerGame * 4.0f / 5.0f) - 1;
-        currNumberOfMarketDices = GameProperties.configurableProperties.initNumberMarketDices;
         
         rollDiceOverlay.SetActive(false);
 

@@ -91,17 +91,7 @@ public class DynamicallyConfigurableGameProperties
 { 
     //(default configurations already assigned)
 
-    public int tokenValue = 0; //1000;
-
-    public int allowedPlayerActionsPerAlbum = 2;
-    public int allowedPlayerTokenBuysPerRound = 1;
-
-    public int maximumSkillLevelPerInstrument = 9000; //infinite
-
-    public int numberOfAlbumsPerGame = 5;
     public int numberOfPlayersPerGame = 3;
-
-    public int initNumberMarketDices = 2; //config the initial number of dices to roll
 
 
     //----------- AutomaticBriefing -------------------
