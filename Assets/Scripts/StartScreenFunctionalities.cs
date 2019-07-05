@@ -167,13 +167,7 @@ public class StartScreenFunctionalities : MonoBehaviour {
             this.UIStartGameButton.interactable = false;
         }
         //}
-        Dictionary<string, string> gameLogEntry = new Dictionary<string, string>();
-        gameLogEntry["sessionId"] = GameGlobals.currSessionId.ToString();
-        gameLogEntry["currGameId"] = GameGlobals.currGameId.ToString();
-        gameLogEntry["condition"] = GameProperties.currSessionParameterization.id;
-        gameLogEntry["outcome"] = GameGlobals.currGameState.ToString();
-        StartCoroutine(GameGlobals.gameLogManager.WriteToLog("fortheplanetlogs", "gameresultslog", gameLogEntry));
-
+       
         // @jbgrocha: auto start if on batchmode
         if (GameGlobals.isSimulation)
         {

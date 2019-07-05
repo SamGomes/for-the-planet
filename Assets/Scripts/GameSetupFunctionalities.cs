@@ -245,6 +245,19 @@ public class GameSetupFunctionalities : MonoBehaviour {
             return;
         }
 
+        //write game in log
+        Dictionary<string, string> gameLogEntry = new Dictionary<string, string>();
+        gameLogEntry["sessionId"] = GameGlobals.currSessionId.ToString();
+        gameLogEntry["currGameId"] = GameGlobals.currGameId.ToString();
+        gameLogEntry["condition"] = GameProperties.currSessionParameterization.id;
+        gameLogEntry["outcome"] = GameGlobals.currGameState.ToString();
+        gameLogEntry["env_state"] = "0";
+        foreach (Player player in GameGlobals.players)
+        {
+            gameLogEntry["playerId_" + player.GetId() + "_econ_state"] = "0";
+        }
+        StartCoroutine(GameGlobals.gameLogManager.WriteToLog("fortheplanetlogs", "gameresultslog", gameLogEntry));
+
         //write players in log before starting the game
         Player currPlayer = null;
         for (int i = 0; i < GameProperties.configurableProperties.numberOfPlayersPerGame; i++)

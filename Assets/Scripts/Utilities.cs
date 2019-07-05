@@ -33,7 +33,7 @@ public static class GameGlobals
     public static GameSceneManager gameSceneManager;
 
 
-    public static float commonEnvironmentInvestment;
+    public static float envState;
 
     //fatima stuff
     public static string FAtiMAScenarioPath;

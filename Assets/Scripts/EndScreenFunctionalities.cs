@@ -136,15 +136,21 @@ public class EndScreenFunctionalities : MonoBehaviour
     IEnumerator YieldedStart()
     {
 
-       
-        
         Dictionary<string, string> gameLogEntry = new Dictionary<string, string>();
         gameLogEntry["sessionId"] = GameGlobals.currSessionId.ToString();
         gameLogEntry["currGameId"] = GameGlobals.currGameId.ToString();
         gameLogEntry["condition"] = GameProperties.currSessionParameterization.id;
         gameLogEntry["outcome"] = GameGlobals.currGameState.ToString();
-        yield return GameGlobals.gameLogManager.UpdateLog("fortheplanetlogs","gameresultslog", "&q={\"currGameId\": \"" + GameGlobals.currGameId.ToString() + "\", \"sessionId\":\"" + GameGlobals.currSessionId.ToString() + "\"}",gameLogEntry);
-        //yield return GameGlobals.gameLogManager.UpdateLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameProperties.currSessionParameterization.id, GameGlobals.currGameState.ToString());
+
+        gameLogEntry["env_state"] = GameGlobals.envState.ToString();
+        foreach (Player player in GameGlobals.players)
+        {
+            gameLogEntry["playerId_"+ player.GetId() + "_econ_state"] = player.GetMoney().ToString();
+        }
+
+        yield return GameGlobals.gameLogManager.UpdateLog("fortheplanetlogs","gameresultslog", "&q={\"currGameId\": \"" + GameGlobals.currGameId.ToString() + "\", \"sessionId\":\"" + GameGlobals.currSessionId.ToString() + "\"}", gameLogEntry);
+
+        
 
         if (GameGlobals.isSimulation)
         {

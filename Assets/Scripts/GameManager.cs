@@ -9,7 +9,7 @@ using System.Globalization;
 public class GameManager : MonoBehaviour {
 
 
-    public float lastEnvDecay;
+    //public float lastEnvDecay;
 
     public GameObject canvas;
 
@@ -110,10 +110,10 @@ public class GameManager : MonoBehaviour {
         }
 
         envDynamicSlider = new DynamicSlider(environmentSliderSceneElement.gameObject);
-
-        StartCoroutine(envDynamicSlider.UpdateSliderValue(0.1f));
         
-        GameGlobals.commonEnvironmentInvestment = 0;
+        GameGlobals.envState = 0.1f;
+        StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState));
+        
         DontDestroyOnLoad(CommonAreaUI);
         
         rollDiceOverlay.SetActive(false);
@@ -191,7 +191,8 @@ public class GameManager : MonoBehaviour {
 
         float envIncrease = (float) environmentResult / 100.0f;
 
-        yield return GameGlobals.monoBehaviourFunctionalities.StartCoroutine(envDynamicSlider.UpdateSliderValue(environmentSliderSceneElement.value + envIncrease));
+        GameGlobals.envState += envIncrease;
+        yield return GameGlobals.monoBehaviourFunctionalities.StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState));
         currPlayer.SetEnvironmentResult(envIncrease);
 
         if (GameGlobals.isNarrated)
@@ -254,14 +255,17 @@ public class GameManager : MonoBehaviour {
         {
             numPlayersToSimulateInvestment = GameGlobals.players.Count;
 
-            string diceOverlayTitle = "Simulating environment growth ...";
+            string diceOverlayTitle = "Simulating environment decay ...";
             yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, 2));
 
             int environmentDecay = diceManager.GetCurrDiceTotal();
             float envDecay = ((float) environmentDecay / 100.0f);
 
-            lastEnvDecay = envDecay;
-            yield return StartCoroutine(envDynamicSlider.UpdateSliderValue(environmentSliderSceneElement.value - envDecay));
+            envDecay *= GameGlobals.players.Count;
+
+            //lastEnvDecay = envDecay;
+            GameGlobals.envState -= envDecay;
+            yield return StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState));
 
             if (GameGlobals.isNarrated)
             {
@@ -271,7 +275,7 @@ public class GameManager : MonoBehaviour {
 
             foreach (Player player in GameGlobals.players)
             {
-                diceOverlayTitle = "Simulating economic growth ...";
+                diceOverlayTitle = "Simulating economic decay ...";
                 yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, 2));
 
                 int economyDecay = diceManager.GetCurrDiceTotal();

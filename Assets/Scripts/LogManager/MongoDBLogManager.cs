@@ -33,7 +33,7 @@ public class MongoDBLogManager : LogManager
         yield return currConnection;
         currConnection = call.www.SendWebRequest();
         yield return currConnection;
-        Debug.Log("remote call error code returned (no return means no error): "+ call.www.error);
+        Debug.Log("remote call error code returned: "+ call.www.error);
         if (call.yieldedReaction != null)
         {
             yield return call.yieldedReaction(call.www.downloadHandler.text);
