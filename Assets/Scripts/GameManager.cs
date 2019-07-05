@@ -256,12 +256,12 @@ public class GameManager : MonoBehaviour {
             numPlayersToSimulateInvestment = GameGlobals.players.Count;
 
             string diceOverlayTitle = "Simulating environment decay ...";
-            yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, 2));
+            yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, 7));
 
             int environmentDecay = diceManager.GetCurrDiceTotal();
             float envDecay = ((float) environmentDecay / 100.0f);
 
-            envDecay *= GameGlobals.players.Count;
+            //envDecay *= ((float) GameGlobals.players.Count + (float) GameGlobals.players.Count/2);
 
             //lastEnvDecay = envDecay;
             GameGlobals.envState -= envDecay;
