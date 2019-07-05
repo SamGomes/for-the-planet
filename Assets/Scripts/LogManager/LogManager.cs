@@ -14,10 +14,10 @@ public abstract class LogManager
         {
             string key = dictKeys[keyI];
 
-            result += " "+ key + ": " + dict[key];
+            result += " "+ key + ": \"" + dict[key] + "\"";
             if(keyI < dictKeys.Count - 1)
             {
-                result += ";";
+                result += ",";
             }
             else
             {
@@ -28,14 +28,10 @@ public abstract class LogManager
         return result;
     }
 
-    public abstract void InitLogs();
-    public abstract IEnumerator WritePlayerToLog(string sessionId, string gameId, string playerId, string playername, string type);
-    public abstract IEnumerator WriteGameToLog(string sessionId, string gameId, string condition, string result);
-    public abstract IEnumerator UpdateGameResultInLog(string sessionId, string gameId, string condition, string result);
-    public abstract IEnumerator WritePlayerResultsToLog(string sessionId, string currGameId, string currGameRoundId, string playerId, string playerName, string money);
-    public abstract IEnumerator WriteEventToLog(string sessionId, string currGameId, string currGameRoundId, string playerId, string playerName, string eventType, Dictionary<string,string> descriptionElements);
-
-
-    public abstract IEnumerator GetLastSessionConditionFromLog(Func<string,int> yieldedReactionToGet);
+    public abstract void InitLogs(MonoBehaviour monoBehaviourObject);
+    public abstract IEnumerator WriteToLog(string database, string table, Dictionary<string, string> argsNValues);
+   
+    public abstract IEnumerator GetFromLog(string database, string table, string query, Func<string, int> yieldedReactionToGet);
+    public abstract IEnumerator UpdateLog(string database, string table, string query, Dictionary<string, string> argsNValues);
     public abstract IEnumerator EndLogs();
 }

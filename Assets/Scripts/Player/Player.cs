@@ -98,7 +98,15 @@ public class Player
 
         Dictionary<string, string> additionalEventArgs = new Dictionary<string, string>();
         additionalEventArgs.Add("InvestmentTarget", "ECONOMY");
-        playerMonoBehaviourFunctionalities.StartCoroutine(GameGlobals.gameLogManager.WriteEventToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameGlobals.currGameRoundId.ToString(), this.id.ToString(), this.name, "ADDED_INVESTMENT", additionalEventArgs));
+
+        Dictionary<string, string> eventLogEntry = new Dictionary<string, string>();
+        eventLogEntry["currSessionId"] = GameGlobals.currSessionId.ToString();
+        eventLogEntry["currGameId"] = GameGlobals.currGameId.ToString();
+        eventLogEntry["currGameRoundId"] = GameGlobals.currGameRoundId.ToString();
+        eventLogEntry["playerId"] = this.id.ToString();
+        eventLogEntry["eventType"] = "ADDED_INVESTMENT";
+        eventLogEntry["description"] = GameGlobals.gameLogManager.StringifyDictionaryForLogs(additionalEventArgs);
+        playerMonoBehaviourFunctionalities.StartCoroutine(GameGlobals.gameLogManager.WriteToLog("fortheplanetlogs", "eventslog", eventLogEntry));
     }
 
     public void SpendTokenInEnvironment()
@@ -113,7 +121,15 @@ public class Player
 
         Dictionary<string, string> additionalEventArgs = new Dictionary<string, string>();
         additionalEventArgs.Add("InvestmentTarget", "ENVIRONMENT");
-        playerMonoBehaviourFunctionalities.StartCoroutine(GameGlobals.gameLogManager.WriteEventToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameGlobals.currGameRoundId.ToString(), this.id.ToString(), this.name, "ADDED_INVESTMENT", additionalEventArgs));
+
+        Dictionary<string, string> eventLogEntry = new Dictionary<string, string>();
+        eventLogEntry["currSessionId"] = GameGlobals.currSessionId.ToString();
+        eventLogEntry["currGameId"] = GameGlobals.currGameId.ToString();
+        eventLogEntry["currGameRoundId"] = GameGlobals.currGameRoundId.ToString();
+        eventLogEntry["playerId"] = this.id.ToString();
+        eventLogEntry["eventType"] = "ADDED_INVESTMENT";
+        eventLogEntry["description"] = GameGlobals.gameLogManager.StringifyDictionaryForLogs(additionalEventArgs);
+        playerMonoBehaviourFunctionalities.StartCoroutine(GameGlobals.gameLogManager.WriteToLog("fortheplanetlogs", "eventslog", eventLogEntry));
     }
     
 
@@ -384,7 +400,15 @@ public class Player
 
         Dictionary<string, string> additionalEventArgs = new Dictionary<string, string>();
         additionalEventArgs.Add("Money", money.ToString("0.00", CultureInfo.InvariantCulture));
-        playerMonoBehaviourFunctionalities.StartCoroutine(GameGlobals.gameLogManager.WriteEventToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameGlobals.currGameRoundId.ToString(), this.id.ToString(), this.name,"SET_MONEY", additionalEventArgs));
+
+        Dictionary<string, string> eventLogEntry = new Dictionary<string, string>();
+        eventLogEntry["currSessionId"] = GameGlobals.currSessionId.ToString();
+        eventLogEntry["currGameId"] = GameGlobals.currGameId.ToString();
+        eventLogEntry["currGameRoundId"] = GameGlobals.currGameRoundId.ToString();
+        eventLogEntry["playerId"] = this.id.ToString();
+        eventLogEntry["eventType"] = "SET_MONEY";
+        eventLogEntry["description"] = GameGlobals.gameLogManager.StringifyDictionaryForLogs(additionalEventArgs);
+        playerMonoBehaviourFunctionalities.StartCoroutine(GameGlobals.gameLogManager.WriteToLog("fortheplanetlogs", "eventslog", eventLogEntry));
 
         if (this.dynamicSlider != null)
         {

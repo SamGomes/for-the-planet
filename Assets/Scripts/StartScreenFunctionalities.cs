@@ -13,6 +13,24 @@ using UnityEngine.UI;
 using System.Runtime.InteropServices;
 using UnityEngine.Networking;
 using System.Globalization;
+using System;
+
+[Serializable]
+public class DataEntryGameResultLog
+{
+    public string sessionId;
+    public string currGameId;
+    public string condition;
+    public string outcome;
+}
+
+[Serializable]
+public class DataEntryGameResultLogQueryResult
+{
+    public List<DataEntryGameResultLog> results;
+}
+
+
 
 public class StartScreenFunctionalities : MonoBehaviour {
     private StreamReader fileReader;
@@ -61,14 +79,15 @@ public class StartScreenFunctionalities : MonoBehaviour {
         GameGlobals.currGameId++;
         GameGlobals.currGameRoundId = 0;
 
-        GameGlobals.diceLogic = new RandomDiceLogic();
         GameGlobals.audioManager = new AudioManager();
         GameGlobals.gameSceneManager = new GameSceneManager();
+
+        GameGlobals.currGameState = GameProperties.GameState.NOT_FINISHED;
         
         GameGlobals.players = new List<Player>(GameProperties.configurableProperties.numberOfPlayersPerGame);
 
-        GameGlobals.gameLogManager = new DebugLogManager();
-        GameGlobals.gameLogManager.InitLogs();
+        GameGlobals.gameLogManager = new MongoDBLogManager();
+        GameGlobals.gameLogManager.InitLogs(GameGlobals.monoBehaviourFunctionalities);
 
         GameGlobals.roundBudget = configs.roundBudget;
 
@@ -84,7 +103,7 @@ public class StartScreenFunctionalities : MonoBehaviour {
             //generate 3 random letters
             for (int i = 0; i < 3; i++)
             {
-                generatedCode += (char)('A' + Random.Range(0, 26));
+                generatedCode += (char)('A' + UnityEngine.Random.Range(0, 26));
             }
             GameGlobals.currSessionId = generatedCode;
 
@@ -100,7 +119,7 @@ public class StartScreenFunctionalities : MonoBehaviour {
 
         if (GameProperties.configurableProperties.isAutomaticBriefing) //generate condition automatically (asynchronous)
         {
-            StartCoroutine(GameGlobals.gameLogManager.GetLastSessionConditionFromLog(YieldedActionsAfterGet)); //changes session code
+            StartCoroutine(GameGlobals.gameLogManager.GetFromLog("fortheplanetlogs","gameresultslog", "&s={\"_id\": -1}&l=1", YieldedActionsAfterGet)); //changes session code
         }
         else
         {
@@ -120,27 +139,40 @@ public class StartScreenFunctionalities : MonoBehaviour {
     }
 
 
-    private int YieldedActionsAfterGet(string lastConditionString)
+    private int YieldedActionsAfterGet(string getResult)
     {
-        if (lastConditionString == "") //no games were found
+        getResult = "{ \"results\":"+ getResult + "}";
+        string lastConditionString = "";
+        List <DataEntryGameResultLog> results = JsonUtility.FromJson<DataEntryGameResultLogQueryResult>(getResult).results;
+        if (results.Count < 1) //no games were found
         {
             List<SessionParameterization> possibleConditions = GameProperties.configurableProperties.possibleParameterizations;
             lastConditionString = possibleConditions[0].id;
         }
-        if (GameGlobals.currGameId == 1)
+        else
         {
-            SetParameterizationCondition(lastConditionString);
-            GameProperties.configurableProperties.numSessionGames = GameProperties.currSessionParameterization.gameParameterizations.Count;
-            if (GameProperties.configurableProperties.numSessionGames >= 1)
-            {
-                this.UIStartGameButton.interactable = true;
-            }
-            else {
-                Debug.Log("number of session games cannot be less than 1");
-                this.UIStartGameButton.interactable = false;
-            }
+            lastConditionString = results[results.Count - 1].condition.ToString();
         }
-        StartCoroutine(GameGlobals.gameLogManager.WriteGameToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameProperties.currSessionParameterization.id, GameGlobals.currGameState.ToString()));
+        //if (GameGlobals.currGameId == 1)
+        //{
+
+        SetParameterizationCondition(lastConditionString);
+        GameProperties.configurableProperties.numSessionGames = GameProperties.currSessionParameterization.gameParameterizations.Count;
+        if (GameProperties.configurableProperties.numSessionGames >= 1)
+        {
+            this.UIStartGameButton.interactable = true;
+        }
+        else {
+            Debug.Log("number of session games cannot be less than 1");
+            this.UIStartGameButton.interactable = false;
+        }
+        //}
+        Dictionary<string, string> gameLogEntry = new Dictionary<string, string>();
+        gameLogEntry["sessionId"] = GameGlobals.currSessionId.ToString();
+        gameLogEntry["currGameId"] = GameGlobals.currGameId.ToString();
+        gameLogEntry["condition"] = GameProperties.currSessionParameterization.id;
+        gameLogEntry["outcome"] = GameGlobals.currGameState.ToString();
+        StartCoroutine(GameGlobals.gameLogManager.WriteToLog("fortheplanetlogs", "gameresultslog", gameLogEntry));
 
         // @jbgrocha: auto start if on batchmode
         if (GameGlobals.isSimulation)
@@ -159,11 +191,10 @@ public class StartScreenFunctionalities : MonoBehaviour {
         int lastConditionIndex = -1;
         if (lastConditionString != "")
         {
-            string lastConditionChar = lastConditionString;
             for (int i = 0; i < possibleConditions.Count; i++)
             {
                 SessionParameterization currSessionParams = possibleConditions[i];
-                if (currSessionParams.id == lastConditionChar)
+                if (currSessionParams.id == lastConditionString)
                 {
                     lastConditionIndex = i;
                     break;

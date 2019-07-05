@@ -6,40 +6,24 @@ using UnityEngine;
 //Debug log manager
 public class DebugLogManager : LogManager
 {
-    public override void InitLogs()
+    public override void InitLogs(MonoBehaviour monoBehaviourObject)
     {
         Debug.Log("Log Initialzed.");
     }
-    public override IEnumerator WritePlayerToLog(string sessionId, string currGameId, string playerId, string playername, string type)
-    {
-        Debug.Log("WritePlayerToLog: " + sessionId + ";" + currGameId + ";" + playerId + ";" + playername + ";" + type);
-        yield return null;
-    }
-    public override IEnumerator WriteGameToLog(string sessionId, string currGameId, string condition, string result)
-    {
-        Debug.Log("WriteGameToLog: " + sessionId + ";" + currGameId + ";" + result);
-        yield return null;
-    }
-    public override IEnumerator UpdateGameResultInLog(string sessionId, string gameId, string condition, string result)
-    {
-        Debug.Log("UpdateGameInLog: " + sessionId + ";" + gameId + ";" + result);
-        yield return null;
-    }
-    public override IEnumerator WritePlayerResultsToLog(string sessionId, string currGameId, string currGameRoundId, string playerId, string playerName, string money)
-    {
-        Debug.Log("WritePlayerResultsToLog: " + sessionId + ";" + currGameId + ";" + currGameRoundId + ";" + playerId + ";" + playerName + ";" + money);
-        yield return null;
-    }
-    public override IEnumerator WriteEventToLog(string sessionId, string currGameId, string currGameRoundId, string playerId, string playerName, string eventType, Dictionary<string, string> descriptionElements)
-    {
-        Debug.Log("WriteEventToLog: " + sessionId + ";" + currGameId + ";" + currGameRoundId + ";" + playerId + ";" + playerName + ";" + eventType + ";" + StringifyDictionaryForLogs(descriptionElements));
+    public override IEnumerator WriteToLog(string database, string table, Dictionary<string, string> argsNValues) {
+        Debug.Log("database: " + database + " ; " + table + " ; " + argsNValues.ToString());
         yield return null;
     }
 
-    public override IEnumerator GetLastSessionConditionFromLog(Func<string,int> yieldedReactionToGet)
+
+    public override IEnumerator GetFromLog(string database, string table, string query, Func<string, int> yieldedReactionToGet) {
+        Debug.Log("database: " + database + " ; " + table + " ; ");
+        yield return null;
+    }
+
+    public override IEnumerator UpdateLog(string database, string table, string query, Dictionary<string, string> argsNValues)
     {
-        Debug.Log("GotLastSessionConditionFromLog");
-        yieldedReactionToGet("B");
+        Debug.Log("database: " + database + " ; " + table + " ; ");
         yield return null;
     }
 

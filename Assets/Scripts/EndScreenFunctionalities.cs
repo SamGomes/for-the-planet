@@ -135,7 +135,16 @@ public class EndScreenFunctionalities : MonoBehaviour
 
     IEnumerator YieldedStart()
     {
-        yield return GameGlobals.gameLogManager.UpdateGameResultInLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameProperties.currSessionParameterization.id, GameGlobals.currGameState.ToString());
+
+       
+        
+        Dictionary<string, string> gameLogEntry = new Dictionary<string, string>();
+        gameLogEntry["sessionId"] = GameGlobals.currSessionId.ToString();
+        gameLogEntry["currGameId"] = GameGlobals.currGameId.ToString();
+        gameLogEntry["condition"] = GameProperties.currSessionParameterization.id;
+        gameLogEntry["outcome"] = GameGlobals.currGameState.ToString();
+        yield return GameGlobals.gameLogManager.UpdateLog("fortheplanetlogs","gameresultslog", "&q={\"currGameId\": \"" + GameGlobals.currGameId.ToString() + "\", \"sessionId\":\"" + GameGlobals.currSessionId.ToString() + "\"}",gameLogEntry);
+        //yield return GameGlobals.gameLogManager.UpdateLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), GameProperties.currSessionParameterization.id, GameGlobals.currGameState.ToString());
 
         if (GameGlobals.isSimulation)
         {

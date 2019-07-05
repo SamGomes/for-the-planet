@@ -42,12 +42,19 @@ public class GameSetupFunctionalities : MonoBehaviour {
             InteractionModule chosenIM = new AutisticInteractionModule();
             switch (currParam.interactionType)
             {
+                case "NONE":
+                    //already defined on top
+                    break;
                 case "BALOON":
                     chosenIM = new SpeechBaloonInteractionModule();
                     break;
 
                 case "ROBOT":
                     chosenIM = new RobotInteractionModule();
+                    break;
+                default:
+                    isErrorEncountered = true;
+                    setupWarningPoppupRef.DisplayPoppup("Error on parsing the interaction module named " + currParam.interactionType);
                     break;
 
             }
@@ -89,11 +96,11 @@ public class GameSetupFunctionalities : MonoBehaviour {
                 default:
                     isErrorEncountered = true;
                     setupWarningPoppupRef.DisplayPoppup("Error on parsing the player type of " + currParam.name);
-                    Debug.Log("[ERROR]: Error on parsing the player type of " + currParam.name);
                     break;
             }
         }
 
+        GameGlobals.diceLogic = new RandomDiceLogic();
         //string pattern = "FIXED:[WL]+";
         //Match m = Regex.Match(parameterization.ngType, pattern, RegexOptions.IgnoreCase);
         //if (m.Success)
@@ -104,23 +111,16 @@ public class GameSetupFunctionalities : MonoBehaviour {
         //}
         //else
         //{
-        //    switch (parameterization.ngType)
-        //    {
-        //        case "RANDOM":
-        //            GameGlobals.gameDiceNG = new RandomDiceNG();
-        //            break;
-        //        case "FIXED:LOSS":
-        //            GameGlobals.gameDiceNG = new LossDiceNG();
-        //            break;
-        //        case "FIXED:VICTORY":
-        //            GameGlobals.gameDiceNG = new VictoryDiceNG();
-        //            break;
-        //        default:
-        //            isErrorEncountered = true;
-        //            setupWarningPoppupRef.DisplayPoppup("Error on parsing the NG Type of parameterization " + parameterization.ngType);
-        //            Debug.Log("[ERROR]: Error on parsing the NG Type of parameterization " + parameterization.ngType);
-        //            break;
-        //    }
+        switch (parameterization.diceLogic)
+        {
+            case "RANDOM":
+                GameGlobals.diceLogic = new RandomDiceLogic();
+                break;
+            default:
+                isErrorEncountered = true;
+                setupWarningPoppupRef.DisplayPoppup("Error on parsing the dice logic of parameterization " + parameterization.diceLogic);
+                break;
+        }
         //}
     }
 
@@ -169,7 +169,7 @@ public class GameSetupFunctionalities : MonoBehaviour {
             });
 
 
-            manualGameParam.ngType = "RANDOM";
+            manualGameParam.diceLogic = "RANDOM";
             for (int i=0; i < UIAIPlayerSelectionButtons.Length; i++)
             {
                 GameGlobals.numberOfSpeakingPlayers++;
@@ -212,14 +212,14 @@ public class GameSetupFunctionalities : MonoBehaviour {
                         manualGameParam.playerParameterizations.Add(new PlayerParameterization("Player", "HUMAN", "BALOON"));
                         manualGameParam.playerParameterizations.Add(new PlayerParameterization("Player", "HUMAN", "BALOON"));
                         manualGameParam.playerParameterizations.Add(new PlayerParameterization("Player", "HUMAN", "BALOON"));
-                        manualGameParam.ngType = "RANDOM";
+                        manualGameParam.diceLogic = "RANDOM";
                     }
                     else if (button.gameObject.name.EndsWith("2"))
                     {
                         manualGameParam.playerParameterizations.Add(new PlayerParameterization("Player", "COOPERATIVE", "BALOON", false));
                         manualGameParam.playerParameterizations.Add(new PlayerParameterization("Player", "GREEDY", "BALOON", false));
                         manualGameParam.playerParameterizations.Add(new PlayerParameterization("Player", "HUMAN", "BALOON"));
-                        manualGameParam.ngType = "RANDOM";
+                        manualGameParam.diceLogic = "RANDOM";
                     }
                     button.interactable = false;
                     CheckForAllPlayersRegistered(manualGameParam);
@@ -250,7 +250,14 @@ public class GameSetupFunctionalities : MonoBehaviour {
         for (int i = 0; i < GameProperties.configurableProperties.numberOfPlayersPerGame; i++)
         {
             currPlayer = GameGlobals.players[i];
-            StartCoroutine(GameGlobals.gameLogManager.WritePlayerToLog(GameGlobals.currSessionId.ToString(), GameGlobals.currGameId.ToString(), currPlayer.GetId().ToString(), currPlayer.GetName(), "-"));
+
+            Dictionary<string, string> playerLogEntry = new Dictionary<string, string>();
+            playerLogEntry["currSessionId"] = GameGlobals.currSessionId.ToString();
+            playerLogEntry["currGameId"] = GameGlobals.currGameId.ToString();
+            playerLogEntry["Id"] = currPlayer.GetId().ToString();
+            playerLogEntry["Name"] = currPlayer.GetName();
+            playerLogEntry["Type"] = currPlayer.GetType().ToString();
+            StartCoroutine(GameGlobals.gameLogManager.WriteToLog("fortheplanetlogs","playerslog", playerLogEntry));
         }
 
         string json = JsonUtility.ToJson(GameProperties.configurableProperties);

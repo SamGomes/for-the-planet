@@ -134,13 +134,13 @@ public struct SessionParameterization
 public struct GameParameterization
 {
     public List<PlayerParameterization> playerParameterizations;
-    public string ngType;
+    public string diceLogic;
     public bool isNarrated;
 
-    public GameParameterization(string id, List<PlayerParameterization> playerParameterizations, string ngType, bool isNarrated)
+    public GameParameterization(string id, List<PlayerParameterization> playerParameterizations, string diceLogic, bool isNarrated)
     {
         this.playerParameterizations = playerParameterizations;
-        this.ngType = ngType;
+        this.diceLogic = diceLogic;
         this.isNarrated = isNarrated;
     }
 
