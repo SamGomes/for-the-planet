@@ -4,7 +4,7 @@
 			"classId": 0,
 			"KnowledgeBase":
 				{
-					"Perspective": "Nameless",
+					"Perspective": "P1",
 					"Knowledge":
 						{
 
@@ -12,8 +12,8 @@
 				},
 			"BodyName": null,
 			"VoiceName": null,
-			"EmotionalAppraisalAssetSource": null,
-			"EmotionalDecisionMakingSource": null,
+			"EmotionalAppraisalAssetSource": "appraisalRulesDisruptive.ea",
+			"EmotionalDecisionMakingSource": "NormalPlayer.edm",
 			"SocialImportanceAssetSource": null,
 			"CommeillFautAssetSource": null,
 			"EmotionalState":

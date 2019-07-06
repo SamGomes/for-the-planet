@@ -59,7 +59,7 @@ public class Player
     private Text environmentHistoryDisplay;
 
     protected Button executeBudgetButton;
-    private PopupScreenFunctionalities warningScreenRef;
+    protected PopupScreenFunctionalities warningScreenRef;
     private DynamicSlider dynamicSlider;
 
     public Player(GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name)

@@ -66,11 +66,11 @@ public class GameSetupFunctionalities : MonoBehaviour {
                     break;
 
                 case "AI_EMOTIONAL_TABLE":
-                    GameGlobals.players.Add(new TableEmotionalAIPlayer(chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name, 1.0f));
+                    GameGlobals.players.Add(new TableEmotionalAIPlayer(chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name, 1.0f, currParam.fatimaRpcPath));
                     break;
 
                 case "AI_EMOTIONAL_DISRUPTIVECONSTRUCTIVE":
-                    GameGlobals.players.Add(new DisruptiveConstructiveEmotionalAIPlayer(chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name, 1.0f));
+                    GameGlobals.players.Add(new DisruptiveConstructiveEmotionalAIPlayer(chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name, 1.0f, currParam.fatimaRpcPath));
                     break;
 
                 case "AI_RANDOM":

@@ -5,7 +5,7 @@
 			"ScenarioName": "For-the-planet",
 			"Description": null,
 			"WorldModelSource": "effect.wmo",
-			"CharacterSources": ["player1.rpc", "GenericPlayer.rpc"],
+			"CharacterSources": ["disruptive.rpc", "constructive.rpc"],
 			"Dialogues": [
 				{
 					"CurrentState": "-",

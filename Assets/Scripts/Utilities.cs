@@ -160,7 +160,9 @@ public struct PlayerParameterization
     
     public int spriteIndex;
 
-    public PlayerParameterization(string name, string playerType, string interactionType, bool isSpeechAllowed, int[] fixedEnvironmentDiceResults, int[] fixedEconomicDiceResults, int spriteIndex)
+    public string fatimaRpcPath;
+
+    public PlayerParameterization(string name, string playerType, string interactionType, bool isSpeechAllowed, int[] fixedEnvironmentDiceResults, int[] fixedEconomicDiceResults, int spriteIndex, string fatimaRpcPath)
     {
         this.name = name;
         this.isSpeechAllowed = isSpeechAllowed;
@@ -171,8 +173,10 @@ public struct PlayerParameterization
         this.fixedEconomicDiceResults = fixedEconomicDiceResults;
 
         this.spriteIndex = spriteIndex;
+
+        this.fatimaRpcPath = fatimaRpcPath;
     }
-    public PlayerParameterization(string name, string playerType, string interactionType, bool isSpeechAllowed, int[] fixedInstrumentDiceResults, int[] fixedMarketingDiceResults) : this(name, playerType, interactionType, isSpeechAllowed, fixedInstrumentDiceResults, fixedMarketingDiceResults, 0) { }
-    public PlayerParameterization(string name, string playerType, string interactionType, bool isSpeechAllowed) : this(name, playerType, interactionType, isSpeechAllowed, new int[] { }, new int[] { }) { }
+    public PlayerParameterization(string name, string playerType, string interactionType, bool isSpeechAllowed, int[] fixedInstrumentDiceResults, int[] fixedMarketingDiceResults, string fatimaRpcPath) : this(name, playerType, interactionType, isSpeechAllowed, fixedInstrumentDiceResults, fixedMarketingDiceResults, 0, fatimaRpcPath) { }
+    public PlayerParameterization(string name, string playerType, string interactionType, bool isSpeechAllowed) : this(name, playerType, interactionType, isSpeechAllowed, new int[] { }, new int[] { }, "") { }
     public PlayerParameterization(string name, string playerType, string interactionType) : this(name, playerType, interactionType, false) { }
 }

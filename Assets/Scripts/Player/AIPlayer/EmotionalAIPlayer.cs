@@ -18,11 +18,12 @@ public class EmotionalAIPlayer: AIPlayer
 
     protected Dictionary<GameProperties.InvestmentTarget, int> investmentIntentions;
 
-    public EmotionalAIPlayer(InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name, float updateDelay) :
+
+    public EmotionalAIPlayer(InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name, float updateDelay, string fatimaRpcPath) :
         base(interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name)
     {
         unperceivedEvents = new List<WellFormedNames.Name>();
-        InitRPC();
+        InitRPC(fatimaRpcPath);
 
         investmentIntentions = new Dictionary<GameProperties.InvestmentTarget, int>();
 
@@ -33,10 +34,17 @@ public class EmotionalAIPlayer: AIPlayer
         playerMonoBehaviourFunctionalities.StartCoroutine(EmotionalUpdateLoop(updateDelay));
     }
 
-    public void InitRPC()
+    public void InitRPC(string fatimaRpcPath)
     {
         IntegratedAuthoringTool.DTOs.CharacterSourceDTO rpcPath = GameGlobals.FAtiMAIat.GetAllCharacterSources().FirstOrDefault<IntegratedAuthoringTool.DTOs.CharacterSourceDTO>();
-        Debug.Log(rpcPath.RelativePath);
+        if (fatimaRpcPath != null && fatimaRpcPath != "")
+        {
+            rpcPath = GameGlobals.FAtiMAIat.GetAllCharacterSources().Where(data => data.RelativePath == fatimaRpcPath).FirstOrDefault();
+        }
+        if (rpcPath == null)
+        {
+            warningScreenRef.DisplayPoppup("error loading fatimaRpcPath= " + fatimaRpcPath);
+        }
         rpc = RolePlayCharacterAsset.LoadFromFile(rpcPath.Source);
         rpc.LoadAssociatedAssets();
         GameGlobals.FAtiMAIat.BindToRegistry(rpc.DynamicPropertiesRegistry);
@@ -168,8 +176,8 @@ public class EmotionalAIPlayer: AIPlayer
 public class TableEmotionalAIPlayer : EmotionalAIPlayer
 {
 
-    public TableEmotionalAIPlayer(InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name, float updateDelay) :
-        base(interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name, updateDelay)
+    public TableEmotionalAIPlayer(InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name, float updateDelay, string fatimaRpcPath) :
+        base(interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name, updateDelay, fatimaRpcPath)
     {
         
     }
@@ -226,8 +234,8 @@ public class DisruptiveConstructiveEmotionalAIPlayer : EmotionalAIPlayer
     Dictionary<string, float> pDeltas;
 
 
-    public DisruptiveConstructiveEmotionalAIPlayer(InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name, float updateDelay) :
-       base(interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name, updateDelay)
+    public DisruptiveConstructiveEmotionalAIPlayer(InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name, float updateDelay, string fatimaRpcPath) :
+       base(interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name, updateDelay, fatimaRpcPath)
     {
         pDisrupt = 0.0f;
     }
