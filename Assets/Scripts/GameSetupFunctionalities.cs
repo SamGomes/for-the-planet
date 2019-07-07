@@ -260,7 +260,7 @@ public class GameSetupFunctionalities : MonoBehaviour {
 
         //write players in log before starting the game
         Player currPlayer = null;
-        for (int i = 0; i < GameProperties.configurableProperties.numberOfPlayersPerGame; i++)
+        for (int i = 0; i < GameGlobals.players.Count; i++)
         {
             currPlayer = GameGlobals.players[i];
 
@@ -290,7 +290,7 @@ public class GameSetupFunctionalities : MonoBehaviour {
     void CheckForAllPlayersRegistered(GameParameterization param)
     {
         UINameSelectionInputBox.text = "";
-        if (param.playerParameterizations.Count == GameProperties.configurableProperties.numberOfPlayersPerGame)
+        if (param.playerParameterizations.Count == GameGlobals.players.Count)
         {
             GameProperties.currGameParameterization = param;
 

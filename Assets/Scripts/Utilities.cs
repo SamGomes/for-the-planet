@@ -93,9 +93,6 @@ public class DynamicallyConfigurableGameProperties
 { 
     //(default configurations already assigned)
 
-    public int numberOfPlayersPerGame = 3;
-
-
     //----------- AutomaticBriefing -------------------
     public bool isAutomaticBriefing = false;
     public int numSessionGames = 0; //no tutorials

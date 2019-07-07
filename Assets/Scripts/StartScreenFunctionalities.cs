@@ -84,7 +84,7 @@ public class StartScreenFunctionalities : MonoBehaviour {
 
         GameGlobals.currGameState = GameProperties.GameState.NOT_FINISHED;
         
-        GameGlobals.players = new List<Player>(GameProperties.configurableProperties.numberOfPlayersPerGame);
+        GameGlobals.players = new List<Player>();
 
         GameGlobals.gameLogManager = new MongoDBLogManager();
         GameGlobals.gameLogManager.InitLogs(GameGlobals.monoBehaviourFunctionalities);

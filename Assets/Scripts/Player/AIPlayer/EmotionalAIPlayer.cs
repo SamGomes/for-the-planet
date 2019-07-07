@@ -107,6 +107,13 @@ public class EmotionalAIPlayer: AIPlayer
     //}
     public override IEnumerator AutoBudgetAllocation()
     {
+        List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
+        //string econS = GetInvestmentsHistory()[GameProperties.InvestmentTarget.ECONOMIC].ToString("0.00", CultureInfo.InvariantCulture);
+        //string envS = GetInvestmentsHistory()[GameProperties.InvestmentTarget.ENVIRONMENT].ToString("0.00", CultureInfo.InvariantCulture);
+        //events.Add(RolePlayCharacter.EventHelper.PropertyChange("HistoryDisplay(" + econS + "," + envS + ")", GetName(), this.name));
+        events.Add(RolePlayCharacter.EventHelper.PropertyChange("BeforeBudgetAllocation(" + money.ToString("0.00", CultureInfo.InvariantCulture) + "," + GameGlobals.envState.ToString("0.00", CultureInfo.InvariantCulture) + ")", this.name, this.name));
+        Perceive(events);
+
         base.AutoBudgetAllocation();
 
         int econ = investmentIntentions[GameProperties.InvestmentTarget.ECONOMIC];
@@ -116,8 +123,6 @@ public class EmotionalAIPlayer: AIPlayer
         yield return InvestInEnvironment(env);
         yield return EndBudgetAllocationPhase();
 
-        //List<WellFormedNames.Name> events = new List<WellFormedNames.Name>(){ RolePlayCharacter.EventHelper.PropertyChange("AllocateBudget(" + econ.ToString("0.00", CultureInfo.InvariantCulture) + "," + env.ToString("0.00", CultureInfo.InvariantCulture) + ")", this.name, this.name)  };
-        //Perceive(events);
     }
 
     public override IEnumerator AutoHistoryDisplay()
@@ -129,7 +134,7 @@ public class EmotionalAIPlayer: AIPlayer
         {
             string econ = player.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ECONOMIC].ToString("0.00", CultureInfo.InvariantCulture);
             string env = player.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ENVIRONMENT].ToString("0.00", CultureInfo.InvariantCulture);
-            events.Add(RolePlayCharacter.EventHelper.PropertyChange("InvestmentHistory(" + econ + ","+ env +")", player.GetName(), this.name));
+            events.Add(RolePlayCharacter.EventHelper.PropertyChange("HistoryDisplay(" + econ + ","+ env +")", player.GetName(), this.name));
         }
         Perceive(events);
 
@@ -144,14 +149,16 @@ public class EmotionalAIPlayer: AIPlayer
         //yield return ApplyInvestments();
 
         List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
-        foreach(Player player in GameGlobals.players)
-        {
-            string econ = player.lastEnvironmentResult.ToString("0.00", CultureInfo.InvariantCulture);
-            string env = player.lastEconomicResult.ToString("0.00", CultureInfo.InvariantCulture);
-            //goal success probability should be obtained using a method which could be overriden according to the personality of the agent
-            events.Add(RolePlayCharacter.EventHelper.PropertyChange("InvestmentResults(" + econ + ","+ env +"," + env + ")", player.GetName(), this.name));
-        }
+        //foreach(Player player in GameGlobals.players)
+        //{
+        //    string econ = player.lastEnvironmentResult.ToString("0.00", CultureInfo.InvariantCulture);
+        //    string env = player.lastEconomicResult.ToString("0.00", CultureInfo.InvariantCulture);
+        //    //goal success probability should be obtained using a method which could be overriden according to the personality of the agent
+        //    events.Add(RolePlayCharacter.EventHelper.PropertyChange("BudgetExecution(" + econ + ","+ env +"," + env + ")", player.GetName(), this.name));
+        //}
+        events.Add(RolePlayCharacter.EventHelper.PropertyChange("BudgetExecution(" + GameGlobals.envState + ")", GetName(), this.name));
         Perceive(events);
+
         // @jbgrocha: Fatima Speech Act (emotional engine call) - After Budget Dice Rolls
     }
 
@@ -160,13 +167,14 @@ public class EmotionalAIPlayer: AIPlayer
         yield return base.AutoInvestmentExecution();
 
         List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
-        foreach (Player player in GameGlobals.players)
-        {
-            string econ = player.lastEnvironmentResult.ToString("0.00", CultureInfo.InvariantCulture);
-            string env = player.lastEconomicResult.ToString("0.00", CultureInfo.InvariantCulture);
-            //goal success probability should be obtained using a method which could be overriden according to the personality of the agent
-            events.Add(RolePlayCharacter.EventHelper.PropertyChange("Decay(" + econ + "," + env + "," + env + ")", player.GetName(), this.name));
-        }
+        //foreach(Player player in GameGlobals.players)
+        //{
+        //    string econ = player.lastEnvironmentResult.ToString("0.00", CultureInfo.InvariantCulture);
+        //    string env = player.lastEconomicResult.ToString("0.00", CultureInfo.InvariantCulture);
+        //    //goal success probability should be obtained using a method which could be overriden according to the personality of the agent
+        //    events.Add(RolePlayCharacter.EventHelper.PropertyChange("BudgetExecution(" + econ + ","+ env +"," + env + ")", player.GetName(), this.name));
+        //}
+        events.Add(RolePlayCharacter.EventHelper.PropertyChange("DecaySimulation(" + GameGlobals.envState + ")", GetName(), this.name));
         Perceive(events);
 
         yield return null;
