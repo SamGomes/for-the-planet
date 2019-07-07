@@ -323,18 +323,19 @@ public class GameManager : MonoBehaviour {
             {
                 GameGlobals.gameSceneManager.LoadEndScene();
             }
-
-            GameGlobals.currGameRoundId++;
-            newRoundScreen.SetActive(true);
-
-            // @jbgrocha: Auto Continue for Batch Mode
-            if (GameGlobals.isSimulation)
+            else
             {
-                newRoundScreen.SetActive(false);
-                StartGameRoundForAllPlayers();
-                Debug.Log("In BatchMode : Start Next Round");
-            }
+                GameGlobals.currGameRoundId++;
+                newRoundScreen.SetActive(true);
 
+                // @jbgrocha: Auto Continue for Batch Mode
+                if (GameGlobals.isSimulation)
+                {
+                    newRoundScreen.SetActive(false);
+                    StartGameRoundForAllPlayers();
+                    Debug.Log("In BatchMode : Start Next Round");
+                }
+            }
         }
 
         //YieldedGameUpdateLoop();

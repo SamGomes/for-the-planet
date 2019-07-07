@@ -69,8 +69,12 @@ public class GameSetupFunctionalities : MonoBehaviour {
                     GameGlobals.players.Add(new TableEmotionalAIPlayer(chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name, 1.0f, currParam.fatimaRpcPath));
                     break;
 
-                case "AI_EMOTIONAL_DISRUPTIVECONSTRUCTIVE":
-                    GameGlobals.players.Add(new DisruptiveConstructiveEmotionalAIPlayer(chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name, 1.0f, currParam.fatimaRpcPath));
+                case "AI_EMOTIONAL_DISRUPTIVE":
+                    GameGlobals.players.Add(new DisruptiveConstructiveEmotionalAIPlayer(chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name, 1.0f, currParam.fatimaRpcPath, true));
+                    break;
+
+                case "AI_EMOTIONAL_CONSTRUCTIVE":
+                    GameGlobals.players.Add(new DisruptiveConstructiveEmotionalAIPlayer(chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name, 1.0f, currParam.fatimaRpcPath, false));
                     break;
 
                 case "AI_RANDOM":
@@ -177,24 +181,24 @@ public class GameSetupFunctionalities : MonoBehaviour {
                 button.onClick.AddListener(delegate
                 {
                     int index = new List<Button>(UIAIPlayerSelectionButtons).IndexOf(button);
-                    switch ((GameProperties.PlayerType) (index+4))
+                    switch (index+4)
                     {
                         //case GameProperties.PlayerType.SIMPLE:
                         //    manualGameParam.playerParameterizations.Add(new PlayerParameterization("Sam", "SIMPLE", false));
                         //    break;
-                        case GameProperties.PlayerType.COOPERATIVE:
+                        case 0:
                             manualGameParam.playerParameterizations.Add(new PlayerParameterization("Cristoph", "COOPERATIVE", "BALOON", false));
                             break;
-                        case GameProperties.PlayerType.GREEDY:
+                        case 1:
                             manualGameParam.playerParameterizations.Add(new PlayerParameterization("Giovanni", "GREEDY", "BALOON", false));
                             break;
-                        case GameProperties.PlayerType.BALANCED:
+                        case 2:
                             manualGameParam.playerParameterizations.Add(new PlayerParameterization("Brian", "BALANCED", "BALOON", false));
                             break;
-                        case GameProperties.PlayerType.UNBALANCED:
+                        case 3:
                             manualGameParam.playerParameterizations.Add(new PlayerParameterization("Ulrich", "UNBALANCED", "BALOON", false));
                             break;
-                        case GameProperties.PlayerType.TITFORTAT:
+                        case 4:
                             manualGameParam.playerParameterizations.Add(new PlayerParameterization("Tim", "TITFORTAT", "BALOON", false));
                             break;
                     }
@@ -273,7 +277,7 @@ public class GameSetupFunctionalities : MonoBehaviour {
             playerLogEntry["currGameId"] = GameGlobals.currGameId.ToString();
             playerLogEntry["Id"] = currPlayer.GetId().ToString();
             playerLogEntry["Name"] = currPlayer.GetName();
-            playerLogEntry["Type"] = currPlayer.GetType().ToString();
+            playerLogEntry["Type"] = currPlayer.GetPlayerType();
             StartCoroutine(GameGlobals.gameLogManager.WriteToLog("fortheplanetlogs","playerslog", playerLogEntry));
         }
 

@@ -152,7 +152,7 @@ public class EndScreenFunctionalities : MonoBehaviour
             float totalInv = econInv + envInv;
 
             gameLogEntry["playerId_" + player.GetId() + "_pos"] = i.ToString();
-            gameLogEntry["playerId_" + player.GetId() + "_type"] = player.GetType().ToString();
+            gameLogEntry["playerId_" + player.GetId() + "_type"] = player.GetPlayerType();
             gameLogEntry["playerId_" + player.GetId() + "_econ_state"] = player.GetMoney().ToString();
             gameLogEntry["playerId_" + player.GetId() + "_econ_history_perc"] = (econInv / totalInv).ToString();
             gameLogEntry["playerId_" + player.GetId() + "_env_history_perc"] = (envInv / totalInv).ToString();

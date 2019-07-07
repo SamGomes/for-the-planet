@@ -265,12 +265,14 @@ public class TableEmotionalAIPlayer : EmotionalAIPlayer
 
 public class DisruptiveConstructiveEmotionalAIPlayer : EmotionalAIPlayer
 {
+    bool isDisruptive;
     float pDisrupt;
     Dictionary<string, float> pDeltas;
 
-    public DisruptiveConstructiveEmotionalAIPlayer(InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name, float updateDelay, string fatimaRpcPath) :
+    public DisruptiveConstructiveEmotionalAIPlayer(InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name, float updateDelay, string fatimaRpcPath, bool isDisruptive) :
        base(interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name, updateDelay, fatimaRpcPath)
     {
+        this.isDisruptive = isDisruptive;
         pDisrupt = 0.5f;
 
         pDeltas = new Dictionary<string, float>();
@@ -283,6 +285,19 @@ public class DisruptiveConstructiveEmotionalAIPlayer : EmotionalAIPlayer
            pDeltas["Anger"] = pDeltas["Shame"] = pDeltas["Reproach"] = pDeltas["Hate"] = 0.1f;
     }
 
+    public override string GetPlayerType()
+    {
+        if (isDisruptive)
+        {
+            return "Disruptive";
+        }
+        else
+        {
+            return "Constructive";
+
+        }
+    }
+
     public override void Act()
     {
         List<EmotionalAppraisal.DTOs.EmotionDTO> emotionList = this.GetAllActiveEmotions();
@@ -290,18 +305,18 @@ public class DisruptiveConstructiveEmotionalAIPlayer : EmotionalAIPlayer
         List<string> emotionStrList = new List<string>();
         foreach (EmotionalAppraisal.DTOs.EmotionDTO dto in emotionList)
         {
-            Dictionary<string, string> eventLogEntry = new Dictionary<string, string>();
-            eventLogEntry["currSessionId"] = GameGlobals.currSessionId.ToString();
-            eventLogEntry["currGameId"] = GameGlobals.currGameId.ToString();
-            eventLogEntry["currGameRoundId"] = GameGlobals.currGameRoundId.ToString();
-            eventLogEntry["currGamePhase"] = gameManagerRef.GetCurrGamePhase().ToString();
-            eventLogEntry["playerId"] = this.id.ToString();
-            eventLogEntry["playerType"] = this.GetType().ToString();
-            eventLogEntry["emotionType"] = dto.Type;
-            eventLogEntry["intensity"] = dto.Intensity.ToString();
-            eventLogEntry["target"] = dto.Target;
-            eventLogEntry["causeEventName"] = dto.CauseEventName;
-            playerMonoBehaviourFunctionalities.StartCoroutine(GameGlobals.gameLogManager.WriteToLog("fortheplanetlogs", "feltEmotionsLog", eventLogEntry));
+            //Dictionary<string, string> eventLogEntry = new Dictionary<string, string>();
+            //eventLogEntry["currSessionId"] = GameGlobals.currSessionId.ToString();
+            //eventLogEntry["currGameId"] = GameGlobals.currGameId.ToString();
+            //eventLogEntry["currGameRoundId"] = GameGlobals.currGameRoundId.ToString();
+            //eventLogEntry["currGamePhase"] = gameManagerRef.GetCurrGamePhase().ToString();
+            //eventLogEntry["playerId"] = this.id.ToString();
+            //eventLogEntry["playerType"] = this.GetPlayerType();
+            //eventLogEntry["emotionType"] = dto.Type;
+            //eventLogEntry["intensity"] = dto.Intensity.ToString();
+            //eventLogEntry["target"] = dto.Target;
+            //eventLogEntry["causeEventName"] = dto.CauseEventName;
+            //playerMonoBehaviourFunctionalities.StartCoroutine(GameGlobals.gameLogManager.WriteToLog("fortheplanetlogs", "feltEmotionsLog", eventLogEntry));
 
             if (!emotionStrList.Contains(dto.Type))
             {
@@ -325,13 +340,15 @@ public class DisruptiveConstructiveEmotionalAIPlayer : EmotionalAIPlayer
         }
 
         int econ = 0;
-        for (int i = 0; i < 5; i++){
+        for (int i = 0; i < (GameGlobals.roundBudget); i++){
             if (UnityEngine.Random.Range(0.0f, 1.0f) < pDisrupt)
             {
                 econ++;
             }
         }
         int env = GameGlobals.roundBudget - econ;
+
+        Debug.Log("(econ:"+ econ+"; env:"+env+")");
 
         investmentIntentions[GameProperties.InvestmentTarget.ENVIRONMENT] = env;
         investmentIntentions[GameProperties.InvestmentTarget.ECONOMIC] = econ;
@@ -340,7 +357,32 @@ public class DisruptiveConstructiveEmotionalAIPlayer : EmotionalAIPlayer
     }
 
 
-    protected float CalcGoalSuccessProbability(float status)
+    protected float CalcGoalSuccessProbabilityInvestment(float status, int numDice)
+    {
+        float gsp = 0.0f;
+        float treshold = 0.0f; //property
+
+        float numDecayDice = GameGlobals.environmentDecayBudget; //property
+        float maxInvest = 6 * numDice;
+        float avgInvest = 3 * numDice;
+        float minInvest = 1 * numDice;
+
+        if (status >= treshold + maxInvest)
+        {
+            gsp = 1;
+        }
+        else if (status >= treshold + avgInvest)
+        {
+            gsp = 0.75f;
+        }
+        else if (status >= treshold + minInvest)
+        {
+            gsp = 0.25f;
+        }
+        return gsp;
+    }
+
+    protected float CalcGoalSuccessProbabilityDecay(float status)
     {
         float gsp = 0.0f;
         float treshold = 0.0f; //property
@@ -369,18 +411,19 @@ public class DisruptiveConstructiveEmotionalAIPlayer : EmotionalAIPlayer
     {
         yield return base.AutoBudgetExecution();
 
-
         float status = 0.0f;
-        if (this.fatimaRpcPath == "disruptive.rpc")
+        float gsp = 0.0f;
+        if (isDisruptive)
         {
+            gsp = CalcGoalSuccessProbabilityInvestment(status, this.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ECONOMIC]);
             status = this.GetMoney();
         }
         else
         {
+            gsp = CalcGoalSuccessProbabilityInvestment(status, this.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT]);
             status = GameGlobals.envState;
 
         }
-        float gsp = CalcGoalSuccessProbability(status);
         
         List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
         events.Add(RolePlayCharacter.EventHelper.PropertyChange("BudgetExecution(" + gsp + ")", GetName(), this.name));
@@ -393,7 +436,7 @@ public class DisruptiveConstructiveEmotionalAIPlayer : EmotionalAIPlayer
         yield return base.AutoInvestmentExecution();
 
         float status = 0.0f;
-        if (this.fatimaRpcPath == "disruptive.rpc")
+        if (isDisruptive)
         {
             status = this.GetMoney();
         }
@@ -402,7 +445,7 @@ public class DisruptiveConstructiveEmotionalAIPlayer : EmotionalAIPlayer
             status = GameGlobals.envState;
 
         }
-        float gsp = CalcGoalSuccessProbability(status);
+        float gsp = CalcGoalSuccessProbabilityDecay(status);
 
         List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
         events.Add(RolePlayCharacter.EventHelper.PropertyChange("DecaySimulation(" + gsp + ")", GetName(), this.name));

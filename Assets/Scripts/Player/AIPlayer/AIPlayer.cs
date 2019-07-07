@@ -265,7 +265,7 @@ public class AIPlayerRandom : AIPlayer
     public override IEnumerator AutoBudgetAllocation()
     {
 
-        int environmentInvestment = UnityEngine.Random.Range(1,5);
+        int environmentInvestment = UnityEngine.Random.Range(0,GameGlobals.roundBudget);
         int economyInvestment = GameGlobals.roundBudget - environmentInvestment;
 
         // @jbgrocha: Fatima Speech Act (emotional engine call) - Start of Budget Allocation

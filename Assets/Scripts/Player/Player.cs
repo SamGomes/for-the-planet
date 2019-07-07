@@ -222,6 +222,7 @@ public class Player
         return this.investmentHistory;
     }
 
+
     public virtual void BudgetAllocationPhaseRequest()
     {
         //this.playerSelfDisablerUI.SetActive(false);
@@ -332,17 +333,15 @@ public class Player
 
     public void AddInvestment(GameProperties.InvestmentTarget target, int amount)
     {
-        
         Dictionary<string, string> eventLogEntry = new Dictionary<string, string>();
         eventLogEntry["currSessionId"] = GameGlobals.currSessionId.ToString();
         eventLogEntry["currGameId"] = GameGlobals.currGameId.ToString();
         eventLogEntry["currGameRoundId"] = GameGlobals.currGameRoundId.ToString();
         eventLogEntry["playerId"] = this.id.ToString();
-        eventLogEntry["playerType"] = this.GetType().ToString();
+        eventLogEntry["playerType"] = this.GetPlayerType();
         eventLogEntry["investmentTarget"] = target.ToString();
         eventLogEntry["amount"] = amount.ToString();
         playerMonoBehaviourFunctionalities.StartCoroutine(GameGlobals.gameLogManager.WriteToLog("fortheplanetlogs", "playerInvestmentslog", eventLogEntry));
-
 
         if (unallocatedBudget == 0)
         {
@@ -452,6 +451,11 @@ public class Player
         this.lastEconomicResult = environmentResult;
     }
 
+
+    public virtual string GetPlayerType()
+    {
+        return this.GetType().ToString();
+    }
 
     public virtual void Perceive(List<WellFormedNames.Name> events) { }
     public virtual List<ActionLibrary.IAction> GetActionList() { return new List<ActionLibrary.IAction>(); }
