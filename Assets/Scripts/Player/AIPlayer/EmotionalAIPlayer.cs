@@ -31,7 +31,9 @@ public class EmotionalAIPlayer: AIPlayer
         investmentIntentions[GameProperties.InvestmentTarget.ECONOMIC] = 3;
         investmentIntentions[GameProperties.InvestmentTarget.ENVIRONMENT] = 2;
 
-        playerMonoBehaviourFunctionalities.StartCoroutine(EmotionalUpdateLoop(updateDelay));
+        //if (!GameGlobals.isSimulation) {
+        //    playerMonoBehaviourFunctionalities.StartCoroutine(EmotionalUpdateLoop(updateDelay));
+        //}
     }
 
     public void InitRPC(string fatimaRpcPath)
@@ -79,7 +81,7 @@ public class EmotionalAIPlayer: AIPlayer
     public virtual void Act() { }
 
 
-    public IEnumerator EmotionalUpdateLoop(float delay)
+    protected void UpdateStep()
     {
         if (unperceivedEvents.Count > 0)
         {
@@ -90,13 +92,16 @@ public class EmotionalAIPlayer: AIPlayer
         {
             Act();
         }
-        catch(Exception e)
-        {
-            int y = 2;
-        }
+        catch (Exception e)
+        { }
 
 
         rpc.Update();
+    }
+
+    public IEnumerator EmotionalUpdateLoop(float delay)
+    {
+        UpdateStep();
         yield return new WaitForSeconds(delay);
         playerMonoBehaviourFunctionalities.StartCoroutine(EmotionalUpdateLoop(delay));
     }
@@ -113,6 +118,12 @@ public class EmotionalAIPlayer: AIPlayer
         //events.Add(RolePlayCharacter.EventHelper.PropertyChange("HistoryDisplay(" + econS + "," + envS + ")", GetName(), this.name));
         events.Add(RolePlayCharacter.EventHelper.PropertyChange("BeforeBudgetAllocation(" + money.ToString("0.00", CultureInfo.InvariantCulture) + "," + GameGlobals.envState.ToString("0.00", CultureInfo.InvariantCulture) + ")", this.name, this.name));
         Perceive(events);
+        //in simulation compute the update imediately after
+        //if (GameGlobals.isSimulation)
+        //{
+            UpdateStep();
+        //}
+
 
         base.AutoBudgetAllocation();
 
@@ -137,6 +148,11 @@ public class EmotionalAIPlayer: AIPlayer
             events.Add(RolePlayCharacter.EventHelper.PropertyChange("HistoryDisplay(" + econ + ","+ env +")", player.GetName(), this.name));
         }
         Perceive(events);
+        //in simulation compute the update imediately after
+        //if (GameGlobals.isSimulation)
+        //{
+        UpdateStep();
+        //}
 
         yield return null;
     }
@@ -158,6 +174,11 @@ public class EmotionalAIPlayer: AIPlayer
         //}
         events.Add(RolePlayCharacter.EventHelper.PropertyChange("BudgetExecution(" + GameGlobals.envState + ")", GetName(), this.name));
         Perceive(events);
+        //in simulation compute the update imediately after
+        //if (GameGlobals.isSimulation)
+        //{
+        UpdateStep();
+        //}
 
         // @jbgrocha: Fatima Speech Act (emotional engine call) - After Budget Dice Rolls
     }
@@ -176,6 +197,11 @@ public class EmotionalAIPlayer: AIPlayer
         //}
         events.Add(RolePlayCharacter.EventHelper.PropertyChange("DecaySimulation(" + GameGlobals.envState + ")", GetName(), this.name));
         Perceive(events);
+        //in simulation compute the update imediately after
+        //if (GameGlobals.isSimulation)
+        //{
+        UpdateStep();
+        //}
 
         yield return null;
     }
@@ -241,23 +267,44 @@ public class DisruptiveConstructiveEmotionalAIPlayer : EmotionalAIPlayer
     float pDisrupt;
     Dictionary<string, float> pDeltas;
 
-
     public DisruptiveConstructiveEmotionalAIPlayer(InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name, float updateDelay, string fatimaRpcPath) :
        base(interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name, updateDelay, fatimaRpcPath)
     {
-        pDisrupt = 0.0f;
+        pDisrupt = 0.5f;
+
+        pDeltas = new Dictionary<string, float>();
+        pDeltas["Happy-for"] = pDeltas["Gloating"] = pDeltas["Satisfaction"] = 
+            pDeltas["Relief"] = pDeltas["Hope"] = pDeltas["Joy"] = pDeltas["Gratification"] = 
+            pDeltas["Gratitude"] = pDeltas["Pride"] = pDeltas["Admiration"] = pDeltas["Love"] = -0.1f;
+
+        pDeltas["Resentment"] = pDeltas["Pity"] = pDeltas["Fear-confirmed"] =
+           pDeltas["Disappointment"] = pDeltas["Fear"] = pDeltas["Distress"] = pDeltas["Remorse"] =
+           pDeltas["Anger"] = pDeltas["Shame"] = pDeltas["Reproach"] = pDeltas["Hate"] = 0.1f;
     }
 
     public override void Act()
     {
         List<EmotionalAppraisal.DTOs.EmotionDTO> emotionList = this.GetAllActiveEmotions();
+        emotionList = emotionList.Distinct().ToList();
+        string emotionListStr = "";
         foreach (EmotionalAppraisal.DTOs.EmotionDTO dto in emotionList)
         {
             pDisrupt += pDeltas[dto.Type];
+            emotionListStr += dto.Type + ",";
+        }
+        Debug.Log("Emotion List: " + emotionListStr);
+
+        if(pDisrupt> 0.9f)
+        {
+            pDisrupt = 0.9f;
+        }
+        if (pDisrupt < 0.1f)
+        {
+            pDisrupt = 0.1f;
         }
 
         int econ = 0;
-        for (int i=0; i < 5; i++){
+        for (int i = 0; i < 5; i++){
             if (UnityEngine.Random.Range(0.0f, 1.0f) < pDisrupt)
             {
                 econ++;
@@ -268,6 +315,6 @@ public class DisruptiveConstructiveEmotionalAIPlayer : EmotionalAIPlayer
         investmentIntentions[GameProperties.InvestmentTarget.ENVIRONMENT] = env;
         investmentIntentions[GameProperties.InvestmentTarget.ECONOMIC] = econ;
 
-        pDisrupt = 0.0f;
+        pDisrupt = 0.5f;
     }
 }

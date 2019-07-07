@@ -91,9 +91,9 @@ public class MongoDBLogManager : LogManager
     {
         //string query = "&s={\"_id\": -1}&l=1"; //query which returns the last game result
         PendingCall call = new PendingCall(ConvertEntityToGetRequest(database, table, query),
-             delegate (string lastGameEntry)
+             delegate (string result)
              {
-                 yieldedReactionToGet(lastGameEntry);
+                 yieldedReactionToGet(result);
                  return 0;
              });
         pendingCalls.Add(call);

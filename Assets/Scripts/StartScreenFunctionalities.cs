@@ -86,7 +86,8 @@ public class StartScreenFunctionalities : MonoBehaviour {
         
         GameGlobals.players = new List<Player>();
 
-        GameGlobals.gameLogManager = new MongoDBLogManager();
+        GameGlobals.gameLogManager = new SilentLogManager();
+        //GameGlobals.gameLogManager = new MongoDBLogManager();
         GameGlobals.gameLogManager.InitLogs(GameGlobals.monoBehaviourFunctionalities);
 
         GameGlobals.roundBudget = configs.roundBudget;
