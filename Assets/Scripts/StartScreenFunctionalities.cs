@@ -86,11 +86,13 @@ public class StartScreenFunctionalities : MonoBehaviour {
         
         GameGlobals.players = new List<Player>();
 
-        GameGlobals.gameLogManager = new SilentLogManager();
-        //GameGlobals.gameLogManager = new MongoDBLogManager();
+        //GameGlobals.gameLogManager = new SilentLogManager();
+        GameGlobals.gameLogManager = new MongoDBLogManager();
         GameGlobals.gameLogManager.InitLogs(GameGlobals.monoBehaviourFunctionalities);
 
         GameGlobals.roundBudget = configs.roundBudget;
+        GameGlobals.environmentDecayBudget = configs.environmentDecayBudget;
+        GameGlobals.playerDecayBudget = configs.playerDecayBudget;
 
         //only generate session data in the first game
         if (GameGlobals.currGameId == 1)

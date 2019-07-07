@@ -11,7 +11,7 @@
 							"EventName": "Event(Property-Change, SELF, BeforeBudgetAllocation([econ], [env]), [target])",
 							"Conditions":
 								{
-									"Set": ["Math(Math([econ], Minus, 0.5), Times, 20) = [d]"]
+									"Set": ["Math(Math([env], Minus, 0.5), Times, 20) = [d]"]
 								},
 							"AppraisalVariables":
 								{
@@ -27,7 +27,7 @@
 							"EventName": "Event(Property-Change, *, HistoryDisplay([econ], [env]), [target])",
 							"Conditions":
 								{
-									"Set": ["Math(Math(Math([econ], Minus, [env]), Div, Math([env], Plus, [econ])), Times, 10) = [p]"]
+									"Set": ["Math(Math(Math([env], Minus, [econ]), Div, Math([env], Plus, [econ])), Times, 10) = [p]"]
 								},
 							"AppraisalVariables":
 								{

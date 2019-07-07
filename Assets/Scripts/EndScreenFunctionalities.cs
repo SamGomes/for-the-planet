@@ -51,31 +51,14 @@ public class EndScreenFunctionalities : MonoBehaviour
     private IEnumerator LoadMainScreenAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
-
-        mainScene.SetActive(true);
-        LoadEndScreenUIElements();        
+        LoadEndScreenUIElements();
     }
 
     private void LoadEndScreenUIElements()
     {
         infoPoppupNeutralRef = new PopupScreenFunctionalities(false, null, null, poppupPrefab, mainScene, this.GetComponent<MonoBehaviourFunctionalities>(), Resources.Load<Sprite>("Textures/UI/Icons/Info"), new Color(0.9f, 0.9f, 0.9f));
 
-        GameGlobals.players.Sort(SortPlayersByMoney);
-        int numPlayers = GameGlobals.players.Count;
-        for (int i = 0; i < numPlayers; i++)
-        {
-            Player currPlayer = GameGlobals.players[i];
-            GameObject newTableEntry = Object.Instantiate(tableEntryPrefab, economicTableUI.transform);
-            newTableEntry.GetComponentsInChildren<Text>()[0].text = currPlayer.GetName();
-            newTableEntry.GetComponentsInChildren<Text>()[1].text = currPlayer.GetMoney()*100.0f + " %";
-        }
-        for (int i = 0; i < numPlayers; i++)
-        {
-            Player currPlayer = GameGlobals.players[i];
-            GameObject newTableEntry = Object.Instantiate(tableEntryPrefab, environmentContributionsTableUI.transform);
-            newTableEntry.GetComponentsInChildren<Text>()[0].text = currPlayer.GetName();
-            newTableEntry.GetComponentsInChildren<Text>()[1].text = currPlayer.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ENVIRONMENT].ToString();
-        }
+        mainScene.SetActive(true);
 
         //Text UIEndGameButtonText = UIEndGameButton.GetComponentInChildren<Text>();
         Text UIRestartGameButtonText = UIRestartGameButton.GetComponentInChildren<Text>();
@@ -123,7 +106,7 @@ public class EndScreenFunctionalities : MonoBehaviour
     //in order to sort the players list by money earned
     public int SortPlayersByMoney(Player p1, Player p2)
     {
-        return -1*(p1.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ECONOMIC]).CompareTo(p2.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ECONOMIC]);
+        return -1*(p1.GetMoney().CompareTo(p2.GetMoney()));
     }
 
 
@@ -136,6 +119,24 @@ public class EndScreenFunctionalities : MonoBehaviour
     IEnumerator YieldedStart()
     {
 
+
+        GameGlobals.players.Sort(SortPlayersByMoney);
+        int numPlayers = GameGlobals.players.Count;
+        for (int i = 0; i < numPlayers; i++)
+        {
+            Player currPlayer = GameGlobals.players[i];
+            GameObject newTableEntry = Object.Instantiate(tableEntryPrefab, economicTableUI.transform);
+            newTableEntry.GetComponentsInChildren<Text>()[0].text = currPlayer.GetName();
+            newTableEntry.GetComponentsInChildren<Text>()[1].text = currPlayer.GetMoney() * 100.0f + " %";
+        }
+        for (int i = 0; i < numPlayers; i++)
+        {
+            Player currPlayer = GameGlobals.players[i];
+            GameObject newTableEntry = Object.Instantiate(tableEntryPrefab, environmentContributionsTableUI.transform);
+            newTableEntry.GetComponentsInChildren<Text>()[0].text = currPlayer.GetName();
+            newTableEntry.GetComponentsInChildren<Text>()[1].text = currPlayer.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ENVIRONMENT].ToString();
+        }
+
         Dictionary<string, string> gameLogEntry = new Dictionary<string, string>();
         gameLogEntry["sessionId"] = GameGlobals.currSessionId.ToString();
         gameLogEntry["currGameId"] = GameGlobals.currGameId.ToString();
@@ -143,14 +144,24 @@ public class EndScreenFunctionalities : MonoBehaviour
         gameLogEntry["outcome"] = GameGlobals.currGameState.ToString();
 
         gameLogEntry["env_state"] = GameGlobals.envState.ToString();
-        foreach (Player player in GameGlobals.players)
+        for (int i = 0; i < GameGlobals.players.Count; i++)
         {
-            gameLogEntry["playerId_"+ player.GetId() + "_econ_state"] = player.GetMoney().ToString();
+            Player player = GameGlobals.players[i];
+            float econInv = (float)player.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ECONOMIC];
+            float envInv = (float)player.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ENVIRONMENT];
+            float totalInv = econInv + envInv;
+
+            gameLogEntry["playerId_" + player.GetId() + "_pos"] = i.ToString();
+            gameLogEntry["playerId_" + player.GetId() + "_type"] = player.GetType().ToString();
+            gameLogEntry["playerId_" + player.GetId() + "_econ_state"] = player.GetMoney().ToString();
+            gameLogEntry["playerId_" + player.GetId() + "_econ_history_perc"] = (econInv / totalInv).ToString();
+            gameLogEntry["playerId_" + player.GetId() + "_env_history_perc"] = (envInv / totalInv).ToString();
         }
 
-        yield return GameGlobals.gameLogManager.UpdateLog("fortheplanetlogs","gameresultslog", "&q={\"currGameId\": \"" + GameGlobals.currGameId.ToString() + "\", \"sessionId\":\"" + GameGlobals.currSessionId.ToString() + "\"}", gameLogEntry);
+        yield return GameGlobals.gameLogManager.UpdateLog("fortheplanetlogs", "gameresultslog", "&q={\"currGameId\": \"" + GameGlobals.currGameId.ToString() + "\", \"sessionId\":\"" + GameGlobals.currSessionId.ToString() + "\"}", gameLogEntry);
 
-        
+
+
 
         if (GameGlobals.isSimulation)
         {

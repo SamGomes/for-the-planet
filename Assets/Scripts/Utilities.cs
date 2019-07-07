@@ -43,6 +43,8 @@ public static class GameGlobals
     public static bool isSimulation;
 
     public static int roundBudget;
+    public static int environmentDecayBudget;
+    public static int playerDecayBudget;
 }
 
 public static class GameProperties
@@ -53,24 +55,18 @@ public static class GameProperties
         VICTORY, //reached the end of the maximum rounds
         LOSS //catastrophic
     }
+    public enum GamePhase
+    {
+        BUDGET_ALLOCATION,
+        HISTORY_DISPLAY,
+        BUDGET_EXECUTION,
+        INVESTMENT_SIMULATION
+    }
 
     public enum InvestmentTarget
     {
         ENVIRONMENT,
         ECONOMIC
-    }
-
-    public enum PlayerType
-    {
-        AIPLAYER_NOT_ASSIGNED,
-        HUMAN,
-        SIMPLE,
-        RANDOM,
-        COOPERATIVE,
-        GREEDY,
-        BALANCED,
-        UNBALANCED,
-        TITFORTAT
     }
 
     public enum NGType
@@ -104,6 +100,8 @@ public class DynamicallyConfigurableGameProperties
     public List<SessionParameterization> possibleParameterizations = new List<SessionParameterization>(); //only used when generating the AI types automatically (for example when "isSimulation=true or isAutomaticBriefing==true")
 
     public int roundBudget = 5;
+    public int environmentDecayBudget = 5;
+    public int playerDecayBudget = 5;
 }
 
 [Serializable]

@@ -42,6 +42,8 @@ public class GameManager : MonoBehaviour {
     private DynamicSlider envDynamicSlider;
     public bool isAutomaticPhaseSkipEnabled;
 
+    public GameProperties.GamePhase currGamePhase;
+
     private bool gameMainSceneFinished;
     private int interruptionRequests; //changed whenever an interruption occurs (either a poppup, warning, etc.)
    
@@ -70,6 +72,8 @@ public class GameManager : MonoBehaviour {
    
     void Start()
     {
+        currGamePhase = GameProperties.GamePhase.BUDGET_ALLOCATION;
+
         //assign some game globals
         GameGlobals.gameManager = this;
         GameGlobals.currGameState = GameProperties.GameState.NOT_FINISHED;
@@ -172,7 +176,6 @@ public class GameManager : MonoBehaviour {
         yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, numTokensForEconomy));
 
         int economyResult = diceManager.GetCurrDiceTotal();
-
         float economicIncrease = (float) economyResult / 100.0f;
 
         yield return StartCoroutine(currPlayer.SetEconomicResult(economicIncrease));
@@ -221,6 +224,8 @@ public class GameManager : MonoBehaviour {
         //end of first phase; trigger second phase
         if (numPlayersToAllocateBudget == 0)
         {
+            currGamePhase = GameProperties.GamePhase.HISTORY_DISPLAY;
+
             //Debug.Log("running2...");
             StartDisplayHistoryPhase();
             numPlayersToAllocateBudget = GameGlobals.players.Count;
@@ -229,6 +234,8 @@ public class GameManager : MonoBehaviour {
         //end of second phase;
         if (numPlayersToDisplayHistory == 0)
         {
+            currGamePhase = GameProperties.GamePhase.BUDGET_EXECUTION;
+
             numPlayersToDisplayHistory = GameGlobals.players.Count;
             if (!GameGlobals.isSimulation)
             {
@@ -240,6 +247,8 @@ public class GameManager : MonoBehaviour {
         //end of third phase
         if (numPlayersToExecuteBudget == 0)
         {
+            currGamePhase = GameProperties.GamePhase.INVESTMENT_SIMULATION;
+
             simulateInvestmentScreen.SetActive(true); //StartInvestmentSimulationPhase(); is called in this screen
             numPlayersToExecuteBudget = GameGlobals.players.Count;
 
@@ -253,10 +262,12 @@ public class GameManager : MonoBehaviour {
         //end of forth phase
         if (numPlayersToSimulateInvestment == 0)
         {
+            currGamePhase = GameProperties.GamePhase.BUDGET_ALLOCATION;
+
             numPlayersToSimulateInvestment = GameGlobals.players.Count;
 
             string diceOverlayTitle = "Simulating environment decay ...";
-            yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, 7));
+            yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, GameGlobals.environmentDecayBudget));
 
             int environmentDecay = diceManager.GetCurrDiceTotal();
             float envDecay = ((float) environmentDecay / 100.0f);
@@ -276,7 +287,7 @@ public class GameManager : MonoBehaviour {
             foreach (Player player in GameGlobals.players)
             {
                 diceOverlayTitle = "Simulating economic decay ...";
-                yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, 2));
+                yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, GameGlobals.playerDecayBudget));
 
                 int economyDecay = diceManager.GetCurrDiceTotal();
                 float economicDecay = ((float) economyDecay / 100.0f);
@@ -502,9 +513,9 @@ public class GameManager : MonoBehaviour {
     {
         return GameGlobals.players[this.currPlayerIndex];
     }
-    public int GetCurrSpeakingPlayerId()
+    public GameProperties.GamePhase GetCurrGamePhase()
     {
-        return this.currSpeakingPlayerId;
+        return this.currGamePhase;
     }
 
     private IEnumerator ChangeActivePlayerUI(Player player)

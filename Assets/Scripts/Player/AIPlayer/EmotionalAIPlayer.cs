@@ -17,13 +17,14 @@ public class EmotionalAIPlayer: AIPlayer
     private List<WellFormedNames.Name> unperceivedEvents;
 
     protected Dictionary<GameProperties.InvestmentTarget, int> investmentIntentions;
-
+    protected string fatimaRpcPath;
 
     public EmotionalAIPlayer(InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name, float updateDelay, string fatimaRpcPath) :
         base(interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name)
     {
         unperceivedEvents = new List<WellFormedNames.Name>();
         InitRPC(fatimaRpcPath);
+        this.fatimaRpcPath = fatimaRpcPath;
 
         investmentIntentions = new Dictionary<GameProperties.InvestmentTarget, int>();
 
@@ -164,21 +165,21 @@ public class EmotionalAIPlayer: AIPlayer
         //// @jbgrocha: Fatima Speech Act (emotional engine call) - Before Budget Dice Rolls
         //yield return ApplyInvestments();
 
-        List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
-        //foreach(Player player in GameGlobals.players)
-        //{
-        //    string econ = player.lastEnvironmentResult.ToString("0.00", CultureInfo.InvariantCulture);
-        //    string env = player.lastEconomicResult.ToString("0.00", CultureInfo.InvariantCulture);
-        //    //goal success probability should be obtained using a method which could be overriden according to the personality of the agent
-        //    events.Add(RolePlayCharacter.EventHelper.PropertyChange("BudgetExecution(" + econ + ","+ env +"," + env + ")", player.GetName(), this.name));
-        //}
-        events.Add(RolePlayCharacter.EventHelper.PropertyChange("BudgetExecution(" + GameGlobals.envState + ")", GetName(), this.name));
-        Perceive(events);
-        //in simulation compute the update imediately after
-        //if (GameGlobals.isSimulation)
-        //{
-        UpdateStep();
-        //}
+        //List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
+        ////foreach(Player player in GameGlobals.players)
+        ////{
+        ////    string econ = player.lastEnvironmentResult.ToString("0.00", CultureInfo.InvariantCulture);
+        ////    string env = player.lastEconomicResult.ToString("0.00", CultureInfo.InvariantCulture);
+        ////    //goal success probability should be obtained using a method which could be overriden according to the personality of the agent
+        ////    events.Add(RolePlayCharacter.EventHelper.PropertyChange("BudgetExecution(" + econ + ","+ env +"," + env + ")", player.GetName(), this.name));
+        ////}
+        //events.Add(RolePlayCharacter.EventHelper.PropertyChange("BudgetExecution(" + GameGlobals.envState + ")", GetName(), this.name));
+        //Perceive(events);
+        ////in simulation compute the update imediately after
+        ////if (GameGlobals.isSimulation)
+        ////{
+        //UpdateStep();
+        ////}
 
         // @jbgrocha: Fatima Speech Act (emotional engine call) - After Budget Dice Rolls
     }
@@ -187,21 +188,21 @@ public class EmotionalAIPlayer: AIPlayer
     {
         yield return base.AutoInvestmentExecution();
 
-        List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
-        //foreach(Player player in GameGlobals.players)
-        //{
-        //    string econ = player.lastEnvironmentResult.ToString("0.00", CultureInfo.InvariantCulture);
-        //    string env = player.lastEconomicResult.ToString("0.00", CultureInfo.InvariantCulture);
-        //    //goal success probability should be obtained using a method which could be overriden according to the personality of the agent
-        //    events.Add(RolePlayCharacter.EventHelper.PropertyChange("BudgetExecution(" + econ + ","+ env +"," + env + ")", player.GetName(), this.name));
-        //}
-        events.Add(RolePlayCharacter.EventHelper.PropertyChange("DecaySimulation(" + GameGlobals.envState + ")", GetName(), this.name));
-        Perceive(events);
-        //in simulation compute the update imediately after
-        //if (GameGlobals.isSimulation)
-        //{
-        UpdateStep();
-        //}
+        //List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
+        ////foreach(Player player in GameGlobals.players)
+        ////{
+        ////    string econ = player.lastEnvironmentResult.ToString("0.00", CultureInfo.InvariantCulture);
+        ////    string env = player.lastEconomicResult.ToString("0.00", CultureInfo.InvariantCulture);
+        ////    //goal success probability should be obtained using a method which could be overriden according to the personality of the agent
+        ////    events.Add(RolePlayCharacter.EventHelper.PropertyChange("BudgetExecution(" + econ + ","+ env +"," + env + ")", player.GetName(), this.name));
+        ////}
+        //events.Add(RolePlayCharacter.EventHelper.PropertyChange("DecaySimulation(" + GameGlobals.envState + ")", GetName(), this.name));
+        //Perceive(events);
+        ////in simulation compute the update imediately after
+        ////if (GameGlobals.isSimulation)
+        ////{
+        //UpdateStep();
+        ////}
 
         yield return null;
     }
@@ -285,22 +286,42 @@ public class DisruptiveConstructiveEmotionalAIPlayer : EmotionalAIPlayer
     public override void Act()
     {
         List<EmotionalAppraisal.DTOs.EmotionDTO> emotionList = this.GetAllActiveEmotions();
-        emotionList = emotionList.Distinct().ToList();
-        string emotionListStr = "";
+
+        List<string> emotionStrList = new List<string>();
         foreach (EmotionalAppraisal.DTOs.EmotionDTO dto in emotionList)
         {
-            pDisrupt += pDeltas[dto.Type];
-            emotionListStr += dto.Type + ",";
-        }
-        Debug.Log("Emotion List: " + emotionListStr);
+            Dictionary<string, string> eventLogEntry = new Dictionary<string, string>();
+            eventLogEntry["currSessionId"] = GameGlobals.currSessionId.ToString();
+            eventLogEntry["currGameId"] = GameGlobals.currGameId.ToString();
+            eventLogEntry["currGameRoundId"] = GameGlobals.currGameRoundId.ToString();
+            eventLogEntry["currGamePhase"] = gameManagerRef.GetCurrGamePhase().ToString();
+            eventLogEntry["playerId"] = this.id.ToString();
+            eventLogEntry["playerType"] = this.GetType().ToString();
+            eventLogEntry["emotionType"] = dto.Type;
+            eventLogEntry["intensity"] = dto.Intensity.ToString();
+            eventLogEntry["target"] = dto.Target;
+            eventLogEntry["causeEventName"] = dto.CauseEventName;
+            playerMonoBehaviourFunctionalities.StartCoroutine(GameGlobals.gameLogManager.WriteToLog("fortheplanetlogs", "feltEmotionsLog", eventLogEntry));
 
-        if(pDisrupt> 0.9f)
-        {
-            pDisrupt = 0.9f;
+            if (!emotionStrList.Contains(dto.Type))
+            {
+                emotionStrList.Add(dto.Type);
+            }
+            //pDisrupt += pDeltas[dto.Type];
         }
-        if (pDisrupt < 0.1f)
+        foreach (string emotionType in emotionStrList)
         {
-            pDisrupt = 0.1f;
+            pDisrupt += pDeltas[emotionType];
+        }
+        Debug.Log("Emotion List: " + emotionStrList.ToArray().ToString());
+
+        if(pDisrupt > 0.95f)
+        {
+            pDisrupt = 0.95f;
+        }
+        if (pDisrupt < 0.05f)
+        {
+            pDisrupt = 0.05f;
         }
 
         int econ = 0;
@@ -317,4 +338,78 @@ public class DisruptiveConstructiveEmotionalAIPlayer : EmotionalAIPlayer
 
         pDisrupt = 0.5f;
     }
+
+
+    protected float CalcGoalSuccessProbability(float status)
+    {
+        float gsp = 0.0f;
+        float treshold = 0.0f; //property
+
+        float numDecayDice = GameGlobals.environmentDecayBudget; //property
+        float maxDecay = 6 * numDecayDice;
+        float avgDecay = 3 * numDecayDice;
+        float minDecay = 1 * numDecayDice;
+
+        if (status >= treshold - maxDecay)
+        {
+            gsp = 1;
+        }
+        else if (status >= treshold - avgDecay)
+        {
+            gsp = 0.75f;
+        }
+        else if (status >= treshold - minDecay)
+        {
+            gsp = 0.25f;
+        }
+        return gsp;
+    }
+
+    public override IEnumerator AutoBudgetExecution()
+    {
+        yield return base.AutoBudgetExecution();
+
+
+        float status = 0.0f;
+        if (this.fatimaRpcPath == "disruptive.rpc")
+        {
+            status = this.GetMoney();
+        }
+        else
+        {
+            status = GameGlobals.envState;
+
+        }
+        float gsp = CalcGoalSuccessProbability(status);
+        
+        List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
+        events.Add(RolePlayCharacter.EventHelper.PropertyChange("BudgetExecution(" + gsp + ")", GetName(), this.name));
+        Perceive(events);
+        UpdateStep();
+    }
+
+    public override IEnumerator AutoInvestmentExecution()
+    {
+        yield return base.AutoInvestmentExecution();
+
+        float status = 0.0f;
+        if (this.fatimaRpcPath == "disruptive.rpc")
+        {
+            status = this.GetMoney();
+        }
+        else
+        {
+            status = GameGlobals.envState;
+
+        }
+        float gsp = CalcGoalSuccessProbability(status);
+
+        List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
+        events.Add(RolePlayCharacter.EventHelper.PropertyChange("DecaySimulation(" + gsp + ")", GetName(), this.name));
+        Perceive(events);
+        UpdateStep();
+        
+    }
+
+
 }

@@ -255,6 +255,10 @@ public class GameSetupFunctionalities : MonoBehaviour {
         foreach (Player player in GameGlobals.players)
         {
             gameLogEntry["playerId_" + player.GetId() + "_econ_state"] = "0";
+            gameLogEntry["playerId_" + player.GetId() + "_type"] = "-";
+            gameLogEntry["playerId_" + player.GetId() + "_pos"] = "0";
+            gameLogEntry["playerId_" + player.GetId() + "_econ_history_perc"] = "0";
+            gameLogEntry["playerId_" + player.GetId() + "_env_history_perc"] = "0";
         }
         StartCoroutine(GameGlobals.gameLogManager.WriteToLog("fortheplanetlogs", "gameresultslog", gameLogEntry));
 
