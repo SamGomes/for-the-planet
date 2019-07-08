@@ -267,7 +267,7 @@ public class DisruptiveConstructiveEmotionalAIPlayer : EmotionalAIPlayer
 {
     bool isDisruptive;
     float pDisrupt;
-    Dictionary<string, float> pDeltas;
+    Dictionary<string, float> pWeights;
 
     public DisruptiveConstructiveEmotionalAIPlayer(InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name, float updateDelay, string fatimaRpcPath, bool isDisruptive) :
        base(interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name, updateDelay, fatimaRpcPath)
@@ -275,14 +275,14 @@ public class DisruptiveConstructiveEmotionalAIPlayer : EmotionalAIPlayer
         this.isDisruptive = isDisruptive;
         pDisrupt = 0.5f;
 
-        pDeltas = new Dictionary<string, float>();
-        pDeltas["Happy-for"] = pDeltas["Gloating"] = pDeltas["Satisfaction"] = 
-            pDeltas["Relief"] = pDeltas["Hope"] = pDeltas["Joy"] = pDeltas["Gratification"] = 
-            pDeltas["Gratitude"] = pDeltas["Pride"] = pDeltas["Admiration"] = pDeltas["Love"] = -0.1f;
+        pWeights = new Dictionary<string, float>();
+        pWeights["Happy-for"] = pWeights["Gloating"] = pWeights["Satisfaction"] = 
+            pWeights["Relief"] = pWeights["Hope"] = pWeights["Joy"] = pWeights["Gratification"] = 
+            pWeights["Gratitude"] = pWeights["Pride"] = pWeights["Admiration"] = pWeights["Love"] = -1.0f;
 
-        pDeltas["Resentment"] = pDeltas["Pity"] = pDeltas["Fear-confirmed"] =
-           pDeltas["Disappointment"] = pDeltas["Fear"] = pDeltas["Distress"] = pDeltas["Remorse"] =
-           pDeltas["Anger"] = pDeltas["Shame"] = pDeltas["Reproach"] = pDeltas["Hate"] = 0.1f;
+        pWeights["Resentment"] = pWeights["Pity"] = pWeights["Fear-confirmed"] =
+           pWeights["Disappointment"] = pWeights["Fear"] = pWeights["Distress"] = pWeights["Remorse"] =
+           pWeights["Anger"] = pWeights["Shame"] = pWeights["Reproach"] = pWeights["Hate"] = 1.0f;
     }
 
     public override string GetPlayerType()
@@ -300,35 +300,24 @@ public class DisruptiveConstructiveEmotionalAIPlayer : EmotionalAIPlayer
 
     public override void Act()
     {
-        List<EmotionalAppraisal.DTOs.EmotionDTO> emotionList = this.GetAllActiveEmotions();
+        EmotionalAppraisal.IActiveEmotion strongestEmotion = this.rpc.GetStrongestActiveEmotion();
 
-        List<string> emotionStrList = new List<string>();
-        foreach (EmotionalAppraisal.DTOs.EmotionDTO dto in emotionList)
-        {
-            //Dictionary<string, string> eventLogEntry = new Dictionary<string, string>();
-            //eventLogEntry["currSessionId"] = GameGlobals.currSessionId.ToString();
-            //eventLogEntry["currGameId"] = GameGlobals.currGameId.ToString();
-            //eventLogEntry["currGameRoundId"] = GameGlobals.currGameRoundId.ToString();
-            //eventLogEntry["currGamePhase"] = gameManagerRef.GetCurrGamePhase().ToString();
-            //eventLogEntry["playerId"] = this.id.ToString();
-            //eventLogEntry["playerType"] = this.GetPlayerType();
-            //eventLogEntry["emotionType"] = dto.Type;
-            //eventLogEntry["intensity"] = dto.Intensity.ToString();
-            //eventLogEntry["target"] = dto.Target;
-            //eventLogEntry["causeEventName"] = dto.CauseEventName;
-            //playerMonoBehaviourFunctionalities.StartCoroutine(GameGlobals.gameLogManager.WriteToLog("fortheplanetlogs", "feltEmotionsLog", eventLogEntry));
-
-            if (!emotionStrList.Contains(dto.Type))
-            {
-                emotionStrList.Add(dto.Type);
-            }
-            //pDisrupt += pDeltas[dto.Type];
-        }
-        foreach (string emotionType in emotionStrList)
-        {
-            pDisrupt += pDeltas[emotionType];
-        }
-        Debug.Log("Emotion List: " + emotionStrList.ToArray().ToString());
+        if (strongestEmotion == null) {
+            return;
+        } 
+        Dictionary<string, string> eventLogEntry = new Dictionary<string, string>();
+        eventLogEntry["currSessionId"] = GameGlobals.currSessionId.ToString();
+        eventLogEntry["currGameId"] = GameGlobals.currGameId.ToString();
+        eventLogEntry["currGameRoundId"] = GameGlobals.currGameRoundId.ToString();
+        eventLogEntry["currGamePhase"] = gameManagerRef.GetCurrGamePhase().ToString();
+        eventLogEntry["playerId"] = this.id.ToString();
+        eventLogEntry["playerType"] = this.GetPlayerType();
+        eventLogEntry["emotionType"] = strongestEmotion.EmotionType;
+        eventLogEntry["intensity"] = strongestEmotion.Intensity.ToString();
+        //eventLogEntry["causeEventName"] = strongestEmotion.GetCause(rpc.).EventName;
+        playerMonoBehaviourFunctionalities.StartCoroutine(GameGlobals.gameLogManager.WriteToLog("fortheplanetlogs", "feltEmotionsLog", eventLogEntry));
+        
+        pDisrupt = pWeights[strongestEmotion.EmotionType] * strongestEmotion.Intensity / 10.0f;
 
         if(pDisrupt > 0.95f)
         {

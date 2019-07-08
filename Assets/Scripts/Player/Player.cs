@@ -290,6 +290,19 @@ public class Player
 
     public int SendBudgetAllocationPhaseResponse()
     {
+        int amountEnv = this.currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT];
+        int amountEcon = this.currRoundInvestment[GameProperties.InvestmentTarget.ECONOMIC];
+        Dictionary<string, string> eventLogEntry = new Dictionary<string, string>();
+        eventLogEntry["currSessionId"] = GameGlobals.currSessionId.ToString();
+        eventLogEntry["currGameId"] = GameGlobals.currGameId.ToString();
+        eventLogEntry["currGameRoundId"] = GameGlobals.currGameRoundId.ToString();
+        eventLogEntry["playerId"] = this.id.ToString();
+        eventLogEntry["playerType"] = this.GetPlayerType();
+        eventLogEntry["amountEnv"] = amountEnv.ToString();
+        eventLogEntry["amountEcon"] = amountEcon.ToString();
+        playerMonoBehaviourFunctionalities.StartCoroutine(GameGlobals.gameLogManager.WriteToLog("fortheplanetlogs", "playerInvestmentslog", eventLogEntry));
+
+
         //this.playerSelfDisablerUI.SetActive(true);
         //hide chosen investments before next player turn
         this.economicGrowthTokensDisplayUI.text = "-";
@@ -330,19 +343,10 @@ public class Player
         playerMonoBehaviourFunctionalities.StartCoroutine(gameManagerRef.InvestmentSimulationPhaseResponse(this));
         return 0;
     }
+    
 
     public void AddInvestment(GameProperties.InvestmentTarget target, int amount)
     {
-        Dictionary<string, string> eventLogEntry = new Dictionary<string, string>();
-        eventLogEntry["currSessionId"] = GameGlobals.currSessionId.ToString();
-        eventLogEntry["currGameId"] = GameGlobals.currGameId.ToString();
-        eventLogEntry["currGameRoundId"] = GameGlobals.currGameRoundId.ToString();
-        eventLogEntry["playerId"] = this.id.ToString();
-        eventLogEntry["playerType"] = this.GetPlayerType();
-        eventLogEntry["investmentTarget"] = target.ToString();
-        eventLogEntry["amount"] = amount.ToString();
-        playerMonoBehaviourFunctionalities.StartCoroutine(GameGlobals.gameLogManager.WriteToLog("fortheplanetlogs", "playerInvestmentslog", eventLogEntry));
-
         if (unallocatedBudget == 0)
         {
             return;
@@ -458,6 +462,4 @@ public class Player
     }
 
     public virtual void Perceive(List<WellFormedNames.Name> events) { }
-    public virtual List<ActionLibrary.IAction> GetActionList() { return new List<ActionLibrary.IAction>(); }
-    public virtual EmotionalAppraisal.IActiveEmotion GetMyStrongestEmotion() { return null; }
 }
