@@ -349,22 +349,22 @@ public class DisruptiveConstructiveEmotionalAIPlayer : EmotionalAIPlayer
     protected float CalcGoalSuccessProbabilityInvestment(float status, int numDice)
     {
         float gsp = 0.0f;
-        float treshold = 0.0f; //property
+        float threshold = 0.0f; //property
 
         float numDecayDice = GameGlobals.environmentDecayBudget; //property
         float maxInvest = 6 * numDice;
         float avgInvest = 3 * numDice;
         float minInvest = 1 * numDice;
 
-        if (status >= treshold + maxInvest)
+        if (status >= threshold + maxInvest)
         {
             gsp = 1;
         }
-        else if (status >= treshold + avgInvest)
+        else if (status >= threshold + avgInvest)
         {
             gsp = 0.75f;
         }
-        else if (status >= treshold + minInvest)
+        else if (status >= threshold + minInvest)
         {
             gsp = 0.25f;
         }
@@ -374,22 +374,22 @@ public class DisruptiveConstructiveEmotionalAIPlayer : EmotionalAIPlayer
     protected float CalcGoalSuccessProbabilityDecay(float status)
     {
         float gsp = 0.0f;
-        float treshold = 0.0f; //property
+        float threshold = 0.0f; //property
 
         float numDecayDice = GameGlobals.environmentDecayBudget; //property
         float maxDecay = 6 * numDecayDice;
         float avgDecay = 3 * numDecayDice;
         float minDecay = 1 * numDecayDice;
 
-        if (status >= treshold - maxDecay)
+        if (status >= threshold - maxDecay)
         {
             gsp = 1;
         }
-        else if (status >= treshold - avgDecay)
+        else if (status >= threshold - avgDecay)
         {
             gsp = 0.75f;
         }
-        else if (status >= treshold - minDecay)
+        else if (status >= threshold - minDecay)
         {
             gsp = 0.25f;
         }
