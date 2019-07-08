@@ -82,7 +82,7 @@
 				{
 					"Name": "WinGame",
 					"Significance": 5,
-					"Likelihood": 0.1
+					"Likelihood": 0.5
 				}]
 		},
 	"types": [
