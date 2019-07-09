@@ -345,7 +345,7 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
     }
 
 
-    protected float CalcGoalSuccessProbabilityInvestment(float status, int numDice)
+    protected float CalcGoalSuccessProbabilityInvestment(float state, int numDice)
     {
         float gsp = 0.0f;
         float threshold = 0.6f; //property
@@ -355,22 +355,22 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
         float avgInvest = 3 * numDice / 100.0f;
         float minInvest = 1 * numDice / 100.0f;
 
-        if (status >= threshold + maxInvest)
+        if (state >= threshold + maxInvest)
         {
             gsp = 1;
         }
-        else if (status >= threshold + avgInvest)
+        else if (state >= threshold + avgInvest)
         {
             gsp = 0.75f;
         }
-        else if (status >= threshold + minInvest)
+        else if (state >= threshold + minInvest)
         {
             gsp = 0.25f;
         }
         return gsp;
     }
 
-    protected float CalcGoalSuccessProbabilityDecay(float status)
+    protected float CalcGoalSuccessProbabilityDecay(float state)
     {
         float gsp = 0.0f;
         float threshold = 0.6f; //property
@@ -380,15 +380,15 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
         float avgDecay = 3 * numDecayDice / 100.0f;
         float minDecay = 1 * numDecayDice / 100.0f;
 
-        if (status >= threshold - maxDecay)
+        if (state >= threshold - maxDecay)
         {
             gsp = 1;
         }
-        else if (status >= threshold - avgDecay)
+        else if (state >= threshold - avgDecay)
         {
             gsp = 0.75f;
         }
-        else if (status >= threshold - minDecay)
+        else if (state >= threshold - minDecay)
         {
             gsp = 0.25f;
         }
@@ -399,18 +399,17 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
     {
         yield return base.AutoBudgetExecution();
 
-        float status = 0.0f;
+        float state = 0.0f;
         float gsp = 0.0f;
         if (isDisruptive)
         {
-            gsp = CalcGoalSuccessProbabilityInvestment(status, this.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ECONOMIC]);
-            status = this.GetMoney();
+            state = this.GetMoney();
+            gsp = CalcGoalSuccessProbabilityInvestment(state, this.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ECONOMIC]);
         }
         else
         {
-            gsp = CalcGoalSuccessProbabilityInvestment(status, this.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT]);
-            status = GameGlobals.envState;
-
+            state = GameGlobals.envState;
+            gsp = CalcGoalSuccessProbabilityInvestment(state, this.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT]);
         }
         
         List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
@@ -423,17 +422,17 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
     {
         yield return base.AutoInvestmentExecution();
 
-        float status = 0.0f;
+        float state = 0.0f;
         if (isDisruptive)
         {
-            status = this.GetMoney();
+            state = this.GetMoney();
         }
         else
         {
-            status = GameGlobals.envState;
+            state = GameGlobals.envState;
 
         }
-        float gsp = CalcGoalSuccessProbabilityDecay(status);
+        float gsp = CalcGoalSuccessProbabilityDecay(state);
 
         List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
         events.Add(RolePlayCharacter.EventHelper.PropertyChange("DecaySimulation(" + gsp + ")", GetName(), this.name));
