@@ -150,11 +150,7 @@ public class EndScreenFunctionalities : MonoBehaviour
             float econInv = (float)player.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ECONOMIC];
             float envInv = (float)player.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ENVIRONMENT];
             float totalInv = econInv + envInv;
-
-            if(gameLogEntry["isCompetitive"]!="1") gameLogEntry["isCompetitive"] = (player.GetPlayerType()=="Competitive")? "1": "0";
-            if(gameLogEntry["isCooperative"]!="1") gameLogEntry["isCooperative"] = (player.GetPlayerType()=="Cooperative")? "1": "0";
-            if(gameLogEntry["isRandom"]!="1") gameLogEntry["isRandom"] = (player.GetPlayerType()=="AIPlayerRandom")? "1": "0";
-
+            
             gameLogEntry["playerId_" + player.GetId() + "_pos"] = i.ToString();
             gameLogEntry["playerId_" + player.GetId() + "_type"] = player.GetPlayerType();
             gameLogEntry["playerId_" + player.GetId() + "_econ_state"] = player.GetMoney().ToString();
