@@ -355,15 +355,15 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
         float avgInvest = 3 * numDice / 100.0f;
         float minInvest = 1 * numDice / 100.0f;
 
-        if (state >= threshold + maxInvest)
+        if (state + minInvest >= threshold)
         {
             gsp = 1;
         }
-        else if (state >= threshold + avgInvest)
+        else if (state + avgInvest >= threshold)
         {
             gsp = 0.75f;
         }
-        else if (state >= threshold + minInvest)
+        else if (state + maxInvest >= threshold)
         {
             gsp = 0.25f;
         }
@@ -380,15 +380,15 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
         float avgDecay = 3 * numDecayDice / 100.0f;
         float minDecay = 1 * numDecayDice / 100.0f;
 
-        if (state >= threshold - maxDecay)
+        if (state - maxDecay >= threshold)
         {
             gsp = 1;
         }
-        else if (state >= threshold - avgDecay)
+        else if (state - avgDecay >= threshold )
         {
             gsp = 0.75f;
         }
-        else if (state >= threshold - minDecay)
+        else if (state - minDecay >= threshold)
         {
             gsp = 0.25f;
         }
