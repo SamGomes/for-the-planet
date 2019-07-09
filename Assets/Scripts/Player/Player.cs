@@ -295,6 +295,7 @@ public class Player
         Dictionary<string, string> eventLogEntry = new Dictionary<string, string>();
         eventLogEntry["currSessionId"] = GameGlobals.currSessionId.ToString();
         eventLogEntry["currGameId"] = GameGlobals.currGameId.ToString();
+        eventLogEntry["currGameCondition"] = GameGlobals.currGameCondition.ToString();
         eventLogEntry["currGameRoundId"] = GameGlobals.currGameRoundId.ToString();
         eventLogEntry["playerId"] = this.id.ToString();
         eventLogEntry["playerType"] = this.GetPlayerType();

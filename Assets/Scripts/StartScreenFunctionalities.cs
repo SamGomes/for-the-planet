@@ -170,13 +170,15 @@ public class StartScreenFunctionalities : MonoBehaviour {
             this.UIStartGameButton.interactable = false;
         }
         //}
-       
+        GameGlobals.currGameCondition = lastConditionString;
+
         // @jbgrocha: auto start if on batchmode
         if (GameGlobals.isSimulation)
         {
             StartGame();
             Debug.Log("In BatchMode");
         }
+
 
         return 0;
     }

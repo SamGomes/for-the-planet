@@ -69,12 +69,12 @@ public class GameSetupFunctionalities : MonoBehaviour {
                     GameGlobals.players.Add(new TableEmotionalAIPlayer(chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name, 1.0f, currParam.fatimaRpcPath));
                     break;
 
-                case "AI_EMOTIONAL_DISRUPTIVE":
-                    GameGlobals.players.Add(new DisruptiveConstructiveEmotionalAIPlayer(chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name, 1.0f, currParam.fatimaRpcPath, true));
+                case "AI_EMOTIONAL_COMPETITIVE":
+                    GameGlobals.players.Add(new CompetitiveCooperativeEmotionalAIPlayer(chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name, 1.0f, currParam.fatimaRpcPath, true));
                     break;
 
-                case "AI_EMOTIONAL_CONSTRUCTIVE":
-                    GameGlobals.players.Add(new DisruptiveConstructiveEmotionalAIPlayer(chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name, 1.0f, currParam.fatimaRpcPath, false));
+                case "AI_EMOTIONAL_COOPERATIVE":
+                    GameGlobals.players.Add(new CompetitiveCooperativeEmotionalAIPlayer(chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name, 1.0f, currParam.fatimaRpcPath, false));
                     break;
 
                 case "AI_RANDOM":

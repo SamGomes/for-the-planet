@@ -333,7 +333,7 @@ public class GameManager : MonoBehaviour {
                 {
                     newRoundScreen.SetActive(false);
                     StartGameRoundForAllPlayers();
-                    Debug.Log("In BatchMode : Start Next Round");
+                    //Debug.Log("In BatchMode : Start Next Round");
                 }
             }
         }

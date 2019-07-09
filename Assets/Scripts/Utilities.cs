@@ -18,7 +18,7 @@ public static class GameGlobals
     public static string currSessionId;
     public static int currGameId;
     public static int currGameRoundId;
-
+    public static string currGameCondition;
 
     public static GameProperties.GameState currGameState;
 

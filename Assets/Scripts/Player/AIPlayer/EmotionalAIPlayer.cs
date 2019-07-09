@@ -263,13 +263,13 @@ public class TableEmotionalAIPlayer : EmotionalAIPlayer
     }
 }
 
-public class DisruptiveConstructiveEmotionalAIPlayer : EmotionalAIPlayer
+public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
 {
     bool isDisruptive;
     float pDisrupt;
     Dictionary<string, float> pWeights;
 
-    public DisruptiveConstructiveEmotionalAIPlayer(InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name, float updateDelay, string fatimaRpcPath, bool isDisruptive) :
+    public CompetitiveCooperativeEmotionalAIPlayer(InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name, float updateDelay, string fatimaRpcPath, bool isDisruptive) :
        base(interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name, updateDelay, fatimaRpcPath)
     {
         this.isDisruptive = isDisruptive;
@@ -289,11 +289,11 @@ public class DisruptiveConstructiveEmotionalAIPlayer : EmotionalAIPlayer
     {
         if (isDisruptive)
         {
-            return "Disruptive";
+            return "Competitive";
         }
         else
         {
-            return "Constructive";
+            return "Cooperative";
 
         }
     }
@@ -308,6 +308,7 @@ public class DisruptiveConstructiveEmotionalAIPlayer : EmotionalAIPlayer
         Dictionary<string, string> eventLogEntry = new Dictionary<string, string>();
         eventLogEntry["currSessionId"] = GameGlobals.currSessionId.ToString();
         eventLogEntry["currGameId"] = GameGlobals.currGameId.ToString();
+        eventLogEntry["currGameCondition"] = GameGlobals.currGameCondition.ToString();
         eventLogEntry["currGameRoundId"] = GameGlobals.currGameRoundId.ToString();
         eventLogEntry["currGamePhase"] = gameManagerRef.GetCurrGamePhase().ToString();
         eventLogEntry["playerId"] = this.id.ToString();
@@ -336,9 +337,7 @@ public class DisruptiveConstructiveEmotionalAIPlayer : EmotionalAIPlayer
             }
         }
         int env = GameGlobals.roundBudget - econ;
-
-        Debug.Log("(econ:"+ econ+"; env:"+env+")");
-
+    
         investmentIntentions[GameProperties.InvestmentTarget.ENVIRONMENT] = env;
         investmentIntentions[GameProperties.InvestmentTarget.ECONOMIC] = econ;
 
@@ -349,12 +348,12 @@ public class DisruptiveConstructiveEmotionalAIPlayer : EmotionalAIPlayer
     protected float CalcGoalSuccessProbabilityInvestment(float status, int numDice)
     {
         float gsp = 0.0f;
-        float threshold = 0.0f; //property
+        float threshold = 0.6f; //property
 
         float numDecayDice = GameGlobals.environmentDecayBudget; //property
-        float maxInvest = 6 * numDice;
-        float avgInvest = 3 * numDice;
-        float minInvest = 1 * numDice;
+        float maxInvest = 6 * numDice / 100.0f;
+        float avgInvest = 3 * numDice / 100.0f;
+        float minInvest = 1 * numDice / 100.0f;
 
         if (status >= threshold + maxInvest)
         {
@@ -374,12 +373,12 @@ public class DisruptiveConstructiveEmotionalAIPlayer : EmotionalAIPlayer
     protected float CalcGoalSuccessProbabilityDecay(float status)
     {
         float gsp = 0.0f;
-        float threshold = 0.0f; //property
+        float threshold = 0.6f; //property
 
         float numDecayDice = GameGlobals.environmentDecayBudget; //property
-        float maxDecay = 6 * numDecayDice;
-        float avgDecay = 3 * numDecayDice;
-        float minDecay = 1 * numDecayDice;
+        float maxDecay = 6 * numDecayDice / 100.0f;
+        float avgDecay = 3 * numDecayDice / 100.0f;
+        float minDecay = 1 * numDecayDice / 100.0f;
 
         if (status >= threshold - maxDecay)
         {
