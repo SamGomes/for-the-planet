@@ -304,7 +304,10 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
 
         if (strongestEmotion == null) {
             return;
-        } 
+        }
+
+
+        interactionModule.Speak("I'm feeling " + strongestEmotion.EmotionType);
         Dictionary<string, string> eventLogEntry = new Dictionary<string, string>();
         eventLogEntry["currSessionId"] = GameGlobals.currSessionId.ToString();
         eventLogEntry["currGameId"] = GameGlobals.currGameId.ToString();

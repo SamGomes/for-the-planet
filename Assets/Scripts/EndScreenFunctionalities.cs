@@ -162,7 +162,6 @@ public class EndScreenFunctionalities : MonoBehaviour
 
 
 
-
         if (GameGlobals.isSimulation)
         {
             yield return GameGlobals.gameLogManager.EndLogs();
