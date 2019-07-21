@@ -381,7 +381,7 @@ public class Player
     }
     public IEnumerator SetMoney(float money)
     {
-        this.money = money;
+        this.money = Mathf.Clamp01(money);
 
         //Dictionary<string, string> additionalEventArgs = new Dictionary<string, string>();
         //additionalEventArgs.Add("Money", money.ToString("0.00", CultureInfo.InvariantCulture));
