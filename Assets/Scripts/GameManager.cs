@@ -275,7 +275,7 @@ public class GameManager : MonoBehaviour {
             //envDecay *= ((float) GameGlobals.players.Count + (float) GameGlobals.players.Count/2);
 
             //lastEnvDecay = envDecay;
-            GameGlobals.envState -= envDecay;
+            GameGlobals.envState = Mathf.Clamp01(GameGlobals.envState - envDecay);
             yield return StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState));
 
             if (GameGlobals.isNarrated)

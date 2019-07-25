@@ -5,7 +5,7 @@
 			"ScenarioName": "For-the-planet",
 			"Description": null,
 			"WorldModelSource": "effect.wmo",
-			"CharacterSources": ["disruptive.rpc", "constructive.rpc"],
+			"CharacterSources": ["Disruptive - Individualistic.rpc", "Constructive - Collectivist.rpc", "Constructive - Individualistic.rpc" ,"Disruptive - Collectivist.rpc"],
 			"Dialogues": [
 				{
 					"CurrentState": "-",

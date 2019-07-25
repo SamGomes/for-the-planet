@@ -12,7 +12,7 @@
 				},
 			"BodyName": null,
 			"VoiceName": null,
-			"EmotionalAppraisalAssetSource": "appraisalRulesConstructive.ea",
+			"EmotionalAppraisalAssetSource": "Constructive - Individualistic.ea",
 			"EmotionalDecisionMakingSource": "NormalPlayer.edm",
 			"SocialImportanceAssetSource": null,
 			"CommeillFautAssetSource": null,
