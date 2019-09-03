@@ -307,7 +307,6 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
         }
 
 
-        interactionModule.Speak("I'm feeling " + strongestEmotion.EmotionType);
         Dictionary<string, string> eventLogEntry = new Dictionary<string, string>();
         eventLogEntry["currSessionId"] = GameGlobals.currSessionId.ToString();
         eventLogEntry["currGameId"] = GameGlobals.currGameId.ToString();
@@ -320,7 +319,9 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
         eventLogEntry["intensity"] = strongestEmotion.Intensity.ToString();
         //eventLogEntry["causeEventName"] = strongestEmotion.GetCause(rpc.).EventName;
         playerMonoBehaviourFunctionalities.StartCoroutine(GameGlobals.gameLogManager.WriteToLog("fortheplanetlogs", "feltEmotionsLog", eventLogEntry));
-        
+
+        interactionModule.Speak("I'm feeling " + strongestEmotion.EmotionType);
+
         pDisrupt = pWeights[strongestEmotion.EmotionType] * strongestEmotion.Intensity / 10.0f;
 
         if(pDisrupt > 0.95f)
