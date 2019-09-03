@@ -69,11 +69,19 @@ public class GameSetupFunctionalities : MonoBehaviour {
                     GameGlobals.players.Add(new TableEmotionalAIPlayer(chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name, 1.0f, currParam.fatimaRpcPath));
                     break;
 
-                case "AI_EMOTIONAL_COMPETITIVE":
+                case "AI_EMOTIONAL_CONSTRUCTIVE_COLLECTIVIST":
                     GameGlobals.players.Add(new CompetitiveCooperativeEmotionalAIPlayer(chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name, 1.0f, currParam.fatimaRpcPath, true));
                     break;
 
-                case "AI_EMOTIONAL_COOPERATIVE":
+                case "AI_EMOTIONAL_CONSTRUCTIVE_INDIVIDUALISTIC":
+                    GameGlobals.players.Add(new CompetitiveCooperativeEmotionalAIPlayer(chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name, 1.0f, currParam.fatimaRpcPath, true));
+                    break;
+
+                case "AI_EMOTIONAL_DISRUPTIVE_COLLECTIVIST":
+                    GameGlobals.players.Add(new CompetitiveCooperativeEmotionalAIPlayer(chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name, 1.0f, currParam.fatimaRpcPath, false));
+                    break;
+
+                case "AI_EMOTIONAL_DISRUPTIVE_INDIVIDUALISTIC":
                     GameGlobals.players.Add(new CompetitiveCooperativeEmotionalAIPlayer(chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name, 1.0f, currParam.fatimaRpcPath, false));
                     break;
 

@@ -57,7 +57,7 @@ public class StartScreenFunctionalities : MonoBehaviour {
         //Assign configurable game properties from file if any
         //Application.ExternalEval("console.log('streaming assets: "+ Application.streamingAssetsPath + "')");
 
-        string path = Application.streamingAssetsPath + "/config.cfg";
+        string path = Application.streamingAssetsPath + "/config.json";
         if (path.Contains("://") || path.Contains(":///")) //url instead of path
         {
             UnityWebRequest www = UnityWebRequest.Get(path);
