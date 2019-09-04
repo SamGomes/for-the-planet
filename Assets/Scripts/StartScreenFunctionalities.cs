@@ -94,6 +94,11 @@ public class StartScreenFunctionalities : MonoBehaviour {
         GameGlobals.environmentDecayBudget = configs.environmentDecayBudget;
         GameGlobals.playerDecayBudget = configs.playerDecayBudget;
 
+        if (GameGlobals.storedRPCs == null) //maintain rpc cache when restarting
+        {
+            GameGlobals.storedRPCs = new Dictionary<string, RolePlayCharacter.RolePlayCharacterAsset>();
+        }
+
         //only generate session data in the first game
         if (GameGlobals.currGameId == 1)
         {

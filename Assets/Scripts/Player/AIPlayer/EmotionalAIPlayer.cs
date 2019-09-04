@@ -48,9 +48,21 @@ public class EmotionalAIPlayer: AIPlayer
         {
             warningScreenRef.DisplayPoppup("error loading fatimaRpcPath= " + fatimaRpcPath);
         }
-        rpc = RolePlayCharacterAsset.LoadFromFile(rpcPath.Source);
-        rpc.LoadAssociatedAssets();
-        GameGlobals.FAtiMAIat.BindToRegistry(rpc.DynamicPropertiesRegistry);
+
+        string rpcSource = rpcPath.Source;
+        if (!GameGlobals.storedRPCs.ContainsKey(rpcSource))
+        {
+            rpc = RolePlayCharacterAsset.LoadFromFile(rpcSource);
+            rpc.LoadAssociatedAssets();
+            GameGlobals.FAtiMAIat.BindToRegistry(rpc.DynamicPropertiesRegistry);
+            GameGlobals.storedRPCs[rpcSource] = rpc;
+        }
+        else
+        {
+            rpc = GameGlobals.storedRPCs[rpcSource];
+        }
+        rpc.ResetEmotionalState();
+
 
         rpc.CharacterName = (WellFormedNames.Name) this.name;
     }

@@ -1,4 +1,5 @@
 ﻿using IntegratedAuthoringTool;
+using RolePlayCharacter;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -45,6 +46,8 @@ public static class GameGlobals
     public static int roundBudget;
     public static int environmentDecayBudget;
     public static int playerDecayBudget;
+
+    public static Dictionary<string, RolePlayCharacterAsset> storedRPCs;
 }
 
 public static class GameProperties

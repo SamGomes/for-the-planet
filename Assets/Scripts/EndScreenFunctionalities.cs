@@ -39,10 +39,12 @@ public class EndScreenFunctionalities : MonoBehaviour
     private void RestartGame()
     {
         GameGlobals.gameSceneManager.LoadStartScene();
-        //destroy stuff saved between scenes (the dontdestroyonload scene is extracted through one of the players)
-        foreach (var root in GameGlobals.players[0].GetPlayerUI().scene.GetRootGameObjects())
-        {
-            Destroy(root);
+        foreach (Player player in GameGlobals.players) { 
+            //destroy stuff saved between scenes (the dontdestroyonload scene is extracted through one of the players)
+            foreach (var root in player.GetPlayerUI().scene.GetRootGameObjects())
+            {
+                Destroy(root);
+            }
         }
 
         Debug.Log("numGamesToSimulate: " + (GameProperties.configurableProperties.numGamesToSimulate - GameGlobals.currGameId));
