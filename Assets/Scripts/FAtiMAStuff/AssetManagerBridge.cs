@@ -32,14 +32,14 @@ namespace FAtiMAScripts
 			{
 				case Severity.Critical:
 				case Severity.Error:
-					Debug.LogError(msg);
+					//Debug.LogError(msg);
 					break;
 				case Severity.Warning:
-					Debug.LogWarning(msg);
+					//Debug.LogWarning(msg);
 					break;
 				case Severity.Information:
 				case Severity.Verbose:
-					Debug.Log(msg);
+					//Debug.Log(msg);
 					break;
 				default:
 					throw new ArgumentOutOfRangeException("severity", severity, null);

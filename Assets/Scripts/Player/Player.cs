@@ -19,6 +19,7 @@ public class Player
 
     protected int id;
     protected GameManager gameManagerRef;
+    protected string type;
     protected string name;
     protected int roundBudget;
     protected int unallocatedBudget;
@@ -59,7 +60,7 @@ public class Player
     protected PopupScreenFunctionalities warningScreenRef;
     private DynamicSlider dynamicSlider;
 
-    public Player(GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name)
+    public Player(string type, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name)
     {
         this.gameManagerRef = GameGlobals.gameManager;
         this.id = id;
@@ -68,6 +69,8 @@ public class Player
         this.warningScreenRef = warningScreenRef;
 
         this.money = 0.0f;
+
+        this.type = type;
 
         investmentHistory = new Dictionary<GameProperties.InvestmentTarget, int>();
         investmentHistory[GameProperties.InvestmentTarget.ECONOMIC] = 0;
@@ -292,16 +295,16 @@ public class Player
     {
         int amountEnv = this.currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT];
         int amountEcon = this.currRoundInvestment[GameProperties.InvestmentTarget.ECONOMIC];
-        Dictionary<string, string> eventLogEntry = new Dictionary<string, string>();
-        eventLogEntry["currSessionId"] = GameGlobals.currSessionId.ToString();
-        eventLogEntry["currGameId"] = GameGlobals.currGameId.ToString();
-        eventLogEntry["currGameCondition"] = GameGlobals.currGameCondition.ToString();
-        eventLogEntry["currGameRoundId"] = GameGlobals.currGameRoundId.ToString();
-        eventLogEntry["playerId"] = this.id.ToString();
-        eventLogEntry["playerType"] = this.GetPlayerType();
-        eventLogEntry["amountEnv"] = amountEnv.ToString();
-        eventLogEntry["amountEcon"] = amountEcon.ToString();
-        playerMonoBehaviourFunctionalities.StartCoroutine(GameGlobals.gameLogManager.WriteToLog("fortheplanetlogs", "playerInvestmentslog", eventLogEntry));
+        //Dictionary<string, string> eventLogEntry = new Dictionary<string, string>();
+        //eventLogEntry["currSessionId"] = GameGlobals.currSessionId.ToString();
+        //eventLogEntry["currGameId"] = GameGlobals.currGameId.ToString();
+        //eventLogEntry["currGameCondition"] = GameGlobals.currGameCondition.ToString();
+        //eventLogEntry["currGameRoundId"] = GameGlobals.currGameRoundId.ToString();
+        //eventLogEntry["playerId"] = this.id.ToString();
+        //eventLogEntry["playerType"] = this.GetPlayerType();
+        //eventLogEntry["amountEnv"] = amountEnv.ToString();
+        //eventLogEntry["amountEcon"] = amountEcon.ToString();
+        //playerMonoBehaviourFunctionalities.StartCoroutine(GameGlobals.gameLogManager.WriteToLog("fortheplanetlogs", "playerInvestmentslog", eventLogEntry));
 
 
         //this.playerSelfDisablerUI.SetActive(true);
@@ -459,7 +462,7 @@ public class Player
 
     public virtual string GetPlayerType()
     {
-        return this.GetType().ToString();
+        return this.type;
     }
 
     public virtual void Perceive(List<WellFormedNames.Name> events) { }

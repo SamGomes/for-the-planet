@@ -19,8 +19,8 @@ public class EmotionalAIPlayer: AIPlayer
     protected Dictionary<GameProperties.InvestmentTarget, int> investmentIntentions;
     protected string fatimaRpcPath;
 
-    public EmotionalAIPlayer(InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name, float updateDelay, string fatimaRpcPath) :
-        base(interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name)
+    public EmotionalAIPlayer(string type, InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name, float updateDelay, string fatimaRpcPath) :
+        base(type, interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name)
     {
         unperceivedEvents = new List<WellFormedNames.Name>();
         InitRPC(fatimaRpcPath);
@@ -223,8 +223,8 @@ public class EmotionalAIPlayer: AIPlayer
 public class TableEmotionalAIPlayer : EmotionalAIPlayer
 {
 
-    public TableEmotionalAIPlayer(InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name, float updateDelay, string fatimaRpcPath) :
-        base(interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name, updateDelay, fatimaRpcPath)
+    public TableEmotionalAIPlayer(string type, InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name, float updateDelay, string fatimaRpcPath) :
+        base(type, interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name, updateDelay, fatimaRpcPath)
     {
         
     }
@@ -281,8 +281,8 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
     float pDisrupt;
     Dictionary<string, float> pWeights;
 
-    public CompetitiveCooperativeEmotionalAIPlayer(InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name, float updateDelay, string fatimaRpcPath, bool isDisruptive) :
-       base(interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name, updateDelay, fatimaRpcPath)
+    public CompetitiveCooperativeEmotionalAIPlayer(string type, InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name, float updateDelay, string fatimaRpcPath, bool isDisruptive) :
+       base(type, interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name, updateDelay, fatimaRpcPath)
     {
         this.isDisruptive = isDisruptive;
         pDisrupt = 0.5f;
@@ -295,19 +295,6 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
         pWeights["Resentment"] = pWeights["Pity"] = pWeights["Fear-confirmed"] =
            pWeights["Disappointment"] = pWeights["Fear"] = pWeights["Distress"] = pWeights["Remorse"] =
            pWeights["Anger"] = pWeights["Shame"] = pWeights["Reproach"] = pWeights["Hate"] = 1.0f;
-    }
-
-    public override string GetPlayerType()
-    {
-        if (isDisruptive)
-        {
-            return "Competitive";
-        }
-        else
-        {
-            return "Cooperative";
-
-        }
     }
 
     public override void Act()

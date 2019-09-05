@@ -62,47 +62,47 @@ public class GameSetupFunctionalities : MonoBehaviour {
             switch (currParam.playerType)
             {
                 case "HUMAN":
-                    GameGlobals.players.Add(new Player(playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/"+ currParam.spriteIndex), currPlayerId++, currParam.name));
+                    GameGlobals.players.Add(new Player(currParam.playerType, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/"+ currParam.spriteIndex), currPlayerId++, currParam.name));
                     break;
 
                 case "AI_EMOTIONAL_TABLE":
-                    GameGlobals.players.Add(new TableEmotionalAIPlayer(chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name, 1.0f, currParam.fatimaRpcPath));
+                    GameGlobals.players.Add(new TableEmotionalAIPlayer(currParam.playerType, chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name, 1.0f, currParam.fatimaRpcPath));
                     break;
 
                 case "AI_EMOTIONAL_CONSTRUCTIVE_COLLECTIVIST":
-                    GameGlobals.players.Add(new CompetitiveCooperativeEmotionalAIPlayer(chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name, 1.0f, currParam.fatimaRpcPath, true));
+                    GameGlobals.players.Add(new CompetitiveCooperativeEmotionalAIPlayer(currParam.playerType, chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name, 1.0f, currParam.fatimaRpcPath, true));
                     break;
 
                 case "AI_EMOTIONAL_CONSTRUCTIVE_INDIVIDUALISTIC":
-                    GameGlobals.players.Add(new CompetitiveCooperativeEmotionalAIPlayer(chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name, 1.0f, currParam.fatimaRpcPath, true));
+                    GameGlobals.players.Add(new CompetitiveCooperativeEmotionalAIPlayer(currParam.playerType, chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name, 1.0f, currParam.fatimaRpcPath, true));
                     break;
 
                 case "AI_EMOTIONAL_DISRUPTIVE_COLLECTIVIST":
-                    GameGlobals.players.Add(new CompetitiveCooperativeEmotionalAIPlayer(chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name, 1.0f, currParam.fatimaRpcPath, false));
+                    GameGlobals.players.Add(new CompetitiveCooperativeEmotionalAIPlayer(currParam.playerType, chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name, 1.0f, currParam.fatimaRpcPath, false));
                     break;
 
                 case "AI_EMOTIONAL_DISRUPTIVE_INDIVIDUALISTIC":
-                    GameGlobals.players.Add(new CompetitiveCooperativeEmotionalAIPlayer(chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name, 1.0f, currParam.fatimaRpcPath, false));
+                    GameGlobals.players.Add(new CompetitiveCooperativeEmotionalAIPlayer(currParam.playerType, chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name, 1.0f, currParam.fatimaRpcPath, false));
                     break;
 
                 case "AI_RANDOM":
-                    GameGlobals.players.Add(new AIPlayerRandom(chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
+                    GameGlobals.players.Add(new AIPlayerRandom(currParam.playerType, chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
                     break;
 
                 case "AI_COOPERATOR":
-                    GameGlobals.players.Add(new AIPlayerCooperator(chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
+                    GameGlobals.players.Add(new AIPlayerCooperator(currParam.playerType, chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
                     break;
 
                 case "AI_BALANCED_COOPERATOR":
-                    GameGlobals.players.Add(new AIPlayerBalancedCooperator(chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
+                    GameGlobals.players.Add(new AIPlayerBalancedCooperator(currParam.playerType, chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
                     break;
 
                 case "AI_DEFECTOR":
-                    GameGlobals.players.Add(new AIPlayerDefector(chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
+                    GameGlobals.players.Add(new AIPlayerDefector(currParam.playerType, chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
                     break;
 
                 case "AI_BALANCED_DEFECTOR":
-                    GameGlobals.players.Add(new AIPlayerBalancedDefector(chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
+                    GameGlobals.players.Add(new AIPlayerBalancedDefector(currParam.playerType, chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
                     break;
 
                 default:
@@ -258,36 +258,41 @@ public class GameSetupFunctionalities : MonoBehaviour {
         }
 
         //write game in log
-        Dictionary<string, string> gameLogEntry = new Dictionary<string, string>();
-        gameLogEntry["sessionId"] = GameGlobals.currSessionId.ToString();
-        gameLogEntry["currGameId"] = GameGlobals.currGameId.ToString();
-        gameLogEntry["condition"] = GameProperties.currSessionParameterization.id;
-        gameLogEntry["outcome"] = GameGlobals.currGameState.ToString();
-        gameLogEntry["env_state"] = "0";
+        
         foreach (Player player in GameGlobals.players)
         {
-            gameLogEntry["playerId_" + player.GetId() + "_econ_state"] = "0";
-            gameLogEntry["playerId_" + player.GetId() + "_type"] = "-";
-            gameLogEntry["playerId_" + player.GetId() + "_pos"] = "0";
-            gameLogEntry["playerId_" + player.GetId() + "_econ_history_perc"] = "0";
-            gameLogEntry["playerId_" + player.GetId() + "_env_history_perc"] = "0";
+            Dictionary<string, string> gameLogEntry = new Dictionary<string, string>();
+            gameLogEntry["sessionId"] = GameGlobals.currSessionId.ToString();
+            gameLogEntry["currGameId"] = GameGlobals.currGameId.ToString();
+            gameLogEntry["condition"] = GameProperties.currSessionParameterization.id;
+            gameLogEntry["outcome"] = GameGlobals.currGameState.ToString();
+            gameLogEntry["env_state"] = "-";
+
+            gameLogEntry["playerId"] = player.GetId().ToString();
+
+            gameLogEntry["econ_state"] = "-";
+            gameLogEntry["type"] = "-";
+            gameLogEntry["pos"] = "-";
+            gameLogEntry["econ_history_perc"] = "-";
+            gameLogEntry["env_history_perc"] = "-";
+
+            StartCoroutine(GameGlobals.gameLogManager.WriteToLog("fortheplanetlogs", "gameresultslog", gameLogEntry));
         }
-        StartCoroutine(GameGlobals.gameLogManager.WriteToLog("fortheplanetlogs", "gameresultslog", gameLogEntry));
 
         //write players in log before starting the game
-        Player currPlayer = null;
-        for (int i = 0; i < GameGlobals.players.Count; i++)
-        {
-            currPlayer = GameGlobals.players[i];
+        //Player currPlayer = null;
+        //for (int i = 0; i < GameGlobals.players.Count; i++)
+        //{
+        //    currPlayer = GameGlobals.players[i];
 
-            Dictionary<string, string> playerLogEntry = new Dictionary<string, string>();
-            playerLogEntry["currSessionId"] = GameGlobals.currSessionId.ToString();
-            playerLogEntry["currGameId"] = GameGlobals.currGameId.ToString();
-            playerLogEntry["Id"] = currPlayer.GetId().ToString();
-            playerLogEntry["Name"] = currPlayer.GetName();
-            playerLogEntry["Type"] = currPlayer.GetPlayerType();
-            StartCoroutine(GameGlobals.gameLogManager.WriteToLog("fortheplanetlogs","playerslog", playerLogEntry));
-        }
+        //    Dictionary<string, string> playerLogEntry = new Dictionary<string, string>();
+        //    playerLogEntry["currSessionId"] = GameGlobals.currSessionId.ToString();
+        //    playerLogEntry["currGameId"] = GameGlobals.currGameId.ToString();
+        //    playerLogEntry["Id"] = currPlayer.GetId().ToString();
+        //    playerLogEntry["Name"] = currPlayer.GetName();
+        //    playerLogEntry["Type"] = currPlayer.GetPlayerType();
+        //    StartCoroutine(GameGlobals.gameLogManager.WriteToLog("fortheplanetlogs","playerslog", playerLogEntry));
+        //}
 
         string json = JsonUtility.ToJson(GameProperties.configurableProperties);
 

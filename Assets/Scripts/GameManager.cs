@@ -58,13 +58,11 @@ public class GameManager : MonoBehaviour {
 
     public int InterruptGame()
     {
-        Debug.Log("interrupted");
         interruptionRequests++;
         return 0;
     }
     public int ContinueGame()
     {
-        Debug.Log("continued");
         interruptionRequests--;
         return 0;
     }
@@ -156,7 +154,6 @@ public class GameManager : MonoBehaviour {
         {
             newRoundScreen.SetActive(false);
             StartGameRoundForAllPlayers();
-            Debug.Log("In BatchMode : Start Next Round");
         }
         
         // ONHOLD: @jbgrocha: Send Start of New Game to AIPlayers (call AIplayer update emotional module function)
@@ -225,8 +222,7 @@ public class GameManager : MonoBehaviour {
         if (numPlayersToAllocateBudget == 0)
         {
             currGamePhase = GameProperties.GamePhase.HISTORY_DISPLAY;
-
-            //Debug.Log("running2...");
+            
             StartDisplayHistoryPhase();
             numPlayersToAllocateBudget = GameGlobals.players.Count;
         }
@@ -333,7 +329,6 @@ public class GameManager : MonoBehaviour {
                 {
                     newRoundScreen.SetActive(false);
                     StartGameRoundForAllPlayers();
-                    //Debug.Log("In BatchMode : Start Next Round");
                 }
             }
         }

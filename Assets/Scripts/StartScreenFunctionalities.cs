@@ -181,7 +181,6 @@ public class StartScreenFunctionalities : MonoBehaviour {
         if (GameGlobals.isSimulation)
         {
             StartGame();
-            Debug.Log("In BatchMode");
         }
 
 

@@ -139,28 +139,33 @@ public class EndScreenFunctionalities : MonoBehaviour
             newTableEntry.GetComponentsInChildren<Text>()[1].text = currPlayer.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ENVIRONMENT].ToString();
         }
 
-        Dictionary<string, string> gameLogEntry = new Dictionary<string, string>();
-        gameLogEntry["sessionId"] = GameGlobals.currSessionId.ToString();
-        gameLogEntry["currGameId"] = GameGlobals.currGameId.ToString();
-        gameLogEntry["condition"] = GameProperties.currSessionParameterization.id;
-        gameLogEntry["outcome"] = GameGlobals.currGameState.ToString();
-
-        gameLogEntry["env_state"] = GameGlobals.envState.ToString();
         for (int i = 0; i < GameGlobals.players.Count; i++)
         {
+            Dictionary<string, string> gameLogEntry = new Dictionary<string, string>();
+            gameLogEntry["sessionId"] = GameGlobals.currSessionId.ToString();
+            gameLogEntry["currGameId"] = GameGlobals.currGameId.ToString();
+            gameLogEntry["condition"] = GameProperties.currSessionParameterization.id;
+            gameLogEntry["outcome"] = GameGlobals.currGameState.ToString();
+
+            gameLogEntry["env_state"] = GameGlobals.envState.ToString();
+
+
             Player player = GameGlobals.players[i];
             float econInv = (float)player.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ECONOMIC];
             float envInv = (float)player.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ENVIRONMENT];
             float totalInv = econInv + envInv;
-            
-            gameLogEntry["playerId_" + player.GetId() + "_pos"] = i.ToString();
-            gameLogEntry["playerId_" + player.GetId() + "_type"] = player.GetPlayerType();
-            gameLogEntry["playerId_" + player.GetId() + "_econ_state"] = player.GetMoney().ToString();
-            gameLogEntry["playerId_" + player.GetId() + "_econ_history_perc"] = (econInv / totalInv).ToString();
-            gameLogEntry["playerId_" + player.GetId() + "_env_history_perc"] = (envInv / totalInv).ToString();
+
+            gameLogEntry["playerId"] = player.GetId().ToString();
+
+            gameLogEntry["pos"] = i.ToString();
+            gameLogEntry["type"] = player.GetPlayerType();
+            gameLogEntry["econ_state"] = player.GetMoney().ToString();
+            gameLogEntry["econ_history_perc"] = (econInv / totalInv).ToString();
+            gameLogEntry["env_history_perc"] = (envInv / totalInv).ToString();
+
+            yield return GameGlobals.gameLogManager.UpdateLog("fortheplanetlogs", "gameresultslog", "&q={\"currGameId\": \"" + GameGlobals.currGameId.ToString() + "\", \"sessionId\":\"" + GameGlobals.currSessionId.ToString() + "\", \"playerId\":\"" + player.GetId().ToString() + "\"}", gameLogEntry);
         }
 
-        yield return GameGlobals.gameLogManager.UpdateLog("fortheplanetlogs", "gameresultslog", "&q={\"currGameId\": \"" + GameGlobals.currGameId.ToString() + "\", \"sessionId\":\"" + GameGlobals.currSessionId.ToString() + "\"}", gameLogEntry);
 
 
 

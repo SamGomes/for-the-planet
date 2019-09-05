@@ -10,8 +10,8 @@ public class AIPlayer : Player
 
     protected InteractionModule interactionModule;
 
-    public AIPlayer(InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name): 
-        base(playerCanvas, warningScreenRef, UIAvatar, id, name)
+    public AIPlayer(string type, InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name): 
+        base(type, playerCanvas, warningScreenRef, UIAvatar, id, name)
     {
         this.interactionModule = interactionModule;
         this.playerSelfDisablerUI.SetActive(true);
@@ -178,8 +178,8 @@ public class AIPlayer : Player
 
 public class AIPlayerCooperator : AIPlayer
 {
-    public AIPlayerCooperator(InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
-        base(interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name)
+    public AIPlayerCooperator(string type, InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
+        base(type, interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name)
     { }
 
     public override IEnumerator AutoBudgetAllocation()
@@ -195,8 +195,8 @@ public class AIPlayerCooperator : AIPlayer
 
 public class AIPlayerDefector : AIPlayer
 {
-    public AIPlayerDefector(InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
-        base(interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name)
+    public AIPlayerDefector(string type, InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
+        base(type, interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name)
     { }
 
     public override IEnumerator AutoBudgetAllocation()
@@ -211,8 +211,8 @@ public class AIPlayerDefector : AIPlayer
 
 public class AIPlayerBalancedCooperator : AIPlayer
 {
-    public AIPlayerBalancedCooperator(InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
-        base(interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name)
+    public AIPlayerBalancedCooperator(string type, InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
+        base(type, interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name)
     { }
 
     public override IEnumerator AutoBudgetAllocation()
@@ -235,8 +235,8 @@ public class AIPlayerBalancedCooperator : AIPlayer
 
 public class AIPlayerBalancedDefector : AIPlayer
 {
-    public AIPlayerBalancedDefector(InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
-        base(interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name)
+    public AIPlayerBalancedDefector(string type, InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
+        base(type, interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name)
     { }
 
     public override IEnumerator AutoBudgetAllocation()
@@ -258,8 +258,8 @@ public class AIPlayerBalancedDefector : AIPlayer
 
 public class AIPlayerRandom : AIPlayer
 {
-    public AIPlayerRandom(InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
-        base(interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name)
+    public AIPlayerRandom(string type, InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
+        base(type, interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name)
     { }
 
     public override IEnumerator AutoBudgetAllocation()

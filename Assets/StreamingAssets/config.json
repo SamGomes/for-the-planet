@@ -12,7 +12,7 @@
     "isAutomaticBriefing": true,
 
     "isSimulation": true,
-    "numGamesToSimulate": 500,
+    "numGamesToSimulate": 1,
 
     "roundBudget": 5,
     "environmentDecayBudget": 7,
