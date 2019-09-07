@@ -356,8 +356,8 @@ public class Player
             return;
         }
         unallocatedBudget -= amount;
-        currRoundInvestment[target]+=amount;
-        investmentHistory[target]+=amount;
+        currRoundInvestment[target] += amount;
+        investmentHistory[target] += amount;
 
         UpdateTokensUI();
         UpdateHistoryUI();
@@ -370,8 +370,8 @@ public class Player
             return;
         }
         unallocatedBudget += amount;
-        currRoundInvestment[target]-=amount;
-        investmentHistory[target]-=amount;
+        currRoundInvestment[target] -= amount;
+        investmentHistory[target] -= amount;
 
         UpdateTokensUI();
         UpdateHistoryUI();
