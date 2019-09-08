@@ -47,7 +47,7 @@ public class EndScreenFunctionalities : MonoBehaviour
             }
         }
 
-        Debug.Log("numGamesToSimulate: " + (GameProperties.configurableProperties.numGamesToSimulate - GameGlobals.currGameId));
+        Debug.Log("---------------------------[NumGamesToSimulate: " + (GameProperties.configurableProperties.numGamesToSimulate - GameGlobals.currGameId) +"]------------------------------------");
     }
 
     private IEnumerator LoadMainScreenAfterDelay(float delay)
@@ -139,6 +139,7 @@ public class EndScreenFunctionalities : MonoBehaviour
             newTableEntry.GetComponentsInChildren<Text>()[1].text = currPlayer.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ENVIRONMENT].ToString();
         }
 
+
         for (int i = 0; i < GameGlobals.players.Count; i++)
         {
             Dictionary<string, string> gameLogEntry = new Dictionary<string, string>();
@@ -151,17 +152,16 @@ public class EndScreenFunctionalities : MonoBehaviour
 
 
             Player player = GameGlobals.players[i];
-            float econInv = (float)player.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ECONOMIC];
-            float envInv = (float)player.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ENVIRONMENT];
-            float totalInv = econInv + envInv;
+            float econInv = (float) player.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ECONOMIC];
+            float envInv = (float) player.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ENVIRONMENT];
 
             gameLogEntry["playerId"] = player.GetId().ToString();
 
             gameLogEntry["pos"] = i.ToString();
             gameLogEntry["type"] = player.GetPlayerType();
             gameLogEntry["econ_state"] = player.GetMoney().ToString();
-            gameLogEntry["econ_history_perc"] = (econInv / totalInv).ToString();
-            gameLogEntry["env_history_perc"] = (envInv / totalInv).ToString();
+            gameLogEntry["econ_history_perc"] = (econInv / ((float) GameGlobals.currGameRoundId + 1)).ToString();
+            gameLogEntry["env_history_perc"] = (envInv / ((float)GameGlobals.currGameRoundId + 1)).ToString();
 
             yield return GameGlobals.gameLogManager.UpdateLog("fortheplanetlogs", "gameresultslog", "&q={\"currGameId\": \"" + GameGlobals.currGameId.ToString() + "\", \"sessionId\":\"" + GameGlobals.currSessionId.ToString() + "\", \"playerId\":\"" + player.GetId().ToString() + "\"}", gameLogEntry);
         }
