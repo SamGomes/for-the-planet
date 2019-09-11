@@ -1,4 +1,4 @@
-mongoexport -h ds119996.mlab.com:19996 -d fortheplanetlogs -c gameresultslog -u studyAC1 -p studyAC1 -o ./gameresultslog.csv --csv -f sessionId,currGameId,condition,outcome,env_state,playerId,pos,type,econ_state,econ_history_perc,env_history_perc
+mongoexport -h ds119996.mlab.com:19996 -d fortheplanetlogs -c gameresultslog -u studyAC1 -p studyAC1 -o ./gameresultslog.csv --csv -f sessionId,currGameId,condition,outcome,env_state,playerId,pos,type,econ_state,econ_history_perc,env_history_perc,num_played_rounds
 rem mongoexport -h ds119996.mlab.com:19996 -d fortheplanetlogs -c playerInvestmentslog -u studyAC1 -p studyAC1 -o ./playerInvestmentslog.csv --csv -f currSessionId,currGameId,currGameRoundId,Name,playerId,playerType,amountEnv,amountEcon
 rem mongoexport -h ds119996.mlab.com:19996 -d fortheplanetlogs -c playerslog -u studyAC1 -p studyAC1 -o ./playerslog.csv --csv -f sessionId,currGameId,Id,Name,type
 mongoexport -h ds119996.mlab.com:19996 -d fortheplanetlogs -c feltEmotionsLog -u studyAC1 -p studyAC1 -o ./feltEmotionsLog.csv --csv -f currSessionId,currGameId,currGameRoundId,currGamePhase,playerId,playerType,emotionType,intensity

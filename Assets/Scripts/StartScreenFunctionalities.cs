@@ -87,7 +87,9 @@ public class StartScreenFunctionalities : MonoBehaviour {
         GameGlobals.players = new List<Player>();
 
         //GameGlobals.gameLogManager = new SilentLogManager();
+        //GameGlobals.gameLogManager = new DebugLogManager();
         GameGlobals.gameLogManager = new MongoDBLogManager();
+
         GameGlobals.gameLogManager.InitLogs(GameGlobals.monoBehaviourFunctionalities);
 
         GameGlobals.roundBudget = configs.roundBudget;
@@ -124,20 +126,9 @@ public class StartScreenFunctionalities : MonoBehaviour {
         {
             this.UIStartGameButton.interactable = true;
         }
-
-        if (GameProperties.configurableProperties.isAutomaticBriefing) //generate condition automatically (asynchronous)
-        {
-            StartCoroutine(GameGlobals.gameLogManager.GetFromLog("fortheplanetlogs","gameresultslog", "&s={\"_id\": -1}&l=1", YieldedActionsAfterGet)); //changes session code
-        }
-        else
-        {
-            //create session parameterization
-            SessionParameterization mock = new SessionParameterization("mock");
-            GameProperties.configurableProperties.possibleParameterizations.Add(mock);
-            this.UIStartGameButton.interactable = true;
-
-            GameProperties.configurableProperties.numSessionGames = 0; //not used
-        }
+        
+        StartCoroutine(GameGlobals.gameLogManager.GetFromLog("fortheplanetlogs","gameresultslog", "&s={\"_id\": -1}&l=1", YieldedActionsAfterGet)); //changes session code
+        this.UIStartGameButton.interactable = true;
 
         //init fatima strings
         GameGlobals.FAtiMAScenarioPath = "/Scenarios/ForThePlanet.iat";
@@ -165,15 +156,15 @@ public class StartScreenFunctionalities : MonoBehaviour {
         //{
 
         SetParameterizationCondition(lastConditionString);
-        GameProperties.configurableProperties.numSessionGames = GameProperties.currSessionParameterization.gameParameterizations.Count;
-        if (GameProperties.configurableProperties.numSessionGames >= 1)
-        {
-            this.UIStartGameButton.interactable = true;
-        }
-        else {
-            Debug.Log("number of session games cannot be less than 1");
-            this.UIStartGameButton.interactable = false;
-        }
+        //GameProperties.configurableProperties.numSessionGames = GameProperties.currSessionParameterization.gameParameterizations.Count;
+        //if (GameProperties.configurableProperties.numSessionGames >= 1)
+        //{
+        //    this.UIStartGameButton.interactable = true;
+        //}
+        //else {
+        //    Debug.Log("number of session games cannot be less than 1");
+        //    this.UIStartGameButton.interactable = false;
+        //}
         //}
         GameGlobals.currGameCondition = lastConditionString;
 

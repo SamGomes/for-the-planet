@@ -142,110 +142,11 @@ public class GameSetupFunctionalities : MonoBehaviour {
         playerWarningPoppupRef = new PopupScreenFunctionalities(true, null, null, poppupPrefab, playerCanvas, GameGlobals.monoBehaviourFunctionalities, Resources.Load<Sprite>("Textures/UI/Icons/Info"), new Color(0.9f, 0.9f, 0.9f), "Audio/snap");
         setupWarningPoppupRef = new PopupScreenFunctionalities(true, null, null, poppupPrefab, playerCanvas, GameGlobals.monoBehaviourFunctionalities, Resources.Load<Sprite>("Textures/UI/Icons/Info"), new Color(0.9f, 0.9f, 0.9f), "Audio/snap");
         Object.DontDestroyOnLoad(playerCanvas);
-
        
-        if (!GameProperties.configurableProperties.isSimulation && !GameProperties.configurableProperties.isAutomaticBriefing)
-        {
-            GameParameterization manualGameParam = new GameParameterization();
-            manualGameParam.playerParameterizations = new List<PlayerParameterization>();
-
-
-            this.customizeLabel = GameObject.Find("Canvas/SetupScreen/customizeLabel").gameObject;
-
-            this.UIResetButton = GameObject.Find("Canvas/SetupScreen/resetButton").gameObject.GetComponent<Button>();
-            this.UINameSelectionInputBox = GameObject.Find("Canvas/SetupScreen/nameSelectionInputBox").gameObject.GetComponent<InputField>();
-            this.UIStartGameButton = GameObject.Find("Canvas/SetupScreen/startGameButton").gameObject.GetComponent<Button>();
-            this.UIAddPlayerButton = GameObject.Find("Canvas/SetupScreen/addPlayerGameButton").gameObject.GetComponent<Button>();
-
-            this.UIAIPlayerSelectionButtonsObject = GameObject.Find("Canvas/SetupScreen/addAIPlayerGameButtons").gameObject;
-            Button[] UIAIPlayerSelectionButtons= UIAIPlayerSelectionButtonsObject.GetComponentsInChildren<Button>();
-
-            this.configSelectionButtonsObject = GameObject.Find("Canvas/SetupScreen/configButtons").gameObject;
-            Button[] UIConfigButtons = configSelectionButtonsObject.GetComponentsInChildren<Button>();
-
-            UIResetButton.onClick.AddListener(delegate {
-                GameGlobals.players.Clear();
-                foreach (Button button in UIAIPlayerSelectionButtons)
-                {
-                    button.interactable = true;
-                }
-            });
-
-
-            UIStartGameButton.gameObject.SetActive(false);
-
-            UIStartGameButton.onClick.AddListener(delegate { StartGame(); });
-            UIAddPlayerButton.onClick.AddListener(delegate {
-                manualGameParam.playerParameterizations.Add(new PlayerParameterization("Sam", "HUMAN", "BALOON"));
-                CheckForAllPlayersRegistered(manualGameParam);
-            });
-
-
-            manualGameParam.diceLogic = "RANDOM";
-            for (int i=0; i < UIAIPlayerSelectionButtons.Length; i++)
-            {
-                GameGlobals.numberOfSpeakingPlayers++;
-                Button button = UIAIPlayerSelectionButtons[i];
-                button.onClick.AddListener(delegate
-                {
-                    int index = new List<Button>(UIAIPlayerSelectionButtons).IndexOf(button);
-                    switch (index+4)
-                    {
-                        //case GameProperties.PlayerType.SIMPLE:
-                        //    manualGameParam.playerParameterizations.Add(new PlayerParameterization("Sam", "SIMPLE", false));
-                        //    break;
-                        case 0:
-                            manualGameParam.playerParameterizations.Add(new PlayerParameterization("Cristoph", "COOPERATIVE", "BALOON", false));
-                            break;
-                        case 1:
-                            manualGameParam.playerParameterizations.Add(new PlayerParameterization("Giovanni", "GREEDY", "BALOON", false));
-                            break;
-                        case 2:
-                            manualGameParam.playerParameterizations.Add(new PlayerParameterization("Brian", "BALANCED", "BALOON", false));
-                            break;
-                        case 3:
-                            manualGameParam.playerParameterizations.Add(new PlayerParameterization("Ulrich", "UNBALANCED", "BALOON", false));
-                            break;
-                        case 4:
-                            manualGameParam.playerParameterizations.Add(new PlayerParameterization("Tim", "TITFORTAT", "BALOON", false));
-                            break;
-                    }
-                    CheckForAllPlayersRegistered(manualGameParam);
-                });
-            }
-
-            for (int i = 0; i < UIConfigButtons.Length; i++)
-            {
-                Button button = UIConfigButtons[i];
-                button.onClick.AddListener(delegate
-                {
-                    if (button.gameObject.name.EndsWith("1"))
-                    {
-                        manualGameParam.playerParameterizations.Add(new PlayerParameterization("Player", "HUMAN", "BALOON"));
-                        manualGameParam.playerParameterizations.Add(new PlayerParameterization("Player", "HUMAN", "BALOON"));
-                        manualGameParam.playerParameterizations.Add(new PlayerParameterization("Player", "HUMAN", "BALOON"));
-                        manualGameParam.diceLogic = "RANDOM";
-                    }
-                    else if (button.gameObject.name.EndsWith("2"))
-                    {
-                        manualGameParam.playerParameterizations.Add(new PlayerParameterization("Player", "COOPERATIVE", "BALOON", false));
-                        manualGameParam.playerParameterizations.Add(new PlayerParameterization("Player", "GREEDY", "BALOON", false));
-                        manualGameParam.playerParameterizations.Add(new PlayerParameterization("Player", "HUMAN", "BALOON"));
-                        manualGameParam.diceLogic = "RANDOM";
-                    }
-                    button.interactable = false;
-                    CheckForAllPlayersRegistered(manualGameParam);
-                });
-            }
-
-        }
-        else
-        {
-            //auto fetch config
-            List<GameParameterization> gameParameterizations = GameProperties.currSessionParameterization.gameParameterizations;
-            GameProperties.currGameParameterization = gameParameterizations[(GameGlobals.currGameId - 1) % gameParameterizations.Count];
-            StartGame();
-        }
+        //auto fetch config
+        List<GameParameterization> gameParameterizations = GameProperties.currSessionParameterization.gameParameterizations;
+        GameProperties.currGameParameterization = gameParameterizations[(GameGlobals.currGameId - 1) % gameParameterizations.Count];
+        StartGame();
     }
 	
 	void StartGame()
@@ -275,25 +176,11 @@ public class GameSetupFunctionalities : MonoBehaviour {
             gameLogEntry["pos"] = "-";
             gameLogEntry["econ_history_perc"] = "-";
             gameLogEntry["env_history_perc"] = "-";
+            gameLogEntry["num_played_rounds"] = "-";
 
             StartCoroutine(GameGlobals.gameLogManager.WriteToLog("fortheplanetlogs", "gameresultslog", gameLogEntry));
         }
-
-        //write players in log before starting the game
-        //Player currPlayer = null;
-        //for (int i = 0; i < GameGlobals.players.Count; i++)
-        //{
-        //    currPlayer = GameGlobals.players[i];
-
-        //    Dictionary<string, string> playerLogEntry = new Dictionary<string, string>();
-        //    playerLogEntry["currSessionId"] = GameGlobals.currSessionId.ToString();
-        //    playerLogEntry["currGameId"] = GameGlobals.currGameId.ToString();
-        //    playerLogEntry["Id"] = currPlayer.GetId().ToString();
-        //    playerLogEntry["Name"] = currPlayer.GetName();
-        //    playerLogEntry["Type"] = currPlayer.GetPlayerType();
-        //    StartCoroutine(GameGlobals.gameLogManager.WriteToLog("fortheplanetlogs","playerslog", playerLogEntry));
-        //}
-
+        
         string json = JsonUtility.ToJson(GameProperties.configurableProperties);
 
         //this init is not nice

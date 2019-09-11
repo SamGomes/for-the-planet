@@ -92,19 +92,16 @@ public class DynamicallyConfigurableGameProperties
 { 
     //(default configurations already assigned)
 
-    //----------- AutomaticBriefing -------------------
-    public bool isAutomaticBriefing = false;
-    public int numSessionGames = 0; //no tutorials
-
     //------------ Simulation --------------------
     public bool isSimulation = false;
-    public int numGamesToSimulate = 1;
+    public int numGamesToPlay = 1;
 
     public List<SessionParameterization> possibleParameterizations = new List<SessionParameterization>(); //only used when generating the AI types automatically (for example when "isSimulation=true or isAutomaticBriefing==true")
 
     public int roundBudget = 5;
     public int environmentDecayBudget = 5;
     public int playerDecayBudget = 5;
+    public int maxNumRounds = 3;
 }
 
 [Serializable]

@@ -267,13 +267,10 @@ public class AIPlayerRandom : AIPlayer
         int economyInvestment = UnityEngine.Random.Range(0, GameGlobals.roundBudget + 1);
         int environmentInvestment = GameGlobals.roundBudget - economyInvestment;
 
-        // @jbgrocha: Fatima Speech Act (emotional engine call) - Start of Budget Allocation
         yield return InvestInEconomy(economyInvestment);
         yield return InvestInEnvironment(environmentInvestment);
 
-        // @jbgrocha: Fatima Speech Act (emotional engine call) - Before ending Budget Allocation
         yield return EndBudgetAllocationPhase();
-        // @jbgrocha: Fatima Speech Act (emotional engine call) - End of Budget Allocation
     }
 
 }

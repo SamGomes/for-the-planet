@@ -47,7 +47,7 @@ public class EndScreenFunctionalities : MonoBehaviour
             }
         }
 
-        Debug.Log("---------------------------[NumGamesToSimulate: " + (GameProperties.configurableProperties.numGamesToSimulate - GameGlobals.currGameId) +"]------------------------------------");
+        Debug.Log("---------------------------[NumGamesToSimulate: " + (GameProperties.configurableProperties.numGamesToPlay - GameGlobals.currGameId) +"]------------------------------------");
     }
 
     private IEnumerator LoadMainScreenAfterDelay(float delay)
@@ -64,9 +64,9 @@ public class EndScreenFunctionalities : MonoBehaviour
 
         //Text UIEndGameButtonText = UIEndGameButton.GetComponentInChildren<Text>();
         Text UIRestartGameButtonText = UIRestartGameButton.GetComponentInChildren<Text>();
-        if (GameProperties.configurableProperties.isAutomaticBriefing)
+        if (!GameProperties.configurableProperties.isSimulation)
         {
-            if (GameGlobals.currGameId >= GameProperties.configurableProperties.numSessionGames)
+            if (GameGlobals.currGameId >= GameProperties.configurableProperties.numGamesToPlay)
             {
                 //infoPoppupNeutralRef.DisplayPoppup("You reached the end of the experiment. You should now fill in the first questionnaire and you need to memorize the following code and also your score.");
                 infoPoppupNeutralRef.DisplayPoppup("You reached the end of the second game. Please write down your score, as well as the following gamecode, and fill the second questionnaire to finish the experiment.");
@@ -160,8 +160,9 @@ public class EndScreenFunctionalities : MonoBehaviour
             gameLogEntry["pos"] = i.ToString();
             gameLogEntry["type"] = player.GetPlayerType();
             gameLogEntry["econ_state"] = player.GetMoney().ToString();
-            gameLogEntry["econ_history_perc"] = (econInv / ((float) GameGlobals.currGameRoundId + 1)).ToString();
-            gameLogEntry["env_history_perc"] = (envInv / ((float)GameGlobals.currGameRoundId + 1)).ToString();
+            gameLogEntry["econ_history_perc"] = econInv.ToString();
+            gameLogEntry["env_history_perc"] = envInv.ToString();
+            gameLogEntry["num_played_rounds"] = (GameGlobals.currGameRoundId + 1).ToString();
 
             yield return GameGlobals.gameLogManager.UpdateLog("fortheplanetlogs", "gameresultslog", "&q={\"currGameId\": \"" + GameGlobals.currGameId.ToString() + "\", \"sessionId\":\"" + GameGlobals.currSessionId.ToString() + "\", \"playerId\":\"" + player.GetId().ToString() + "\"}", gameLogEntry);
         }
@@ -173,7 +174,7 @@ public class EndScreenFunctionalities : MonoBehaviour
         {
             yield return GameGlobals.gameLogManager.EndLogs();
 
-            if (GameGlobals.currGameId < GameProperties.configurableProperties.numGamesToSimulate)
+            if (GameGlobals.currGameId < GameProperties.configurableProperties.numGamesToPlay)
             {
                 RestartGame();
             }

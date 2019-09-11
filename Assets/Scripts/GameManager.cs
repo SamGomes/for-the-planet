@@ -308,7 +308,7 @@ public class GameManager : MonoBehaviour {
             }
             else
             {
-                if (GameGlobals.currGameRoundId > 2)
+                if (GameGlobals.currGameRoundId > GameProperties.configurableProperties.maxNumRounds)
                 {
                     GameGlobals.currGameState = GameProperties.GameState.VICTORY;
                     // ONHOLD @jbgrocha: Send GAME Victory Event to AIPlayers (call AIplayer update emotional module function)
@@ -352,8 +352,6 @@ public class GameManager : MonoBehaviour {
             //players perceive round start
             events.Add(RolePlayCharacter.EventHelper.ActionEnd("World", "State(Round,Start)", player.GetName()));
             player.Perceive(events);
-
-            player.SetRoundBudget(GameGlobals.roundBudget);
         }
 
         if (GameGlobals.isNarrated)

@@ -105,7 +105,6 @@ public class Player
         }
         this.RemoveInvestment(GameProperties.InvestmentTarget.ECONOMIC, 1);
         this.AddInvestment(GameProperties.InvestmentTarget.ENVIRONMENT, 1);
-
     }
     
 
@@ -176,33 +175,6 @@ public class Player
         this.gameManagerRef = gameManagerRef;
     }
 
-    //public abstract void InformChoosePreferredInstrument(Player nextPlayer);
-    //public abstract void InformBudgetAllocation(Player invoker, GameProperties.Instrument leveledUpInstrument);
-    //public abstract void InformPlayForInstrument(Player nextPlayer);
-    //public abstract void InformLastDecision(Player nextPlayer);
-    //public abstract void InformRollDicesValue(Player invoker, int maxValue, int obtainedValue);
-    //public abstract void InformAlbumResult(int albumValue, int marketValue);
-    //public abstract void InformGameResult(GameProperties.GameState state);
-    //public abstract void InformNewAlbum();
-
-    public int GetRoundBudget()
-    {
-        return this.roundBudget;
-    }
-    public void SetRoundBudget(int newBudget)
-    {
-        this.roundBudget = newBudget;
-        this.SetUnallocatedBudget(newBudget);
-    }
-
-    public int GetUnallocatedBudget()
-    {
-        return this.unallocatedBudget;
-    }
-    public void SetUnallocatedBudget(int newBudget)
-    {
-        this.unallocatedBudget = newBudget;
-    }
 
     public int GetId()
     {
@@ -235,7 +207,8 @@ public class Player
         this.budgetExecutionScreenUI.SetActive(false);
         this.investmentSimulationScreenUI.SetActive(false);
         this.playerActionButtonUI.gameObject.SetActive(true);
-        
+
+        unallocatedBudget = GameGlobals.roundBudget;
         int halfBudget = Mathf.FloorToInt(this.unallocatedBudget / 2.0f);
         int startingEconomicInv = halfBudget;
         int startingEnvironmentInv = unallocatedBudget - halfBudget;
@@ -295,20 +268,7 @@ public class Player
     {
         int amountEnv = this.currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT];
         int amountEcon = this.currRoundInvestment[GameProperties.InvestmentTarget.ECONOMIC];
-        //Dictionary<string, string> eventLogEntry = new Dictionary<string, string>();
-        //eventLogEntry["currSessionId"] = GameGlobals.currSessionId.ToString();
-        //eventLogEntry["currGameId"] = GameGlobals.currGameId.ToString();
-        //eventLogEntry["currGameCondition"] = GameGlobals.currGameCondition.ToString();
-        //eventLogEntry["currGameRoundId"] = GameGlobals.currGameRoundId.ToString();
-        //eventLogEntry["playerId"] = this.id.ToString();
-        //eventLogEntry["playerType"] = this.GetPlayerType();
-        //eventLogEntry["amountEnv"] = amountEnv.ToString();
-        //eventLogEntry["amountEcon"] = amountEcon.ToString();
-        //playerMonoBehaviourFunctionalities.StartCoroutine(GameGlobals.gameLogManager.WriteToLog("fortheplanetlogs", "playerInvestmentslog", eventLogEntry));
-
-
-        //this.playerSelfDisablerUI.SetActive(true);
-        //hide chosen investments before next player turn
+        
         this.economicGrowthTokensDisplayUI.text = "-";
         this.environmentTokensDisplayUI.text = "-";
 
@@ -351,7 +311,7 @@ public class Player
 
     public void AddInvestment(GameProperties.InvestmentTarget target, int amount)
     {
-        if (unallocatedBudget == 0)
+        if (unallocatedBudget - amount < 0)
         {
             return;
         }
@@ -365,7 +325,7 @@ public class Player
     public void RemoveInvestment(GameProperties.InvestmentTarget target, int amount)
     {
         int currTargetInvestment = currRoundInvestment[target];
-        if (currTargetInvestment == 0)
+        if (currTargetInvestment - amount < 0)
         {
             return;
         }
