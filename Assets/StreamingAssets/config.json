@@ -1,18 +1,8 @@
 {
-    "tokenValue": 0,
-    "marketingPointValue": 1000,
-
-    "allowedPlayerActionsPerAlbum": 2,
-    "allowedPlayerTokenBuysPerRound": 1,
-    "maximumSkillLevelPerInstrument": 9000,
-
-    "numberOfAlbumsPerGame": 5,
-    "initNumberMarketDices": 2,
-
-    "isAutomaticBriefing": true,
+    "maxNumRounds": 3,
 
     "isSimulation": true,
-    "numGamesToSimulate": 1,
+    "numGamesToPlay": 3500,
 
     "roundBudget": 5,
     "environmentDecayBudget": 7,
