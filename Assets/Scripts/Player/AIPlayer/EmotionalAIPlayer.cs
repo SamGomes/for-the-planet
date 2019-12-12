@@ -154,12 +154,16 @@ public class EmotionalAIPlayer: AIPlayer
         yield return base.AutoHistoryDisplay();
 
         List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
+        int totalEconPoints = 0;
+        int totalEnvPoints = 0;
         foreach (Player player in GameGlobals.players)
         {
-            string econ = player.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ECONOMIC].ToString("0.00", CultureInfo.InvariantCulture);
-            string env = player.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ENVIRONMENT].ToString("0.00", CultureInfo.InvariantCulture);
-            events.Add(RolePlayCharacter.EventHelper.PropertyChange("HistoryDisplay(" + econ + ","+ env +")", player.GetName(), this.name));
+            totalEconPoints += player.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ECONOMIC];
+            totalEnvPoints += player.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ENVIRONMENT];
         }
+        string econStr = totalEconPoints.ToString("0.00", CultureInfo.InvariantCulture);
+        string envStr = totalEconPoints.ToString("0.00", CultureInfo.InvariantCulture);
+        events.Add(RolePlayCharacter.EventHelper.PropertyChange("HistoryDisplay(" + econStr + "," + envStr + ")", "All", this.name));
         Perceive(events);
         //in simulation compute the update imediately after
         //if (GameGlobals.isSimulation)
