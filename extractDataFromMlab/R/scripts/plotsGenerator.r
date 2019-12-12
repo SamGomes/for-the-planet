@@ -31,8 +31,11 @@ plot <- plot + labs(x = "Player Type", y = "Times Emotion was Triggered", fill =
 suppressMessages(ggsave(sprintf("plots/Emotions.png")))
 
 
-agg <- aggregate(econ_history_perc ~ type, gameresultslog, mean)
-print(agg)
-plot <- ggplot(agg, aes(x = agg$type)) + geom_bar(fill=agg$type, y = agg$econ_history_perc ,color="black", stat="identity", fill = "#638ad3", position = "dodge")  + geom_bar(fill=agg$type, y = agg$econ_history_perc ,color="black", stat="identity", fill = "#638ad3", position = "dodge") 
-plot <- plot + labs(x = "Player Type", y = "Avg. Investments (%)", fill = "Investment Target") + theme(axis.text=element_text(size = 15), axis.title=element_text(size = 15, face = "bold")) + scale_x_discrete(labels = as.character(c("Constructive\nCollectivist","Constructive\nIndividualist","Disruptive\nCollectivist","Disruptive\nIndividualistic","Random")))  
+meltedResults <- melt(gameresultslog, id.vars= c("sessionId","playerId","type"), measure.vars = c("econ_history_perc","env_history_perc"))
+colnames(meltedResults)[4] <- "target"
+colnames(meltedResults)[5] <- "investment"
+aggResults <- aggregate(investment ~ type + target , meltedResults, mean)
+plot <- ggplot(aggResults, aes(x = aggResults$type, y=aggResults$investment, fill = aggResults$target)) + geom_bar(color="black", stat="identity", position="dodge") 
+plot <- plot + scale_fill_discrete(labels = as.character(c("Economy","Environment")))
+plot <- plot + labs(x = "Player Type", y = "Avg. Investments (%)", fill = "Investment Target") + theme(axis.text = element_text(size = 15), axis.title = element_text(size = 15, face = "bold")) + scale_x_discrete(labels = as.character(c("Constructive\nCollectivist","Constructive\nIndividualist","Disruptive\nCollectivist","Disruptive\nIndividualistic","Random")))  
 suppressMessages(ggsave(sprintf("plots/Investments.png")))
