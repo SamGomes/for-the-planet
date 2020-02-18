@@ -1,4 +1,5 @@
-﻿using RolePlayCharacter;
+﻿using System;
+using RolePlayCharacter;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
@@ -9,6 +10,7 @@ using UnityEngine.UI;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Globalization;
+using Object = UnityEngine.Object;
 
 public class Player
 {
@@ -69,7 +71,6 @@ public class Player
         this.warningScreenRef = warningScreenRef;
 
         this.money = 0.0f;
-
         this.type = type;
 
         investmentHistory = new Dictionary<GameProperties.InvestmentTarget, int>();
@@ -80,7 +81,10 @@ public class Player
         currRoundInvestment[GameProperties.InvestmentTarget.ECONOMIC] = 0;
         currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT] = 0;
 
-        InitUI(playerCanvas, warningScreenRef, UIAvatar);
+        if (!GameGlobals.isSimulation)
+        {
+            InitUI(playerCanvas, warningScreenRef, UIAvatar);
+        }
     }
 
 
@@ -164,10 +168,7 @@ public class Player
         this.budgetExecutionScreenUI.SetActive(false);
         this.investmentSimulationScreenUI.SetActive(false);
         this.playerActionButtonUI.gameObject.SetActive(false);
-    
         this.playerActionButtonUI.gameObject.SetActive(false);
-        //this.playerMarkerUI.SetActive(false);
-        //this.playerDisablerUI.SetActive(true);
     }
 
 
@@ -200,13 +201,15 @@ public class Player
 
     public virtual void BudgetAllocationPhaseRequest()
     {
-        //this.playerSelfDisablerUI.SetActive(false);
-
-        this.budgetAllocationScreenUI.SetActive(true);
-        this.displayHistoryScreenUI.SetActive(false);
-        this.budgetExecutionScreenUI.SetActive(false);
-        this.investmentSimulationScreenUI.SetActive(false);
-        this.playerActionButtonUI.gameObject.SetActive(true);
+        if (!GameGlobals.isSimulation)
+        {
+            this.budgetAllocationScreenUI.SetActive(true);
+            this.displayHistoryScreenUI.SetActive(false);
+            this.budgetExecutionScreenUI.SetActive(false);
+            this.investmentSimulationScreenUI.SetActive(false);
+            this.playerActionButtonUI.gameObject.SetActive(true);
+        }
+        
 
         unallocatedBudget = GameGlobals.roundBudget;
         int halfBudget = Mathf.FloorToInt(this.unallocatedBudget / 2.0f);
@@ -219,48 +222,50 @@ public class Player
         AddInvestment(GameProperties.InvestmentTarget.ECONOMIC, startingEconomicInv);
         AddInvestment(GameProperties.InvestmentTarget.ENVIRONMENT, startingEnvironmentInv);
 
-        this.playerActionButtonUI.onClick.RemoveListener(SendBudgetAllocationPhaseResponseDelegate);
-        this.playerActionButtonUI.onClick.AddListener(SendBudgetAllocationPhaseResponseDelegate);
+        if (!GameGlobals.isSimulation)
+        {
+            this.playerActionButtonUI.onClick.RemoveListener(SendBudgetAllocationPhaseResponseDelegate);
+            this.playerActionButtonUI.onClick.AddListener(SendBudgetAllocationPhaseResponseDelegate);
+        }
     }
     public virtual void HistoryDisplayPhaseRequest()
     {
-        //this.playerSelfDisablerUI.SetActive(false);
-
-        this.budgetAllocationScreenUI.SetActive(false);
-        this.displayHistoryScreenUI.SetActive(true);
-        this.budgetExecutionScreenUI.SetActive(false);
-        this.investmentSimulationScreenUI.SetActive(false);
-        this.playerActionButtonUI.gameObject.SetActive(false);
-
-        this.playerMarkerUI.SetActive(false);
-        this.playerDisablerUI.SetActive(false);
+        if (!GameGlobals.isSimulation)
+        {
+            this.budgetAllocationScreenUI.SetActive(false);
+            this.displayHistoryScreenUI.SetActive(true);
+            this.budgetExecutionScreenUI.SetActive(false);
+            this.investmentSimulationScreenUI.SetActive(false);
+            this.playerActionButtonUI.gameObject.SetActive(false);
+            this.playerMarkerUI.SetActive(false);
+            this.playerDisablerUI.SetActive(false);
+        }
 
         SendHistoryDisplayPhaseResponse();
     }
     public virtual void BudgetExecutionPhaseRequest()
     {
-        //this.playerSelfDisablerUI.SetActive(false);
-
-        this.budgetAllocationScreenUI.SetActive(false);
-        this.displayHistoryScreenUI.SetActive(false);
-        this.budgetExecutionScreenUI.SetActive(true);
-        this.investmentSimulationScreenUI.SetActive(false);
-        this.playerActionButtonUI.gameObject.SetActive(false);
-        
+        if (!GameGlobals.isSimulation)
+        {
+            this.budgetAllocationScreenUI.SetActive(false);
+            this.displayHistoryScreenUI.SetActive(false);
+            this.budgetExecutionScreenUI.SetActive(true);
+            this.investmentSimulationScreenUI.SetActive(false);
+            this.playerActionButtonUI.gameObject.SetActive(false);
+        }
     }
     public virtual void InvestmentSimulationRequest()
     {
-        //this.playerSelfDisablerUI.SetActive(false);
-
-        this.budgetAllocationScreenUI.SetActive(false);
-        this.displayHistoryScreenUI.SetActive(false);
-        this.budgetExecutionScreenUI.SetActive(false);
-        this.investmentSimulationScreenUI.SetActive(true);
-        this.playerActionButtonUI.gameObject.SetActive(false);
-
-        this.playerMarkerUI.SetActive(false);
-        this.playerDisablerUI.SetActive(false);
-
+        if (!GameGlobals.isSimulation)
+        {
+            this.budgetAllocationScreenUI.SetActive(false);
+            this.displayHistoryScreenUI.SetActive(false);
+            this.budgetExecutionScreenUI.SetActive(false);
+            this.investmentSimulationScreenUI.SetActive(true);
+            this.playerActionButtonUI.gameObject.SetActive(false);
+            this.playerMarkerUI.SetActive(false);
+            this.playerDisablerUI.SetActive(false);
+        }
         SendInvestmentSimulationPhaseResponse();
     }
 
@@ -268,42 +273,35 @@ public class Player
     {
         int amountEnv = this.currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT];
         int amountEcon = this.currRoundInvestment[GameProperties.InvestmentTarget.ECONOMIC];
-        
-        this.economicGrowthTokensDisplayUI.text = "-";
-        this.environmentTokensDisplayUI.text = "-";
 
+        if (!GameGlobals.isSimulation)
+        {
+            this.economicGrowthTokensDisplayUI.text = "-";
+            this.environmentTokensDisplayUI.text = "-";
+        }
         playerMonoBehaviourFunctionalities.StartCoroutine(gameManagerRef.BudgetAllocationPhaseResponse(this));
-
         return 0;
     }
-
     public void SendBudgetAllocationPhaseResponseDelegate()
     {
         SendBudgetAllocationPhaseResponse();
     }
-
     public int SendHistoryDisplayPhaseResponse()
     {
-        //this.playerSelfDisablerUI.SetActive(true);
         playerMonoBehaviourFunctionalities.StartCoroutine(gameManagerRef.HistoryDisplayPhaseResponse(this));
         return 0;
     }
     public int SendBudgetExecutionPhaseResponse()
     {
-        //this.playerSelfDisablerUI.SetActive(true);
         playerMonoBehaviourFunctionalities.StartCoroutine(gameManagerRef.BudgetExecutionPhaseResponse(this));
         return 0;
     }
-
     public void SendBudgetExecutionPhaseResponseDelegate()
     {
         SendBudgetExecutionPhaseResponse();
     }
-
-
     public int SendInvestmentSimulationPhaseResponse()
     {
-        //this.playerSelfDisablerUI.SetActive(true);
         playerMonoBehaviourFunctionalities.StartCoroutine(gameManagerRef.InvestmentSimulationPhaseResponse(this));
         return 0;
     }
@@ -319,8 +317,11 @@ public class Player
         currRoundInvestment[target] += amount;
         investmentHistory[target] += amount;
 
-        UpdateTokensUI();
-        UpdateHistoryUI();
+        if (!GameGlobals.isSimulation)
+        {
+            UpdateTokensUI();
+            UpdateHistoryUI();
+        }
     }
     public void RemoveInvestment(GameProperties.InvestmentTarget target, int amount)
     {
@@ -333,8 +334,11 @@ public class Player
         currRoundInvestment[target] -= amount;
         investmentHistory[target] -= amount;
 
-        UpdateTokensUI();
-        UpdateHistoryUI();
+        if (!GameGlobals.isSimulation)
+        {
+            UpdateTokensUI();
+            UpdateHistoryUI();
+        }
     }
 
     public IEnumerator TakeAllMoney()
@@ -345,19 +349,6 @@ public class Player
     public IEnumerator SetMoney(float money)
     {
         this.money = Mathf.Clamp01(money);
-
-        //Dictionary<string, string> additionalEventArgs = new Dictionary<string, string>();
-        //additionalEventArgs.Add("Money", money.ToString("0.00", CultureInfo.InvariantCulture));
-
-        //Dictionary<string, string> eventLogEntry = new Dictionary<string, string>();
-        //eventLogEntry["currSessionId"] = GameGlobals.currSessionId.ToString();
-        //eventLogEntry["currGameId"] = GameGlobals.currGameId.ToString();
-        //eventLogEntry["currGameRoundId"] = GameGlobals.currGameRoundId.ToString();
-        //eventLogEntry["playerId"] = this.id.ToString();
-        //eventLogEntry["eventType"] = "SET_MONEY";
-        //eventLogEntry["description"] = GameGlobals.gameLogManager.StringifyDictionaryForLogAttributes(additionalEventArgs);
-        //playerMonoBehaviourFunctionalities.StartCoroutine(GameGlobals.gameLogManager.WriteToLog("fortheplanetlogs", "eventslog", eventLogEntry));
-
         if (this.dynamicSlider != null)
         {
             yield return playerMonoBehaviourFunctionalities.StartCoroutine(this.dynamicSlider.UpdateSliderValue(money));
@@ -399,6 +390,7 @@ public class Player
     }
     public Sprite GetAvatarUI()
     {
+        throw new NotImplementedException();
         return this.UIAvatar;
     }
 

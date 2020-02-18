@@ -6,14 +6,8 @@ using UnityEngine.UI;
 
 public abstract class SceneTransitionEffect
 {
-    protected GameObject transitionScreen;
-
     public SceneTransitionEffect()
-    {
-        transitionScreen = Object.Instantiate(Resources.Load<GameObject>("Prefabs/TransitionScreen"));
-        Object.DontDestroyOnLoad(transitionScreen);
-        transitionScreen.SetActive(false);
-    }
+    { }
     public abstract void LoadSceneWithEffect(string sceneName, LoadSceneMode mode);
 }
 public class Instant : SceneTransitionEffect
@@ -26,6 +20,8 @@ public class Instant : SceneTransitionEffect
 
 public class Fade: SceneTransitionEffect{
 
+    private GameObject transitionScreen;
+    
     private float fadeRate;
     private float presentationDelay;
     private Color currFadeColor;
@@ -39,7 +35,10 @@ public class Fade: SceneTransitionEffect{
         currFadeColor.a = 0.0f;
         this.fadeRate = fadeRate;
         this.presentationDelay = presentationDelay;
-
+        
+        transitionScreen = Object.Instantiate(Resources.Load<GameObject>("Prefabs/TransitionScreen"));
+        Object.DontDestroyOnLoad(transitionScreen);
+        transitionScreen.SetActive(false);
         transitionImage = transitionScreen.GetComponentInChildren<Image>();
     }
     public Fade(Sprite transitionSprite, float fadeRate, float presentationDelay) : this(Color.white, fadeRate, presentationDelay)
@@ -108,8 +107,12 @@ public class Fade: SceneTransitionEffect{
 
 public class AnimatedEffect : SceneTransitionEffect {
 
+    private GameObject transitionScreen;
     public AnimatedEffect(Animator animator) : base()
     {
+        transitionScreen = Object.Instantiate(Resources.Load<GameObject>("Prefabs/TransitionScreen"));
+        Object.DontDestroyOnLoad(transitionScreen);
+        transitionScreen.SetActive(false);
         transitionScreen.gameObject.AddComponent<Animator>().runtimeAnimatorController = animator.runtimeAnimatorController;
         //this.gameObject.SetActive(false);
     }
@@ -142,6 +145,4 @@ public class AnimatedEffect : SceneTransitionEffect {
         transitionScreen.gameObject.GetComponent<Animator>().Play(0);
         return null;
     }
-
-
 }

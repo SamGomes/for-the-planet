@@ -14,9 +14,10 @@ public class AIPlayer : Player
         base(type, playerCanvas, warningScreenRef, UIAvatar, id, name)
     {
         this.interactionModule = interactionModule;
-        this.playerSelfDisablerUI.SetActive(true);
-
-
+        if (!GameGlobals.isSimulation)
+        {
+            this.playerSelfDisablerUI.SetActive(true);
+        }
         GameObject speechBaloonPrefab = (this.GetId() % 2 == 0) ? Resources.Load<GameObject>("Prefabs/PlayerUI/speechBalloonLeft") : Resources.Load<GameObject>("Prefabs/PlayerUI/speechBalloonRight");
         interactionModule.Init(speechBaloonPrefab, playerUI, false);
     }
@@ -42,34 +43,6 @@ public class AIPlayer : Player
         SimulateMouseUp(button);
     }
 
-    public virtual IEnumerator AutoBudgetAllocation() { yield return null; }
-    public virtual IEnumerator AutoHistoryDisplay() { yield return null; }
-    public virtual IEnumerator AutoBudgetExecution() { yield return ApplyInvestments(); }
-    public virtual IEnumerator AutoInvestmentExecution() { yield return null; }
-
-    public override void BudgetAllocationPhaseRequest()
-    {
-        base.BudgetAllocationPhaseRequest();
-        playerMonoBehaviourFunctionalities.StartCoroutine(AutoBudgetAllocation());
-    }
-
-    public override void HistoryDisplayPhaseRequest()
-    {
-        base.HistoryDisplayPhaseRequest();
-        playerMonoBehaviourFunctionalities.StartCoroutine(AutoHistoryDisplay());
-    }
-
-    public override void BudgetExecutionPhaseRequest()
-    {
-        base.BudgetExecutionPhaseRequest();
-        playerMonoBehaviourFunctionalities.StartCoroutine(AutoBudgetExecution());
-    }
-
-    public override void InvestmentSimulationRequest()
-    {
-        base.InvestmentSimulationRequest();
-        playerMonoBehaviourFunctionalities.StartCoroutine(AutoInvestmentExecution());
-    }
 
     public IEnumerator ClickEconomyInvestmentButton()
     {
@@ -80,7 +53,6 @@ public class AIPlayer : Player
         }
         else
         {
-            yield return new WaitForSeconds(0.0f);
             SpendTokenInEconomicGrowth();
         }
 
@@ -110,12 +82,11 @@ public class AIPlayer : Player
     {
         if (!GameGlobals.isSimulation)
         {
-            yield return new WaitForSeconds(1.0f);
+            yield return new WaitForSeconds(0.1f);
             yield return SimulateMouseClick(this.spendTokenInEnvironmentButtonUI, 0.5f);
         }
         else
         {
-            yield return new WaitForSeconds(0.0f);
             SpendTokenInEnvironment();
         }
     }
@@ -169,6 +140,36 @@ public class AIPlayer : Player
             SendBudgetExecutionPhaseResponse();
         }
 
+    }
+    
+    
+    public virtual IEnumerator AutoBudgetAllocation() { yield return null; }
+    public virtual IEnumerator AutoHistoryDisplay() { yield return null; }
+    public virtual IEnumerator AutoBudgetExecution() { yield return ApplyInvestments(); }
+    public virtual IEnumerator AutoInvestmentExecution() { yield return null; }
+
+    public override void BudgetAllocationPhaseRequest()
+    {
+        base.BudgetAllocationPhaseRequest();
+        playerMonoBehaviourFunctionalities.StartCoroutine(AutoBudgetAllocation());
+    }
+
+    public override void HistoryDisplayPhaseRequest()
+    {
+        base.HistoryDisplayPhaseRequest();
+        playerMonoBehaviourFunctionalities.StartCoroutine(AutoHistoryDisplay());
+    }
+
+    public override void BudgetExecutionPhaseRequest()
+    {
+        base.BudgetExecutionPhaseRequest();
+        playerMonoBehaviourFunctionalities.StartCoroutine(AutoBudgetExecution());
+    }
+
+    public override void InvestmentSimulationRequest()
+    {
+        base.InvestmentSimulationRequest();
+        playerMonoBehaviourFunctionalities.StartCoroutine(AutoInvestmentExecution());
     }
 
 }

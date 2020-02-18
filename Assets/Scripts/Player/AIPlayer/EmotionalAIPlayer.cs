@@ -46,7 +46,7 @@ public class EmotionalAIPlayer: AIPlayer
         }
         if (rpcPath == null)
         {
-            warningScreenRef.DisplayPoppup("error loading fatimaRpcPath= " + fatimaRpcPath);
+            warningScreenRef.DisplayPoppup("error loading fatimaRpcPath = " + fatimaRpcPath);
         }
 
         string rpcSource = rpcPath.Source;
@@ -101,12 +101,15 @@ public class EmotionalAIPlayer: AIPlayer
             rpc.Perceive(unperceivedEvents);
             unperceivedEvents.Clear();
         }
+
         try
         {
             Act();
         }
         catch (Exception e)
-        { }
+        {
+            Debug.Log("Could not act due to the following exception: "+e.ToString());
+        }
 
 
         rpc.Update();
@@ -154,16 +157,12 @@ public class EmotionalAIPlayer: AIPlayer
         yield return base.AutoHistoryDisplay();
 
         List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
-        int totalEconPoints = 0;
-        int totalEnvPoints = 0;
         foreach (Player player in GameGlobals.players)
         {
-            totalEconPoints += player.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ECONOMIC];
-            totalEnvPoints += player.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ENVIRONMENT];
+            string econ = player.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ECONOMIC].ToString("0.00", CultureInfo.InvariantCulture);
+            string env = player.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ENVIRONMENT].ToString("0.00", CultureInfo.InvariantCulture);
+            events.Add(RolePlayCharacter.EventHelper.PropertyChange("HistoryDisplay(" + econ + ","+ env +")", player.GetName(), this.name));
         }
-        string econStr = totalEconPoints.ToString("0.00", CultureInfo.InvariantCulture);
-        string envStr = totalEconPoints.ToString("0.00", CultureInfo.InvariantCulture);
-        events.Add(RolePlayCharacter.EventHelper.PropertyChange("HistoryDisplay(" + econStr + "," + envStr + ")", "All", this.name));
         Perceive(events);
         //in simulation compute the update imediately after
         //if (GameGlobals.isSimulation)
@@ -309,7 +308,6 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
             return;
         }
 
-
         Dictionary<string, string> eventLogEntry = new Dictionary<string, string>();
         eventLogEntry["currSessionId"] = GameGlobals.currSessionId.ToString();
         eventLogEntry["currGameId"] = GameGlobals.currGameId.ToString();
@@ -357,7 +355,7 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
         float gsp = 0.0f;
         float threshold = 0.6f; //property
 
-        float numDecayDice = GameGlobals.environmentDecayBudget; //property
+//        float numDecayDice = GameGlobals.environmentDecayBudget; //property
         float maxInvest = 6 * numDice / 100.0f;
         float avgInvest = 3 * numDice / 100.0f;
         float minInvest = 1 * numDice / 100.0f;
@@ -380,9 +378,9 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
     protected float CalcGoalSuccessProbabilityDecay(float state)
     {
         float gsp = 0.0f;
-        float threshold = 0.6f; //property
+        float threshold = 0.6f;
 
-        float numDecayDice = GameGlobals.environmentDecayBudget; //property
+        float numDecayDice = GameGlobals.environmentDecayBudget;
         float maxDecay = 6 * numDecayDice / 100.0f;
         float avgDecay = 3 * numDecayDice / 100.0f;
         float minDecay = 1 * numDecayDice / 100.0f;
@@ -391,7 +389,7 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
         {
             gsp = 1;
         }
-        else if (state - avgDecay >= threshold )
+        else if (state - avgDecay >= threshold)
         {
             gsp = 0.75f;
         }

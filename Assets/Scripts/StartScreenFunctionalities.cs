@@ -53,10 +53,7 @@ public class StartScreenFunctionalities : MonoBehaviour {
         string configText = "";
         GameProperties.configurableProperties = new DynamicallyConfigurableGameProperties();
 
-
         //Assign configurable game properties from file if any
-        //Application.ExternalEval("console.log('streaming assets: "+ Application.streamingAssetsPath + "')");
-
         string path = Application.streamingAssetsPath + "/config.json";
         if (path.Contains("://") || path.Contains(":///")) //url instead of path
         {
@@ -72,14 +69,17 @@ public class StartScreenFunctionalities : MonoBehaviour {
         DynamicallyConfigurableGameProperties configs = JsonUtility.FromJson<DynamicallyConfigurableGameProperties>(configText);
         GameProperties.configurableProperties = configs;
 
-
         GameGlobals.isSimulation = configs.isSimulation || Application.isBatchMode;
 
         GameGlobals.numberOfSpeakingPlayers = 0;
         GameGlobals.currGameId++;
         GameGlobals.currGameRoundId = 0;
 
-        GameGlobals.audioManager = new AudioManager();
+        //only init audio manager if is not simulation
+        if (!GameGlobals.isSimulation)
+        {
+            GameGlobals.audioManager = new AudioManager();
+        }
         GameGlobals.gameSceneManager = new GameSceneManager();
 
         GameGlobals.currGameState = GameProperties.GameState.NOT_FINISHED;
@@ -87,7 +87,7 @@ public class StartScreenFunctionalities : MonoBehaviour {
         GameGlobals.players = new List<Player>();
 
         //GameGlobals.gameLogManager = new SilentLogManager();
-        //GameGlobals.gameLogManager = new DebugLogManager();
+//        GameGlobals.gameLogManager = new DebugLogManager();
         GameGlobals.gameLogManager = new MongoDBLogManager();
 
         GameGlobals.gameLogManager.InitLogs(GameGlobals.monoBehaviourFunctionalities);
@@ -116,23 +116,16 @@ public class StartScreenFunctionalities : MonoBehaviour {
                 generatedCode += (char)('A' + UnityEngine.Random.Range(0, 26));
             }
             GameGlobals.currSessionId = generatedCode;
-
-            //update the gamecode UI
-            //GameObject UIGameCodeDisplay = Object.Instantiate(UIGameCodeDisplayPrefab);
-            //UIGameCodeDisplay.GetComponentInChildren<Text>().text = "Game Code: " + GameGlobals.currSessionId;
-            //Object.DontDestroyOnLoad(UIGameCodeDisplay);
-        }
-        else
-        {
-            this.UIStartGameButton.interactable = true;
         }
         
         StartCoroutine(GameGlobals.gameLogManager.GetFromLog("fortheplanetlogs","gameresultslog", "&s={\"_id\": -1}&l=1", YieldedActionsAfterGet)); //changes session code
-        this.UIStartGameButton.interactable = true;
+        if (!GameGlobals.isSimulation)
+        {
+            this.UIStartGameButton.interactable = true;
+        }
 
         //init fatima strings
         GameGlobals.FAtiMAScenarioPath = "/Scenarios/ForThePlanet.iat";
-
         AssetManager.Instance.Bridge = new AssetManagerBridge();
         GameGlobals.FAtiMAIat = IntegratedAuthoringToolAsset.LoadFromFile(GameGlobals.FAtiMAScenarioPath);
     }
@@ -152,20 +145,7 @@ public class StartScreenFunctionalities : MonoBehaviour {
         {
             lastConditionString = results[results.Count - 1].condition.ToString();
         }
-        //if (GameGlobals.currGameId == 1)
-        //{
-
         SetParameterizationCondition(lastConditionString);
-        //GameProperties.configurableProperties.numSessionGames = GameProperties.currSessionParameterization.gameParameterizations.Count;
-        //if (GameProperties.configurableProperties.numSessionGames >= 1)
-        //{
-        //    this.UIStartGameButton.interactable = true;
-        //}
-        //else {
-        //    Debug.Log("number of session games cannot be less than 1");
-        //    this.UIStartGameButton.interactable = false;
-        //}
-        //}
         GameGlobals.currGameCondition = lastConditionString;
 
         // @jbgrocha: auto start if on batchmode
@@ -173,8 +153,6 @@ public class StartScreenFunctionalities : MonoBehaviour {
         {
             StartGame();
         }
-
-
         return 0;
     }
 
@@ -208,8 +186,8 @@ public class StartScreenFunctionalities : MonoBehaviour {
         }
         return 0;
     }
-
-
+    
+    
     private void StartGame()
     {
         GameGlobals.gameSceneManager.LoadPlayersSetupScene();
@@ -218,16 +196,21 @@ public class StartScreenFunctionalities : MonoBehaviour {
     public void InitGame()
     {
         //play theme song
-        //GameGlobals.audioManager.PlayInfinitClip("Audio/theme/themeIntro", "Audio/theme/themeLoop");
-        if(UIStartGameButton!=null)
-            UIStartGameButton.onClick.AddListener(delegate () { StartGame(); });
+        if (!GameGlobals.isSimulation)
+        {
+            //GameGlobals.audioManager.PlayInfinitClip("Audio/theme/themeIntro", "Audio/theme/themeLoop");
+            if (UIStartGameButton != null)
+                UIStartGameButton.onClick.AddListener(delegate() { StartGame(); });
+        }
 
         //thanks WebGL, because of you I've got to init a game global to init the rest of the game globals!
-        GameObject monoBehaviourDummy = Instantiate(monoBehaviourDummyPrefab);
-        DontDestroyOnLoad(monoBehaviourDummy);
-        GameGlobals.monoBehaviourFunctionalities = monoBehaviourDummy.GetComponent<MonoBehaviourFunctionalities>();
+        if (GameGlobals.monoBehaviourFunctionalities == null)
+        {
+            GameObject monoBehaviourDummy = Instantiate(monoBehaviourDummyPrefab);
+            DontDestroyOnLoad(monoBehaviourDummy);
+            GameGlobals.monoBehaviourFunctionalities = monoBehaviourDummy.GetComponent<MonoBehaviourFunctionalities>();
+        }
         GameGlobals.monoBehaviourFunctionalities.StartCoroutine(InitGameGlobals());
-        
     }
 
 
@@ -235,13 +218,16 @@ public class StartScreenFunctionalities : MonoBehaviour {
     {
         CultureInfo.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
 
-
         // Make the game perform as good as possible
-        Application.targetFrameRate = 40;
-        UIStartScreen = GameObject.Find("Canvas/StartScreen").transform;
-       
-        this.UIStartGameButton = GameObject.Find("Canvas/StartScreen/startGameButton").gameObject.GetComponent<Button>();
-        this.UIStartGameButton.interactable = false;
+        if (!GameGlobals.isSimulation)
+        {
+            Application.targetFrameRate = 40;
+            UIStartScreen = GameObject.Find("Canvas/StartScreen").transform;
+
+            this.UIStartGameButton =
+                GameObject.Find("Canvas/StartScreen/startGameButton").gameObject.GetComponent<Button>();
+            this.UIStartGameButton.interactable = false;
+        }
 
         InitGame();
         

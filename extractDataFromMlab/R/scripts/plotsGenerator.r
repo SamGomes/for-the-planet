@@ -1,6 +1,13 @@
 
-suppressMessages(library(ggplot2))
-suppressMessages(library(ez))
+# install.packages("ggplot2", repos = 'http://cran.us.r-project.org')
+# install.packages("multcomp", repos = 'http://cran.us.r-project.org')
+# install.packages("nlme", repos = 'http://cran.us.r-project.org')
+# install.packages("pastecs", repos = 'http://cran.us.r-project.org')
+# install.packages("reshape", repos = 'http://cran.us.r-project.org')
+# install.packages("tidyverse", repos = 'http://cran.us.r-project.org')
+# install.packages("sjPlot", repos = 'http://cran.us.r-project.org')
+# install.packages("sjmisc", repos = 'http://cran.us.r-project.org')
+
 suppressMessages(library(ggplot2))
 suppressMessages(library(multcomp))
 suppressMessages(library(nlme))

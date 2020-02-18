@@ -7,10 +7,7 @@ using System.Collections.Generic;
 using System.Globalization;
 
 public class GameManager : MonoBehaviour {
-
-
-    //public float lastEnvDecay;
-
+    
     public GameObject canvas;
 
     private int numPlayersToAllocateBudget;
@@ -46,11 +43,9 @@ public class GameManager : MonoBehaviour {
 
     private bool gameMainSceneFinished;
     private int interruptionRequests; //changed whenever an interruption occurs (either a poppup, warning, etc.)
-   
-
-    private int currPlayerIndex;
-    private int currSpeakingPlayerId;
     
+    private int currSpeakingPlayerId;
+    private int currPlayerIndex;
     private float phaseEndDelay;
 
     private int marketLimit;
@@ -97,68 +92,72 @@ public class GameManager : MonoBehaviour {
 
         gameMainSceneFinished = false;
         phaseEndDelay = 2.0f;
+        GameGlobals.envState = 0.1f;
 
         int numPlayers = GameGlobals.players.Count;
-        Player currPlayer = null;
-        for (int i = 0; i < numPlayers; i++)
-        {
-            currPlayer = GameGlobals.players[i];
-            currPlayer.ReceiveGameManager(this);
-            StartCoroutine(currPlayer.SetMoney(0.1f));
-
-            //Setup warnings
-            currPlayer.GetWarningScreenRef().AddOnShow(InterruptGame);
-            currPlayer.GetWarningScreenRef().AddOnHide(ContinueGame);
-        }
-
-        envDynamicSlider = new DynamicSlider(environmentSliderSceneElement.gameObject);
         
-        GameGlobals.envState = 0.1f;
-        StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState));
-        
-        DontDestroyOnLoad(CommonAreaUI);
-        
-        rollDiceOverlay.SetActive(false);
-
-        advanceRoundButton.onClick.AddListener(delegate () {
-            newRoundScreen.SetActive(false);
-            StartGameRoundForAllPlayers();
-        });
-        
-        simulateEvolutionButton.onClick.AddListener(delegate () {
-            simulateInvestmentScreen.SetActive(false);
-            StartInvestmentSimulationPhase();
-        });
-        simulateInvestmentScreen.SetActive(false);
-
-        //this init is not nice
-        Button[] allButtons = FindObjectsOfType<Button>();
-        foreach (Button button in allButtons)
-        {
-            button.onClick.AddListener(delegate () {
-                GameGlobals.audioManager.PlayClip("Audio/snap");
-            });
-        }
-
-        // Narrator (function is ienumerator)
-        if(GameGlobals.isNarrated)
-        {
-            StartCoroutine(GameGlobals.narrator.GameStart());
-        }
-
-
-        ContinueGame();
-
         // @jbgrocha: Auto Continue for Batch Mode
+        Player currPlayer = null;
         if (GameGlobals.isSimulation)
         {
+            for (int i = 0; i < numPlayers; i++)
+            {
+                currPlayer = GameGlobals.players[i];
+                currPlayer.ReceiveGameManager(this);
+                StartCoroutine(currPlayer.SetMoney(0.1f));
+            }
+
             newRoundScreen.SetActive(false);
             StartGameRoundForAllPlayers();
         }
-        
-        // ONHOLD: @jbgrocha: Send Start of New Game to AIPlayers (call AIplayer update emotional module function)
+        else
+        {
 
-        //StartCoroutine(YieldedGameUpdateLoop());
+            for (int i = 0; i < numPlayers; i++)
+            {
+                currPlayer = GameGlobals.players[i];
+                currPlayer.ReceiveGameManager(this);
+                StartCoroutine(currPlayer.SetMoney(0.1f));
+
+                //Setup warnings
+                currPlayer.GetWarningScreenRef().AddOnShow(InterruptGame);
+                currPlayer.GetWarningScreenRef().AddOnHide(ContinueGame);
+            }
+
+
+            envDynamicSlider = new DynamicSlider(environmentSliderSceneElement.gameObject);
+            StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState));
+            DontDestroyOnLoad(CommonAreaUI);
+
+            rollDiceOverlay.SetActive(false);
+
+            advanceRoundButton.onClick.AddListener(delegate()
+            {
+                newRoundScreen.SetActive(false);
+                StartGameRoundForAllPlayers();
+            });
+
+            simulateEvolutionButton.onClick.AddListener(delegate()
+            {
+                simulateInvestmentScreen.SetActive(false);
+                StartInvestmentSimulationPhase();
+            });
+            simulateInvestmentScreen.SetActive(false);
+
+            //this init is not nice
+            Button[] allButtons = FindObjectsOfType<Button>();
+            foreach (Button button in allButtons)
+            {
+                button.onClick.AddListener(delegate() { GameGlobals.audioManager.PlayClip("Audio/snap"); });
+            }
+
+            if (!GameGlobals.isSimulation && GameGlobals.isNarrated)
+            {
+                StartCoroutine(GameGlobals.narrator.GameStart());
+            }
+
+            ContinueGame();
+        }
     }
 
 
@@ -177,12 +176,12 @@ public class GameManager : MonoBehaviour {
 
         yield return StartCoroutine(currPlayer.SetEconomicResult(economicIncrease));
 
-        // Narrator - Budget Execution Economy
-        if (GameGlobals.isNarrated)
+        if (!GameGlobals.isSimulation && GameGlobals.isNarrated)
         {
             yield return GameGlobals.narrator.EconomyBudgetExecution(currPlayer, GameGlobals.currGameRoundId, economyResult);
         }
 
+        
         //roll dice for GameProperties.InvestmentTarget.ENVIRONMENT       
         diceOverlayTitle = currPlayer.GetName() + " rolling " + numTokensForEnvironment + " dice for environment ...";
         yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, numTokensForEnvironment));
@@ -192,13 +191,18 @@ public class GameManager : MonoBehaviour {
         float envIncrease = (float) environmentResult / 100.0f;
 
         GameGlobals.envState += envIncrease;
-        yield return GameGlobals.monoBehaviourFunctionalities.StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState));
+        if (!GameGlobals.isSimulation)
+        {
+            yield return GameGlobals.monoBehaviourFunctionalities.StartCoroutine(
+                envDynamicSlider.UpdateSliderValue(GameGlobals.envState));
+        }
+
         currPlayer.SetEnvironmentResult(envIncrease);
 
-        if (GameGlobals.isNarrated)
+        if (!GameGlobals.isSimulation && GameGlobals.isNarrated)
         {
-            // Narrator - Budget Execution Environment
-            yield return GameGlobals.narrator.EnvironmentBudgetExecution(currPlayer, GameGlobals.currGameRoundId, environmentResult);
+            yield return GameGlobals.narrator.EnvironmentBudgetExecution(currPlayer, GameGlobals.currGameRoundId,
+                environmentResult);
         }
 
         // Narrator (function is ienumerator)
@@ -209,15 +213,13 @@ public class GameManager : MonoBehaviour {
 
     private IEnumerator YieldedGameUpdateLoop()
     {
-        //while (true)
-        //{
-
         //avoid rerun in this case because load scene is asyncronous
         if (this.gameMainSceneFinished || this.interruptionRequests > 0)
         {
             yield return null;
         }
 
+        
         //end of first phase; trigger second phase
         if (numPlayersToAllocateBudget == 0)
         {
@@ -267,16 +269,16 @@ public class GameManager : MonoBehaviour {
 
             int environmentDecay = diceManager.GetCurrDiceTotal();
             float envDecay = ((float) environmentDecay / 100.0f);
-
-            //envDecay *= ((float) GameGlobals.players.Count + (float) GameGlobals.players.Count/2);
-
-            //lastEnvDecay = envDecay;
+            
+            
             GameGlobals.envState = Mathf.Clamp01(GameGlobals.envState - envDecay);
-            yield return StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState));
-
-            if (GameGlobals.isNarrated)
+            if (!GameGlobals.isSimulation)
             {
-                // Narrator - Environmental Decay
+                yield return StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState));
+            }
+
+            if (!GameGlobals.isSimulation && GameGlobals.isNarrated)
+            {
                 StartCoroutine(GameGlobals.narrator.EnvironmentDecaySimulation(GameGlobals.currGameRoundId, environmentDecay));
             }
 
@@ -289,9 +291,8 @@ public class GameManager : MonoBehaviour {
                 float economicDecay = ((float) economyDecay / 100.0f);
                 StartCoroutine(player.SetEconomicDecay(economicDecay));
 
-                if (GameGlobals.isNarrated)
+                if (!GameGlobals.isSimulation && GameGlobals.isNarrated)
                 {
-                    // Narrator - Player Economic Decay
                     StartCoroutine(GameGlobals.narrator.EconomyDecaySimulation(player, GameGlobals.currGameRoundId, economyDecay));
                 }
             }
@@ -300,15 +301,17 @@ public class GameManager : MonoBehaviour {
             {
                 yield return new WaitForSeconds(phaseEndDelay);
             }
+            
             //check for game end to stop the game instead of loading new round
-            if (environmentSliderSceneElement.value <= 0.05f)
+            if (GameGlobals.envState <= 0.05f)
             {
                 GameGlobals.currGameState = GameProperties.GameState.LOSS;
-                // ONHOLD @jbgrocha: Send GAME LOSS Event to AIPlayers (call AIplayer update emotional module function)
+                //ONHOLD @jbgrocha: Send GAME LOSS Event to AIPlayers (call AIplayer update emotional module function)
             }
             else
             {
-                if (GameGlobals.currGameRoundId > GameProperties.configurableProperties.maxNumRounds)
+                
+                if (GameGlobals.currGameRoundId > GameProperties.configurableProperties.maxNumRounds - 1)
                 {
                     GameGlobals.currGameState = GameProperties.GameState.VICTORY;
                     // ONHOLD @jbgrocha: Send GAME Victory Event to AIPlayers (call AIplayer update emotional module function)
@@ -322,24 +325,34 @@ public class GameManager : MonoBehaviour {
             else
             {
                 GameGlobals.currGameRoundId++;
-                newRoundScreen.SetActive(true);
-
-                // @jbgrocha: Auto Continue for Batch Mode
                 if (GameGlobals.isSimulation)
                 {
-                    newRoundScreen.SetActive(false);
                     StartGameRoundForAllPlayers();
+                }
+                else
+                {
+                    newRoundScreen.SetActive(true);
                 }
             }
         }
-
-        //YieldedGameUpdateLoop();
-        //}
     }
 
+    // Run update or fixed update if is or not simulation mode    
+    public void Update()
+    {
+        if (GameGlobals.isSimulation)
+        {
+            StartCoroutine(YieldedGameUpdateLoop());
+
+        }
+    }
     public void FixedUpdate()
     {
-        StartCoroutine(YieldedGameUpdateLoop());
+        if (!GameGlobals.isSimulation)
+        {
+            StartCoroutine(YieldedGameUpdateLoop());
+
+        }
     }
 
     public void StartGameRoundForAllPlayers()
@@ -354,23 +367,27 @@ public class GameManager : MonoBehaviour {
             player.Perceive(events);
         }
 
-        if (GameGlobals.isNarrated)
+        if (!GameGlobals.isSimulation && GameGlobals.isNarrated)
         {
-            // Narrator (function is ienumerator)
             StartCoroutine(GameGlobals.narrator.RoundStart());
         }
-
         StartAlocateBudgetPhase();
 
     }
 
+    
+    
+    //------------------------------------------Requests---------------------------------------
     public void StartAlocateBudgetPhase()
     {
-        foreach (Player player in GameGlobals.players)
+        if (!GameGlobals.isSimulation)
         {
-            player.ResetPlayerUI();
+            foreach (Player player in GameGlobals.players)
+            {
+                player.ResetPlayerUI();
+            }
+            ChangeActivePlayerUI(GameGlobals.players[0]);
         }
-        ChangeActivePlayerUI(GameGlobals.players[0]);
         GameGlobals.players[0].BudgetAllocationPhaseRequest();
     }
     public void StartDisplayHistoryPhase()
@@ -378,7 +395,10 @@ public class GameManager : MonoBehaviour {
         //this phase displays the history of all players
         foreach (Player player in GameGlobals.players)
         {
-            player.ResetPlayerUI();
+            if (!GameGlobals.isSimulation)
+            {
+                player.ResetPlayerUI();
+            }
             player.HistoryDisplayPhaseRequest();
             
             //Fatima updates
@@ -393,22 +413,22 @@ public class GameManager : MonoBehaviour {
             }
             player.Perceive(events);
 
-            if (GameGlobals.isNarrated)
+            if (!GameGlobals.isSimulation && GameGlobals.isNarrated)
             {
-                // Narrator (function is ienumerator)
                 StartCoroutine(GameGlobals.narrator.DisplayHistory(player, GameGlobals.currGameRoundId));
             }
         }
-        
     }
     public void StartExecuteBudgetPhase()
     {
-        foreach (Player player in GameGlobals.players)
+        if (!GameGlobals.isSimulation)
         {
-            player.ResetPlayerUI();
+            foreach (Player player in GameGlobals.players)
+            {
+                player.ResetPlayerUI();
+            }
+            ChangeActivePlayerUI(GameGlobals.players[0]);
         }
-
-        ChangeActivePlayerUI(GameGlobals.players[0]);
         GameGlobals.players[0].BudgetExecutionPhaseRequest();
     }
 
@@ -417,7 +437,10 @@ public class GameManager : MonoBehaviour {
         //this phase simulates the evolution of all players
         foreach (Player player in GameGlobals.players)
         {
-            player.ResetPlayerUI();
+            if (!GameGlobals.isSimulation)
+            {
+                player.ResetPlayerUI();
+            }
             player.InvestmentSimulationRequest();
         }
     }
@@ -426,16 +449,18 @@ public class GameManager : MonoBehaviour {
     //------------------------------------------Responses---------------------------------------
     public IEnumerator BudgetAllocationPhaseResponse(Player invoker)
     {
-        currSpeakingPlayerId = Random.Range(0, GameGlobals.numberOfSpeakingPlayers);
-        
+        if (!GameGlobals.isSimulation)
+        {
+            currSpeakingPlayerId = Random.Range(0, GameGlobals.numberOfSpeakingPlayers);
+        }
+
         Player currPlayer = GameGlobals.players[currPlayerIndex];
         Player nextPlayer = ChangeToNextPlayer(currPlayer);
 
         numPlayersToAllocateBudget--;
 
-        if (GameGlobals.isNarrated)
+        if (!GameGlobals.isSimulation && GameGlobals.isNarrated)
         {
-            // Narrator (function is ienumerator)
             StartCoroutine(GameGlobals.narrator.BudgetAllocation(currPlayer, GameGlobals.currGameRoundId));
         }
 
@@ -447,24 +472,15 @@ public class GameManager : MonoBehaviour {
     }
     public IEnumerator HistoryDisplayPhaseResponse(Player invoker)
     {
-        //currSpeakingPlayerId = Random.Range(0, GameGlobals.numberOfSpeakingPlayers);
-        
-        //Player currPlayer = GameGlobals.players[currPlayerIndex];
-        //Player nextPlayer = ChangeToNextPlayer(currPlayer);
-        //if (numPlayersToPlayForInstrument > 0)
-        //{
-        //foreach (var player in GameGlobals.players)
-        //{
-        //    if (player == currPlayer) continue;
-        //    player.InformPlayForInstrument(nextPlayer);
-        //}
-        //}
         numPlayersToDisplayHistory--;
         yield return null;
     }
     public IEnumerator BudgetExecutionPhaseResponse(Player invoker)
     {
-        currSpeakingPlayerId = Random.Range(0, GameGlobals.numberOfSpeakingPlayers);
+        if (!GameGlobals.isSimulation)
+        {
+            currSpeakingPlayerId = Random.Range(0, GameGlobals.numberOfSpeakingPlayers);
+        }
         
         Player currPlayer = GameGlobals.players[currPlayerIndex];
         yield return StartCoroutine(BudgetExecutionPhase(currPlayer));
@@ -478,35 +494,23 @@ public class GameManager : MonoBehaviour {
     }
     public IEnumerator InvestmentSimulationPhaseResponse(Player invoker)
     {
-        //currSpeakingPlayerId = Random.Range(0, GameGlobals.numberOfSpeakingPlayers);
-
-        //investmentSimulationResponseReceived = false;
-        //Player currPlayer = GameGlobals.players[currPlayerIndex];
-        //Player nextPlayer = ChangeToNextPlayer(currPlayer);
-
-        //if (numPlayersToSimulateInvestment > 0)
-        //{
-        //    nextPlayer.InvestmentSimulationRequest();
-        //}
-
-        
         numPlayersToSimulateInvestment--;
         yield return null;
     }
 
+    
     public Player ChangeToNextPlayer(Player currPlayer)
     {
         currPlayerIndex = (currPlayerIndex + 1) % GameGlobals.players.Count;
         Player nextPlayer = GameGlobals.players[currPlayerIndex];
-        ChangeActivePlayerUI(nextPlayer);
+        if (!GameGlobals.isSimulation)
+        {
+            ChangeActivePlayerUI(nextPlayer);
+        }
         return nextPlayer;
     }
     
 
-    public Player GetCurrentPlayer()
-    {
-        return GameGlobals.players[this.currPlayerIndex];
-    }
     public GameProperties.GamePhase GetCurrGamePhase()
     {
         return this.currGamePhase;

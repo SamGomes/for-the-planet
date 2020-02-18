@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="$USER_HOME$/.Rider2019.1/system/extResources" t="IncludeRecursive" />
+    <e p="$USER_HOME$/.Rider2019.1/system/resharper-host/local/Transient/ReSharperHost/v191/SolutionCaches/_for-the-planet.-1744071692.00" t="ExcludeRecursive" />
+    <e p="$PROJECT_DIR$" t="IncludeRecursive">
+      <e p="Assembly-CSharp-Editor.csproj" t="IncludeRecursive" />
+      <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
+      <e p="Assets" t="Include">
+        <e p="Resources" t="Include">
+          <e p="Shaders" t="Include">
+            <e p="Blur.shader" t="Include" />
+          </e>
+        </e>
+        <e p="Scripts" t="Include">
+          <e p="AudioManager.cs" t="Include" />
+          <e p="DiceManager" t="Include">
+            <e p="DiceLogic.cs" t="Include" />
+            <e p="DiceManager.cs" t="Include" />
+          </e>
+          <e p="DynamicSlider.cs" t="Include" />
+          <e p="EndScreenFunctionalities.cs" t="Include" />
+          <e p="FAtiMAStuff" t="Include">
+            <e p="AssetManagerBridge.cs" t="Include" />
+            <e p="IStorageProvider.cs" t="Include" />
+            <e p="Storage" t="Include">
+              <e p="AndroidStreamingAssetStorageProvider.cs" t="Include" />
+              <e p="DefaultResourceAssetsStorageProvider.cs" t="Include" />
+              <e p="WebGLStorageProvider.cs" t="Include" />
+            </e>
+          </e>
+          <e p="GameManager.cs" t="Include" />
+          <e p="GameSceneManager.cs" t="Include" />
+          <e p="GameSetupFunctionalities.cs" t="Include" />
+          <e p="LogManager" t="Include">
+            <e p="DebugLogManager.cs" t="Include" />
+            <e p="LogManager.cs" t="Include" />
+            <e p="MongoDBLogManager.cs" t="Include" />
+            <e p="SilentLogManager.cs" t="Include" />
+          </e>
+          <e p="MonoBehaviourFunctionalities.cs" t="Include" />
+          <e p="Narrator" t="Include">
+            <e p="Narrator.cs" t="Include" />
+          </e>
+          <e p="Player" t="Include">
+            <e p="AIPlayer" t="Include">
+              <e p="AIPlayer.cs" t="Include" />
+              <e p="EmotionalAIPlayer.cs" t="Include" />
+              <e p="IInteractionModule.cs" t="Include" />
+            </e>
+            <e p="Player.cs" t="Include" />
+          </e>
+          <e p="PoppupScreenFunctionalities.cs" t="Include" />
+          <e p="SceneTransitionEffect.cs" t="Include" />
+          <e p="StartScreenFunctionalities.cs" t="Include" />
+          <e p="Thalamus" t="Include">
+            <e p="IFTRMessages.cs" t="Include" />
+            <e p="ThalamusConnector.cs" t="Include" />
+          </e>
+          <e p="Utilities.cs" t="Include" />
+        </e>
+        <e p="WebGLIME" t="Include">
+          <e p="Editor" t="Include">
+            <e p="WebGLNativeInputFieldEditor.cs" t="Include" />
+          </e>
+          <e p="ReadMe.txt" t="Include" />
+          <e p="Scripts" t="Include">
+            <e p="WebGLNativeInputField.cs" t="Include" />
+            <e p="WebNativeDialog.cs" t="Include" />
+          </e>
+        </e>
+        <e p="link.xml" t="Include" />
+      </e>
+      <e p="Temp/bin" t="ExcludeRecursive" />
+      <e p="for-the-planet.sln" t="IncludeFlat" />
+      <e p="obj" t="ExcludeRecursive" />
+      <e p="packages" t="ExcludeRecursive" />
+    </e>
+  </component>
+</project>
