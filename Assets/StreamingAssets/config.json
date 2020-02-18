@@ -1,12 +1,12 @@
 {
     "maxNumRounds": 100,
 
-    "isSimulation": true,
+    "isSimulation": false,
     "numGamesToPlay": 35,
 
     "roundBudget": 5,
-    "environmentDecayBudget": 7,
-    "playerDecayBudget": 2,
+    "environmentDecayBudget": [7,8],
+    "playerDecayBudget": [2,3],
 
     "possibleParameterizations": [{
             "id": "['CC', 'CC', 'CC']",

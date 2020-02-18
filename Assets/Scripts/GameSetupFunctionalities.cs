@@ -155,7 +155,6 @@ public class GameSetupFunctionalities : MonoBehaviour {
         }
 
         //write game in log
-        
         foreach (Player player in GameGlobals.players)
         {
             Dictionary<string, string> gameLogEntry = new Dictionary<string, string>();

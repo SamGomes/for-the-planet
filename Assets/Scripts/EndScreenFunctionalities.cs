@@ -47,7 +47,7 @@ public class EndScreenFunctionalities : MonoBehaviour
         }
         else
         {
-            Debug.Log("Game: " + GameGlobals.currGameId +" of "+GameProperties.configurableProperties.numGamesToPlay+"]");
+            Debug.Log("[Game: " + GameGlobals.currGameId +" of "+GameProperties.configurableProperties.numGamesToPlay+"]");
         }
     }
 

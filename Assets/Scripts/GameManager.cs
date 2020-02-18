@@ -261,15 +261,14 @@ public class GameManager : MonoBehaviour {
         if (numPlayersToSimulateInvestment == 0)
         {
             currGamePhase = GameProperties.GamePhase.BUDGET_ALLOCATION;
-
             numPlayersToSimulateInvestment = GameGlobals.players.Count;
 
             string diceOverlayTitle = "Simulating environment decay ...";
-            yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, GameGlobals.environmentDecayBudget));
+            yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, Random.Range(GameGlobals.environmentDecayBudget[0],GameGlobals.environmentDecayBudget[1]+1)));
 
             int environmentDecay = diceManager.GetCurrDiceTotal();
             float envDecay = ((float) environmentDecay / 100.0f);
-            
+
             
             GameGlobals.envState = Mathf.Clamp01(GameGlobals.envState - envDecay);
             if (!GameGlobals.isSimulation)
@@ -285,7 +284,7 @@ public class GameManager : MonoBehaviour {
             foreach (Player player in GameGlobals.players)
             {
                 diceOverlayTitle = "Simulating economic decay ...";
-                yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, GameGlobals.playerDecayBudget));
+                yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, Random.Range(GameGlobals.playerDecayBudget[0],GameGlobals.playerDecayBudget[1]+1)));
 
                 int economyDecay = diceManager.GetCurrDiceTotal();
                 float economicDecay = ((float) economyDecay / 100.0f);
@@ -310,7 +309,7 @@ public class GameManager : MonoBehaviour {
             }
             else
             {
-                Debug.Log("Round: " + GameGlobals.currGameRoundId +" of "+GameProperties.configurableProperties.maxNumRounds+"]");
+                Debug.Log("[Round: " + (GameGlobals.currGameRoundId+1) +" of "+GameProperties.configurableProperties.maxNumRounds+"]");
                 if (GameGlobals.currGameRoundId > GameProperties.configurableProperties.maxNumRounds - 1)
                 {
                     GameGlobals.currGameState = GameProperties.GameState.VICTORY;

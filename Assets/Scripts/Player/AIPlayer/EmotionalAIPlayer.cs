@@ -110,8 +110,6 @@ public class EmotionalAIPlayer: AIPlayer
         {
             Debug.Log("Could not act due to the following exception: "+e.ToString());
         }
-
-
         rpc.Update();
     }
 
@@ -134,11 +132,7 @@ public class EmotionalAIPlayer: AIPlayer
         //events.Add(RolePlayCharacter.EventHelper.PropertyChange("HistoryDisplay(" + econS + "," + envS + ")", GetName(), this.name));
         events.Add(RolePlayCharacter.EventHelper.PropertyChange("BeforeBudgetAllocation(" + money.ToString("0.00", CultureInfo.InvariantCulture) + "," + GameGlobals.envState.ToString("0.00", CultureInfo.InvariantCulture) + ")", this.name, this.name));
         Perceive(events);
-        //in simulation compute the update imediately after
-        //if (GameGlobals.isSimulation)
-        //{
-            UpdateStep();
-        //}
+        UpdateStep();
 
 
         base.AutoBudgetAllocation();
@@ -164,11 +158,7 @@ public class EmotionalAIPlayer: AIPlayer
             events.Add(RolePlayCharacter.EventHelper.PropertyChange("HistoryDisplay(" + econ + ","+ env +")", player.GetName(), this.name));
         }
         Perceive(events);
-        //in simulation compute the update imediately after
-        //if (GameGlobals.isSimulation)
-        //{
         UpdateStep();
-        //}
 
         yield return null;
     }
@@ -176,50 +166,11 @@ public class EmotionalAIPlayer: AIPlayer
     public override IEnumerator AutoBudgetExecution()
     {
         yield return base.AutoBudgetExecution();
-
-        //// @jbgrocha: Fatima Speech Act (emotional engine call) - Before Budget Dice Rolls
-        //yield return ApplyInvestments();
-
-        //List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
-        ////foreach(Player player in GameGlobals.players)
-        ////{
-        ////    string econ = player.lastEnvironmentResult.ToString("0.00", CultureInfo.InvariantCulture);
-        ////    string env = player.lastEconomicResult.ToString("0.00", CultureInfo.InvariantCulture);
-        ////    //goal success probability should be obtained using a method which could be overriden according to the personality of the agent
-        ////    events.Add(RolePlayCharacter.EventHelper.PropertyChange("BudgetExecution(" + econ + ","+ env +"," + env + ")", player.GetName(), this.name));
-        ////}
-        //events.Add(RolePlayCharacter.EventHelper.PropertyChange("BudgetExecution(" + GameGlobals.envState + ")", GetName(), this.name));
-        //Perceive(events);
-        ////in simulation compute the update imediately after
-        ////if (GameGlobals.isSimulation)
-        ////{
-        //UpdateStep();
-        ////}
-
-        // @jbgrocha: Fatima Speech Act (emotional engine call) - After Budget Dice Rolls
     }
 
     public override IEnumerator AutoInvestmentExecution()
     {
         yield return base.AutoInvestmentExecution();
-
-        //List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
-        ////foreach(Player player in GameGlobals.players)
-        ////{
-        ////    string econ = player.lastEnvironmentResult.ToString("0.00", CultureInfo.InvariantCulture);
-        ////    string env = player.lastEconomicResult.ToString("0.00", CultureInfo.InvariantCulture);
-        ////    //goal success probability should be obtained using a method which could be overriden according to the personality of the agent
-        ////    events.Add(RolePlayCharacter.EventHelper.PropertyChange("BudgetExecution(" + econ + ","+ env +"," + env + ")", player.GetName(), this.name));
-        ////}
-        //events.Add(RolePlayCharacter.EventHelper.PropertyChange("DecaySimulation(" + GameGlobals.envState + ")", GetName(), this.name));
-        //Perceive(events);
-        ////in simulation compute the update imediately after
-        ////if (GameGlobals.isSimulation)
-        ////{
-        //UpdateStep();
-        ////}
-
-        yield return null;
     }
 }
 
@@ -355,7 +306,6 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
         float gsp = 0.0f;
         float threshold = 0.6f; //property
 
-//        float numDecayDice = GameGlobals.environmentDecayBudget; //property
         float maxInvest = 6 * numDice / 100.0f;
         float avgInvest = 3 * numDice / 100.0f;
         float minInvest = 1 * numDice / 100.0f;
@@ -380,7 +330,7 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
         float gsp = 0.0f;
         float threshold = 0.6f;
 
-        float numDecayDice = GameGlobals.environmentDecayBudget;
+        float numDecayDice = (GameGlobals.environmentDecayBudget[0] + GameGlobals.environmentDecayBudget[1]) / 2.0f;
         float maxDecay = 6 * numDecayDice / 100.0f;
         float avgDecay = 3 * numDecayDice / 100.0f;
         float minDecay = 1 * numDecayDice / 100.0f;
