@@ -310,7 +310,7 @@ public class GameManager : MonoBehaviour {
             }
             else
             {
-                
+                Debug.Log("Round: " + GameGlobals.currGameRoundId +" of "+GameProperties.configurableProperties.maxNumRounds+"]");
                 if (GameGlobals.currGameRoundId > GameProperties.configurableProperties.maxNumRounds - 1)
                 {
                     GameGlobals.currGameState = GameProperties.GameState.VICTORY;
