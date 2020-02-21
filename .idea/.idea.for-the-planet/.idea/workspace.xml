@@ -3,16 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="0639d0ba-cf5a-493c-bca0-69d133fc9e06" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.for-the-planet/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.for-the-planet/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/GameManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/GameManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Player/Player.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Player/Player.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/StreamingAssets/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/StreamingAssets/config.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extractDataFromMlab/R/input/gameresultslog.csv" beforeDir="false" afterPath="$PROJECT_DIR$/extractDataFromMlab/R/input/gameresultslog.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extractDataFromMlab/R/plots/OutcomeFrequencies.png" beforeDir="false" afterPath="$PROJECT_DIR$/extractDataFromMlab/R/plots/OutcomeFrequencies.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extractDataFromMlab/R/plots/Positions.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/extractDataFromMlab/R/scripts/plotsGenerator.r" beforeDir="false" afterPath="$PROJECT_DIR$/extractDataFromMlab/R/scripts/plotsGenerator.r" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/extractDataFromMlab/autoRun.bat" beforeDir="false" afterPath="$PROJECT_DIR$/extractDataFromMlab/autoRun.bat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extractDataFromMlab/extractData.bat" beforeDir="false" afterPath="$PROJECT_DIR$/extractDataFromMlab/extractData.bat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extractDataFromMlab/gameresultslog.csv" beforeDir="false" afterPath="$PROJECT_DIR$/extractDataFromMlab/gameresultslog.csv" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -553,7 +546,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="1920" />
     <option name="width" value="956" />
     <option name="height" value="1080" />
@@ -640,12 +633,12 @@
       <workItem from="1582027316240" duration="10040000" />
       <workItem from="1582062854346" duration="5409000" />
       <workItem from="1582127879148" duration="2373000" />
-      <workItem from="1582294816000" duration="6299000" />
+      <workItem from="1582294816000" duration="6897000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="38185000" />
+    <option name="totallyTimeSpent" value="38783000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -657,7 +650,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="1920" y="0" width="1920" height="1080" extended-state="7" />
+    <frame x="1920" y="0" width="1920" height="1080" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.16435432" />
