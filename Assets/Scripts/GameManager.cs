@@ -37,14 +37,12 @@ public class GameManager : MonoBehaviour {
     public GameObject CommonAreaUI;
     public Slider environmentSliderSceneElement;
     private DynamicSlider envDynamicSlider;
-    public bool isAutomaticPhaseSkipEnabled;
 
     public GameProperties.GamePhase currGamePhase;
 
     private bool gameMainSceneFinished;
     private int interruptionRequests; //changed whenever an interruption occurs (either a poppup, warning, etc.)
     
-    private int currSpeakingPlayerId;
     private int currPlayerIndex;
     private float phaseEndDelay;
 
@@ -92,7 +90,7 @@ public class GameManager : MonoBehaviour {
 
         gameMainSceneFinished = false;
         phaseEndDelay = 2.0f;
-        GameGlobals.envState = 0.1f;
+        GameGlobals.envState = 0.5f;
 
         int numPlayers = GameGlobals.players.Count;
         
@@ -175,6 +173,7 @@ public class GameManager : MonoBehaviour {
         float economicIncrease = (float) economyResult / 100.0f;
 
         yield return StartCoroutine(currPlayer.SetEconomicResult(economicIncrease));
+//        Debug.Log("economicIncrease: "+economicIncrease);
 
         if (!GameGlobals.isSimulation && GameGlobals.isNarrated)
         {
@@ -187,10 +186,10 @@ public class GameManager : MonoBehaviour {
         yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, numTokensForEnvironment));
 
         int environmentResult = diceManager.GetCurrDiceTotal();
-
         float envIncrease = (float) environmentResult / 100.0f;
+//        Debug.Log("envIncrease: "+envIncrease);
 
-        GameGlobals.envState += envIncrease;
+        GameGlobals.envState = GameGlobals.envState + envIncrease;
         if (!GameGlobals.isSimulation)
         {
             yield return GameGlobals.monoBehaviourFunctionalities.StartCoroutine(
@@ -267,10 +266,10 @@ public class GameManager : MonoBehaviour {
             yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, Random.Range(GameGlobals.environmentDecayBudget[0],GameGlobals.environmentDecayBudget[1]+1)));
 
             int environmentDecay = diceManager.GetCurrDiceTotal();
-            float envDecay = ((float) environmentDecay / 100.0f);
-
+            float envDecay = (float) environmentDecay / 100.0f;
+//            Debug.Log("envDecay: "+envDecay);
             
-            GameGlobals.envState = Mathf.Clamp01(GameGlobals.envState - envDecay);
+            GameGlobals.envState = GameGlobals.envState - envDecay;
             if (!GameGlobals.isSimulation)
             {
                 yield return StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState));
@@ -287,8 +286,9 @@ public class GameManager : MonoBehaviour {
                 yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, Random.Range(GameGlobals.playerDecayBudget[0],GameGlobals.playerDecayBudget[1]+1)));
 
                 int economyDecay = diceManager.GetCurrDiceTotal();
-                float economicDecay = ((float) economyDecay / 100.0f);
+                float economicDecay = (float) economyDecay / 100.0f;
                 StartCoroutine(player.SetEconomicDecay(economicDecay));
+//                Debug.Log("economicDecay: "+economicDecay);
 
                 if (!GameGlobals.isSimulation && GameGlobals.isNarrated)
                 {
@@ -302,19 +302,19 @@ public class GameManager : MonoBehaviour {
             }
             
             //check for game end to stop the game instead of loading new round
-            if (GameGlobals.envState <= 0.05f)
+            if (GameGlobals.envState <= 0.001f)
             {
                 GameGlobals.currGameState = GameProperties.GameState.LOSS;
                 //ONHOLD @jbgrocha: Send GAME LOSS Event to AIPlayers (call AIplayer update emotional module function)
             }
             else
             {
-                Debug.Log("[Round: " + (GameGlobals.currGameRoundId+1) +" of "+GameProperties.configurableProperties.maxNumRounds+"]");
                 if (GameGlobals.currGameRoundId > GameProperties.configurableProperties.maxNumRounds - 1)
                 {
                     GameGlobals.currGameState = GameProperties.GameState.VICTORY;
                     // ONHOLD @jbgrocha: Send GAME Victory Event to AIPlayers (call AIplayer update emotional module function)
                 }
+                Debug.Log("[Game: "+GameGlobals.currGameId+"; Round: " + (GameGlobals.currGameRoundId+1) +" of "+GameProperties.configurableProperties.maxNumRounds+"]");
             }
 
             if (GameGlobals.currGameState != GameProperties.GameState.NOT_FINISHED)
@@ -323,6 +323,23 @@ public class GameManager : MonoBehaviour {
             }
             else
             {
+                foreach(Player player in GameGlobals.players)
+                {
+                    Dictionary<string, string> logEntry = new Dictionary<string, string>()
+                    {
+                        {"currSessionId", GameGlobals.currSessionId},
+                        {"currGameId", GameGlobals.currGameId.ToString()},
+                        {"currRoundId", GameGlobals.currGameRoundId.ToString()},
+                        {"playerId", player.GetType().ToString()},
+                        {"playerType", player.GetType().ToString()},
+                        {"playerCurrInvestEcon", player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ECONOMIC].ToString()},
+                        {"playerCurrInvestEnv", player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT].ToString()},
+                        {"playerEconState", player.GetMoney().ToString()},
+                        {"envState", GameGlobals.envState.ToString()}
+                    };
+                    StartCoroutine(GameGlobals.gameLogManager.WriteToLog("fortheplanetlogs", "strategies", logEntry));
+                }
+                
                 GameGlobals.currGameRoundId++;
                 if (GameGlobals.isSimulation)
                 {
@@ -448,11 +465,6 @@ public class GameManager : MonoBehaviour {
     //------------------------------------------Responses---------------------------------------
     public IEnumerator BudgetAllocationPhaseResponse(Player invoker)
     {
-        if (!GameGlobals.isSimulation)
-        {
-            currSpeakingPlayerId = Random.Range(0, GameGlobals.numberOfSpeakingPlayers);
-        }
-
         Player currPlayer = GameGlobals.players[currPlayerIndex];
         Player nextPlayer = ChangeToNextPlayer(currPlayer);
 
@@ -476,11 +488,6 @@ public class GameManager : MonoBehaviour {
     }
     public IEnumerator BudgetExecutionPhaseResponse(Player invoker)
     {
-        if (!GameGlobals.isSimulation)
-        {
-            currSpeakingPlayerId = Random.Range(0, GameGlobals.numberOfSpeakingPlayers);
-        }
-        
         Player currPlayer = GameGlobals.players[currPlayerIndex];
         yield return StartCoroutine(BudgetExecutionPhase(currPlayer));
         Player nextPlayer = ChangeToNextPlayer(currPlayer);
