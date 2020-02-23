@@ -385,6 +385,7 @@ public class Player
     {
         return this.playerDisablerUI;
     }
+
     public Sprite GetAvatarUI()
     {
         throw new NotImplementedException();

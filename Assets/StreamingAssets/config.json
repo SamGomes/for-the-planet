@@ -1,5 +1,5 @@
     {
-    "maxNumRounds": 50,
+    "maxNumRounds": 200,
 
     "isSimulation": true,
     "numGamesToPlay": 35,

@@ -25,7 +25,7 @@ for(i in  seq(from=1, to=max(gameresultslog$num_played_rounds), by=1)) {
   totalGameResults$roundsNum[i] <- i #assume the id of the group is the first id of the players
   totalGameResults$num_played_rounds[i] <- length(which(gameresultslog$num_played_rounds >= i))/300 #assume the id of the group is the first id of the players
 }
-plot <- ggplot(totalGameResults, aes(x = totalGameResults$roundsNum , y=totalGameResults$num_played_rounds )) + geom_line(stat="identity") 
+plot <- ggplot(totalGameResults, aes(x = totalGameResults$roundsNum , y=totalGameResults$num_played_rounds)) + geom_line(stat="identity") 
 plot <- plot + ylim(0, 1.0)
 plot <- plot + labs(x = "num_played_rounds", y = "Survived Games (%)") + theme(axis.text=element_text(size = 15), axis.title=element_text(size = 15, face = "bold")) #+ scale_x_discrete(labels = as.character(c("Constructive\nCollectivist","Constructive\nIndividualist","Disruptive\nCollectivist","Disruptive\nIndividualistic","Random")))  
 suppressMessages(ggsave(sprintf("plots/OutcomeFrequencies.png"), height=6, width=10, units="in", dpi=500))
@@ -35,9 +35,11 @@ suppressMessages(ggsave(sprintf("plots/OutcomeFrequencies.png"), height=6, width
 # plot strategies
 strategieslog <- read.csv(file="input/strategies.csv", header=TRUE, sep=",")
 agg <- aggregate(playerCurrInvestEnv ~ playerType*currRoundId , strategieslog , mean)
-# print(agg)
-plot <- ggplot(agg, aes(x = agg$currRoundId, y=agg$playerCurrInvestEnv, group=agg$playerType)) + geom_line(stat="identity") 
-plot <- plot + labs(x = "Cooperation Investment", y = "Curr Round Id") + theme(axis.text = element_text(size = 15), axis.title = element_text(size = 15, face = "bold")) #+ scale_group_discrete(labels = as.character(c("Constructive\nCollectivist","Constructive\nIndividualist","Disruptive\nCollectivist","Disruptive\nIndividualistic","Random")))  
+print(agg)
+plot <- ggplot(agg, aes(x = agg$currRoundId, y=agg$playerCurrInvestEnv, group=agg$playerType, color=agg$playerType)) 
+plot <- plot + geom_line(stat="identity")
+plot <- plot + geom_point(aes(color=agg$playerType)) 
+plot <- plot + labs(x = "Curr Round Id", y = "Cooperation Investment", color="Player Type") + theme(axis.text = element_text(size = 15), axis.title = element_text(size = 15, face = "bold")) #+ scale_group_discrete(labels = as.character(c("Constructive\nCollectivist","Constructive\nIndividualist","Disruptive\nCollectivist","Disruptive\nIndividualistic","Random")))  
 suppressMessages(ggsave(sprintf("plots/Strats.png"), height=6, width=10, units="in", dpi=500))
 
 
@@ -45,17 +47,31 @@ suppressMessages(ggsave(sprintf("plots/Strats.png"), height=6, width=10, units="
 # plot env state
 agg <- aggregate(envState ~ playerType*currRoundId , strategieslog , mean)
 # print(agg)
-plot <- ggplot(agg, aes(x = agg$currRoundId, y=agg$envState, group=agg$playerType)) + geom_line(stat="identity") 
-plot <- plot + labs(x = "Env State", y = "Curr Round Id") + theme(axis.text = element_text(size = 15), axis.title = element_text(size = 15, face = "bold")) #+ scale_group_discrete(labels = as.character(c("Constructive\nCollectivist","Constructive\nIndividualist","Disruptive\nCollectivist","Disruptive\nIndividualistic","Random")))  
+plot <- ggplot(agg, aes(x = agg$currRoundId, y=agg$envState, group=agg$playerType, color=agg$playerType))
+plot <- plot + geom_line(stat="identity")
+plot <- plot + geom_point(aes(color=agg$playerType)) 
+plot <- plot + labs(x = "Curr Round Id", y = "Env State", color="Player Type") + theme(axis.text = element_text(size = 15), axis.title = element_text(size = 15, face = "bold")) #+ scale_group_discrete(labels = as.character(c("Constructive\nCollectivist","Constructive\nIndividualist","Disruptive\nCollectivist","Disruptive\nIndividualistic","Random")))  
 suppressMessages(ggsave(sprintf("plots/EnvState.png"), height=6, width=10, units="in", dpi=500))
 
 
 
+# plot emotions
+feltEmotionsLog <- read.csv(file="input/feltEmotionsLog.csv", header=TRUE, sep=",")
+# agg <- aggregate(emotionType ~ playerType*currRoundId , feltEmotionsLog , mean)
+# print(feltEmotionsLog[,50])
+plot <- ggplot(feltEmotionsLog, aes(x = feltEmotionsLog$currGameRoundId, group=feltEmotionsLog$emotionType, color=feltEmotionsLog$emotionType)) + facet_grid(. ~ playerType)
+plot <- plot + geom_line(stat="count")
+# plot <- plot + geom_point(aes(color=feltEmotionsLog$playerType)) 
+plot <- plot + labs(x = "Curr Round Id", y = "Cooperation Investment", color="Player Type") + theme(axis.text = element_text(size = 15), axis.title = element_text(size = 15, face = "bold")) #+ scale_group_discrete(labels = as.character(c("Constructive\nCollectivist","Constructive\nIndividualist","Disruptive\nCollectivist","Disruptive\nIndividualistic","Random")))  
+suppressMessages(ggsave(sprintf("plots/Emotions.png"), height=6, width=10, units="in", dpi=500))
 
-# feltEmotionsLog <- read.csv(file="input/feltEmotionsLog.csv", header=TRUE, sep=",")
-# plot <- ggplot(feltEmotionsLog, aes(x = feltEmotionsLog$playerType, fill = feltEmotionsLog$emotionType)) + geom_bar(color="black", position="fill") 
-# plot <- plot + labs(x = "Player Type", y = "Times Emotion was Triggered", fill = "Emotion Type") + theme(axis.text=element_text(size = 15), axis.title=element_text(size = 15, face = "bold")) + scale_x_discrete(labels = as.character(c("Constructive\nCollectivist","Constructive\nIndividualist","Disruptive\nCollectivist","Disruptive\nIndividualistic","Random")))  
-# suppressMessages(ggsave(sprintf("plots/Emotions.png"), height=4, width=10, units="in", dpi=500))
+
+
+# emotions
+feltEmotionsLog <- read.csv(file="input/feltEmotionsLog.csv", header=TRUE, sep=",")
+plot <- ggplot(feltEmotionsLog, aes(x = feltEmotionsLog$playerType, fill = feltEmotionsLog$emotionType)) + geom_bar(color="black", position="fill") 
+plot <- plot + labs(x = "Player Type", y = "Times Emotion was Triggered", fill = "Emotion Type") + theme(axis.text=element_text(size = 15), axis.title=element_text(size = 15, face = "bold")) + scale_x_discrete(labels = as.character(c("Constructive\nCollectivist","Constructive\nIndividualist","Disruptive\nCollectivist","Disruptive\nIndividualistic","Random")))  
+suppressMessages(ggsave(sprintf("plots/EmotionsOld.png"), height=4, width=10, units="in", dpi=500))
 
 
 # feltEmotionsLog <- read.csv(file="input/feltEmotionsLog.csv", header=TRUE, sep=",")
