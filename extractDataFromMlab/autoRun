@@ -1,6 +1,0 @@
-rem ./../build/ftp.x86_64
-rem ./extractData
-rem cp *.csv ./R/input
-
-cd R
-./compileData

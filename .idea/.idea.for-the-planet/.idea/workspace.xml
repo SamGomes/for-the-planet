@@ -2,18 +2,22 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0639d0ba-cf5a-493c-bca0-69d133fc9e06" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/GameManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/GameManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Player/Player.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Player/Player.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/StreamingAssets/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/StreamingAssets/config.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.for-the-planet/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.for-the-planet/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extractDataFromMlab/R/feltEmotionsLog (1).csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/extractDataFromMlab/R/gameresultslog (1).csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/extractDataFromMlab/R/input/feltEmotionsLog (1).csv" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/extractDataFromMlab/R/input/feltEmotionsLog.csv" beforeDir="false" afterPath="$PROJECT_DIR$/extractDataFromMlab/R/input/feltEmotionsLog.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extractDataFromMlab/R/input/gameresultslog (1).csv" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/extractDataFromMlab/R/input/gameresultslog.csv" beforeDir="false" afterPath="$PROJECT_DIR$/extractDataFromMlab/R/input/gameresultslog.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/extractDataFromMlab/R/input/strategies.csv" beforeDir="false" afterPath="$PROJECT_DIR$/extractDataFromMlab/R/input/strategies.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extractDataFromMlab/R/plots/EnvState.png" beforeDir="false" afterPath="$PROJECT_DIR$/extractDataFromMlab/R/plots/EnvState.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extractDataFromMlab/R/plots/OutcomeFrequencies.png" beforeDir="false" afterPath="$PROJECT_DIR$/extractDataFromMlab/R/plots/OutcomeFrequencies.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extractDataFromMlab/R/plots/Strats.png" beforeDir="false" afterPath="$PROJECT_DIR$/extractDataFromMlab/R/plots/Strats.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extractDataFromMlab/R/plots/Emotions.png" beforeDir="false" afterPath="$PROJECT_DIR$/extractDataFromMlab/R/plots/Emotions.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extractDataFromMlab/R/plots/EmotionsOld.png" beforeDir="false" afterPath="$PROJECT_DIR$/extractDataFromMlab/R/plots/EmotionsOld.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/extractDataFromMlab/R/scripts/plotsGenerator.r" beforeDir="false" afterPath="$PROJECT_DIR$/extractDataFromMlab/R/scripts/plotsGenerator.r" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extractDataFromMlab/autoRun.bat" beforeDir="false" afterPath="$PROJECT_DIR$/extractDataFromMlab/autoRun.bat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extractDataFromMlab/autoRun" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/extractDataFromMlab/extractData" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/extractDataFromMlab/feltEmotionsLog (1).csv" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/extractDataFromMlab/feltEmotionsLog.csv" beforeDir="false" afterPath="$PROJECT_DIR$/extractDataFromMlab/feltEmotionsLog.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extractDataFromMlab/gameresultslog (1).csv" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/extractDataFromMlab/gameresultslog.csv" beforeDir="false" afterPath="$PROJECT_DIR$/extractDataFromMlab/gameresultslog.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/extractDataFromMlab/strategies.csv" beforeDir="false" afterPath="$PROJECT_DIR$/extractDataFromMlab/strategies.csv" afterDir="false" />
     </list>
@@ -28,8 +32,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Assets/Scripts/GameManager.cs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="251">
-              <caret line="333" column="59" selection-start-line="333" selection-start-column="59" selection-end-line="333" selection-end-column="59" />
+            <state relative-caret-position="491">
+              <caret line="334" column="46" selection-start-line="334" selection-start-column="26" selection-end-line="334" selection-end-column="46" />
               <folding>
                 <marker date="1582418796736" expanded="false" signature="7:148" ph="..." />
                 <marker date="1582418796736" expanded="true" signature="191:21078" ph="{...}" />
@@ -655,12 +659,12 @@
       <workItem from="1582027316240" duration="10040000" />
       <workItem from="1582062854346" duration="5409000" />
       <workItem from="1582127879148" duration="2373000" />
-      <workItem from="1582294816000" duration="7613000" />
+      <workItem from="1582294816000" duration="8240000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="39499000" />
+    <option name="totallyTimeSpent" value="40126000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1385,8 +1389,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Assets/Scripts/GameManager.cs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="251">
-          <caret line="333" column="59" selection-start-line="333" selection-start-column="59" selection-end-line="333" selection-end-column="59" />
+        <state relative-caret-position="491">
+          <caret line="334" column="46" selection-start-line="334" selection-start-column="26" selection-end-line="334" selection-end-column="46" />
           <folding>
             <marker date="1582418796736" expanded="false" signature="7:148" ph="..." />
             <marker date="1582418796736" expanded="true" signature="191:21078" ph="{...}" />

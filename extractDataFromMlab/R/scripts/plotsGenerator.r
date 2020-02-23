@@ -23,7 +23,7 @@ gameresultslog <- read.csv(file="input/gameresultslog.csv", header=TRUE, sep=","
 totalGameResults <- data.frame(matrix(ncol = 0, nrow = max(gameresultslog$num_played_rounds)))
 for(i in  seq(from=1, to=max(gameresultslog$num_played_rounds), by=1)) {
   totalGameResults$roundsNum[i] <- i #assume the id of the group is the first id of the players
-  totalGameResults$num_played_rounds[i] <- length(which(gameresultslog$num_played_rounds >= i))/300 #assume the id of the group is the first id of the players
+  totalGameResults$num_played_rounds[i] <- length(which(gameresultslog$num_played_rounds >= i))/length(gameresultslog$num_played_rounds)  #assume the id of the group is the first id of the players
 }
 plot <- ggplot(totalGameResults, aes(x = totalGameResults$roundsNum , y=totalGameResults$num_played_rounds)) + geom_line(stat="identity") 
 plot <- plot + ylim(0, 1.0)
@@ -35,7 +35,7 @@ suppressMessages(ggsave(sprintf("plots/OutcomeFrequencies.png"), height=6, width
 # plot strategies
 strategieslog <- read.csv(file="input/strategies.csv", header=TRUE, sep=",")
 agg <- aggregate(playerCurrInvestEnv ~ playerType*currRoundId , strategieslog , mean)
-print(agg)
+# print(agg)
 plot <- ggplot(agg, aes(x = agg$currRoundId, y=agg$playerCurrInvestEnv, group=agg$playerType, color=agg$playerType)) 
 plot <- plot + geom_line(stat="identity")
 plot <- plot + geom_point(aes(color=agg$playerType)) 
@@ -57,12 +57,13 @@ suppressMessages(ggsave(sprintf("plots/EnvState.png"), height=6, width=10, units
 
 # plot emotions
 feltEmotionsLog <- read.csv(file="input/feltEmotionsLog.csv", header=TRUE, sep=",")
+# feltEmotionsLog <- feltEmotionsLog[feltEmotionsLog$emotionType == "Reproach",]
 # agg <- aggregate(emotionType ~ playerType*currRoundId , feltEmotionsLog , mean)
-# print(feltEmotionsLog[,50])
-plot <- ggplot(feltEmotionsLog, aes(x = feltEmotionsLog$currGameRoundId, group=feltEmotionsLog$emotionType, color=feltEmotionsLog$emotionType)) + facet_grid(. ~ playerType)
+# print(length(which(feltEmotionsLog$emotionType == "Reproach")))
+plot <- ggplot(feltEmotionsLog, aes(x = feltEmotionsLog$currGameRoundId, color=feltEmotionsLog$emotionType)) + facet_grid(. ~ playerType)
 plot <- plot + geom_line(stat="count")
-# plot <- plot + geom_point(aes(color=feltEmotionsLog$playerType)) 
-plot <- plot + labs(x = "Curr Round Id", y = "Cooperation Investment", color="Player Type") + theme(axis.text = element_text(size = 15), axis.title = element_text(size = 15, face = "bold")) #+ scale_group_discrete(labels = as.character(c("Constructive\nCollectivist","Constructive\nIndividualist","Disruptive\nCollectivist","Disruptive\nIndividualistic","Random")))  
+plot <- plot + geom_point(aes(x = feltEmotionsLog$currGameRoundId, color=feltEmotionsLog$emotionType), stat="count") 
+plot <- plot + labs(x = "Curr Round Id", y = "Emotion", color="Emotion Type") + theme(axis.text = element_text(size = 15), axis.title = element_text(size = 15, face = "bold")) #+ scale_group_discrete(labels = as.character(c("Constructive\nCollectivist","Constructive\nIndividualist","Disruptive\nCollectivist","Disruptive\nIndividualistic","Random")))  
 suppressMessages(ggsave(sprintf("plots/Emotions.png"), height=6, width=10, units="in", dpi=500))
 
 
