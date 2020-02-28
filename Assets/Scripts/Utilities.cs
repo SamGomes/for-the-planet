@@ -44,8 +44,8 @@ public static class GameGlobals
     public static bool isSimulation;
 
     public static int roundBudget;
-    public static int environmentDecayBudget;
-    public static int playerDecayBudget;
+    public static int[] environmentDecayBudget;
+    public static int[] playerDecayBudget;
 
     public static Dictionary<string, RolePlayCharacterAsset> storedRPCs;
 }
@@ -99,8 +99,8 @@ public class DynamicallyConfigurableGameProperties
     public List<SessionParameterization> possibleParameterizations = new List<SessionParameterization>(); //only used when generating the AI types automatically (for example when "isSimulation=true or isAutomaticBriefing==true")
 
     public int roundBudget = 5;
-    public int environmentDecayBudget = 5;
-    public int playerDecayBudget = 5;
+    public int[] environmentDecayBudget = new int[]{5,5};
+    public int[] playerDecayBudget = new int[]{5,5};
     public int maxNumRounds = 3;
 }
 

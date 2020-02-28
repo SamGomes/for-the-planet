@@ -1,4 +1,5 @@
-﻿using RolePlayCharacter;
+﻿using System;
+using RolePlayCharacter;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
@@ -9,6 +10,7 @@ using UnityEngine.UI;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Globalization;
+using Object = UnityEngine.Object;
 
 public class Player
 {
@@ -62,14 +64,13 @@ public class Player
 
     public Player(string type, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name)
     {
-        this.gameManagerRef = GameGlobals.gameManager;
+        gameManagerRef = GameGlobals.gameManager;
         this.id = id;
         this.name = name;
-        this.playerMonoBehaviourFunctionalities = GameGlobals.monoBehaviourFunctionalities;
+        playerMonoBehaviourFunctionalities = GameGlobals.monoBehaviourFunctionalities;
         this.warningScreenRef = warningScreenRef;
 
-        this.money = 0.0f;
-
+        money = 0.0f;
         this.type = type;
 
         investmentHistory = new Dictionary<GameProperties.InvestmentTarget, int>();
@@ -80,7 +81,10 @@ public class Player
         currRoundInvestment[GameProperties.InvestmentTarget.ECONOMIC] = 0;
         currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT] = 0;
 
-        InitUI(playerCanvas, warningScreenRef, UIAvatar);
+        if (!GameGlobals.isSimulation)
+        {
+            InitUI(playerCanvas, warningScreenRef, UIAvatar);
+        }
     }
 
 
@@ -113,61 +117,58 @@ public class Player
     {
         this.canvas = canvas;
 
-        this.playerUI = Object.Instantiate(Resources.Load<GameObject>("Prefabs/PlayerUI/playerUI"), canvas.transform);
+        playerUI = Object.Instantiate(Resources.Load<GameObject>("Prefabs/PlayerUI/playerUI"), canvas.transform);
 
-        this.playerMarkerUI = playerUI.transform.Find("marker").gameObject;
-        this.playerDisablerUI = playerUI.transform.Find("disabler").gameObject;
-        this.playerSelfDisablerUI = playerUI.transform.Find("selfDisabler").gameObject;
+        playerMarkerUI = playerUI.transform.Find("marker").gameObject;
+        playerDisablerUI = playerUI.transform.Find("disabler").gameObject;
+        playerSelfDisablerUI = playerUI.transform.Find("selfDisabler").gameObject;
         playerSelfDisablerUI.SetActive(false); //provide interaction by default
 
         this.UIAvatar = UIAvatar;
 
-        this.playerActionButtonUI = playerUI.transform.Find("playerActionSection/playerActionButton").gameObject.GetComponent<Button>();
+        playerActionButtonUI = playerUI.transform.Find("playerActionSection/playerActionButton").gameObject.GetComponent<Button>();
 
-        this.nameTextUI = playerUI.transform.Find("nameText").gameObject.GetComponent<Text>();
-        this.moneySliderUI = playerUI.transform.Find("playerStateSection/InvestmentUI/Slider").gameObject.GetComponent<Slider>();
+        nameTextUI = playerUI.transform.Find("nameText").gameObject.GetComponent<Text>();
+        moneySliderUI = playerUI.transform.Find("playerStateSection/InvestmentUI/Slider").gameObject.GetComponent<Slider>();
 
 
-        this.spendTokenInEconomicGrowthButtonUI = playerUI.transform.Find("playerActionSection/budgetAllocationUI/tokenSelection/alocateEconomicGrowth/Button").gameObject.GetComponent<Button>();
-        this.spendTokenInEconomicGrowthButtonUI.onClick.AddListener(SpendTokenInEconomicGrowth);
-        this.economicGrowthTokensDisplayUI = playerUI.transform.Find("playerActionSection/budgetAllocationUI/tokenSelection/alocateEconomicGrowth/display").gameObject.GetComponent<Text>();
+        spendTokenInEconomicGrowthButtonUI = playerUI.transform.Find("playerActionSection/budgetAllocationUI/tokenSelection/alocateEconomicGrowth/Button").gameObject.GetComponent<Button>();
+        spendTokenInEconomicGrowthButtonUI.onClick.AddListener(SpendTokenInEconomicGrowth);
+        economicGrowthTokensDisplayUI = playerUI.transform.Find("playerActionSection/budgetAllocationUI/tokenSelection/alocateEconomicGrowth/display").gameObject.GetComponent<Text>();
 
-        this.spendTokenInEnvironmentButtonUI = playerUI.transform.Find("playerActionSection/budgetAllocationUI/tokenSelection/alocateEnvironment/Button").gameObject.GetComponent<Button>();
-        this.spendTokenInEnvironmentButtonUI.onClick.AddListener(SpendTokenInEnvironment);
-        this.environmentTokensDisplayUI = playerUI.transform.Find("playerActionSection/budgetAllocationUI/tokenSelection/alocateEnvironment/display").gameObject.GetComponent<Text>();
+        spendTokenInEnvironmentButtonUI = playerUI.transform.Find("playerActionSection/budgetAllocationUI/tokenSelection/alocateEnvironment/Button").gameObject.GetComponent<Button>();
+        spendTokenInEnvironmentButtonUI.onClick.AddListener(SpendTokenInEnvironment);
+        environmentTokensDisplayUI = playerUI.transform.Find("playerActionSection/budgetAllocationUI/tokenSelection/alocateEnvironment/display").gameObject.GetComponent<Text>();
 
-        this.economicGrowthHistoryDisplay = playerUI.transform.Find("playerActionSection/displayHistoryUI/tokenSelection/alocateEconomicGrowth/display").gameObject.GetComponent<Text>();
-        this.environmentHistoryDisplay = playerUI.transform.Find("playerActionSection/displayHistoryUI/tokenSelection/alocateEnvironment/display").gameObject.GetComponent<Text>();
+        economicGrowthHistoryDisplay = playerUI.transform.Find("playerActionSection/displayHistoryUI/tokenSelection/alocateEconomicGrowth/display").gameObject.GetComponent<Text>();
+        environmentHistoryDisplay = playerUI.transform.Find("playerActionSection/displayHistoryUI/tokenSelection/alocateEnvironment/display").gameObject.GetComponent<Text>();
 
-        this.executeBudgetButton = playerUI.transform.Find("playerActionSection/budgetExecutionUI/rollForInvestmentButton").gameObject.GetComponent<Button>();
-        this.executeBudgetButton.onClick.AddListener(SendBudgetExecutionPhaseResponseDelegate);
+        executeBudgetButton = playerUI.transform.Find("playerActionSection/budgetExecutionUI/rollForInvestmentButton").gameObject.GetComponent<Button>();
+        executeBudgetButton.onClick.AddListener(SendBudgetExecutionPhaseResponseDelegate);
 
-        this.budgetAllocationScreenUI = playerUI.transform.Find("playerActionSection/budgetAllocationUI").gameObject;
-        this.displayHistoryScreenUI = playerUI.transform.Find("playerActionSection/displayHistoryUI").gameObject;
-        this.budgetExecutionScreenUI = playerUI.transform.Find("playerActionSection/budgetExecutionUI").gameObject;
-        this.investmentSimulationScreenUI = playerUI.transform.Find("playerActionSection/investmentSimulationUI").gameObject;
+        budgetAllocationScreenUI = playerUI.transform.Find("playerActionSection/budgetAllocationUI").gameObject;
+        displayHistoryScreenUI = playerUI.transform.Find("playerActionSection/displayHistoryUI").gameObject;
+        budgetExecutionScreenUI = playerUI.transform.Find("playerActionSection/budgetExecutionUI").gameObject;
+        investmentSimulationScreenUI = playerUI.transform.Find("playerActionSection/investmentSimulationUI").gameObject;
 
-        nameTextUI.text = this.name;
+        nameTextUI.text = name;
 
-        this.dynamicSlider = new DynamicSlider(this.playerUI.transform.Find("playerStateSection/InvestmentUI/Slider").gameObject);
+        dynamicSlider = new DynamicSlider(this.playerUI.transform.Find("playerStateSection/InvestmentUI/Slider").gameObject);
 
         //position UI on canvas
-        this.playerUI.transform.Translate(new Vector3(0, -GameGlobals.players.Count * (0.2f * Screen.height)*0.9f, 0));
+        playerUI.transform.Translate(new Vector3(0, -GameGlobals.players.Count * (0.2f * Screen.height)*0.9f, 0));
 
         ResetPlayerUI();
     }
 
     public void ResetPlayerUI()
     {
-        this.budgetAllocationScreenUI.SetActive(false);
-        this.displayHistoryScreenUI.SetActive(false);
-        this.budgetExecutionScreenUI.SetActive(false);
-        this.investmentSimulationScreenUI.SetActive(false);
-        this.playerActionButtonUI.gameObject.SetActive(false);
-    
-        this.playerActionButtonUI.gameObject.SetActive(false);
-        //this.playerMarkerUI.SetActive(false);
-        //this.playerDisablerUI.SetActive(true);
+        budgetAllocationScreenUI.SetActive(false);
+        displayHistoryScreenUI.SetActive(false);
+        budgetExecutionScreenUI.SetActive(false);
+        investmentSimulationScreenUI.SetActive(false);
+        playerActionButtonUI.gameObject.SetActive(false);
+        playerActionButtonUI.gameObject.SetActive(false);
     }
 
 
@@ -200,13 +201,15 @@ public class Player
 
     public virtual void BudgetAllocationPhaseRequest()
     {
-        //this.playerSelfDisablerUI.SetActive(false);
-
-        this.budgetAllocationScreenUI.SetActive(true);
-        this.displayHistoryScreenUI.SetActive(false);
-        this.budgetExecutionScreenUI.SetActive(false);
-        this.investmentSimulationScreenUI.SetActive(false);
-        this.playerActionButtonUI.gameObject.SetActive(true);
+        if (!GameGlobals.isSimulation)
+        {
+            this.budgetAllocationScreenUI.SetActive(true);
+            this.displayHistoryScreenUI.SetActive(false);
+            this.budgetExecutionScreenUI.SetActive(false);
+            this.investmentSimulationScreenUI.SetActive(false);
+            this.playerActionButtonUI.gameObject.SetActive(true);
+        }
+        
 
         unallocatedBudget = GameGlobals.roundBudget;
         int halfBudget = Mathf.FloorToInt(this.unallocatedBudget / 2.0f);
@@ -219,91 +222,83 @@ public class Player
         AddInvestment(GameProperties.InvestmentTarget.ECONOMIC, startingEconomicInv);
         AddInvestment(GameProperties.InvestmentTarget.ENVIRONMENT, startingEnvironmentInv);
 
-        this.playerActionButtonUI.onClick.RemoveListener(SendBudgetAllocationPhaseResponseDelegate);
-        this.playerActionButtonUI.onClick.AddListener(SendBudgetAllocationPhaseResponseDelegate);
+        if (!GameGlobals.isSimulation)
+        {
+            playerActionButtonUI.onClick.RemoveListener(SendBudgetAllocationPhaseResponseDelegate);
+            playerActionButtonUI.onClick.AddListener(SendBudgetAllocationPhaseResponseDelegate);
+        }
     }
     public virtual void HistoryDisplayPhaseRequest()
     {
-        //this.playerSelfDisablerUI.SetActive(false);
-
-        this.budgetAllocationScreenUI.SetActive(false);
-        this.displayHistoryScreenUI.SetActive(true);
-        this.budgetExecutionScreenUI.SetActive(false);
-        this.investmentSimulationScreenUI.SetActive(false);
-        this.playerActionButtonUI.gameObject.SetActive(false);
-
-        this.playerMarkerUI.SetActive(false);
-        this.playerDisablerUI.SetActive(false);
+        if (!GameGlobals.isSimulation)
+        {
+            budgetAllocationScreenUI.SetActive(false);
+            displayHistoryScreenUI.SetActive(true);
+            budgetExecutionScreenUI.SetActive(false);
+            investmentSimulationScreenUI.SetActive(false);
+            playerActionButtonUI.gameObject.SetActive(false);
+            playerMarkerUI.SetActive(false);
+            playerDisablerUI.SetActive(false);
+        }
 
         SendHistoryDisplayPhaseResponse();
     }
     public virtual void BudgetExecutionPhaseRequest()
     {
-        //this.playerSelfDisablerUI.SetActive(false);
-
-        this.budgetAllocationScreenUI.SetActive(false);
-        this.displayHistoryScreenUI.SetActive(false);
-        this.budgetExecutionScreenUI.SetActive(true);
-        this.investmentSimulationScreenUI.SetActive(false);
-        this.playerActionButtonUI.gameObject.SetActive(false);
-        
+        if (!GameGlobals.isSimulation)
+        {
+            budgetAllocationScreenUI.SetActive(false);
+            displayHistoryScreenUI.SetActive(false);
+            budgetExecutionScreenUI.SetActive(true);
+            investmentSimulationScreenUI.SetActive(false);
+            playerActionButtonUI.gameObject.SetActive(false);
+        }
     }
     public virtual void InvestmentSimulationRequest()
     {
-        //this.playerSelfDisablerUI.SetActive(false);
-
-        this.budgetAllocationScreenUI.SetActive(false);
-        this.displayHistoryScreenUI.SetActive(false);
-        this.budgetExecutionScreenUI.SetActive(false);
-        this.investmentSimulationScreenUI.SetActive(true);
-        this.playerActionButtonUI.gameObject.SetActive(false);
-
-        this.playerMarkerUI.SetActive(false);
-        this.playerDisablerUI.SetActive(false);
-
+        if (!GameGlobals.isSimulation)
+        {
+            budgetAllocationScreenUI.SetActive(false);
+            displayHistoryScreenUI.SetActive(false);
+            budgetExecutionScreenUI.SetActive(false);
+            investmentSimulationScreenUI.SetActive(true);
+            playerActionButtonUI.gameObject.SetActive(false);
+            playerMarkerUI.SetActive(false);
+            playerDisablerUI.SetActive(false);
+        }
         SendInvestmentSimulationPhaseResponse();
     }
 
     public int SendBudgetAllocationPhaseResponse()
     {
-        int amountEnv = this.currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT];
-        int amountEcon = this.currRoundInvestment[GameProperties.InvestmentTarget.ECONOMIC];
-        
-        this.economicGrowthTokensDisplayUI.text = "-";
-        this.environmentTokensDisplayUI.text = "-";
-
+        if (!GameGlobals.isSimulation)
+        {
+            economicGrowthTokensDisplayUI.text = "-";
+            environmentTokensDisplayUI.text = "-";
+        }
         playerMonoBehaviourFunctionalities.StartCoroutine(gameManagerRef.BudgetAllocationPhaseResponse(this));
-
         return 0;
     }
-
     public void SendBudgetAllocationPhaseResponseDelegate()
     {
         SendBudgetAllocationPhaseResponse();
     }
-
     public int SendHistoryDisplayPhaseResponse()
     {
-        //this.playerSelfDisablerUI.SetActive(true);
         playerMonoBehaviourFunctionalities.StartCoroutine(gameManagerRef.HistoryDisplayPhaseResponse(this));
         return 0;
     }
     public int SendBudgetExecutionPhaseResponse()
     {
-        //this.playerSelfDisablerUI.SetActive(true);
         playerMonoBehaviourFunctionalities.StartCoroutine(gameManagerRef.BudgetExecutionPhaseResponse(this));
         return 0;
     }
-
     public void SendBudgetExecutionPhaseResponseDelegate()
     {
         SendBudgetExecutionPhaseResponse();
     }
-
-
     public int SendInvestmentSimulationPhaseResponse()
     {
-        //this.playerSelfDisablerUI.SetActive(true);
         playerMonoBehaviourFunctionalities.StartCoroutine(gameManagerRef.InvestmentSimulationPhaseResponse(this));
         return 0;
     }
@@ -319,8 +314,11 @@ public class Player
         currRoundInvestment[target] += amount;
         investmentHistory[target] += amount;
 
-        UpdateTokensUI();
-        UpdateHistoryUI();
+        if (!GameGlobals.isSimulation)
+        {
+            UpdateTokensUI();
+            UpdateHistoryUI();
+        }
     }
     public void RemoveInvestment(GameProperties.InvestmentTarget target, int amount)
     {
@@ -333,8 +331,11 @@ public class Player
         currRoundInvestment[target] -= amount;
         investmentHistory[target] -= amount;
 
-        UpdateTokensUI();
-        UpdateHistoryUI();
+        if (!GameGlobals.isSimulation)
+        {
+            UpdateTokensUI();
+            UpdateHistoryUI();
+        }
     }
 
     public IEnumerator TakeAllMoney()
@@ -345,20 +346,7 @@ public class Player
     public IEnumerator SetMoney(float money)
     {
         this.money = Mathf.Clamp01(money);
-
-        //Dictionary<string, string> additionalEventArgs = new Dictionary<string, string>();
-        //additionalEventArgs.Add("Money", money.ToString("0.00", CultureInfo.InvariantCulture));
-
-        //Dictionary<string, string> eventLogEntry = new Dictionary<string, string>();
-        //eventLogEntry["currSessionId"] = GameGlobals.currSessionId.ToString();
-        //eventLogEntry["currGameId"] = GameGlobals.currGameId.ToString();
-        //eventLogEntry["currGameRoundId"] = GameGlobals.currGameRoundId.ToString();
-        //eventLogEntry["playerId"] = this.id.ToString();
-        //eventLogEntry["eventType"] = "SET_MONEY";
-        //eventLogEntry["description"] = GameGlobals.gameLogManager.StringifyDictionaryForLogAttributes(additionalEventArgs);
-        //playerMonoBehaviourFunctionalities.StartCoroutine(GameGlobals.gameLogManager.WriteToLog("fortheplanetlogs", "eventslog", eventLogEntry));
-
-        if (this.dynamicSlider != null)
+        if (dynamicSlider != null)
         {
             yield return playerMonoBehaviourFunctionalities.StartCoroutine(this.dynamicSlider.UpdateSliderValue(money));
         }
@@ -397,8 +385,10 @@ public class Player
     {
         return this.playerDisablerUI;
     }
+
     public Sprite GetAvatarUI()
     {
+        throw new NotImplementedException();
         return this.UIAvatar;
     }
 
@@ -420,7 +410,7 @@ public class Player
     }
 
 
-    public virtual string GetPlayerType()
+    public string GetPlayerType()
     {
         return this.type;
     }

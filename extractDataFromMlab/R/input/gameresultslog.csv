@@ -1,0 +1,4 @@
+sessionId,currGameId,condition,outcome,env_state,playerId,pos,type,econ_state,econ_history_perc,env_history_perc,num_played_rounds
+"281056KGZ['CC', 'CC', 'CI']",1,"['CC', 'CC', 'CI']",VICTORY,0.1800001,1,2,AI_EMOTIONAL_CONSTRUCTIVE_COLLECTIVIST,0.18,8,2,2
+"281056KGZ['CC', 'CC', 'CI']",1,"['CC', 'CC', 'CI']",VICTORY,0.1800001,0,1,AI_EMOTIONAL_CONSTRUCTIVE_COLLECTIVIST,0.25,8,2,2
+"281056KGZ['CC', 'CC', 'CI']",1,"['CC', 'CC', 'CI']",VICTORY,0.1800001,2,0,AI_EMOTIONAL_CONSTRUCTIVE_INDIVIDUALISTIC,0.34,8,2,2

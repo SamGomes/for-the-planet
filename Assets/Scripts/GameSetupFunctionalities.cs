@@ -6,19 +6,8 @@ using UnityEngine.UI;
 public class GameSetupFunctionalities : MonoBehaviour {
 
     private bool isErrorEncountered;
-    private GameObject customizeLabel;
-
-    private InputField UINameSelectionInputBox;
-    private Button UIStartGameButton;
-    private Button UIAddPlayerButton;
-    private Button UIResetButton;
-
-    private GameObject UIAIPlayerSelectionButtonsObject;
-    private GameObject configSelectionButtonsObject;
-
     
     public GameObject poppupPrefab;
-    public GameObject playerUIPrefab;
     public GameObject playerCanvas;
     private PopupScreenFunctionalities playerWarningPoppupRef;
     private PopupScreenFunctionalities setupWarningPoppupRef;
@@ -139,10 +128,17 @@ public class GameSetupFunctionalities : MonoBehaviour {
     void Start ()
     {
         isErrorEncountered = false;
-        playerWarningPoppupRef = new PopupScreenFunctionalities(true, null, null, poppupPrefab, playerCanvas, GameGlobals.monoBehaviourFunctionalities, Resources.Load<Sprite>("Textures/UI/Icons/Info"), new Color(0.9f, 0.9f, 0.9f), "Audio/snap");
-        setupWarningPoppupRef = new PopupScreenFunctionalities(true, null, null, poppupPrefab, playerCanvas, GameGlobals.monoBehaviourFunctionalities, Resources.Load<Sprite>("Textures/UI/Icons/Info"), new Color(0.9f, 0.9f, 0.9f), "Audio/snap");
-        Object.DontDestroyOnLoad(playerCanvas);
-       
+        if (!GameGlobals.isSimulation)
+        {
+            playerWarningPoppupRef = new PopupScreenFunctionalities(true, null, null, poppupPrefab, playerCanvas,
+                GameGlobals.monoBehaviourFunctionalities, Resources.Load<Sprite>("Textures/UI/Icons/Info"),
+                new Color(0.9f, 0.9f, 0.9f), "Audio/snap");
+            setupWarningPoppupRef = new PopupScreenFunctionalities(true, null, null, poppupPrefab, playerCanvas,
+                GameGlobals.monoBehaviourFunctionalities, Resources.Load<Sprite>("Textures/UI/Icons/Info"),
+                new Color(0.9f, 0.9f, 0.9f), "Audio/snap");
+            Object.DontDestroyOnLoad(playerCanvas);
+        }
+
         //auto fetch config
         List<GameParameterization> gameParameterizations = GameProperties.currSessionParameterization.gameParameterizations;
         GameProperties.currGameParameterization = gameParameterizations[(GameGlobals.currGameId - 1) % gameParameterizations.Count];
@@ -159,7 +155,6 @@ public class GameSetupFunctionalities : MonoBehaviour {
         }
 
         //write game in log
-        
         foreach (Player player in GameGlobals.players)
         {
             Dictionary<string, string> gameLogEntry = new Dictionary<string, string>();
@@ -197,19 +192,18 @@ public class GameSetupFunctionalities : MonoBehaviour {
 
     void CheckForAllPlayersRegistered(GameParameterization param)
     {
-        UINameSelectionInputBox.text = "";
+//        UINameSelectionInputBox.text = "";
         if (param.playerParameterizations.Count == GameGlobals.players.Count)
         {
             GameProperties.currGameParameterization = param;
 
-            UIStartGameButton.gameObject.SetActive(true);
-            customizeLabel.gameObject.SetActive(false);
-            UIAddPlayerButton.gameObject.SetActive(false);
-            UINameSelectionInputBox.gameObject.SetActive(false);
-
-            UIAIPlayerSelectionButtonsObject.SetActive(false);
-            configSelectionButtonsObject.SetActive(false);
-            UIResetButton.gameObject.SetActive(false);
+//            UIStartGameButton.gameObject.SetActive(true);
+//            UIAddPlayerButton.gameObject.SetActive(false);
+//            UINameSelectionInputBox.gameObject.SetActive(false);
+//
+//            UIAIPlayerSelectionButtonsObject.SetActive(false);
+//            configSelectionButtonsObject.SetActive(false);
+//            UIResetButton.gameObject.SetActive(false);
         }
     }
     

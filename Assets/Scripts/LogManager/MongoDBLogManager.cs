@@ -7,14 +7,11 @@ using UnityEngine.Networking;
 //Debug log manager
 public class MongoDBLogManager : LogManager
 {
-
     MonoBehaviour monoBehaviourObject;
     private string myApiKey;
 
     Hashtable postHeader;
     private List<PendingCall> pendingCalls;
-    private UnityWebRequestAsyncOperation currRequest;
-    
 
     private struct PendingCall
     {
@@ -83,13 +80,12 @@ public class MongoDBLogManager : LogManager
     {
         PendingCall call = new PendingCall(ConvertEntityToPostRequest(argsNValues, database, table), null);
         pendingCalls.Add(call);
-        yield return monoBehaviourObject.StartCoroutine(ExecuteCall(currRequest, call));
+        yield return monoBehaviourObject.StartCoroutine(ExecuteCall(null, call));
         pendingCalls.Remove(call);
     }
 
     public override IEnumerator GetFromLog(string database, string table, string query, Func<string, int> yieldedReactionToGet)
     {
-        //string query = "&s={\"_id\": -1}&l=1"; //query which returns the last game result
         PendingCall call = new PendingCall(ConvertEntityToGetRequest(database, table, query),
              delegate (string result)
              {
@@ -97,7 +93,7 @@ public class MongoDBLogManager : LogManager
                  return 0;
              });
         pendingCalls.Add(call);
-        yield return GameGlobals.monoBehaviourFunctionalities.StartCoroutine(ExecuteCall(currRequest, call));
+        yield return GameGlobals.monoBehaviourFunctionalities.StartCoroutine(ExecuteCall(null, call));
         pendingCalls.Remove(call);
     }
 
@@ -106,7 +102,7 @@ public class MongoDBLogManager : LogManager
 
         PendingCall call = new PendingCall(ConvertEntityToPutRequest(argsNValues, database, table, query), null);
         pendingCalls.Add(call);
-        yield return GameGlobals.monoBehaviourFunctionalities.StartCoroutine(ExecuteCall(currRequest, call));
+        yield return GameGlobals.monoBehaviourFunctionalities.StartCoroutine(ExecuteCall(null, call));
         pendingCalls.Remove(call);
     }
 
@@ -117,7 +113,6 @@ public class MongoDBLogManager : LogManager
         {
             yield return null;
         }
-        //Debug.Log("Log Closed.");
     }
 }
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -37,7 +38,10 @@ public class DiceManager
 
     public IEnumerator RollTheDice(string rollOverlayTitle, int numRolls)
     {
-        rollDiceOverlay.transform.Find("title/Text").GetComponent<Text>().text = rollOverlayTitle;
+        if (!GameGlobals.isSimulation)
+        {
+            rollDiceOverlay.transform.Find("title/Text").GetComponent<Text>().text = rollOverlayTitle;
+        }
         currDiceResults = new List<int>(); //save each rolled dice number to display in the UI
         currDiceTotal = 0;
 
@@ -54,10 +58,13 @@ public class DiceManager
             }
         }
 
-        //wait until all dice are rolled
-        while (currDiceResults.Count < numRolls)
+        if (!GameGlobals.isSimulation)
         {
-            yield return null;
+            //wait until all dice are rolled
+            while (currDiceResults.Count < numRolls)
+            {
+                yield return null;
+            }
         }
         currDiceResults.Clear();
     }
@@ -72,15 +79,13 @@ public class DiceManager
         return currDiceTotal;
     }
 
-    private IEnumerator PlayDiceUI(int currThrowResult, int sequenceNumber, int numDicesInThrow, GameObject diceImagePrefab, string diceNumberSpritesPath)
+    private IEnumerator PlayDiceUI(int currThrowResult, int sequenceNumber, int maxSeqNumber, GameObject diceImagePrefab, string diceNumberSpritesPath)
     //the sequence number aims to void dice overlaps as it represents the order for which this dice is going to be rolled. We do not want to roll a dice two times for the same place
     {
-
         if (sequenceNumber < 1)
         {
             this.rollDiceOverlay.SetActive(true);
         }
-
 
         GameObject diceUIClone = new GameObject();
         Sprite currDiceNumberSprite = Resources.Load<Sprite>(diceNumberSpritesPath + currThrowResult);
@@ -101,7 +106,7 @@ public class DiceManager
             float translationFactorY = Screen.width * 0.02f;
             diceUIClone.transform.Translate(new Vector3(Random.Range(-translationFactorX, translationFactorY), Random.Range(-translationFactorX, translationFactorY), 0));
 
-            float diceRotation = sequenceNumber * (360.0f / numDicesInThrow);
+            float diceRotation = sequenceNumber * (360.0f / maxSeqNumber);
 
             diceUIClone.transform.Rotate(new Vector3(0, 0, 1), diceRotation);
             diceImage.overrideSprite = null;
@@ -122,8 +127,6 @@ public class DiceManager
             yield return null;
         }
 
-        rollDiceOverlayAnimator.speed = 0;
-
         rollDiceOverlayAnimator.speed = 1;
         while (!rollDiceOverlayAnimator.GetCurrentAnimatorStateInfo(0).IsName("Idle2"))
         {
@@ -134,8 +137,9 @@ public class DiceManager
 
         //record result
         UpdateCurrDiceTotal(currThrowResult);
+        Debug.Log(currThrowResult);
 
-        if (sequenceNumber > numDicesInThrow-2)
+        if (sequenceNumber > maxSeqNumber-2)
         {
             this.rollDiceOverlay.SetActive(false);
         }
