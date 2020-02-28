@@ -381,7 +381,7 @@ public class GameManager : MonoBehaviour {
             //players perceive round start
             events.Add(RolePlayCharacter.EventHelper.ActionEnd("World", "State(Round,Start)", player.GetName()));
             player.Perceive(events);
-        }
+        } 
 
         if (!GameGlobals.isSimulation && GameGlobals.isNarrated)
         {
