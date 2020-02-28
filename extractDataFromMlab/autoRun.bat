@@ -1,4 +1,4 @@
-rem ./../build/ftp.x86_64
+./../build/ftp.x86_64
 sh extractData.bat
 cp *.csv ./R/input
 

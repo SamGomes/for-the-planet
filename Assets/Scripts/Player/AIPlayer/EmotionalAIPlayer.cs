@@ -7,8 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using EmotionalAppraisal.DTOs;
 using UnityEngine;
 using Utilities;
+using Object = System.Object;
 
 public class EmotionalAIPlayer: AIPlayer
 {
@@ -254,11 +256,36 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
     public override void Act()
     {
         EmotionalAppraisal.IActiveEmotion strongestEmotion = this.rpc.GetStrongestActiveEmotion();
-
         if (strongestEmotion == null) {
             return;
         }
 
+        string rpcArr = "[";
+        int j = 0;
+
+//        foreach (EmotionDTO currEmotion in emotions)
+//        {
+//            rpcArr += "{'type': '" + currEmotion.Type + "', 'intensity': '" + currEmotion.Intensity + "'}";
+//            if (j++ < emotions.Count - 1)
+//            {
+//                rpcArr += ",";
+//            }
+//        }
+//        rpcArr += "]";
+        
+        Dictionary<string, int> emotions = new Dictionary<string, int>();
+        emotions["Happy-for"] = emotions["Gloating"] = emotions["Satisfaction"] = 
+            emotions["Relief"] = emotions["Hope"] = emotions["Joy"] = emotions["Gratification"] = 
+                emotions["Gratitude"] = emotions["Pride"] = emotions["Admiration"] = emotions["Love"] = 
+                    emotions["Resentment"] = emotions["Pity"] = emotions["Fear-confirmed"] =
+                        emotions["Disappointment"] = emotions["Fear"] = emotions["Distress"] = emotions["Remorse"] =
+                            emotions["Anger"] = emotions["Shame"] = emotions["Reproach"] = emotions["Hate"] = 0;
+        string str = "";
+        foreach (EmotionDTO currEmotion in rpc.GetAllActiveEmotions())
+        {
+            emotions[currEmotion.Type]++;
+        }
+        
         Dictionary<string, string> eventLogEntry = new Dictionary<string, string>();
         eventLogEntry["currSessionId"] = GameGlobals.currSessionId.ToString();
         eventLogEntry["currGameId"] = GameGlobals.currGameId.ToString();
@@ -267,15 +294,29 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
         eventLogEntry["currGamePhase"] = gameManagerRef.GetCurrGamePhase().ToString();
         eventLogEntry["playerId"] = this.id.ToString();
         eventLogEntry["playerType"] = this.GetPlayerType();
-        eventLogEntry["emotionType"] = strongestEmotion.EmotionType;
-        eventLogEntry["intensity"] = strongestEmotion.Intensity.ToString();
+        eventLogEntry["state"] = rpc.GetInternalStateString();
+        foreach (string currEmotionKey in emotions.Keys)
+        {
+            string currEmotion = currEmotionKey;
+            if (currEmotion == "Happy-for")
+            {
+                currEmotion = "HappyFor";
+            }
+            if (currEmotion == "Fear-confirmed")
+            {
+                currEmotion = "FearConfirmed";
+            }
+            str += "feltEmotionsLog$activeEmotions_" + currEmotion+",";
+            eventLogEntry["activeEmotions_" + currEmotion] = emotions[currEmotionKey].ToString();
+        }
+        eventLogEntry["strongestEmotionType"] = strongestEmotion.EmotionType;
+        eventLogEntry["strongestEmotionIntensity"] = strongestEmotion.Intensity.ToString();
         //eventLogEntry["causeEventName"] = strongestEmotion.GetCause(rpc.).EventName;
         playerMonoBehaviourFunctionalities.StartCoroutine(GameGlobals.gameLogManager.WriteToLog("fortheplanetlogs", "feltEmotionsLog", eventLogEntry));
 
         interactionModule.Speak("I'm feeling " + strongestEmotion.EmotionType);
 
-        pDisrupt = pWeights[strongestEmotion.EmotionType] * strongestEmotion.Intensity / 10.0f;
-
+        pDisrupt = pWeights[strongestEmotion.EmotionType] * ((strongestEmotion.Intensity + 10.0f) / 20.0f);
         if(pDisrupt > 0.95f)
         {
             pDisrupt = 0.95f;

@@ -1,8 +1,8 @@
     {
-    "maxNumRounds": 200,
+    "maxNumRounds": 1,
 
     "isSimulation": true,
-    "numGamesToPlay": 35,
+    "numGamesToPlay": 1,
 
     "roundBudget": 5,
     "environmentDecayBudget": [7,7],

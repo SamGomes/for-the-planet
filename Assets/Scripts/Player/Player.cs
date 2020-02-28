@@ -345,7 +345,7 @@ public class Player
     }
     public IEnumerator SetMoney(float money)
     {
-        this.money = money;
+        this.money = Mathf.Clamp01(money);
         if (dynamicSlider != null)
         {
             yield return playerMonoBehaviourFunctionalities.StartCoroutine(this.dynamicSlider.UpdateSliderValue(money));
