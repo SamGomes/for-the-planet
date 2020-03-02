@@ -109,6 +109,11 @@ public class PopupScreenFunctionalities
         this.audioPath = audioPath;
         this.UIcloseButton.onClick.AddListener(delegate () { additionalCloseButtonFunctionalities(); });
     }
+    public PopupScreenFunctionalities(bool isGlobal, GameObject poppupPrefab, GameObject canvas, MonoBehaviourFunctionalities monoBehaviourFunctionalities, Sprite icon, Color backgroundColor, string audioPath)
+        : this(isGlobal, null, null, poppupPrefab, canvas, monoBehaviourFunctionalities, icon, backgroundColor)
+    {
+    }
+
 
     public void AddOnShow(Func<int> OnShow)
     {

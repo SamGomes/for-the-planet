@@ -361,8 +361,8 @@ public class Player
     }
     private void UpdateHistoryUI()
     {
-        economicGrowthHistoryDisplay.text = investmentHistory[GameProperties.InvestmentTarget.ECONOMIC].ToString();
-        environmentHistoryDisplay.text = investmentHistory[GameProperties.InvestmentTarget.ENVIRONMENT].ToString();
+        economicGrowthHistoryDisplay.text = currRoundInvestment[GameProperties.InvestmentTarget.ECONOMIC].ToString();
+        environmentHistoryDisplay.text = currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT].ToString();
     }
 
     public PopupScreenFunctionalities GetWarningScreenRef()

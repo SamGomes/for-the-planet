@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using EmotionalAppraisal.DTOs;
 using UnityEngine;
+using UnityEngine.Networking;
 using Utilities;
 using Object = System.Object;
 
@@ -21,11 +22,17 @@ public class EmotionalAIPlayer: AIPlayer
     protected Dictionary<GameProperties.InvestmentTarget, int> investmentIntentions;
     protected string fatimaRpcPath;
 
+    private float lastMoneyInc;
+    private float lastEnvInc;
+
     public EmotionalAIPlayer(string type, InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name, float updateDelay, string fatimaRpcPath) :
         base(type, interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name)
     {
+        lastEnvInc = 0.0f;
+        lastMoneyInc = 0.0f;
+        
         unperceivedEvents = new List<WellFormedNames.Name>();
-        InitRPC(fatimaRpcPath);
+        this.rpc = GameGlobals.FAtiMAIat.Characters.FirstOrDefault(x => x.CharacterName.ToString() == this.type.ToString());
         this.fatimaRpcPath = fatimaRpcPath;
 
         investmentIntentions = new Dictionary<GameProperties.InvestmentTarget, int>();
@@ -37,36 +44,6 @@ public class EmotionalAIPlayer: AIPlayer
         //if (!GameGlobals.isSimulation) {
         //    playerMonoBehaviourFunctionalities.StartCoroutine(EmotionalUpdateLoop(updateDelay));
         //}
-    }
-
-    public void InitRPC(string fatimaRpcPath)
-    {
-        IntegratedAuthoringTool.DTOs.CharacterSourceDTO rpcPath = GameGlobals.FAtiMAIat.GetAllCharacterSources().FirstOrDefault<IntegratedAuthoringTool.DTOs.CharacterSourceDTO>();
-        if (fatimaRpcPath != null && fatimaRpcPath != "")
-        {
-            rpcPath = GameGlobals.FAtiMAIat.GetAllCharacterSources().Where(data => data.RelativePath == fatimaRpcPath).FirstOrDefault();
-        }
-        if (rpcPath == null)
-        {
-            warningScreenRef.DisplayPoppup("error loading fatimaRpcPath = " + fatimaRpcPath);
-        }
-
-        string rpcSource = rpcPath.Source;
-        if (!GameGlobals.storedRPCs.ContainsKey(rpcSource))
-        {
-            rpc = RolePlayCharacterAsset.LoadFromFile(rpcSource);
-            rpc.LoadAssociatedAssets();
-            GameGlobals.FAtiMAIat.BindToRegistry(rpc.DynamicPropertiesRegistry);
-            GameGlobals.storedRPCs[rpcSource] = rpc;
-        }
-        else
-        {
-            rpc = GameGlobals.storedRPCs[rpcSource];
-        }
-        rpc.ResetEmotionalState();
-
-
-        rpc.CharacterName = (WellFormedNames.Name) this.name;
     }
 
     public override void Perceive(List<WellFormedNames.Name> events)
@@ -113,11 +90,12 @@ public class EmotionalAIPlayer: AIPlayer
             Debug.Log("Could not act due to the following exception: "+e.ToString());
         }
         rpc.Update();
+        rpc.Update();
+        rpc.Update();
     }
 
     public IEnumerator EmotionalUpdateLoop(float delay)
     {
-        UpdateStep();
         yield return new WaitForSeconds(delay);
         playerMonoBehaviourFunctionalities.StartCoroutine(EmotionalUpdateLoop(delay));
     }
@@ -128,13 +106,6 @@ public class EmotionalAIPlayer: AIPlayer
     //}
     public override IEnumerator AutoBudgetAllocation()
     {
-        List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
-        //string econS = GetInvestmentsHistory()[GameProperties.InvestmentTarget.ECONOMIC].ToString("0.00", CultureInfo.InvariantCulture);
-        //string envS = GetInvestmentsHistory()[GameProperties.InvestmentTarget.ENVIRONMENT].ToString("0.00", CultureInfo.InvariantCulture);
-        //events.Add(RolePlayCharacter.EventHelper.PropertyChange("HistoryDisplay(" + econS + "," + envS + ")", GetName(), this.name));
-        events.Add(RolePlayCharacter.EventHelper.PropertyChange("BeforeBudgetAllocation(" + money.ToString("0.00", CultureInfo.InvariantCulture) + "," + GameGlobals.envState.ToString("0.00", CultureInfo.InvariantCulture) + ")", this.name, this.name));
-        Perceive(events);
-        UpdateStep();
 
 
         base.AutoBudgetAllocation();
@@ -142,6 +113,12 @@ public class EmotionalAIPlayer: AIPlayer
         int econ = investmentIntentions[GameProperties.InvestmentTarget.ECONOMIC];
         int env = investmentIntentions[GameProperties.InvestmentTarget.ENVIRONMENT];
 
+        List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
+        events.Add(RolePlayCharacter.EventHelper.PropertyChange("BeforeBudgetAllocation(" + money.ToString("0.00", CultureInfo.InvariantCulture) + "," + GameGlobals.envState.ToString("0.00", CultureInfo.InvariantCulture) + ")", this.id.ToString(), this.id.ToString()));
+        Perceive(events);
+        UpdateStep();
+        
+        
         yield return InvestInEconomy(econ);
         yield return InvestInEnvironment(env);
         yield return EndBudgetAllocationPhase();
@@ -153,14 +130,23 @@ public class EmotionalAIPlayer: AIPlayer
         yield return base.AutoHistoryDisplay();
 
         List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
+        float econ = 0;
+        float env = 0;
         foreach (Player player in GameGlobals.players)
         {
-            string econ = player.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ECONOMIC].ToString("0.00", CultureInfo.InvariantCulture);
-            string env = player.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ENVIRONMENT].ToString("0.00", CultureInfo.InvariantCulture);
-            events.Add(RolePlayCharacter.EventHelper.PropertyChange("HistoryDisplay(" + econ + ","+ env +")", player.GetName(), this.name));
+            econ += player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ECONOMIC];
+            env += player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT];
+            events.Add(RolePlayCharacter.EventHelper.PropertyChange("HistoryDisplay(" + econ + ","+ env +")", player.GetId().ToString(), this.id.ToString()));
         }
+        econ /= GameGlobals.players.Count;
+        env /= GameGlobals.players.Count;
+        Debug.Log(econ);
+            
+        string econStr = econ.ToString("0.00", CultureInfo.InvariantCulture);
+        string envStr = env.ToString("0.00", CultureInfo.InvariantCulture);
+        
         Perceive(events);
-        UpdateStep();
+//        UpdateStep();
 
         yield return null;
     }
@@ -273,17 +259,23 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
 //        }
 //        rpcArr += "]";
         
-        Dictionary<string, int> emotions = new Dictionary<string, int>();
-        emotions["Happy-for"] = emotions["Gloating"] = emotions["Satisfaction"] = 
-            emotions["Relief"] = emotions["Hope"] = emotions["Joy"] = emotions["Gratification"] = 
-                emotions["Gratitude"] = emotions["Pride"] = emotions["Admiration"] = emotions["Love"] = 
-                    emotions["Resentment"] = emotions["Pity"] = emotions["Fear-confirmed"] =
-                        emotions["Disappointment"] = emotions["Fear"] = emotions["Distress"] = emotions["Remorse"] =
-                            emotions["Anger"] = emotions["Shame"] = emotions["Reproach"] = emotions["Hate"] = 0;
+      
+        Dictionary<string, float> emotionsStrI = new Dictionary<string, float>();
+        emotionsStrI["Happy-for"] = emotionsStrI["Gloating"] = emotionsStrI["Satisfaction"] = 
+            emotionsStrI["Relief"] = emotionsStrI["Hope"] = emotionsStrI["Joy"] = emotionsStrI["Gratification"] = 
+                emotionsStrI["Gratitude"] = emotionsStrI["Pride"] = emotionsStrI["Admiration"] = emotionsStrI["Love"] = 
+                    emotionsStrI["Resentment"] = emotionsStrI["Pity"] = emotionsStrI["Fear-confirmed"] =
+                        emotionsStrI["Disappointment"] = emotionsStrI["Fear"] = emotionsStrI["Distress"] = emotionsStrI["Remorse"] =
+                            emotionsStrI["Anger"] = emotionsStrI["Shame"] = emotionsStrI["Reproach"] = emotionsStrI["Hate"] = 0.0f;
+        
         string str = "";
         foreach (EmotionDTO currEmotion in rpc.GetAllActiveEmotions())
         {
-            emotions[currEmotion.Type]++;
+            if (currEmotion.Intensity > emotionsStrI[currEmotion.Type])
+            {
+                emotionsStrI[currEmotion.Type] = currEmotion.Intensity;
+            }
+//            emotions[currEmotion.Type]++;
         }
         
         Dictionary<string, string> eventLogEntry = new Dictionary<string, string>();
@@ -295,7 +287,7 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
         eventLogEntry["playerId"] = this.id.ToString();
         eventLogEntry["playerType"] = this.GetPlayerType();
         eventLogEntry["state"] = rpc.GetInternalStateString();
-        foreach (string currEmotionKey in emotions.Keys)
+        foreach (string currEmotionKey in emotionsStrI.Keys)
         {
             string currEmotion = currEmotionKey;
             if (currEmotion == "Happy-for")
@@ -307,7 +299,7 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
                 currEmotion = "FearConfirmed";
             }
             str += "feltEmotionsLog$activeEmotions_" + currEmotion+",";
-            eventLogEntry["activeEmotions_" + currEmotion] = emotions[currEmotionKey].ToString();
+            eventLogEntry["activeEmotions_" + currEmotion] = emotionsStrI[currEmotionKey].ToString();
         }
         eventLogEntry["strongestEmotionType"] = strongestEmotion.EmotionType;
         eventLogEntry["strongestEmotionIntensity"] = strongestEmotion.Intensity.ToString();
@@ -395,45 +387,26 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
     {
         yield return base.AutoBudgetExecution();
 
-        float state = 0.0f;
-        float gsp = 0.0f;
-        if (isDisruptive)
-        {
-            state = this.GetMoney();
-            gsp = CalcGoalSuccessProbabilityInvestment(state, this.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ECONOMIC]);
-        }
-        else
-        {
-            state = GameGlobals.envState;
-            gsp = CalcGoalSuccessProbabilityInvestment(state, this.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT]);
-        }
+        float state = this.GetMoney();
+        float gsp = CalcGoalSuccessProbabilityInvestment(state, this.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ECONOMIC]);
         
         List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
-        events.Add(RolePlayCharacter.EventHelper.PropertyChange("BudgetExecution(" + gsp + ")", GetName(), this.name));
+        events.Add(RolePlayCharacter.EventHelper.PropertyChange("BudgetExecution(" + gsp + ")", GetId().ToString(), this.id.ToString()));
         Perceive(events);
-        UpdateStep();
+//        UpdateStep();
     }
 
     public override IEnumerator AutoInvestmentExecution()
     {
         yield return base.AutoInvestmentExecution();
 
-        float state = 0.0f;
-        if (isDisruptive)
-        {
-            state = this.GetMoney();
-        }
-        else
-        {
-            state = GameGlobals.envState;
-
-        }
+        float state = this.GetMoney();
         float gsp = CalcGoalSuccessProbabilityDecay(state);
 
         List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
-        events.Add(RolePlayCharacter.EventHelper.PropertyChange("DecaySimulation(" + gsp + ")", GetName(), this.name));
+        events.Add(RolePlayCharacter.EventHelper.PropertyChange("DecaySimulation(" + gsp + ")", GetId().ToString(), this.id.ToString()));
         Perceive(events);
-        UpdateStep();
+//        UpdateStep();
         
     }
 

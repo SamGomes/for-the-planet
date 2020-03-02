@@ -1,4 +1,4 @@
-rem sh extractData.bat
+sh extractData.bat
 cp *.csv ./R/input
 
 cd R

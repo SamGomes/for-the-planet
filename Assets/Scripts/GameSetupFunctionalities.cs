@@ -14,6 +14,13 @@ public class GameSetupFunctionalities : MonoBehaviour {
 
     public void SetUpParameterization(GameParameterization parameterization)
     {
+
+        if (!GameGlobals.isSimulation)
+        {
+            playerWarningPoppupRef = new PopupScreenFunctionalities(false, poppupPrefab, playerCanvas, GameGlobals.monoBehaviourFunctionalities, Resources.Load<Sprite>("Textures/UI/Icons/Info"), new Color(0.9f, 0.9f, 0.9f), "Audio/snap");
+            setupWarningPoppupRef = new PopupScreenFunctionalities(false, poppupPrefab, playerCanvas, GameGlobals.monoBehaviourFunctionalities, Resources.Load<Sprite>("Textures/UI/Icons/Info"), new Color(0.9f, 0.9f, 0.9f), "Audio/snap");
+        }
+        
         GameGlobals.players.Clear();
 
         GameGlobals.isNarrated = parameterization.isNarrated;
@@ -54,49 +61,57 @@ public class GameSetupFunctionalities : MonoBehaviour {
                     GameGlobals.players.Add(new Player(currParam.playerType, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/"+ currParam.spriteIndex), currPlayerId++, currParam.name));
                     break;
 
-                case "AI_EMOTIONAL_TABLE":
+                case "AI-EMOTIONAL-TABLE":
                     GameGlobals.players.Add(new TableEmotionalAIPlayer(currParam.playerType, chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name, 1.0f, currParam.fatimaRpcPath));
                     break;
 
-                case "AI_EMOTIONAL_CONSTRUCTIVE_COLLECTIVIST":
+                case "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST":
                     GameGlobals.players.Add(new CompetitiveCooperativeEmotionalAIPlayer(currParam.playerType, chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name, 1.0f, currParam.fatimaRpcPath, true));
                     break;
 
-                case "AI_EMOTIONAL_CONSTRUCTIVE_INDIVIDUALISTIC":
+                case "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC":
                     GameGlobals.players.Add(new CompetitiveCooperativeEmotionalAIPlayer(currParam.playerType, chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name, 1.0f, currParam.fatimaRpcPath, true));
                     break;
 
-                case "AI_EMOTIONAL_DISRUPTIVE_COLLECTIVIST":
+                case "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST":
                     GameGlobals.players.Add(new CompetitiveCooperativeEmotionalAIPlayer(currParam.playerType, chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name, 1.0f, currParam.fatimaRpcPath, false));
                     break;
 
-                case "AI_EMOTIONAL_DISRUPTIVE_INDIVIDUALISTIC":
+                case "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC":
                     GameGlobals.players.Add(new CompetitiveCooperativeEmotionalAIPlayer(currParam.playerType, chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name, 1.0f, currParam.fatimaRpcPath, false));
                     break;
 
-                case "AI_RANDOM":
+                case "AI-RANDOM":
                     GameGlobals.players.Add(new AIPlayerRandom(currParam.playerType, chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
                     break;
 
-                case "AI_COOPERATOR":
+                case "AI-COOPERATOR":
                     GameGlobals.players.Add(new AIPlayerCooperator(currParam.playerType, chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
                     break;
 
-                case "AI_BALANCED_COOPERATOR":
+                case "AI-BALANCED-COOPERATOR":
                     GameGlobals.players.Add(new AIPlayerBalancedCooperator(currParam.playerType, chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
                     break;
 
-                case "AI_DEFECTOR":
+                case "AI-DEFECTOR":
                     GameGlobals.players.Add(new AIPlayerDefector(currParam.playerType, chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
                     break;
 
-                case "AI_BALANCED_DEFECTOR":
+                case "AI-BALANCED-DEFECTOR":
                     GameGlobals.players.Add(new AIPlayerBalancedDefector(currParam.playerType, chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
                     break;
 
                 default:
                     isErrorEncountered = true;
-                    setupWarningPoppupRef.DisplayPoppup("Error on parsing the player type of " + currParam.name);
+                    string errorStr = "Error on parsing the player type of " + currParam.name;
+                    if (!GameGlobals.isSimulation)
+                    {
+                        setupWarningPoppupRef.DisplayPoppup(errorStr);
+                    }
+                    else
+                    {
+                        Debug.Log(errorStr);
+                    }
                     break;
             }
         }

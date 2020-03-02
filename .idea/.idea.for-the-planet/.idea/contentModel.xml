@@ -20,15 +20,6 @@
           </e>
           <e p="DynamicSlider.cs" t="Include" />
           <e p="EndScreenFunctionalities.cs" t="Include" />
-          <e p="FAtiMAStuff" t="Include">
-            <e p="AssetManagerBridge.cs" t="Include" />
-            <e p="IStorageProvider.cs" t="Include" />
-            <e p="Storage" t="Include">
-              <e p="AndroidStreamingAssetStorageProvider.cs" t="Include" />
-              <e p="DefaultResourceAssetsStorageProvider.cs" t="Include" />
-              <e p="WebGLStorageProvider.cs" t="Include" />
-            </e>
-          </e>
           <e p="GameManager.cs" t="Include" />
           <e p="GameSceneManager.cs" t="Include" />
           <e p="GameSetupFunctionalities.cs" t="Include" />
