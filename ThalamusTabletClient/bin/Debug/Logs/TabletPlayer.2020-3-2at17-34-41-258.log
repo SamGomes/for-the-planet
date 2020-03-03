@@ -1,0 +1,3 @@
+(00:00:00.6393939) TabletPlayer[log]: Attempt to start service on port '2000'
+(00:00:00.6413008) TabletPlayer[log]: Attempt to start Slow service on port '2000'
+(00:00:00.6663681) TabletPlayer[log]: Creating publisher from type 'ITabletPublishing'

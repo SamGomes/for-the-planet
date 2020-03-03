@@ -69,6 +69,7 @@ public class StartScreenFunctionalities : MonoBehaviour {
         DynamicallyConfigurableGameProperties configs = JsonUtility.FromJson<DynamicallyConfigurableGameProperties>(configText);
         GameProperties.configurableProperties = configs;
 
+        GameGlobals.areHumansOnSyncTablets = configs.areHumansOnSyncTablets;
         GameGlobals.isSimulation = configs.isSimulation || Application.isBatchMode;
 
         GameGlobals.numberOfSpeakingPlayers = 0;

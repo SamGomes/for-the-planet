@@ -40,6 +40,9 @@ public static class GameGlobals
     public static string FAtiMAScenarioPath;
     public static IntegratedAuthoringToolAsset FAtiMAIat;
 
+    // added by @Filipa
+    public static bool areHumansOnSyncTablets;
+
     // @jbgrocha: Auto play if batchmode (or explicitly set it to true);
     public static bool isSimulation;
 
@@ -89,10 +92,11 @@ public static class GameProperties
 
 [Serializable]
 public class DynamicallyConfigurableGameProperties
-{ 
+{
     //(default configurations already assigned)
 
     //------------ Simulation --------------------
+    public bool areHumansOnSyncTablets = false;
     public bool isSimulation = false;
     public int numGamesToPlay = 1;
 

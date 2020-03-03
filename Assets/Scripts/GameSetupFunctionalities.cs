@@ -125,6 +125,26 @@ public class GameSetupFunctionalities : MonoBehaviour {
         //}
     }
 
+    public void SetUpTabletParameterization(GameParameterization parameterization)
+    {
+        GameGlobals.players.Clear();
+
+        GameGlobals.isNarrated = parameterization.isNarrated;
+        // Init Narrator
+        if (GameGlobals.isNarrated)
+        {
+            GameGlobals.narrator = new Narrator(playerCanvas);
+        }
+
+        int currPlayerId = 0;
+
+        GameGlobals.players.Add(new TabletPlayer("HUMAN", playerCanvas, playerWarningPoppupRef, null, currPlayerId++, "A"));
+        GameGlobals.players.Add(new RemotePlayer("HUMAN", playerCanvas, playerWarningPoppupRef, null, currPlayerId++, "B"));
+        GameGlobals.players.Add(new RemotePlayer("HUMAN", playerCanvas, playerWarningPoppupRef, null, currPlayerId++, "C"));
+
+        GameGlobals.diceLogic = new RandomDiceLogic();
+    }
+
     void Start ()
     {
         isErrorEncountered = false;
@@ -139,6 +159,7 @@ public class GameSetupFunctionalities : MonoBehaviour {
             Object.DontDestroyOnLoad(playerCanvas);
         }
 
+        
         //auto fetch config
         List<GameParameterization> gameParameterizations = GameProperties.currSessionParameterization.gameParameterizations;
         GameProperties.currGameParameterization = gameParameterizations[(GameGlobals.currGameId - 1) % gameParameterizations.Count];
@@ -147,7 +168,14 @@ public class GameSetupFunctionalities : MonoBehaviour {
 	
 	void StartGame()
     {
-        SetUpParameterization(GameProperties.currGameParameterization);
+        if (GameGlobals.areHumansOnSyncTablets)
+        {
+            SetUpTabletParameterization(GameProperties.currGameParameterization);
+        }
+        else
+        {
+            SetUpParameterization(GameProperties.currGameParameterization);
+        }
 
         if (isErrorEncountered)
         {

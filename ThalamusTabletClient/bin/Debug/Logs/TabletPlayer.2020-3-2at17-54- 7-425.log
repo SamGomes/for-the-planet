@@ -1,0 +1,54 @@
+(00:00:00.0260496) TabletPlayer[log]: Found Perception interface: 'ITabletSubscribing'
+(00:00:00.0289311) TabletPlayer[log]: Subscribed to event 'ITabletSubscribing.ReceiveZ'
+(00:00:00.0602915) TabletPlayer[log]: Attempt to start service on port '2000'
+(00:00:00.0604166) TabletPlayer[log]: Attempt to start Slow service on port '2000'
+(00:00:00.1254386) TabletPlayer[log]: Creating publisher from type 'ITabletPublishing'
+(00:00:00.3801802) TabletPlayer[log]: Slow Port unavaliable.
+(00:00:00.3802848) TabletPlayer[log]: Attempt to start Slow service on port '2001'
+(00:00:00.4090473) TabletPlayer[log]: Port -1 unavaliable.
+(00:00:00.4091872) TabletPlayer[log]: Attempt to start service on port '2001'
+(00:00:00.4091948) TabletPlayer[log]: Searching for Thalamus Character filipa...
+(00:00:00.5130405) TabletPlayer[log]: XMLRPC Listening on http://*:7000/
+(00:00:00.5259143) TabletPlayer[log]: Found Thalamus Character 'SERA'
+(00:00:00.5620745) TabletPlayer[log]: Slow Port unavaliable.
+(00:00:00.5621747) TabletPlayer[log]: Attempt to start Slow service on port '2002'
+(00:00:00.5694571) TabletPlayer[log]: Port -1 unavaliable.
+(00:00:00.5695796) TabletPlayer[log]: Attempt to start service on port '2002'
+(00:00:00.7500150) TabletPlayer[log]: Port -1 unavaliable.
+(00:00:00.7571921) TabletPlayer[log]: Attempt to start service on port '2003'
+(00:00:00.7642485) TabletPlayer[log]: Slow Port unavaliable.
+(00:00:00.7643972) TabletPlayer[log]: Attempt to start Slow service on port '2003'
+(00:00:00.8415925) TabletPlayer[log]: Port -1 unavaliable.
+(00:00:00.8417503) TabletPlayer[log]: Attempt to start service on port '2004'
+(00:00:00.8430637) TabletPlayer[log]: Slow Port unavaliable.
+(00:00:00.8431968) TabletPlayer[log]: Attempt to start Slow service on port '2004'
+(00:00:00.9062679) TabletPlayer[log]: Slow XMLRPC Listening on port 2004
+(00:00:00.9302407) TabletPlayer[log]: Port -1 unavaliable.
+(00:00:00.9303708) TabletPlayer[log]: Attempt to start service on port '2005'
+(00:00:00.9863661) TabletPlayer[log]: Fast XMLRPC Listening on port 2005 c: filipa
+(00:00:01.5906655) TabletPlayer[log]: Searching for Thalamus Character filipa...
+(00:00:02.0886488) TabletPlayer[log]: Found Thalamus Master for character 'filipa' at '194.210.223.37:2002/2003'.
+(00:00:02.0992536) TabletPlayer[log]: Set Master fast endpoint to 194.210.223.37:2002
+(00:00:02.0999374) TabletPlayer[log]: Set Master slow endpoint to 194.210.223.37:2003
+(00:00:02.1003705) TabletPlayer[log]: Connecting... f: 2005 s: 2004
+(00:00:02.1409722) TabletPlayer[log]: Connected with clientId '40f4168c-403d-4a2b-b515-92f7bed89687'
+(00:00:02.1875540) TabletPlayer[log]: Performing registration...
+(00:00:02.1994964) TabletPlayer[log]: Cleared subscriptions of character filipa.
+(00:00:02.1998100) TabletPlayer[log]: Announcing event information...
+(00:00:02.2152458) TabletPlayer[log]: Done.
+(00:00:02.2155101) TabletPlayer[log]: Announcing and Subscribing to events...
+(00:00:02.2447420) TabletPlayer[log]: Done.
+(00:00:02.6425516) TabletPlayer[log]: 2.6420942::Received:IThalamusClient.Connected:(IThalamusClient.Connected):[uid=40f4168c-403d-4a2b-b515-92f7bed89687;port=2006;]
+(00:05:25.9200811) TabletPlayer[log]: Sending Master a Disconnect message...
+(00:05:25.9447734) TabletPlayer[log]: Sent disconnect message.
+(00:05:25.9449088) TabletPlayer[log]: Set shutdown flag.
+(00:05:25.9589113) TabletPlayer[log]: Terminated SendMessagesDispatcher
+(00:05:25.9588999) TabletPlayer[log]: Terminated ReceiveSlowHttpRequestsDispatcher
+(00:05:25.9589030) TabletPlayer[log]: Terminated ReceiveMessagesDispatcher
+(00:05:25.9589014) TabletPlayer[log]: Terminated ReceiveFastHttpRequestsDispatcher
+(00:05:26.3651821) TabletPlayer[log]: Terminated AutoDiscoveryClient
+(00:05:26.3676086) TabletPlayer[log]: Stopped Fast HTTP listener.
+(00:05:26.3703631) TabletPlayer[log]: Stopped Slow HTTP listener.
+(00:05:26.3862824) TabletPlayer[log]: Terminated SlowHttpListenerThread
+(00:05:26.3904292) TabletPlayer[log]: Terminated FastHttpListenerThread
+(00:05:26.4121427) TabletPlayer[log]: Dumped log to 'Logs\TabletPlayer.2020-3-2at17-54- 7-425.log'

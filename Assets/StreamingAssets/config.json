@@ -1,6 +1,7 @@
     {
     "maxNumRounds": 200,
 
+    "areHumansOnSyncTablets": true,
     "isSimulation": false,
     "numGamesToPlay": 35,
 

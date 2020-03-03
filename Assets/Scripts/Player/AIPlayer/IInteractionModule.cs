@@ -36,11 +36,9 @@ public class AutisticInteractionModule : InteractionModule
     public override void Init(GameObject uiPrefab, GameObject uiContainer, bool locksInteraction) {
         base.Init(uiPrefab, uiContainer, locksInteraction);
     }
-    public override void Speak(string utterance) {
 
-    }
-    public override void Move() {
-    }
+    public override void Speak(string utterance) { }
+    public override void Move() { }
 
 }
 
@@ -128,12 +126,12 @@ public class SpeechBaloonInteractionModule: InteractionModule
 
 public class RobotInteractionModule : InteractionModule
 {
-    private ThalamusConnector thalamusConnector = null;
+    private RobotThalamusConnector thalamusConnector = null;
 
     public override void Init(GameObject uiPrefab, GameObject uiContainer, bool locksInteraction)
     {
         base.Init(uiPrefab, uiContainer, locksInteraction);
-        thalamusConnector = new ThalamusConnector(7000);
+        thalamusConnector = new RobotThalamusConnector(7000);
     }
     
 

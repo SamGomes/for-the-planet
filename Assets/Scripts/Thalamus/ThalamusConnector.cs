@@ -5,27 +5,11 @@ using System.Threading;
 using CookComputing.XmlRpc;
 using UnityEngine;
 
-public interface IThalamusSActions
+public abstract class ThalamusConnector
 {
-    [XmlRpcMethod]
-    void ReceiveInformation();
-}
+    protected string _remoteAddress = "localhost";
 
-public class ThalamusListener : XmlRpcListenerService, IThalamusSActions
-{
-    public ThalamusListener() { }
-
-    public void ReceiveInformation()
-    {
-        //may need to receive external information
-    }
-}
-
-public class ThalamusConnector : IFTRMessages
-{
-    private string _remoteAddress = "localhost";
-
-    private bool _printExceptions = true;
+    protected bool _printExceptions = true;
     public string RemoteAddress
     {
         get { return _remoteAddress; }
@@ -33,11 +17,11 @@ public class ThalamusConnector : IFTRMessages
         {
             _remoteAddress = value;
             _remoteUri = string.Format("http://{0}:{1}/", _remoteAddress, _remotePort);
-            _rpcProxy.Url = _remoteUri;
+            //_rpcProxy.Url = _remoteUri;
         }
     }
 
-    private int _remotePort = 7000;
+    protected int _remotePort = 7000;
     public int RemotePort
     {
         get { return _remotePort; }
@@ -45,31 +29,40 @@ public class ThalamusConnector : IFTRMessages
         {
             _remotePort = value;
             _remoteUri = string.Format("http://{0}:{1}/", _remoteAddress, _remotePort);
-            _rpcProxy.Url = _remoteUri;
+            //_rpcProxy.Url = _remoteUri;
         }
     }
 
-    private HttpListener _listener;
-    private bool _serviceRunning;
-    private int _localPort = 7001;
-    private bool _shutdown;
+    protected HttpListener _listener;
+    protected bool _serviceRunning;
+    protected int _localPort = 7001;
+    protected bool _shutdown;
     List<HttpListenerContext> _httpRequestsQueue = new List<HttpListenerContext>();
-    private Thread _dispatcherThread;
-    private Thread _messageDispatcherThread;
+    protected Thread _dispatcherThread;
+    protected Thread _messageDispatcherThread;
 
 
-    IFTRMessagesRpc _rpcProxy;
-    private string _remoteUri = "";
+    protected string _remoteUri = "";
+
+
+
+
+    public class ThalamusDummyListener : XmlRpcListenerService, IThalamusReceivingInterface
+    {
+        public ThalamusDummyListener() { }
+
+        public void ReceiveInformation()
+        {
+            //may need to receive external information
+        }
+    }
 
     public ThalamusConnector(int remotePort = 7000)
     {
         _remotePort = remotePort;
         _localPort = _remotePort + 1;
         _remoteUri = String.Format("http://{0}:{1}/", _remoteAddress, _remotePort);
-        Debug.Log("Thalamus endpoint set to " + _remoteUri);
-        _rpcProxy = XmlRpcProxyGen.Create<IFTRMessagesRpc>();
-        _rpcProxy.Timeout = 1000;
-        _rpcProxy.Url = _remoteUri;
+        Debug.Log("Thalamus endpoint set to " + _remoteUri); 
 
 
         _dispatcherThread = new Thread(DispatcherThreadThalamus);
@@ -180,11 +173,44 @@ public class ThalamusConnector : IFTRMessages
         Debug.Log("Terminated MessageDispatcherThalamus");
     }
 
-    public void ProcessRequestThalamus(object oContext)
+    //this method should be overriden if you need the derived class to listen to thalamus methods
+    public abstract void ProcessRequestThalamus(object oContext);
+        /*
     {
         try
         {
-            XmlRpcListenerService svc = new ThalamusListener();
+            XmlRpcListenerService svc = new ThalamusDummyListener();
+            svc.ProcessRequest((HttpListenerContext)oContext);
+        }
+        catch (Exception e)
+        {
+            if (_printExceptions) Debug.Log("Exception: " + e);
+        }
+
+    }*/
+
+    #endregion
+
+}
+
+
+public class RobotThalamusConnector : ThalamusConnector, IRobotMessages
+{
+
+    protected IRobotMessagesRpc _rpcProxy;
+
+    public RobotThalamusConnector(int remotePort = 7000) : base(remotePort)
+    {
+        _rpcProxy = XmlRpcProxyGen.Create<IRobotMessagesRpc>();
+        _rpcProxy.Timeout = 1000;
+        _rpcProxy.Url = _remoteUri;
+    }
+
+    public override void ProcessRequestThalamus(object oContext)
+    {
+        try
+        {
+            XmlRpcListenerService svc = new ThalamusDummyListener();
             svc.ProcessRequest((HttpListenerContext)oContext);
         }
         catch (Exception e)
@@ -193,9 +219,6 @@ public class ThalamusConnector : IFTRMessages
         }
 
     }
-
-    #endregion
-
 
     public void PerformUtterance(string utterance, string[] tags, string[] tagsValues)
     {
@@ -232,7 +255,53 @@ public class ThalamusConnector : IFTRMessages
             if (_printExceptions) Debug.Log("Exception: " + e.Message + (e.InnerException != null ? ": " + e.InnerException : ""));
         }
     }
+}
 
 
+public class TabletThalamusConnector : ThalamusConnector, ITabletPublisher
+{
+    protected IUnityTabletPublisher _rpcProxy;
 
+    public class UnityRPCListener : XmlRpcListenerService, IUnityTabletSubscriber
+    {
+        private TabletThalamusConnector _thalamusConnector;
+
+        public UnityRPCListener(TabletThalamusConnector connectorRef)
+        {
+            _thalamusConnector = connectorRef;
+        }
+
+        public void ReceiveZ()
+        {
+            Debug.Log("FILIPA: Just received Z message!");
+            _thalamusConnector.SendA();
+        }
+    }
+
+    public TabletThalamusConnector(int remotePort = 7000) : base(remotePort)
+    {
+        _rpcProxy = XmlRpcProxyGen.Create<IUnityTabletPublisher>();
+        _rpcProxy.Timeout = 1000;
+        _rpcProxy.Url = _remoteUri;
+    }
+
+    public override void ProcessRequestThalamus(object oContext)
+    {
+        try
+        {
+            XmlRpcListenerService svc = new UnityRPCListener(this);
+            svc.ProcessRequest((HttpListenerContext)oContext);
+        }
+        catch (Exception e)
+        {
+            if (_printExceptions) Debug.Log("Exception: " + e);
+        }
+
+    }
+
+    public void SendA()
+    {
+        Debug.Log("FILIPA: Just sent A message!");
+        _rpcProxy.SendA();
+    }
 }

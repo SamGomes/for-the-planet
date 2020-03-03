@@ -1,0 +1,39 @@
+(00:00:00.0239898) TabletPlayer[log]: Found Perception interface: 'ITabletSubscribing'
+(00:00:00.0267292) TabletPlayer[log]: Subscribed to event 'ITabletSubscribing.ReceiveZ'
+(00:00:00.0305995) TabletPlayer[log]: Attempt to start service on port '2000'
+(00:00:00.0308873) TabletPlayer[log]: Attempt to start Slow service on port '2000'
+(00:00:00.1149719) TabletPlayer[log]: Creating publisher from type 'ITabletPublishing'
+(00:00:00.3645374) TabletPlayer[log]: Searching for Thalamus Character filipa...
+(00:00:00.3975569) TabletPlayer[log]: Slow Port unavaliable.
+(00:00:00.3976574) TabletPlayer[log]: Attempt to start Slow service on port '2001'
+(00:00:00.3990205) TabletPlayer[log]: Port -1 unavaliable.
+(00:00:00.3994229) TabletPlayer[log]: Attempt to start service on port '2001'
+(00:00:00.4390195) TabletPlayer[log]: XMLRPC Listening on http://*:7000/
+(00:00:00.4799678) TabletPlayer[log]: Slow Port unavaliable.
+(00:00:00.4800903) TabletPlayer[log]: Attempt to start Slow service on port '2002'
+(00:00:00.5314405) TabletPlayer[log]: Port -1 unavaliable.
+(00:00:00.5315577) TabletPlayer[log]: Attempt to start service on port '2002'
+(00:00:00.6265819) TabletPlayer[log]: Slow Port unavaliable.
+(00:00:00.6267142) TabletPlayer[log]: Attempt to start Slow service on port '2003'
+(00:00:00.6297790) TabletPlayer[log]: Port -1 unavaliable.
+(00:00:00.6301078) TabletPlayer[log]: Attempt to start service on port '2003'
+(00:00:00.6797824) TabletPlayer[log]: Found Thalamus Master for character 'filipa' at '194.210.223.37:2002/2003'.
+(00:00:00.7062515) TabletPlayer[log]: Port -1 unavaliable.
+(00:00:00.7074124) TabletPlayer[log]: Attempt to start service on port '2004'
+(00:00:00.7074249) TabletPlayer[log]: Slow Port unavaliable.
+(00:00:00.7079350) TabletPlayer[log]: Attempt to start Slow service on port '2004'
+(00:00:00.7715958) TabletPlayer[log]: Fast XMLRPC Listening on port 2004 c: filipa
+(00:00:00.7796759) TabletPlayer[log]: Slow Port unavaliable.
+(00:00:00.7798261) TabletPlayer[log]: Attempt to start Slow service on port '2005'
+(00:00:00.8340791) TabletPlayer[log]: Slow XMLRPC Listening on port 2005
+(00:00:00.9022561) TabletPlayer[log]: Set Master fast endpoint to 194.210.223.37:2002
+(00:00:00.9026153) TabletPlayer[log]: Set Master slow endpoint to 194.210.223.37:2003
+(00:00:00.9028068) TabletPlayer[log]: Connecting... f: 2004 s: 2005
+(00:00:00.9348073) TabletPlayer[log]: Connected with clientId '6d9028dc-ca81-4e61-b10d-b5c752d6d6a6'
+(00:00:00.9794427) TabletPlayer[log]: Performing registration...
+(00:00:00.9933379) TabletPlayer[log]: Cleared subscriptions of character filipa.
+(00:00:00.9935317) TabletPlayer[log]: Announcing event information...
+(00:00:01.0087801) TabletPlayer[log]: Done.
+(00:00:01.0089364) TabletPlayer[log]: Announcing and Subscribing to events...
+(00:00:01.0384436) TabletPlayer[log]: Done.
+(00:00:01.4662103) TabletPlayer[log]: 1.4657446::Received:IThalamusClient.Connected:(IThalamusClient.Connected):[uid=6d9028dc-ca81-4e61-b10d-b5c752d6d6a6;port=2006;]

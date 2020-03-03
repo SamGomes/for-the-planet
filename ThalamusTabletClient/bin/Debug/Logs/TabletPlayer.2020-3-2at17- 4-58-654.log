@@ -1,0 +1,34 @@
+(00:00:00.0174029) TabletPlayer[log]: Attempt to start service on port '2000'
+(00:00:00.0183727) TabletPlayer[log]: Attempt to start Slow service on port '2000'
+(00:00:00.0533041) TabletPlayer[log]: Creating publisher from type 'ITabletPublishing'
+(00:00:00.1761445) TabletPlayer[log]: Slow XMLRPC Listening on port 2000
+(00:00:00.2284990) TabletPlayer[log]: Port -1 unavaliable.
+(00:00:00.2287409) TabletPlayer[log]: Searching for Thalamus Character filipa...
+(00:00:00.2290682) TabletPlayer[log]: Attempt to start service on port '2001'
+(00:00:00.3596356) TabletPlayer[log]: XMLRPC Listening on http://*:7002/
+(00:00:00.4469606) TabletPlayer[log]: Fast XMLRPC Listening on port 2001 c: filipa
+(00:00:00.5696447) TabletPlayer[log]: Found Thalamus Master for character 'filipa' at '194.210.223.37:2002/2003'.
+(00:00:00.5759487) TabletPlayer[log]: Set Master fast endpoint to 194.210.223.37:2002
+(00:00:00.5763094) TabletPlayer[log]: Set Master slow endpoint to 194.210.223.37:2003
+(00:00:00.5764304) TabletPlayer[log]: Connecting... f: 2001 s: 2000
+(00:00:00.6090976) TabletPlayer[log]: Connected with clientId '23ea3ff3-d8b2-42c4-b005-e46084a3731a'
+(00:00:00.6456853) TabletPlayer[log]: Performing registration...
+(00:00:00.6484174) TabletPlayer[log]: Cleared subscriptions of character filipa.
+(00:00:00.6485896) TabletPlayer[log]: Announcing event information...
+(00:00:00.6597413) TabletPlayer[log]: Done.
+(00:00:00.6598888) TabletPlayer[log]: Announcing and Subscribing to events...
+(00:00:00.6834786) TabletPlayer[log]: Done.
+(00:00:01.0123910) TabletPlayer[log]: 1.0119295::Received:IThalamusClient.Connected:(IThalamusClient.Connected):[uid=23ea3ff3-d8b2-42c4-b005-e46084a3731a;port=2004;]
+(00:01:37.5693635) TabletPlayer[log]: Sending Master a Disconnect message...
+(00:01:37.5908995) TabletPlayer[log]: Sent disconnect message.
+(00:01:37.5912109) TabletPlayer[log]: Set shutdown flag.
+(00:01:37.5963919) TabletPlayer[log]: Terminated ReceiveMessagesDispatcher
+(00:01:37.5963919) TabletPlayer[log]: Terminated ReceiveSlowHttpRequestsDispatcher
+(00:01:37.5983914) TabletPlayer[log]: Terminated ReceiveFastHttpRequestsDispatcher
+(00:01:37.6003703) TabletPlayer[log]: Terminated SendMessagesDispatcher
+(00:01:37.6464178) TabletPlayer[log]: Terminated AutoDiscoveryClient
+(00:01:37.6475935) TabletPlayer[log]: Stopped Fast HTTP listener.
+(00:01:37.6493035) TabletPlayer[log]: Stopped Slow HTTP listener.
+(00:01:37.6553318) TabletPlayer[log]: Terminated FastHttpListenerThread
+(00:01:37.6603903) TabletPlayer[log]: Terminated SlowHttpListenerThread
+(00:01:37.6736249) TabletPlayer[log]: Dumped log to 'Logs\TabletPlayer.2020-3-2at17- 4-58-654.log'

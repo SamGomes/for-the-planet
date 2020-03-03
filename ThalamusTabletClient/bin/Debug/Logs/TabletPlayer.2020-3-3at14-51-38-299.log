@@ -1,0 +1,41 @@
+(00:00:00.0369911) TabletPlayer[log]: Found Perception interface: 'ITabletSubscribing'
+(00:00:00.0400225) TabletPlayer[log]: Subscribed to event 'ITabletSubscribing.ReceiveZ'
+(00:00:00.0711352) TabletPlayer[log]: Attempt to start service on port '2000'
+(00:00:00.0762153) TabletPlayer[log]: Attempt to start Slow service on port '2000'
+(00:00:00.1622678) TabletPlayer[log]: Creating publisher from type 'ITabletPublishing'
+(00:00:00.1640147) TabletPlayer[log]: Found Action interface: 'LOL'
+(00:00:00.1649435) TabletPlayer[log]: Announced event 'LOL.SendA'
+(00:00:00.1656288) TabletPlayer[log]: Registered action 'LOL.SendA' in publisher.
+(00:00:00.2300474) TabletPlayer[log]: Searching for Thalamus Character filipa...
+(00:00:00.2777665) TabletPlayer[log]: Fast XMLRPC Listening on port 2000 c: filipa
+(00:00:00.3038806) TabletPlayer[log]: Slow Port unavaliable.
+(00:00:00.3164059) TabletPlayer[log]: Attempt to start Slow service on port '2001'
+(00:00:00.5332897) TabletPlayer[log]: Found Thalamus Master for character 'filipa' at '194.210.223.28:2002/2003'.
+(00:00:00.5347742) TabletPlayer[log]: XMLRPC Listening on http://*:7000/
+(00:00:00.5352596) TabletPlayer[log]: Slow XMLRPC Listening on port 2001
+(00:00:00.6401987) TabletPlayer[log]: Set Master fast endpoint to 194.210.223.28:2002
+(00:00:00.6408825) TabletPlayer[log]: Set Master slow endpoint to 194.210.223.28:2003
+(00:00:00.6415007) TabletPlayer[log]: Connecting... f: 2000 s: 2001
+(00:00:00.6848986) TabletPlayer[log]: Connected with clientId '4088c9c6-89e6-49c1-9c04-27dcf6c512d5'
+(00:00:00.7247592) TabletPlayer[log]: Performing registration...
+(00:00:00.7325927) TabletPlayer[log]: Cleared subscriptions of character filipa.
+(00:00:00.7327812) TabletPlayer[log]: Announcing event information...
+(00:00:00.7439405) TabletPlayer[log]: Done.
+(00:00:00.7440778) TabletPlayer[log]: Announcing and Subscribing to events...
+(00:00:00.7607082) TabletPlayer[log]: Done.
+(00:00:01.1265085) TabletPlayer[log]: 1.1236936::Received:IThalamusClient.Connected:(IThalamusClient.Connected):[uid=4088c9c6-89e6-49c1-9c04-27dcf6c512d5;port=2004;]
+(01:40:49.3586306) TabletPlayer[log]: 6049.3586223::Received:ITabletSubscribing.ReceiveZ:(ITabletSubscribing.ReceiveZ):[]
+(01:40:50.6633900) TabletPlayer[log]: 6050.6633828:Sent::LOL.SendA:(LOL.SendA):[]
+(01:40:59.5947848) TabletPlayer[log]: Sending Master a Disconnect message...
+(01:40:59.6161730) TabletPlayer[log]: Sent disconnect message.
+(01:40:59.6163182) TabletPlayer[log]: Set shutdown flag.
+(01:40:59.6163535) TabletPlayer[log]: Terminated ReceiveMessagesDispatcher
+(01:40:59.6163376) TabletPlayer[log]: Terminated ReceiveSlowHttpRequestsDispatcher
+(01:40:59.6203789) TabletPlayer[log]: Terminated SendMessagesDispatcher
+(01:40:59.6233587) TabletPlayer[log]: Terminated ReceiveFastHttpRequestsDispatcher
+(01:41:00.0978464) TabletPlayer[log]: Terminated AutoDiscoveryClient
+(01:41:00.0987888) TabletPlayer[log]: Stopped Fast HTTP listener.
+(01:41:00.1039031) TabletPlayer[log]: Stopped Slow HTTP listener.
+(01:41:00.1098145) TabletPlayer[log]: Terminated SlowHttpListenerThread
+(01:41:00.1098396) TabletPlayer[log]: Terminated FastHttpListenerThread
+(01:41:00.1429130) TabletPlayer[log]: Dumped log to 'Logs\TabletPlayer.2020-3-3at14-51-38-299.log'
