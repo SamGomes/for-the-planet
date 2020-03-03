@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -33,6 +34,7 @@ public class EmotionalAIPlayer: AIPlayer
         
         unperceivedEvents = new List<WellFormedNames.Name>();
         this.rpc = GameGlobals.FAtiMAIat.Characters.FirstOrDefault(x => x.CharacterName.ToString() == this.type.ToString());
+        this.rpc.CharacterName = (WellFormedNames.Name) this.id.ToString();
         this.fatimaRpcPath = fatimaRpcPath;
 
         investmentIntentions = new Dictionary<GameProperties.InvestmentTarget, int>();
@@ -77,6 +79,14 @@ public class EmotionalAIPlayer: AIPlayer
     {
         if (unperceivedEvents.Count > 0)
         {
+//            Debug.Log("[");
+//            foreach (WellFormedNames.Name name in unperceivedEvents)
+//            {                
+//                Debug.Log(name.ToString()+", ");
+//                rpc.Perceive(name);
+//
+//            }
+//            Debug.Log("]");
             rpc.Perceive(unperceivedEvents);
             unperceivedEvents.Clear();
         }
@@ -89,8 +99,6 @@ public class EmotionalAIPlayer: AIPlayer
         {
             Debug.Log("Could not act due to the following exception: "+e.ToString());
         }
-        rpc.Update();
-        rpc.Update();
         rpc.Update();
     }
 
@@ -106,18 +114,66 @@ public class EmotionalAIPlayer: AIPlayer
     //}
     public override IEnumerator AutoBudgetAllocation()
     {
-
-
         base.AutoBudgetAllocation();
 
-        int econ = investmentIntentions[GameProperties.InvestmentTarget.ECONOMIC];
-        int env = investmentIntentions[GameProperties.InvestmentTarget.ENVIRONMENT];
 
         List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
         events.Add(RolePlayCharacter.EventHelper.PropertyChange("BeforeBudgetAllocation(" + money.ToString("0.00", CultureInfo.InvariantCulture) + "," + GameGlobals.envState.ToString("0.00", CultureInfo.InvariantCulture) + ")", this.id.ToString(), this.id.ToString()));
         Perceive(events);
         UpdateStep();
         
+        int econ = investmentIntentions[GameProperties.InvestmentTarget.ECONOMIC];
+        int env = investmentIntentions[GameProperties.InvestmentTarget.ENVIRONMENT];
+        
+        
+        EmotionalAppraisal.IActiveEmotion strongestEmotion = this.rpc.GetStrongestActiveEmotion();
+        if (strongestEmotion != null) {
+            Dictionary<string, float> emotionsStrI = new Dictionary<string, float>();
+            emotionsStrI["Happy-for"] = emotionsStrI["Gloating"] = emotionsStrI["Satisfaction"] = 
+                emotionsStrI["Relief"] = emotionsStrI["Hope"] = emotionsStrI["Joy"] = emotionsStrI["Gratification"] = 
+                    emotionsStrI["Gratitude"] = emotionsStrI["Pride"] = emotionsStrI["Admiration"] = emotionsStrI["Love"] = 
+                        emotionsStrI["Resentment"] = emotionsStrI["Pity"] = emotionsStrI["Fear-confirmed"] =
+                            emotionsStrI["Disappointment"] = emotionsStrI["Fear"] = emotionsStrI["Distress"] = emotionsStrI["Remorse"] =
+                                emotionsStrI["Anger"] = emotionsStrI["Shame"] = emotionsStrI["Reproach"] = emotionsStrI["Hate"] = 0.0f;
+            
+            string str = "";
+            foreach (EmotionDTO currEmotion in rpc.GetAllActiveEmotions())
+            {
+                if (currEmotion.Intensity > emotionsStrI[currEmotion.Type])
+                {
+                    emotionsStrI[currEmotion.Type] = currEmotion.Intensity;
+                }
+            }
+            
+            Dictionary<string, string> eventLogEntry = new Dictionary<string, string>();
+            eventLogEntry["currSessionId"] = GameGlobals.currSessionId.ToString();
+            eventLogEntry["currGameId"] = GameGlobals.currGameId.ToString();
+            eventLogEntry["currGameCondition"] = GameGlobals.currGameCondition.ToString();
+            eventLogEntry["currGameRoundId"] = GameGlobals.currGameRoundId.ToString();
+            eventLogEntry["currGamePhase"] = gameManagerRef.GetCurrGamePhase().ToString();
+            eventLogEntry["playerId"] = this.id.ToString();
+            eventLogEntry["playerType"] = this.GetPlayerType();
+            eventLogEntry["state"] = rpc.GetInternalStateString();
+            foreach (string currEmotionKey in emotionsStrI.Keys)
+            {
+                string currEmotion = currEmotionKey;
+                if (currEmotion == "Happy-for")
+                {
+                    currEmotion = "HappyFor";
+                }
+                if (currEmotion == "Fear-confirmed")
+                {
+                    currEmotion = "FearConfirmed";
+                }
+                str += "feltEmotionsLog$activeEmotions_" + currEmotion+",";
+                eventLogEntry["activeEmotions_" + currEmotion] = emotionsStrI[currEmotionKey].ToString();
+            }
+            eventLogEntry["strongestEmotionType"] = strongestEmotion.EmotionType;
+            eventLogEntry["strongestEmotionIntensity"] = strongestEmotion.Intensity.ToString();
+            //eventLogEntry["causeEventName"] = strongestEmotion.GetCause(rpc.).EventName;
+            playerMonoBehaviourFunctionalities.StartCoroutine(GameGlobals.gameLogManager.WriteToLog("fortheplanetlogs", "feltEmotionsLog", eventLogEntry));
+        }
+
         
         yield return InvestInEconomy(econ);
         yield return InvestInEnvironment(env);
@@ -134,13 +190,15 @@ public class EmotionalAIPlayer: AIPlayer
         float env = 0;
         foreach (Player player in GameGlobals.players)
         {
-            econ += player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ECONOMIC];
-            env += player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT];
-            events.Add(RolePlayCharacter.EventHelper.PropertyChange("HistoryDisplay(" + econ + ","+ env +")", player.GetId().ToString(), this.id.ToString()));
+            econ = player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ECONOMIC];
+            env = player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT];
+       
+            events.Add(RolePlayCharacter.EventHelper.PropertyChange("HistoryDisplay(" + econ.ToString("0.00", CultureInfo.InvariantCulture) + "," + env.ToString("0.00", CultureInfo.InvariantCulture) + ")",
+                this.id.ToString(), player.GetId().ToString()));
+            
         }
         econ /= GameGlobals.players.Count;
         env /= GameGlobals.players.Count;
-        Debug.Log(econ);
             
         string econStr = econ.ToString("0.00", CultureInfo.InvariantCulture);
         string envStr = env.ToString("0.00", CultureInfo.InvariantCulture);
@@ -200,9 +258,6 @@ public class TableEmotionalAIPlayer : EmotionalAIPlayer
 
                     interactionModule.Speak(ReplaceVariablesInDialogue(dialog.Utterance, new Dictionary<string, string>() { { "target", action.Target.ToString() } }));
 
-                    Debug.Log(rpc.GetStrongestActiveEmotion().ToString());
-                    //rpc.TellWorkingMemory("emotionTarget", rpc.GetStrongestActiveEmotion().ToString());
-
                     WellFormedNames.Name speakEvent = RolePlayCharacter.EventHelper.ActionEnd(this.name, "Speak(" + cs + "," + ns + "," + m + "," + s + ")", this.name);
                     Perceive(new List<WellFormedNames.Name>() { speakEvent });
 
@@ -219,14 +274,12 @@ public class TableEmotionalAIPlayer : EmotionalAIPlayer
 
 public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
 {
-    bool isDisruptive;
     float pDisrupt;
     Dictionary<string, float> pWeights;
 
-    public CompetitiveCooperativeEmotionalAIPlayer(string type, InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name, float updateDelay, string fatimaRpcPath, bool isDisruptive) :
+    public CompetitiveCooperativeEmotionalAIPlayer(string type, InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name, float updateDelay, string fatimaRpcPath) :
        base(type, interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name, updateDelay, fatimaRpcPath)
     {
-        this.isDisruptive = isDisruptive;
         pDisrupt = 0.5f;
 
         pWeights = new Dictionary<string, float>();
@@ -260,52 +313,7 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
 //        rpcArr += "]";
         
       
-        Dictionary<string, float> emotionsStrI = new Dictionary<string, float>();
-        emotionsStrI["Happy-for"] = emotionsStrI["Gloating"] = emotionsStrI["Satisfaction"] = 
-            emotionsStrI["Relief"] = emotionsStrI["Hope"] = emotionsStrI["Joy"] = emotionsStrI["Gratification"] = 
-                emotionsStrI["Gratitude"] = emotionsStrI["Pride"] = emotionsStrI["Admiration"] = emotionsStrI["Love"] = 
-                    emotionsStrI["Resentment"] = emotionsStrI["Pity"] = emotionsStrI["Fear-confirmed"] =
-                        emotionsStrI["Disappointment"] = emotionsStrI["Fear"] = emotionsStrI["Distress"] = emotionsStrI["Remorse"] =
-                            emotionsStrI["Anger"] = emotionsStrI["Shame"] = emotionsStrI["Reproach"] = emotionsStrI["Hate"] = 0.0f;
         
-        string str = "";
-        foreach (EmotionDTO currEmotion in rpc.GetAllActiveEmotions())
-        {
-            if (currEmotion.Intensity > emotionsStrI[currEmotion.Type])
-            {
-                emotionsStrI[currEmotion.Type] = currEmotion.Intensity;
-            }
-//            emotions[currEmotion.Type]++;
-        }
-        
-        Dictionary<string, string> eventLogEntry = new Dictionary<string, string>();
-        eventLogEntry["currSessionId"] = GameGlobals.currSessionId.ToString();
-        eventLogEntry["currGameId"] = GameGlobals.currGameId.ToString();
-        eventLogEntry["currGameCondition"] = GameGlobals.currGameCondition.ToString();
-        eventLogEntry["currGameRoundId"] = GameGlobals.currGameRoundId.ToString();
-        eventLogEntry["currGamePhase"] = gameManagerRef.GetCurrGamePhase().ToString();
-        eventLogEntry["playerId"] = this.id.ToString();
-        eventLogEntry["playerType"] = this.GetPlayerType();
-        eventLogEntry["state"] = rpc.GetInternalStateString();
-        foreach (string currEmotionKey in emotionsStrI.Keys)
-        {
-            string currEmotion = currEmotionKey;
-            if (currEmotion == "Happy-for")
-            {
-                currEmotion = "HappyFor";
-            }
-            if (currEmotion == "Fear-confirmed")
-            {
-                currEmotion = "FearConfirmed";
-            }
-            str += "feltEmotionsLog$activeEmotions_" + currEmotion+",";
-            eventLogEntry["activeEmotions_" + currEmotion] = emotionsStrI[currEmotionKey].ToString();
-        }
-        eventLogEntry["strongestEmotionType"] = strongestEmotion.EmotionType;
-        eventLogEntry["strongestEmotionIntensity"] = strongestEmotion.Intensity.ToString();
-        //eventLogEntry["causeEventName"] = strongestEmotion.GetCause(rpc.).EventName;
-        playerMonoBehaviourFunctionalities.StartCoroutine(GameGlobals.gameLogManager.WriteToLog("fortheplanetlogs", "feltEmotionsLog", eventLogEntry));
-
         interactionModule.Speak("I'm feeling " + strongestEmotion.EmotionType);
 
         pDisrupt = pWeights[strongestEmotion.EmotionType] * ((strongestEmotion.Intensity + 10.0f) / 20.0f);
@@ -391,7 +399,7 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
         float gsp = CalcGoalSuccessProbabilityInvestment(state, this.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ECONOMIC]);
         
         List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
-        events.Add(RolePlayCharacter.EventHelper.PropertyChange("BudgetExecution(" + gsp + ")", GetId().ToString(), this.id.ToString()));
+        events.Add(RolePlayCharacter.EventHelper.PropertyChange("BudgetExecution(" + gsp + ")", this.id.ToString(), this.id.ToString()));
         Perceive(events);
 //        UpdateStep();
     }
@@ -404,7 +412,7 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
         float gsp = CalcGoalSuccessProbabilityDecay(state);
 
         List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
-        events.Add(RolePlayCharacter.EventHelper.PropertyChange("DecaySimulation(" + gsp + ")", GetId().ToString(), this.id.ToString()));
+        events.Add(RolePlayCharacter.EventHelper.PropertyChange("DecaySimulation(" + gsp + ")", this.id.ToString(), this.id.ToString()));
         Perceive(events);
 //        UpdateStep();
         

@@ -1,4 +1,0 @@
-sessionId,currGameId,condition,outcome,env_state,playerId,pos,type,econ_state,econ_history_perc,env_history_perc,num_played_rounds
-"021922GVX['CI', 'RANDOM', 'RANDOM']",1,"['CI', 'RANDOM', 'RANDOM']",VICTORY,0.24,0,0,AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC,0.95,220,35,51
-"021922GVX['CI', 'RANDOM', 'RANDOM']",1,"['CI', 'RANDOM', 'RANDOM']",VICTORY,0.24,1,1,AI-RANDOM,0.91,132,123,51
-"021922GVX['CI', 'RANDOM', 'RANDOM']",1,"['CI', 'RANDOM', 'RANDOM']",VICTORY,0.24,2,2,AI-RANDOM,0.1900002,102,153,51
