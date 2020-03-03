@@ -1,17 +1,13 @@
-using System;
-using CookComputing.XmlRpc;
 using Thalamus;
+using CookComputing.XmlRpc;
+using ForThePlanetParallelScreens;
 
-public interface IThalamusTabletPublisher : IThalamusPublisher, ITabletPublisher
+public interface IThalamusTabletPublisher : IThalamusPublisher, ITabletsGM
 {
 }
 
-public interface ITabletPublisher : IAction
-{
-    void SendA();
-}
 
-public interface IUnityTabletSubscriber : ITabletPublisher
+public interface IUnityTabletSubscriber : ITabletsGM
 {
     void Dispose();
 
@@ -20,13 +16,7 @@ public interface IUnityTabletSubscriber : ITabletPublisher
 
 }
 
-public interface IThalamusTabletSubscriber: IPerception
-{
-    void ReceiveZ();
-}
-
-
-public interface IUnityTabletPublisher : IThalamusTabletSubscriber, IXmlRpcProxy
+public interface IUnityTabletPublisher : IGMTablets, IXmlRpcProxy
 {
     [XmlRpcMethod]
     new void ReceiveZ();

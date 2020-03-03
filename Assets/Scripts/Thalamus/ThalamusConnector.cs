@@ -273,7 +273,6 @@ public class TabletThalamusConnector : ThalamusConnector, ITabletPublisher
 
         public void ReceiveZ()
         {
-            Debug.Log("FILIPA: Just received Z message!");
             _thalamusConnector.SendA();
         }
     }
@@ -301,7 +300,6 @@ public class TabletThalamusConnector : ThalamusConnector, ITabletPublisher
 
     public void SendA()
     {
-        Debug.Log("FILIPA: Just sent A message!");
         _rpcProxy.SendA();
     }
 }

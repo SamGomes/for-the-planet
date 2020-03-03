@@ -1,9 +1,9 @@
-﻿using System.Threading;
-using Thalamus;
+﻿using Thalamus;
+using ForThePlanetParallelScreens;
 
 
 
-public class ThalamusConnector : ThalamusClient, IThalamusTabletSubscriber
+public class ThalamusConnector : ThalamusClient, IGMTablets
 {
     public IThalamusTabletPublisher TypifiedPublisher {  get;  private set; }
     public UnityConnector UnityConnector { private get; set; }

@@ -1,4 +1,5 @@
 using CookComputing.XmlRpc;
+using ForThePlanetParallelScreens;
 
 
 //this file contains the thalamus interfaces necessary for "for the planet"
@@ -30,14 +31,14 @@ public interface IRobotMessages
 
 public interface IUnityTabletPublisher : IXmlRpcProxy, ITabletPublisher { }
 
-public interface ITabletPublisher
+public interface ITabletPublisher : ITabletsGM
 {
     [XmlRpcMethod]
-    void SendA();
+    new void SendA();
 }
 
-public interface IUnityTabletSubscriber
+public interface IUnityTabletSubscriber : IGMTablets
 {
     [XmlRpcMethod]
-    void ReceiveZ();
+    new void ReceiveZ();
 }
