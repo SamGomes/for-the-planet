@@ -88,6 +88,7 @@ public class EmotionalAIPlayer: AIPlayer
 //            }
 //            Debug.Log("]");
             rpc.Perceive(unperceivedEvents);
+            Debug.Log(this.rpc.GetAllActiveEmotions().Count());
             unperceivedEvents.Clear();
         }
 
@@ -116,14 +117,16 @@ public class EmotionalAIPlayer: AIPlayer
     {
         base.AutoBudgetAllocation();
 
+        int econ = currRoundInvestment[GameProperties.InvestmentTarget.ECONOMIC];
+        int env = currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT];
 
         List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
-        events.Add(RolePlayCharacter.EventHelper.PropertyChange("BeforeBudgetAllocation(" + money.ToString("0.00", CultureInfo.InvariantCulture) + "," + GameGlobals.envState.ToString("0.00", CultureInfo.InvariantCulture) + ")", this.id.ToString(), this.id.ToString()));
+        events.Add(RolePlayCharacter.EventHelper.PropertyChange("BeforeBudgetAllocation(" + econ + "," + env + ")", this.id.ToString(), this.id.ToString()));
         Perceive(events);
         UpdateStep();
         
-        int econ = investmentIntentions[GameProperties.InvestmentTarget.ECONOMIC];
-        int env = investmentIntentions[GameProperties.InvestmentTarget.ENVIRONMENT];
+        econ = investmentIntentions[GameProperties.InvestmentTarget.ECONOMIC];
+        env = investmentIntentions[GameProperties.InvestmentTarget.ENVIRONMENT];
         
         
         EmotionalAppraisal.IActiveEmotion strongestEmotion = this.rpc.GetStrongestActiveEmotion();
@@ -204,7 +207,7 @@ public class EmotionalAIPlayer: AIPlayer
         string envStr = env.ToString("0.00", CultureInfo.InvariantCulture);
         
         Perceive(events);
-//        UpdateStep();
+        UpdateStep();
 
         yield return null;
     }
@@ -399,9 +402,12 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
         float gsp = CalcGoalSuccessProbabilityInvestment(state, this.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ECONOMIC]);
         
         List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
-        events.Add(RolePlayCharacter.EventHelper.PropertyChange("BudgetExecution(" + gsp + ")", this.id.ToString(), this.id.ToString()));
+        string eventName = "Event(Property-Change,"+this.id.ToString()+",BudgetExecution(" + gsp.ToString("0.00", CultureInfo.InvariantCulture) + "),"+this.id.ToString()+")";
+        WellFormedNames.Name eventNameName = WellFormedNames.Name.BuildName(eventName);
+//        events.Add(RolePlayCharacter.EventHelper.PropertyChange(eventNameName, this.id.ToString(), this.id.ToString()));
+        events.Add(eventNameName);
         Perceive(events);
-//        UpdateStep();
+        UpdateStep();
     }
 
     public override IEnumerator AutoInvestmentExecution()
@@ -412,9 +418,9 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
         float gsp = CalcGoalSuccessProbabilityDecay(state);
 
         List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
-        events.Add(RolePlayCharacter.EventHelper.PropertyChange("DecaySimulation(" + gsp + ")", this.id.ToString(), this.id.ToString()));
+        events.Add(RolePlayCharacter.EventHelper.PropertyChange("DecaySimulation(" + gsp.ToString("0.00", CultureInfo.InvariantCulture) + ")", this.id.ToString(), this.id.ToString()));
         Perceive(events);
-//        UpdateStep();
+        UpdateStep();
         
     }
 

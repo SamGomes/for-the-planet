@@ -13,7 +13,7 @@
 							"EventName": "Event(Property-Change, *, HistoryDisplay([econ], [env]), [target])",
 							"Conditions":
 								{
-									"Set": ["Math(Math(Math([econ], Minus, [env]), Div, Math([env], Plus, [econ])), Times, 10) = [p]", "Ask(SELF) = AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC"]
+									"Set": ["Math(Math(Math([econ], Minus, [env]), Div, Math([env], Plus, [econ])), Times, 10) = [p]", "Is(DI) = True"]
 								},
 							"AppraisalVariables":
 								{
@@ -26,26 +26,10 @@
 								}
 						}, 
 						{
-							"EventName": "Event(Property-Change, SELF, BeforeBudgetAllocation([econ], [env]), [target])",
-							"Conditions":
-								{
-									"Set": ["Math(Math(Math([econ], Minus, [env]), Div, Math([env], Plus, [econ])), Times, 10) = [d]", "Ask(SELF) = AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC"]
-								},
-							"AppraisalVariables":
-								{
-									"AppraisalVariables": [
-										{
-											"Name": "Desirability",
-											"Value": "[d]",
-											"Target": "[target]"
-										}]
-								}
-						}, 
-						{
 							"EventName": "Event(Property-Change, *, DecaySimulation([gs]), [target])",
 							"Conditions":
 								{
-									"Set": ["Ask(SELF) = AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC"]
+									"Set": ["Is(DI) = True"]
 								},
 							"AppraisalVariables":
 								{
@@ -61,7 +45,7 @@
 							"EventName": "Event(Property-Change, *, BudgetExecution([gs]), [target])",
 							"Conditions":
 								{
-									"Set": ["Ask(SELF) = AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC"]
+									"Set": ["Is(DI) = True"]
 								},
 							"AppraisalVariables":
 								{
@@ -77,7 +61,7 @@
 							"EventName": "Event(Property-Change, *, HistoryDisplay([econ], [env]), [target])",
 							"Conditions":
 								{
-									"Set": ["Math(Math(Math([env], Minus, [econ]), Div, Math([env], Plus, [econ])), Times, 10) = [p]", "Ask(SELF) = AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST"]
+									"Set": ["Math(Math(Math([env], Minus, [econ]), Div, Math([env], Plus, [econ])), Times, 10) = [p]", "Is(DC) = True"]
 								},
 							"AppraisalVariables":
 								{
@@ -90,26 +74,10 @@
 								}
 						}, 
 						{
-							"EventName": "Event(Property-Change, SELF, BeforeBudgetAllocation([econ], [env]), [target])",
-							"Conditions":
-								{
-									"Set": ["Math(Math(Math([econ], Minus, [env]), Div, Math([env], Plus, [econ])), Times, 10) = [d]", "Ask(SELF) = AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST"]
-								},
-							"AppraisalVariables":
-								{
-									"AppraisalVariables": [
-										{
-											"Name": "Desirability",
-											"Value": "[d]",
-											"Target": "[target]"
-										}]
-								}
-						}, 
-						{
 							"EventName": "Event(Property-Change, *, DecaySimulation([gs]), [target])",
 							"Conditions":
 								{
-									"Set": ["Ask(SELF) = AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST"]
+									"Set": ["Is(DC) = True"]
 								},
 							"AppraisalVariables":
 								{
@@ -125,7 +93,7 @@
 							"EventName": "Event(Property-Change, *, BudgetExecution([gs]), [target])",
 							"Conditions":
 								{
-									"Set": ["Ask(SELF) = AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST"]
+									"Set": ["Is(DC) = True"]
 								},
 							"AppraisalVariables":
 								{
@@ -141,7 +109,7 @@
 							"EventName": "Event(Property-Change, *, HistoryDisplay([econ], [env]), [target])",
 							"Conditions":
 								{
-									"Set": ["Math(Math(Math([env], Minus, [econ]), Div, Math([env], Plus, [econ])), Times, 10) = [p]", "Ask(SELF) = AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST"]
+									"Set": ["Math(Math(Math([env], Minus, [econ]), Div, Math([env], Plus, [econ])), Times, 10) = [p]", "Is(CC) = True"]
 								},
 							"AppraisalVariables":
 								{
@@ -154,26 +122,10 @@
 								}
 						}, 
 						{
-							"EventName": "Event(Property-Change, SELF, BeforeBudgetAllocation([econ], [env]), [target])",
-							"Conditions":
-								{
-									"Set": ["Math(Math(Math([env], Minus, [econ]), Div, Math([env], Plus, [econ])), Times, 10) = [d]", "Ask(SELF) = AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST"]
-								},
-							"AppraisalVariables":
-								{
-									"AppraisalVariables": [
-										{
-											"Name": "Desirability",
-											"Value": "[d]",
-											"Target": "[target]"
-										}]
-								}
-						}, 
-						{
 							"EventName": "Event(Property-Change, *, DecaySimulation([gs]), [target])",
 							"Conditions":
 								{
-									"Set": ["Ask(SELF) = AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST"]
+									"Set": ["Is(CC) = True"]
 								},
 							"AppraisalVariables":
 								{
@@ -189,7 +141,7 @@
 							"EventName": "Event(Property-Change, *, BudgetExecution([gs]), [target])",
 							"Conditions":
 								{
-									"Set": ["Ask(SELF) = AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST"]
+									"Set": ["Is(CC) = True"]
 								},
 							"AppraisalVariables":
 								{
@@ -198,6 +150,86 @@
 											"Name": "Goal Success Probablity",
 											"Value": "[gs]",
 											"Target": "WinGame"
+										}]
+								}
+						}, 
+						{
+							"EventName": "Event(Property-Change, *, DecaySimulation([gs]), [target])",
+							"Conditions":
+								{
+									"Set": ["Is(CI) = True"]
+								},
+							"AppraisalVariables":
+								{
+									"AppraisalVariables": [
+										{
+											"Name": "Goal Success Probablity",
+											"Value": "[gs]",
+											"Target": "WinGame"
+										}]
+								}
+						}, 
+						{
+							"EventName": "Event(Property-Change, *, BudgetExecution([gs]), [target])",
+							"Conditions":
+								{
+									"Set": ["Is(CI) = True"]
+								},
+							"AppraisalVariables":
+								{
+									"AppraisalVariables": [
+										{
+											"Name": "Goal Success Probablity",
+											"Value": "[gs]",
+											"Target": "WinGame"
+										}]
+								}
+						}, 
+						{
+							"EventName": "Event(Property-Change, *, BeforeBudgetAllocation([econ], [env]), [target])",
+							"Conditions":
+								{
+									"Set": ["Math(Math(Math([env], Minus, [econ]), Div, Math([env], Plus, [econ])), Times, 10) = [d]", "Is(CC) = True"]
+								},
+							"AppraisalVariables":
+								{
+									"AppraisalVariables": [
+										{
+											"Name": "Desirability",
+											"Value": "[d]",
+											"Target": "[target]"
+										}]
+								}
+						}, 
+						{
+							"EventName": "Event(Property-Change, *, BeforeBudgetAllocation([econ], [env]), [target])",
+							"Conditions":
+								{
+									"Set": ["Math(Math(Math([econ], Minus, [env]), Div, Math([env], Plus, [econ])), Times, 10) = [d]", "Is(DC) = True"]
+								},
+							"AppraisalVariables":
+								{
+									"AppraisalVariables": [
+										{
+											"Name": "Desirability",
+											"Value": "[d]",
+											"Target": "[target]"
+										}]
+								}
+						}, 
+						{
+							"EventName": "Event(Property-Change, *, BeforeBudgetAllocation([econ], [env]), [target])",
+							"Conditions":
+								{
+									"Set": ["Math(Math(Math([econ], Minus, [env]), Div, Math([env], Plus, [econ])), Times, 10) = [d]", "Is(DI) = True"]
+								},
+							"AppraisalVariables":
+								{
+									"AppraisalVariables": [
+										{
+											"Name": "Desirability",
+											"Value": "[d]",
+											"Target": "[target]"
 										}]
 								}
 						}, 
@@ -205,7 +237,7 @@
 							"EventName": "Event(Property-Change, *, HistoryDisplay([econ], [env]), [target])",
 							"Conditions":
 								{
-									"Set": ["Math(Math(Math([env], Minus, [econ]), Div, Math([env], Plus, [econ])), Times, 10) = [p]", "Ask(SELF) = AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC"]
+									"Set": ["Math(Math(Math([econ], Minus, [env]), Div, Math([env], Plus, [econ])), Times, 10) = [p]", "Is(CI) = True"]
 								},
 							"AppraisalVariables":
 								{
@@ -218,10 +250,10 @@
 								}
 						}, 
 						{
-							"EventName": "Event(Property-Change, SELF, BeforeBudgetAllocation([econ], [env]), [target])",
+							"EventName": "Event(Property-Change, *, BeforeBudgetAllocation([econ], [env]), [target])",
 							"Conditions":
 								{
-									"Set": ["Math(Math(Math([econ], Minus, [env]), Div, Math([env], Plus, [econ])), Times, 10) = [d]", "Ask(SELF) = AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC"]
+									"Set": ["Math(Math(Math([env], Minus, [econ]), Div, Math([env], Plus, [econ])), Times, 10) = [d]", "Is(CI) = True"]
 								},
 							"AppraisalVariables":
 								{
@@ -230,38 +262,6 @@
 											"Name": "Desirability",
 											"Value": "[d]",
 											"Target": "[target]"
-										}]
-								}
-						}, 
-						{
-							"EventName": "Event(Property-Change, *, DecaySimulation([gs]), [target])",
-							"Conditions":
-								{
-									"Set": ["Ask(SELF) = AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC"]
-								},
-							"AppraisalVariables":
-								{
-									"AppraisalVariables": [
-										{
-											"Name": "Goal Success Probablity",
-											"Value": "[gs]",
-											"Target": "WinGame"
-										}]
-								}
-						}, 
-						{
-							"EventName": "Event(Property-Change, *, BudgetExecution([gs]), [target])",
-							"Conditions":
-								{
-									"Set": ["Ask(SELF) = AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC"]
-								},
-							"AppraisalVariables":
-								{
-									"AppraisalVariables": [
-										{
-											"Name": "Goal Success Probablity",
-											"Value": "[gs]",
-											"Target": "WinGame"
 										}]
 								}
 						}]
