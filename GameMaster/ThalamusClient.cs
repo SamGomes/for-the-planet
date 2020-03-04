@@ -1,7 +1,7 @@
 ﻿using System;
 using Thalamus;
 using ForThePlanetParallelScreens;
-
+using System.Collections.Generic;
 
 public interface IGameMasterPublisher : IThalamusPublisher, IGMTablets { }
 
@@ -22,19 +22,57 @@ class GameMasterThalamusClient : ThalamusClient, ITabletsGM
         }
     }
 
-    public GameMasterPublisher GameMaster;
+    private GameMasterPublisher _gameMaster;
+    private List<int> _tabletsConnected;
+    private bool _connectedToMaster;
 
 
     public GameMasterThalamusClient()
         : base("GameMastrer", "filipa")
     {
         SetPublisher<IGameMasterPublisher>();
-        GameMaster = new GameMasterPublisher(base.Publisher);
+        _gameMaster = new GameMasterPublisher(base.Publisher);
+        _tabletsConnected = new List<int>();
+        _connectedToMaster = false;
+    }
+
+    public override void ConnectedToMaster()
+    {
+        _connectedToMaster = true;
     }
 
 
     public void SendA()
     {
-        //Console.WriteLine("Received A from Tablet");
+        _tabletsConnected.Add(1);
+        Console.WriteLine("Received A from Tablet");
+
+        if (_tabletsConnected.Count == 3)
+        {
+            _gameMaster.ReceiveZ();
+        }
+    }
+
+
+    internal void SessionWithTablets()
+    {
+        while (!_connectedToMaster) { }
+
+        Console.WriteLine("Waiting for 3 tablets...");
+
+        bool stop = false;
+        while (!stop)
+        {
+            string input = Console.ReadLine();
+
+            if (input == "z")
+            {
+                _gameMaster.ReceiveZ();
+            }
+            else if (input == "q")
+            {
+                stop = true;
+            }
+        }
     }
 }

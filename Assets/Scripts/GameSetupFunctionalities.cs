@@ -171,6 +171,7 @@ public class GameSetupFunctionalities : MonoBehaviour {
         if (GameGlobals.areHumansOnSyncTablets)
         {
             SetUpTabletParameterization(GameProperties.currGameParameterization);
+            ((TabletPlayer)GameGlobals.players[0]).ConnectToGameMaster();
         }
         else
         {

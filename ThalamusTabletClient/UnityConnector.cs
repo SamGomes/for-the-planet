@@ -36,10 +36,10 @@ public class UnityConnector
     private string _remoteUri = "";
     public IUnityTabletPublisher RPCProxy { private set; get; }
     private int _remotePort;
-    private string _remoteAddress = "192.168.0.101";
+    private string _remoteAddress = "localhost";
     private ThalamusConnector _thalamusClient;
 
-    public UnityConnector(ThalamusConnector thalamusClient, int port)
+    public UnityConnector(ThalamusConnector thalamusClient, string address, int port)
     {
         _thalamusClient = thalamusClient;
         _dispatcherThread = new Thread(new ThreadStart(DispatcherThread));
@@ -47,7 +47,7 @@ public class UnityConnector
         _dispatcherThread.Start();
         _messageDispatcherThread.Start();
 
-
+        _remoteAddress = address;
         _localPort = port;
         _remotePort = port + 1;
         _remoteUri = String.Format("http://{0}:{1}/", _remoteAddress, _remotePort);
