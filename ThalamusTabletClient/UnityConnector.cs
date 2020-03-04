@@ -36,7 +36,7 @@ public class UnityConnector
     private string _remoteUri = "";
     public IUnityTabletPublisher RPCProxy { private set; get; }
     private int _remotePort;
-    private string _remoteAddress = "localhost";
+    private string _remoteAddress = "192.168.0.101";
     private ThalamusConnector _thalamusClient;
 
     public UnityConnector(ThalamusConnector thalamusClient, int port)
@@ -55,7 +55,7 @@ public class UnityConnector
         RPCProxy = XmlRpcProxyGen.Create<IUnityTabletPublisher>();
         /*rpcProxy.Expect100Continue = true;
         rpcProxy.KeepAlive = false;*/
-        RPCProxy.Timeout = 2000;
+        RPCProxy.Timeout = 10000;
         RPCProxy.Url = _remoteUri;
 
     }

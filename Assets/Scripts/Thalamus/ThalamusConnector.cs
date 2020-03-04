@@ -7,7 +7,7 @@ using UnityEngine;
 
 public abstract class ThalamusConnector
 {
-    protected string _remoteAddress = "localhost";
+    protected string _remoteAddress = "192.168.0.100";
 
     protected bool _printExceptions = true;
     public string RemoteAddress
@@ -202,7 +202,7 @@ public class RobotThalamusConnector : ThalamusConnector, IRobotMessages
     public RobotThalamusConnector(int remotePort = 7000) : base(remotePort)
     {
         _rpcProxy = XmlRpcProxyGen.Create<IRobotMessagesRpc>();
-        _rpcProxy.Timeout = 1000;
+        _rpcProxy.Timeout = 10000;
         _rpcProxy.Url = _remoteUri;
     }
 
