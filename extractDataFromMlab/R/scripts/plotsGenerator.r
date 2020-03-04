@@ -67,20 +67,43 @@ plot <- plot + labs(x = "Curr Round Id", y = "Econ State", color="Player Type") 
 suppressMessages(ggsave(sprintf("plots/EconState.png"), height=6, width=10, units="in", dpi=500))
 
 
+# plot mood
+moodlog <- read.csv(file="input/moodLog.csv", header=TRUE, sep=",")
+plot <- ggplot(moodlog, aes(x = moodlog$currGameRoundId, y=moodlog$mood, color=moodlog$playerType)) + facet_grid(playerType ~ .)
+plot <- plot + geom_line(stat = "summary", fun.y = "mean")
+plot <- plot + geom_point(aes(color=moodlog$playerType)) 
+# plot <- plot + ylim(0, 1.0)
+plot <- plot + labs(x = "Curr Round Id", y = "Mood", color="Player Type") + theme(axis.text = element_text(size = 15), axis.title = element_text(size = 15, face = "bold")) #+ scale_group_discrete(labels = as.character(c("Constructive\nCollectivist","Constructive\nIndividualist","Disruptive\nCollectivist","Disruptive\nIndividualistic","Random")))  
+suppressMessages(ggsave(sprintf("plots/Mood.png"), height=6, width=10, units="in", dpi=500))
+
+
 
 # plot emotions
 feltEmotionsLog <- read.csv(file="input/feltEmotionsLog.csv", header=TRUE, sep=",")
-
-# agg <- melt(feltEmotionsLog, id.vars = c(feltEmotionsLog$playerType,feltEmotionsLog$currGameRoundId), measure.vars = c(feltEmotionsLog$activeEmotions_Hate,feltEmotionsLog$activeEmotions_Reproach,feltEmotionsLog$activeEmotions_Shame,feltEmotionsLog$activeEmotions_Anger,feltEmotionsLog$activeEmotions_Remorse,feltEmotionsLog$activeEmotions_Distress,feltEmotionsLog$activeEmotions_Fear,feltEmotionsLog$activeEmotions_Disappointment,feltEmotionsLog$activeEmotions_FearConfirmed,feltEmotionsLog$activeEmotions_Pity,feltEmotionsLog$activeEmotions_Resentment,feltEmotionsLog$activeEmotions_Love,feltEmotionsLog$activeEmotions_Admiration,feltEmotionsLog$activeEmotions_Pride,feltEmotionsLog$activeEmotions_Gratitude,feltEmotionsLog$activeEmotions_Gratification,feltEmotionsLog$activeEmotions_Joy,feltEmotionsLog$activeEmotions_Hope,feltEmotionsLog$activeEmotions_Relief,feltEmotionsLog$activeEmotions_Satisfaction,feltEmotionsLog$activeEmotions_Gloating,feltEmotionsLog$activeEmotions_HappyFor))
-# print(agg)
-# head(agg, 5)
-print(feltEmotionsLog$strongestEmotionIntensity)
-plot <- ggplot(feltEmotionsLog, aes(x = feltEmotionsLog$currGameRoundId, y = feltEmotionsLog$strongestEmotionIntensity, color = feltEmotionsLog$strongestEmotionType)) + facet_grid(playerType ~ .)
-plot <- plot + geom_line(stat = "identity")
-# plot <- plot + geom_line(stat = "summary", fun.y = "mean")
-plot <- plot + geom_point(aes(x = feltEmotionsLog$currGameRoundId, y = feltEmotionsLog$strongestEmotionIntensity, color=feltEmotionsLog$strongestEmotionType), stat = "identity") 
-# plot <- plot + geom_point(aes(x = feltEmotionsLog$currGameRoundId, y = feltEmotionsLog$strongestEmotionIntensity, color=feltEmotionsLog$strongestEmotionType), stat = "summary", fun.y = "mean") 
-plot <- plot + labs(x = "Curr Round Id", y = "Emotion Triggered Freq.", color="Emotion Type") + theme(axis.text = element_text(size = 15), axis.title = element_text(size = 15, face = "bold")) #+ scale_group_discrete(labels = as.character(c("Constructive\nCollectivist","Constructive\nIndividualist","Disruptive\nCollectivist","Disruptive\nIndividualistic","Random")))  
+varsToConsider <- c()
+vars <- c("activeEmotions_Hate","activeEmotions_Reproach","activeEmotions_Shame","activeEmotions_Anger","activeEmotions_Remorse","activeEmotions_Distress","activeEmotions_Fear","activeEmotions_Disappointment","activeEmotions_FearConfirmed","activeEmotions_Pity","activeEmotions_Resentment","activeEmotions_Love","activeEmotions_Admiration","activeEmotions_Pride","activeEmotions_Gratitude","activeEmotions_Gratification","activeEmotions_Joy","activeEmotions_Hope","activeEmotions_Relief","activeEmotions_Satisfaction","activeEmotions_Gloating","activeEmotions_HappyFor")
+j <- 1
+for(i in  seq(from=1, to=length(vars), by=1)) {
+	currVar = vars[i]
+	isGood = 0
+	for(k in  seq(from=1, to=length(feltEmotionsLog[,currVar]), by=1)) {
+		currVarValue = feltEmotionsLog[,currVar][k]
+		if(currVarValue!=0){
+			isGood = isGood + 1
+		}
+	}
+	
+	if(isGood > 0){
+		varsToConsider[[j]] <- currVar
+		j <- j + 1
+	}
+}
+agg <- melt(feltEmotionsLog, id.vars = c("currSessionId","currGameId","currGameRoundId","currGamePhase","playerId","playerType"), measure.vars = varsToConsider)
+levels(agg$playerType) <- c("CC","CI","DC","DI")
+plot <- ggplot(agg, aes(x = agg$currGameRoundId, y = agg$value, color = agg$variable)) + facet_grid(playerType ~ .)
+plot <- plot + geom_line(stat = "summary", fun.y = "mean")
+plot <- plot + geom_point(aes(x = agg$currGameRoundId, y = agg$value, color = agg$variable), stat = "summary", fun.y = "mean") 
+plot <- plot + labs(x = "Curr Round Id", y = "Max. Emotion Intensity", color="Emotion Type") + theme(axis.text = element_text(size = 15), axis.title = element_text(size = 15, face = "bold")) #+ scale_group_discrete(labels = as.character(c("Constructive\nCollectivist","Constructive\nIndividualist","Disruptive\nCollectivist","Disruptive\nIndividualistic","Random")))  
 # plot <- plot + ylim(0, 5.0)
 suppressMessages(ggsave(sprintf("plots/Emotions.png"), height=6, width=10, units="in", dpi=500))
 

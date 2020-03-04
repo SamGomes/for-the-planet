@@ -1,0 +1,4 @@
+sessionId,currGameId,condition,outcome,env_state,playerId,pos,type,econ_state,econ_history_perc,env_history_perc,num_played_rounds
+"041623ZGZ['CI', 'RANDOM', 'RANDOM']",1,"['CI', 'RANDOM', 'RANDOM']",VICTORY,0.76,1,0,AI-RANDOM,0.94,121,134,51
+"041623ZGZ['CI', 'RANDOM', 'RANDOM']",1,"['CI', 'RANDOM', 'RANDOM']",VICTORY,0.76,0,2,AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC,0,18,237,51
+"041623ZGZ['CI', 'RANDOM', 'RANDOM']",1,"['CI', 'RANDOM', 'RANDOM']",VICTORY,0.76,2,1,AI-RANDOM,0.89,134,121,51
