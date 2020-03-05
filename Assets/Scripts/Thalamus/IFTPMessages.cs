@@ -34,11 +34,11 @@ public interface IUnityTabletPublisher : IXmlRpcProxy, ITabletPublisher { }
 public interface ITabletPublisher : ITabletsGM
 {
     [XmlRpcMethod]
-    new void SendA();
+    new void ConnectToGM();
 }
 
 public interface IUnityTabletSubscriber : IGMTablets
 {
     [XmlRpcMethod]
-    new void ReceiveZ();
+    new void AllConnected();
 }

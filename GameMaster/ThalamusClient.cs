@@ -17,9 +17,9 @@ class GameMasterThalamusClient : ThalamusClient, ITabletsGM
             this.publisher = publisher;
         }
 
-        public void ReceiveZ()
+        public void AllConnected()
         {
-            this.publisher.ReceiveZ();
+            this.publisher.AllConnected();
         }
     }
 
@@ -43,7 +43,7 @@ class GameMasterThalamusClient : ThalamusClient, ITabletsGM
     }
 
 
-    public void SendA()
+    public void ConnectToGM()
     {
         _tabletsConnected.Add(1);
         Console.WriteLine("Received A from Tablet");
@@ -52,7 +52,7 @@ class GameMasterThalamusClient : ThalamusClient, ITabletsGM
         {
             Console.WriteLine("Sleeping for 3s to make sure the tablets load MainScene and GameManager is not null...");
             Thread.Sleep(3000);
-            _gameMaster.ReceiveZ();
+            _gameMaster.AllConnected();
         }
     }
 
@@ -70,7 +70,7 @@ class GameMasterThalamusClient : ThalamusClient, ITabletsGM
 
             if (input == "z")
             {
-                _gameMaster.ReceiveZ();
+                _gameMaster.AllConnected();
             }
             else if (input == "q")
             {

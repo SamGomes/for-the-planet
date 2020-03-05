@@ -12,12 +12,12 @@ public interface IUnityTabletSubscriber : ITabletsGM
     void Dispose();
 
     [XmlRpcMethod]
-    new void SendA();
+    new void ConnectToGM();
 
 }
 
 public interface IUnityTabletPublisher : IGMTablets, IXmlRpcProxy
 {
     [XmlRpcMethod]
-    new void ReceiveZ();
+    new void AllConnected();
 }

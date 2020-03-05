@@ -271,7 +271,7 @@ public class TabletThalamusConnector : ThalamusConnector, ITabletPublisher
             _thalamusConnector = connectorRef;
         }
 
-        public void ReceiveZ()
+        public void AllConnected()
         {
             GameGlobals.gameManager.AllConnected();
         }
@@ -298,8 +298,8 @@ public class TabletThalamusConnector : ThalamusConnector, ITabletPublisher
 
     }
 
-    public void SendA()
+    public void ConnectToGM()
     {
-        _rpcProxy.SendA();
+        _rpcProxy.ConnectToGM();
     }
 }

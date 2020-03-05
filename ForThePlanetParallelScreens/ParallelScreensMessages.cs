@@ -4,12 +4,12 @@ namespace ForThePlanetParallelScreens
 {
     public interface IGMTablets : IPerception
     {
-        void ReceiveZ();
+        void AllConnected();
     }
 
 
     public interface ITabletsGM : IAction
     {
-        void SendA();
+        void ConnectToGM();
     }
 }

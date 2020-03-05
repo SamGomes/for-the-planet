@@ -23,9 +23,9 @@ public class ThalamusConnector : ThalamusClient, IGMTablets
             _publisher.Dispose();
         }
 
-        public void SendA()
+        public void ConnectToGM()
         {
-            _publisher.SendA();
+            _publisher.ConnectToGM();
         }
     }
 
@@ -42,8 +42,8 @@ public class ThalamusConnector : ThalamusClient, IGMTablets
         base.Dispose();
     }
 
-    public void ReceiveZ()
+    public void AllConnected()
     {
-        UnityConnector.RPCProxy.ReceiveZ();
+        UnityConnector.RPCProxy.AllConnected();
     }
 }

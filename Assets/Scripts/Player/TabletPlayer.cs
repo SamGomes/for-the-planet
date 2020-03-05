@@ -13,7 +13,7 @@ public class TabletPlayer : Player
 
     public void ConnectToGameMaster()
     {
-        thalamusConnector.SendA();
+        thalamusConnector.ConnectToGM();
     }
 
 }
