@@ -7,7 +7,7 @@ using UnityEngine;
 
 public abstract class ThalamusConnector
 {
-    protected string _remoteAddress = "192.168.0.100";
+    protected string _remoteAddress = "";
 
     protected bool _printExceptions = true;
     public string RemoteAddress
@@ -59,6 +59,7 @@ public abstract class ThalamusConnector
 
     public ThalamusConnector(int remotePort = 7000)
     {
+        _remoteAddress = GameGlobals.thalamusClientIP;
         _remotePort = remotePort;
         _localPort = _remotePort + 1;
         _remoteUri = String.Format("http://{0}:{1}/", _remoteAddress, _remotePort);
