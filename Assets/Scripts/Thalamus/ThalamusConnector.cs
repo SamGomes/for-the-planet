@@ -202,7 +202,7 @@ public class RobotThalamusConnector : ThalamusConnector, IRobotMessages
     public RobotThalamusConnector(int remotePort = 7000) : base(remotePort)
     {
         _rpcProxy = XmlRpcProxyGen.Create<IRobotMessagesRpc>();
-        _rpcProxy.Timeout = 10000;
+        _rpcProxy.Timeout = 2000;
         _rpcProxy.Url = _remoteUri;
     }
 
@@ -273,14 +273,14 @@ public class TabletThalamusConnector : ThalamusConnector, ITabletPublisher
 
         public void ReceiveZ()
         {
-            _thalamusConnector.SendA();
+            GameGlobals.gameManager.AllConnected();
         }
     }
 
     public TabletThalamusConnector(int remotePort = 7000) : base(remotePort)
     {
         _rpcProxy = XmlRpcProxyGen.Create<IUnityTabletPublisher>();
-        _rpcProxy.Timeout = 1000;
+        _rpcProxy.Timeout = 2000;
         _rpcProxy.Url = _remoteUri;
     }
 

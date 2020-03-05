@@ -2,6 +2,7 @@
 using Thalamus;
 using ForThePlanetParallelScreens;
 using System.Collections.Generic;
+using System.Threading;
 
 public interface IGameMasterPublisher : IThalamusPublisher, IGMTablets { }
 
@@ -49,6 +50,8 @@ class GameMasterThalamusClient : ThalamusClient, ITabletsGM
 
         if (_tabletsConnected.Count == 3)
         {
+            Console.WriteLine("Sleeping for 3s to make sure the tablets load MainScene and GameManager is not null...");
+            Thread.Sleep(3000);
             _gameMaster.ReceiveZ();
         }
     }

@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Globalization;
+using System;
 
 public class GameManager : MonoBehaviour {
     
@@ -49,6 +50,9 @@ public class GameManager : MonoBehaviour {
     private int marketLimit;
     private int currNumberOfMarketDices;
 
+    //tablets
+    private bool _allConnect;
+
     public int InterruptGame()
     {
         interruptionRequests++;
@@ -63,6 +67,7 @@ public class GameManager : MonoBehaviour {
    
     void Start()
     {
+        _allConnect = false;
         currGamePhase = GameProperties.GamePhase.BUDGET_ALLOCATION;
 
         //assign some game globals
@@ -129,6 +134,7 @@ public class GameManager : MonoBehaviour {
 
             rollDiceOverlay.SetActive(false);
 
+            advanceRoundButton.interactable = false;
             advanceRoundButton.onClick.AddListener(delegate()
             {
                 newRoundScreen.SetActive(false);
@@ -210,6 +216,11 @@ public class GameManager : MonoBehaviour {
         //yield return GameGlobals.narrator.BudgetExecution(currPlayer, GameGlobals.currGameRoundId, economyResult, environmentResult);
     }
 
+    internal void AllConnected()
+    {
+        _allConnect = true;
+    }
+
     private IEnumerator YieldedGameUpdateLoop()
     {
         //avoid rerun in this case because load scene is asyncronous
@@ -263,7 +274,7 @@ public class GameManager : MonoBehaviour {
             numPlayersToSimulateInvestment = GameGlobals.players.Count;
 
             string diceOverlayTitle = "Simulating environment decay ...";
-            yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, Random.Range(GameGlobals.environmentDecayBudget[0],GameGlobals.environmentDecayBudget[1]+1)));
+            yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, UnityEngine.Random.Range(GameGlobals.environmentDecayBudget[0],GameGlobals.environmentDecayBudget[1]+1)));
 
             int environmentDecay = diceManager.GetCurrDiceTotal();
             float envDecay = (float) environmentDecay / 100.0f;
@@ -283,7 +294,7 @@ public class GameManager : MonoBehaviour {
             foreach (Player player in GameGlobals.players)
             {
                 diceOverlayTitle = "Simulating economic decay ...";
-                yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, Random.Range(GameGlobals.playerDecayBudget[0],GameGlobals.playerDecayBudget[1]+1)));
+                yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, UnityEngine.Random.Range(GameGlobals.playerDecayBudget[0],GameGlobals.playerDecayBudget[1]+1)));
 
                 int economyDecay = diceManager.GetCurrDiceTotal();
                 float economicDecay = (float) economyDecay / 100.0f;
@@ -356,6 +367,10 @@ public class GameManager : MonoBehaviour {
     // Run update or fixed update if is or not simulation mode    
     public void Update()
     {
+        if (GameGlobals.areHumansOnSyncTablets && _allConnect && advanceRoundButton.interactable == false)
+        {
+            advanceRoundButton.interactable = true;
+        }
         if (GameGlobals.isSimulation)
         {
             StartCoroutine(YieldedGameUpdateLoop());
