@@ -69,9 +69,9 @@ suppressMessages(ggsave(sprintf("plots/EconState.png"), height=6, width=10, unit
 
 # plot mood
 moodlog <- read.csv(file="input/moodLog.csv", header=TRUE, sep=",")
-plot <- ggplot(moodlog, aes(x = moodlog$currGameRoundId, y=moodlog$mood, color=moodlog$playerType)) + facet_grid(playerType ~ .)
+plot <- ggplot(moodlog, aes(x = moodlog$currGameRoundId, y=moodlog$mood, color = "")) + facet_grid(playerType ~ .)
 plot <- plot + geom_line(stat = "summary", fun.y = "mean")
-plot <- plot + geom_point(aes(color=moodlog$playerType)) 
+plot <- plot + geom_point(aes(x = moodlog$currGameRoundId, y=moodlog$mood), stat = "summary", fun.y = "mean") 
 # plot <- plot + ylim(0, 1.0)
 plot <- plot + labs(x = "Curr Round Id", y = "Mood", color="Player Type") + theme(axis.text = element_text(size = 15), axis.title = element_text(size = 15, face = "bold")) #+ scale_group_discrete(labels = as.character(c("Constructive\nCollectivist","Constructive\nIndividualist","Disruptive\nCollectivist","Disruptive\nIndividualistic","Random")))  
 suppressMessages(ggsave(sprintf("plots/Mood.png"), height=6, width=10, units="in", dpi=500))
@@ -86,8 +86,10 @@ j <- 1
 for(i in  seq(from=1, to=length(vars), by=1)) {
 	currVar = vars[i]
 	isGood = 0
+	
 	for(k in  seq(from=1, to=length(feltEmotionsLog[,currVar]), by=1)) {
 		currVarValue = feltEmotionsLog[,currVar][k]
+		print(currVarValue)
 		if(currVarValue!=0){
 			isGood = isGood + 1
 		}
