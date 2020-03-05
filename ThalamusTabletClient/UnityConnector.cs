@@ -55,7 +55,7 @@ public class UnityConnector
         RPCProxy = XmlRpcProxyGen.Create<IUnityTabletPublisher>();
         /*rpcProxy.Expect100Continue = true;
         rpcProxy.KeepAlive = false;*/
-        RPCProxy.Timeout = 2000;
+        RPCProxy.Timeout = 5000;
         RPCProxy.Url = _remoteUri;
 
     }

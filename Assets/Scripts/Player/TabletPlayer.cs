@@ -11,6 +11,8 @@ public class TabletPlayer : Player
         thalamusConnector = new TabletThalamusConnector(7000);
     }
 
+
+
     public void ConnectToGameMaster()
     {
         thalamusConnector.ConnectToGM();
