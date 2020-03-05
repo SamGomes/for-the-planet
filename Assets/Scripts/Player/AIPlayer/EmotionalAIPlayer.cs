@@ -88,7 +88,7 @@ public class EmotionalAIPlayer: AIPlayer
 //            }
 //            Debug.Log("]");
             rpc.Perceive(unperceivedEvents);
-            Debug.Log(this.rpc.GetAllActiveEmotions().Count());
+//            Debug.Log(this.rpc.GetAllActiveEmotions().Count());
             unperceivedEvents.Clear();
         }
 

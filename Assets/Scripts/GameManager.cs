@@ -302,20 +302,20 @@ public class GameManager : MonoBehaviour {
             }
             
             //check for game end to stop the game instead of loading new round
-//            if (GameGlobals.envState <= 0.001f)
-//            {
-//                GameGlobals.currGameState = GameProperties.GameState.LOSS;
-//                //ONHOLD @jbgrocha: Send GAME LOSS Event to AIPlayers (call AIplayer update emotional module function)
-//            }
-//            else
-//            {
+            if (GameGlobals.envState <= 0.001f)
+            {
+                GameGlobals.currGameState = GameProperties.GameState.LOSS;
+                //ONHOLD @jbgrocha: Send GAME LOSS Event to AIPlayers (call AIplayer update emotional module function)
+            }
+            else
+            {
                 if (GameGlobals.currGameRoundId > GameProperties.configurableProperties.maxNumRounds - 1)
                 {
                     GameGlobals.currGameState = GameProperties.GameState.VICTORY;
                     // ONHOLD @jbgrocha: Send GAME Victory Event to AIPlayers (call AIplayer update emotional module function)
                 }
                 Debug.Log("[Game: "+GameGlobals.currGameId+"; Round: " + (GameGlobals.currGameRoundId+1) +" of "+GameProperties.configurableProperties.maxNumRounds+"]");
-//            }
+            }
 
             if (GameGlobals.currGameState != GameProperties.GameState.NOT_FINISHED)
             {
