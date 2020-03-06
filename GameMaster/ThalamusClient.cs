@@ -28,8 +28,8 @@ class GameMasterThalamusClient : ThalamusClient, ITabletsGM
     private bool _connectedToMaster;
 
 
-    public GameMasterThalamusClient()
-        : base("GameMastrer", "filipa")
+    public GameMasterThalamusClient(string clientName, string characterName)
+        : base(clientName, characterName)
     {
         SetPublisher<IGameMasterPublisher>();
         _gameMaster = new GameMasterPublisher(base.Publisher);

@@ -8,7 +8,7 @@ public class TabletPlayer : Player
     public TabletPlayer(string type, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name)
         : base(type, playerCanvas, warningScreenRef, UIAvatar, id, name)
     {
-        thalamusConnector = new TabletThalamusConnector(7000);
+        thalamusConnector = new TabletThalamusConnector(int.Parse(GameGlobals.thalamusClientPort));
     }
 
 

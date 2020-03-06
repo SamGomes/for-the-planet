@@ -42,8 +42,9 @@ public static class GameGlobals
 
     // tABLETS STUFF
     public static bool areHumansOnSyncTablets;
-    public static string myTabletID;
+    public static string tabletID;
     public static string thalamusClientIP;
+    public static string thalamusClientPort;
     public static string participantName;
 
     // @jbgrocha: Auto play if batchmode (or explicitly set it to true);
