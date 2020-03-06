@@ -299,8 +299,8 @@ public class TabletThalamusConnector : ThalamusConnector, ITabletPublisher
 
     }
 
-    public void ConnectToGM()
+    public void ConnectToGM(string id, string name)
     {
-        _rpcProxy.ConnectToGM();
+        _rpcProxy.ConnectToGM(id, name);
     }
 }

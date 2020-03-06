@@ -16,9 +16,9 @@ public class UnityListener : XmlRpcListenerService, IUnityTabletSubscriber
 
     public void Dispose() { }
 
-    public void ConnectToGM()
+    public void ConnectToGM(string id, string name)
     {
-        _thalamusCS.TypifiedPublisher.ConnectToGM();
+        _thalamusCS.TypifiedPublisher.ConnectToGM(id, name);
     }
 }
 

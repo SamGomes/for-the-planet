@@ -10,6 +10,6 @@ namespace ForThePlanetParallelScreens
 
     public interface ITabletsGM : IAction
     {
-        void ConnectToGM();
+        void ConnectToGM(string id, string name);
     }
 }

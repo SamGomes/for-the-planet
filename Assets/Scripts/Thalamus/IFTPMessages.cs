@@ -34,7 +34,7 @@ public interface IUnityTabletPublisher : IXmlRpcProxy, ITabletPublisher { }
 public interface ITabletPublisher : ITabletsGM
 {
     [XmlRpcMethod]
-    new void ConnectToGM();
+    new void ConnectToGM(string id, string name);
 }
 
 public interface IUnityTabletSubscriber : IGMTablets

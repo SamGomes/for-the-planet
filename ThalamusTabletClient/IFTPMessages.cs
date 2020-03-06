@@ -12,7 +12,7 @@ public interface IUnityTabletSubscriber : ITabletsGM
     void Dispose();
 
     [XmlRpcMethod]
-    new void ConnectToGM();
+    new void ConnectToGM(string id, string name);
 
 }
 

@@ -43,7 +43,7 @@ class GameMasterThalamusClient : ThalamusClient, ITabletsGM
     }
 
 
-    public void ConnectToGM()
+    public void ConnectToGM(string id, string name)
     {
         _tabletsConnected.Add(1);
         Console.WriteLine("Received A from Tablet");

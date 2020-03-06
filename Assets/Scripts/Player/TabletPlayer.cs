@@ -15,7 +15,7 @@ public class TabletPlayer : Player
 
     public void ConnectToGameMaster()
     {
-        thalamusConnector.ConnectToGM();
+        thalamusConnector.ConnectToGM(GameGlobals.tabletID, GameGlobals.participantName);
     }
 
 }

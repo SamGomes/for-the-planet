@@ -23,9 +23,9 @@ public class ThalamusConnector : ThalamusClient, IGMTablets
             _publisher.Dispose();
         }
 
-        public void ConnectToGM()
+        public void ConnectToGM(string id, string name)
         {
-            _publisher.ConnectToGM();
+            _publisher.ConnectToGM(id, name);
         }
     }
 
