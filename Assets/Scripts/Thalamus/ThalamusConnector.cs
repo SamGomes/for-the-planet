@@ -277,6 +277,17 @@ public class TabletThalamusConnector : ThalamusConnector, ITabletPublisher
         {
             GameGlobals.gameManager.AllConnected(p0Id, p0Name, p1Id, p1Name, p2Id, p2Name);
         }
+
+        public void FinishRound(int[] envAllocations)
+        {
+            for (int i = 0; i < envAllocations.Length; i++)
+            {
+                if (i != int.Parse(GameGlobals.tabletID))
+                {
+                    ((RemotePlayer)GameGlobals.players[i]).ReceiveRemoteBudgetAllocation(envAllocations[i]);
+                }
+            }
+        }
     }
 
     public TabletThalamusConnector(int remotePort = 7000) : base(remotePort)

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class TabletPlayer : Player
 {
@@ -45,4 +46,8 @@ public class RemotePlayer : Player
 
     }
 
+    internal void ReceiveRemoteBudgetAllocation(int envAllocation)
+    {
+        throw new NotImplementedException();
+    }
 }

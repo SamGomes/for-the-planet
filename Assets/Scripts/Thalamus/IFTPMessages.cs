@@ -43,4 +43,6 @@ public interface IUnityTabletSubscriber : IGMTablets
 {
     [XmlRpcMethod]
     new void AllConnected(string p0Id, string p0Name, string p1Id, string p1Name, string p2Id, string p2Name);
+    [XmlRpcMethod]
+    new void FinishRound(int[] envAllocations);
 }

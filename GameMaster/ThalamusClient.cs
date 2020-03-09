@@ -21,6 +21,11 @@ class GameMasterThalamusClient : ThalamusClient, ITabletsGM
         {
             this.publisher.AllConnected(p0Id, p0Name, p1Id, p1Name, p2Id, p2Name);
         }
+
+        public void FinishRound(int[] envAllocations)
+        {
+            this.publisher.FinishRound(envAllocations);
+        }
     }
 
     private GameMasterPublisher _gameMaster;
