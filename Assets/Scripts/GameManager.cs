@@ -218,6 +218,9 @@ public class GameManager : MonoBehaviour {
 
     internal void AllConnected(string p0Id, string p0Name, string p1Id, string p1Name, string p2Id, string p2Name)
     {
+        GameGlobals.players[0].SetName(p0Name);
+        GameGlobals.players[1].SetName(p1Name);
+        GameGlobals.players[2].SetName(p2Name);
         _allConnect = true;
     }
 
@@ -369,6 +372,9 @@ public class GameManager : MonoBehaviour {
     {
         if (GameGlobals.areHumansOnSyncTablets && _allConnect && advanceRoundButton.interactable == false)
         {
+            GameGlobals.players[0].UpdateUIName();
+            GameGlobals.players[1].UpdateUIName();
+            GameGlobals.players[2].UpdateUIName();
             advanceRoundButton.interactable = true;
         }
         if (GameGlobals.isSimulation)
@@ -559,9 +565,9 @@ public class GameManager : MonoBehaviour {
 
     void OnApplicationQuit()
     {
-        if (GameGlobals.areHumansOnSyncTablets && GameGlobals.players != null && GameGlobals.players[0] != null)
+        if (GameGlobals.areHumansOnSyncTablets && GameGlobals.tabletPlayer != null)
         {
-            ((TabletPlayer)GameGlobals.players[0]).Dispose();
+            GameGlobals.tabletPlayer.Dispose();
         }
     }
 }

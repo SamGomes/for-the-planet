@@ -185,6 +185,14 @@ public class Player
     {
         return this.name;
     }
+    public void SetName(string _name)
+    {
+        this.name = _name;
+    }
+    public void UpdateUIName()
+    {
+        nameTextUI.text = name;
+    }
     public float GetMoney()
     {
         return this.money;

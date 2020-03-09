@@ -40,12 +40,13 @@ public static class GameGlobals
     public static string FAtiMAScenarioPath;
     public static IntegratedAuthoringToolAsset FAtiMAIat;
 
-    // tABLETS STUFF
+    // TABLETS STUFF
     public static bool areHumansOnSyncTablets;
     public static string tabletID;
     public static string thalamusClientIP;
     public static string thalamusClientPort;
     public static string participantName;
+    public static TabletPlayer tabletPlayer;
 
     // @jbgrocha: Auto play if batchmode (or explicitly set it to true);
     public static bool isSimulation;

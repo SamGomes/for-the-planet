@@ -11,8 +11,6 @@ public class TabletPlayer : Player
         thalamusConnector = new TabletThalamusConnector(int.Parse(GameGlobals.thalamusClientPort));
     }
 
-
-
     public void ConnectToGameMaster()
     {
         thalamusConnector.ConnectToGM(GameGlobals.tabletID, GameGlobals.participantName);

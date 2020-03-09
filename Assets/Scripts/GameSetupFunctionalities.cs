@@ -138,9 +138,28 @@ public class GameSetupFunctionalities : MonoBehaviour {
 
         int currPlayerId = 0;
 
-        GameGlobals.players.Add(new TabletPlayer("HUMAN", playerCanvas, playerWarningPoppupRef, null, currPlayerId++, "A"));
-        GameGlobals.players.Add(new RemotePlayer("HUMAN", playerCanvas, playerWarningPoppupRef, null, currPlayerId++, "B"));
-        GameGlobals.players.Add(new RemotePlayer("HUMAN", playerCanvas, playerWarningPoppupRef, null, currPlayerId++, "C"));
+
+        if (GameGlobals.tabletID == "1")
+        {
+            GameGlobals.players.Add(new TabletPlayer("HUMAN", playerCanvas, playerWarningPoppupRef, null, currPlayerId++, GameGlobals.participantName));
+            GameGlobals.tabletPlayer = (TabletPlayer)GameGlobals.players[0];
+            GameGlobals.players.Add(new RemotePlayer("HUMAN", playerCanvas, playerWarningPoppupRef, null, currPlayerId++, "B"));
+            GameGlobals.players.Add(new RemotePlayer("HUMAN", playerCanvas, playerWarningPoppupRef, null, currPlayerId++, "C"));
+        }
+        else if (GameGlobals.tabletID == "2")
+        {
+            GameGlobals.players.Add(new RemotePlayer("HUMAN", playerCanvas, playerWarningPoppupRef, null, currPlayerId++, "A"));
+            GameGlobals.players.Add(new TabletPlayer("HUMAN", playerCanvas, playerWarningPoppupRef, null, currPlayerId++, GameGlobals.participantName));
+            GameGlobals.tabletPlayer = (TabletPlayer)GameGlobals.players[1];
+            GameGlobals.players.Add(new RemotePlayer("HUMAN", playerCanvas, playerWarningPoppupRef, null, currPlayerId++, "C"));
+        }
+        else if (GameGlobals.tabletID == "3")
+        {
+            GameGlobals.players.Add(new RemotePlayer("HUMAN", playerCanvas, playerWarningPoppupRef, null, currPlayerId++, "A"));
+            GameGlobals.players.Add(new RemotePlayer("HUMAN", playerCanvas, playerWarningPoppupRef, null, currPlayerId++, "B"));
+            GameGlobals.players.Add(new TabletPlayer("HUMAN", playerCanvas, playerWarningPoppupRef, null, currPlayerId++, GameGlobals.participantName));
+            GameGlobals.tabletPlayer = (TabletPlayer)GameGlobals.players[2];
+        }
 
         GameGlobals.diceLogic = new RandomDiceLogic();
     }
@@ -171,7 +190,7 @@ public class GameSetupFunctionalities : MonoBehaviour {
         if (GameGlobals.areHumansOnSyncTablets)
         {
             SetUpTabletParameterization(GameProperties.currGameParameterization);
-            ((TabletPlayer)GameGlobals.players[0]).ConnectToGameMaster();
+            GameGlobals.tabletPlayer.ConnectToGameMaster();
         }
         else
         {
@@ -239,9 +258,9 @@ public class GameSetupFunctionalities : MonoBehaviour {
 
     void OnApplicationQuit()
     {
-        if (GameGlobals.areHumansOnSyncTablets && GameGlobals.players != null && GameGlobals.players[0] != null)
+        if (GameGlobals.areHumansOnSyncTablets && GameGlobals.tabletPlayer != null)
         {
-            ((TabletPlayer)GameGlobals.players[0]).Dispose();
+            GameGlobals.tabletPlayer.Dispose();
         }
     }
 
