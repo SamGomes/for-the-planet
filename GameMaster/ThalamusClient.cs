@@ -60,6 +60,12 @@ class GameMasterThalamusClient : ThalamusClient, ITabletsGM
     }
 
 
+    public void SendBudgetAllocation(int economyAllocation, int environmentAllocation)
+    {
+
+    }
+
+
     internal void SessionWithTablets()
     {
         while (!_connectedToMaster) { }

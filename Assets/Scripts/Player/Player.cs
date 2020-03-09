@@ -37,18 +37,18 @@ public class Player
 
     private GameObject canvas;
     protected GameObject playerUI;
-    private GameObject playerMarkerUI;
-    private GameObject playerDisablerUI;
+    protected GameObject playerMarkerUI;
+    protected GameObject playerDisablerUI;
     protected GameObject playerSelfDisablerUI;
     protected Button playerActionButtonUI;
 
     private Text nameTextUI;
     private Slider moneySliderUI;
 
-    private GameObject budgetAllocationScreenUI;
-    private GameObject displayHistoryScreenUI;
-    private GameObject budgetExecutionScreenUI;
-    private GameObject investmentSimulationScreenUI;
+    protected GameObject budgetAllocationScreenUI;
+    protected GameObject displayHistoryScreenUI;
+    protected GameObject budgetExecutionScreenUI;
+    protected GameObject investmentSimulationScreenUI;
 
     protected Button spendTokenInEconomicGrowthButtonUI;
     private Text economicGrowthTokensDisplayUI;
@@ -189,10 +189,6 @@ public class Player
     {
         this.name = _name;
     }
-    public void UpdateUIName()
-    {
-        nameTextUI.text = name;
-    }
     public float GetMoney()
     {
         return this.money;
@@ -277,7 +273,7 @@ public class Player
         SendInvestmentSimulationPhaseResponse();
     }
 
-    public int SendBudgetAllocationPhaseResponse()
+    public virtual int SendBudgetAllocationPhaseResponse()
     {
         if (!GameGlobals.isSimulation)
         {
@@ -362,6 +358,10 @@ public class Player
 
 
     //UI Stuff
+    public void UpdateNameUI()
+    {
+        nameTextUI.text = name;
+    }
     private void UpdateTokensUI()
     {
         economicGrowthTokensDisplayUI.text = currRoundInvestment[GameProperties.InvestmentTarget.ECONOMIC].ToString();

@@ -27,6 +27,11 @@ public class ThalamusConnector : ThalamusClient, IGMTablets
         {
             _publisher.ConnectToGM(id, name);
         }
+
+        public void SendBudgetAllocation(int economyAllocation, int environmentAllocation)
+        {
+            _publisher.SendBudgetAllocation(economyAllocation, environmentAllocation);
+        }
     }
 
     public ThalamusConnector(string clientName, string character)

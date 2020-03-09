@@ -85,7 +85,14 @@ public class GameManager : MonoBehaviour {
         numPlayersToDisplayHistory = GameGlobals.players.Count;
         numPlayersToSimulateInvestment = GameGlobals.players.Count;
 
-        currPlayerIndex = 0;
+        if (GameGlobals.areHumansOnSyncTablets)
+        {
+            currPlayerIndex = int.Parse(GameGlobals.tabletID) - 1;
+        }
+        else
+        {
+            currPlayerIndex = 0;
+        }
 
         //get player poppups (can be from any player) and set methods
         infoPoppupLossRef = new PopupScreenFunctionalities(false, InterruptGame, ContinueGame, poppupPrefab, canvas, GameGlobals.monoBehaviourFunctionalities, Resources.Load<Sprite>("Textures/UI/Icons/InfoLoss"), new Color(0.9f, 0.8f, 0.8f), "Audio/albumLoss");
@@ -372,9 +379,9 @@ public class GameManager : MonoBehaviour {
     {
         if (GameGlobals.areHumansOnSyncTablets && _allConnect && advanceRoundButton.interactable == false)
         {
-            GameGlobals.players[0].UpdateUIName();
-            GameGlobals.players[1].UpdateUIName();
-            GameGlobals.players[2].UpdateUIName();
+            GameGlobals.players[0].UpdateNameUI();
+            GameGlobals.players[1].UpdateNameUI();
+            GameGlobals.players[2].UpdateNameUI();
             advanceRoundButton.interactable = true;
         }
         if (GameGlobals.isSimulation)
@@ -423,9 +430,25 @@ public class GameManager : MonoBehaviour {
             {
                 player.ResetPlayerUI();
             }
-            ChangeActivePlayerUI(GameGlobals.players[0]);
+
+            if (!GameGlobals.areHumansOnSyncTablets)
+            {
+                ChangeActivePlayerUI(GameGlobals.players[0]);
+            }
+            else
+            {
+                ChangeActivePlayerUI(GameGlobals.tabletPlayer);
+            }
         }
-        GameGlobals.players[0].BudgetAllocationPhaseRequest();
+
+        if (!GameGlobals.areHumansOnSyncTablets)
+        {
+            GameGlobals.players[0].BudgetAllocationPhaseRequest();
+        }
+        else
+        {
+            GameGlobals.tabletPlayer.BudgetAllocationPhaseRequest();
+        }
     }
     public void StartDisplayHistoryPhase()
     {
@@ -466,6 +489,7 @@ public class GameManager : MonoBehaviour {
             }
             ChangeActivePlayerUI(GameGlobals.players[0]);
         }
+       
         GameGlobals.players[0].BudgetExecutionPhaseRequest();
     }
 
@@ -487,7 +511,6 @@ public class GameManager : MonoBehaviour {
     public IEnumerator BudgetAllocationPhaseResponse(Player invoker)
     {
         Player currPlayer = GameGlobals.players[currPlayerIndex];
-        Player nextPlayer = ChangeToNextPlayer(currPlayer);
 
         numPlayersToAllocateBudget--;
 
@@ -496,8 +519,9 @@ public class GameManager : MonoBehaviour {
             StartCoroutine(GameGlobals.narrator.BudgetAllocation(currPlayer, GameGlobals.currGameRoundId));
         }
 
-        if (numPlayersToAllocateBudget > 0)
+        if (numPlayersToAllocateBudget > 0 && !GameGlobals.areHumansOnSyncTablets)
         {
+            Player nextPlayer = ChangeToNextPlayer(currPlayer);
             nextPlayer.BudgetAllocationPhaseRequest();
         }
         yield return null;

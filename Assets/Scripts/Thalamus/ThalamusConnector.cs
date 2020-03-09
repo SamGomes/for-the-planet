@@ -304,4 +304,9 @@ public class TabletThalamusConnector : ThalamusConnector, ITabletPublisher
     {
         _rpcProxy.ConnectToGM(id, name);
     }
+
+    public void SendBudgetAllocation(int economyAllocation, int environmentAllocation)
+    {
+        _rpcProxy.SendBudgetAllocation(economyAllocation, environmentAllocation);
+    }
 }

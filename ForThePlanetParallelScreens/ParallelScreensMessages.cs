@@ -11,5 +11,6 @@ namespace ForThePlanetParallelScreens
     public interface ITabletsGM : IAction
     {
         void ConnectToGM(string id, string name);
+        void SendBudgetAllocation(int economyAllocation, int environmentAllocation);
     }
 }

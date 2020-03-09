@@ -20,6 +20,11 @@ public class UnityListener : XmlRpcListenerService, IUnityTabletSubscriber
     {
         _thalamusCS.TypifiedPublisher.ConnectToGM(id, name);
     }
+
+    public void SendBudgetAllocation(int economyAllocation, int environmentAllocation)
+    {
+        _thalamusCS.TypifiedPublisher.SendBudgetAllocation(economyAllocation, environmentAllocation);
+    }
 }
 
 public class UnityConnector

@@ -13,6 +13,8 @@ public interface IUnityTabletSubscriber : ITabletsGM
 
     [XmlRpcMethod]
     new void ConnectToGM(string id, string name);
+    [XmlRpcMethod]
+    new void SendBudgetAllocation(int economyAllocation, int environmentAllocation);
 
 }
 

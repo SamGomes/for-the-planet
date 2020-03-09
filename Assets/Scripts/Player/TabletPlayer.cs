@@ -21,6 +21,20 @@ public class TabletPlayer : Player
         thalamusConnector.Dispose();
     }
 
+    public override int SendBudgetAllocationPhaseResponse()
+    {
+        thalamusConnector.SendBudgetAllocation(currRoundInvestment[GameProperties.InvestmentTarget.ECONOMIC], currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT]);
+        budgetAllocationScreenUI.SetActive(false);
+        displayHistoryScreenUI.SetActive(false);
+        budgetExecutionScreenUI.SetActive(false);
+        investmentSimulationScreenUI.SetActive(false);
+        playerActionButtonUI.gameObject.SetActive(false);
+        playerMarkerUI.SetActive(false);
+        playerDisablerUI.SetActive(false);
+        base.SendBudgetAllocationPhaseResponse();
+        return 0;
+    }
+
 }
 
 public class RemotePlayer : Player
