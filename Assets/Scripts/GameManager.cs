@@ -216,7 +216,7 @@ public class GameManager : MonoBehaviour {
         //yield return GameGlobals.narrator.BudgetExecution(currPlayer, GameGlobals.currGameRoundId, economyResult, environmentResult);
     }
 
-    internal void AllConnected()
+    internal void AllConnected(string p0Id, string p0Name, string p1Id, string p1Name, string p2Id, string p2Name)
     {
         _allConnect = true;
     }

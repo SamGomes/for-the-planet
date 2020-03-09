@@ -42,8 +42,8 @@ public class ThalamusConnector : ThalamusClient, IGMTablets
         base.Dispose();
     }
 
-    public void AllConnected()
+    public void AllConnected(string p0Id, string p0Name, string p1Id, string p1Name, string p2Id, string p2Name)
     {
-        UnityConnector.RPCProxy.AllConnected();
+        UnityConnector.RPCProxy.AllConnected(p0Id, p0Name, p1Id, p1Name, p2Id, p2Name);
     }
 }
