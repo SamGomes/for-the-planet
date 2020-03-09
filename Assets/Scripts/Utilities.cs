@@ -42,7 +42,7 @@ public static class GameGlobals
 
     // TABLETS STUFF
     public static bool areHumansOnSyncTablets;
-    public static string tabletID;
+    public static int tabletID;
     public static string thalamusClientIP;
     public static string thalamusClientPort;
     public static string participantName;

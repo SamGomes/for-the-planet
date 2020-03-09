@@ -139,24 +139,24 @@ public class GameSetupFunctionalities : MonoBehaviour {
         int currPlayerId = 0;
 
 
-        if (GameGlobals.tabletID == "1")
+        if (GameGlobals.tabletID == 0)
         {
             GameGlobals.players.Add(new TabletPlayer("HUMAN", playerCanvas, playerWarningPoppupRef, null, currPlayerId++, GameGlobals.participantName));
             GameGlobals.tabletPlayer = (TabletPlayer)GameGlobals.players[0];
-            GameGlobals.players.Add(new RemotePlayer("HUMAN", playerCanvas, playerWarningPoppupRef, null, currPlayerId++, "B"));
-            GameGlobals.players.Add(new RemotePlayer("HUMAN", playerCanvas, playerWarningPoppupRef, null, currPlayerId++, "C"));
+            GameGlobals.players.Add(new RemotePlayer("HUMAN", playerCanvas, playerWarningPoppupRef, null, currPlayerId++, ""));
+            GameGlobals.players.Add(new RemotePlayer("HUMAN", playerCanvas, playerWarningPoppupRef, null, currPlayerId++, ""));
         }
-        else if (GameGlobals.tabletID == "2")
+        else if (GameGlobals.tabletID == 1)
         {
-            GameGlobals.players.Add(new RemotePlayer("HUMAN", playerCanvas, playerWarningPoppupRef, null, currPlayerId++, "A"));
+            GameGlobals.players.Add(new RemotePlayer("HUMAN", playerCanvas, playerWarningPoppupRef, null, currPlayerId++, ""));
             GameGlobals.players.Add(new TabletPlayer("HUMAN", playerCanvas, playerWarningPoppupRef, null, currPlayerId++, GameGlobals.participantName));
             GameGlobals.tabletPlayer = (TabletPlayer)GameGlobals.players[1];
-            GameGlobals.players.Add(new RemotePlayer("HUMAN", playerCanvas, playerWarningPoppupRef, null, currPlayerId++, "C"));
+            GameGlobals.players.Add(new RemotePlayer("HUMAN", playerCanvas, playerWarningPoppupRef, null, currPlayerId++, ""));
         }
-        else if (GameGlobals.tabletID == "3")
+        else if (GameGlobals.tabletID == 2)
         {
-            GameGlobals.players.Add(new RemotePlayer("HUMAN", playerCanvas, playerWarningPoppupRef, null, currPlayerId++, "A"));
-            GameGlobals.players.Add(new RemotePlayer("HUMAN", playerCanvas, playerWarningPoppupRef, null, currPlayerId++, "B"));
+            GameGlobals.players.Add(new RemotePlayer("HUMAN", playerCanvas, playerWarningPoppupRef, null, currPlayerId++, ""));
+            GameGlobals.players.Add(new RemotePlayer("HUMAN", playerCanvas, playerWarningPoppupRef, null, currPlayerId++, ""));
             GameGlobals.players.Add(new TabletPlayer("HUMAN", playerCanvas, playerWarningPoppupRef, null, currPlayerId++, GameGlobals.participantName));
             GameGlobals.tabletPlayer = (TabletPlayer)GameGlobals.players[2];
         }

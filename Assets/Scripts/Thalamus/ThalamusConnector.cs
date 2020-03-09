@@ -273,7 +273,7 @@ public class TabletThalamusConnector : ThalamusConnector, ITabletPublisher
             _thalamusConnector = connectorRef;
         }
 
-        public void AllConnected(string p0Id, string p0Name, string p1Id, string p1Name, string p2Id, string p2Name)
+        public void AllConnected(int p0Id, string p0Name, int p1Id, string p1Name, int p2Id, string p2Name)
         {
             GameGlobals.gameManager.AllConnected(p0Id, p0Name, p1Id, p1Name, p2Id, p2Name);
         }
@@ -282,7 +282,7 @@ public class TabletThalamusConnector : ThalamusConnector, ITabletPublisher
         {
             for (int i = 0; i < envAllocations.Length; i++)
             {
-                if (i != int.Parse(GameGlobals.tabletID))
+                if (i != GameGlobals.tabletID)
                 {
                     ((RemotePlayer)GameGlobals.players[i]).ReceiveRemoteBudgetAllocation(envAllocations[i]);
                 }
@@ -311,13 +311,13 @@ public class TabletThalamusConnector : ThalamusConnector, ITabletPublisher
 
     }
 
-    public void ConnectToGM(string id, string name)
+    public void ConnectToGM(int id, string name)
     {
         _rpcProxy.ConnectToGM(id, name);
     }
 
-    public void SendBudgetAllocation(int economyAllocation, int environmentAllocation)
+    public void SendBudgetAllocation(int tabletID, int envAllocation)
     {
-        _rpcProxy.SendBudgetAllocation(economyAllocation, environmentAllocation);
+        _rpcProxy.SendBudgetAllocation(tabletID, envAllocation);
     }
 }

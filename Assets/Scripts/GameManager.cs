@@ -87,7 +87,7 @@ public class GameManager : MonoBehaviour {
 
         if (GameGlobals.areHumansOnSyncTablets)
         {
-            currPlayerIndex = int.Parse(GameGlobals.tabletID) - 1;
+            currPlayerIndex = GameGlobals.tabletID;
         }
         else
         {
@@ -223,11 +223,11 @@ public class GameManager : MonoBehaviour {
         //yield return GameGlobals.narrator.BudgetExecution(currPlayer, GameGlobals.currGameRoundId, economyResult, environmentResult);
     }
 
-    internal void AllConnected(string p0Id, string p0Name, string p1Id, string p1Name, string p2Id, string p2Name)
+    internal void AllConnected(int p0Id, string p0Name, int p1Id, string p1Name, int p2Id, string p2Name)
     {
-        GameGlobals.players[0].SetName(p0Name);
-        GameGlobals.players[1].SetName(p1Name);
-        GameGlobals.players[2].SetName(p2Name);
+        GameGlobals.players[p0Id].SetName(p0Name);
+        GameGlobals.players[p1Id].SetName(p1Name);
+        GameGlobals.players[p2Id].SetName(p2Name);
         _allConnect = true;
     }
 
@@ -243,6 +243,13 @@ public class GameManager : MonoBehaviour {
         //end of first phase; trigger second phase
         if (numPlayersToAllocateBudget == 0)
         {
+            if (GameGlobals.areHumansOnSyncTablets)
+            {
+                foreach (Player p in GameGlobals.players)
+                {
+                    p.UpdateHistoryUI();
+                }
+            }
             currGamePhase = GameProperties.GamePhase.HISTORY_DISPLAY;
             
             StartDisplayHistoryPhase();
@@ -460,18 +467,21 @@ public class GameManager : MonoBehaviour {
                 player.ResetPlayerUI();
             }
             player.HistoryDisplayPhaseRequest();
-            
-            //Fatima updates
-            //players see the history of each other
-            List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
-            events.Add(RolePlayCharacter.EventHelper.PropertyChange("AllocatedBudgetPoints(" + player.GetName() + ", Environment)", player.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ENVIRONMENT].ToString("0.00", CultureInfo.InvariantCulture), "World"));
-            events.Add(RolePlayCharacter.EventHelper.PropertyChange("AllocatedBudgetPoints(" + player.GetName() + ", Economic)", player.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ECONOMIC].ToString("0.00", CultureInfo.InvariantCulture), "World"));
-            foreach (Player otherPlayer in GameGlobals.players)
+
+            if (player.GetPlayerType() != "HUMAN")
             {
-                events.Add(RolePlayCharacter.EventHelper.PropertyChange("AllocatedBudgetPoints(" + otherPlayer.GetName() + ", Environment)", otherPlayer.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ENVIRONMENT].ToString("0", CultureInfo.InvariantCulture), "World"));
-                events.Add(RolePlayCharacter.EventHelper.PropertyChange("AllocatedBudgetPoints(" + otherPlayer.GetName() + ", Economic)", otherPlayer.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ECONOMIC].ToString("0", CultureInfo.InvariantCulture), "World"));
+                //Fatima updates
+                //players see the history of each other
+                List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
+                events.Add(RolePlayCharacter.EventHelper.PropertyChange("AllocatedBudgetPoints(" + player.GetName() + ", Environment)", player.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ENVIRONMENT].ToString("0.00", CultureInfo.InvariantCulture), "World"));
+                events.Add(RolePlayCharacter.EventHelper.PropertyChange("AllocatedBudgetPoints(" + player.GetName() + ", Economic)", player.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ECONOMIC].ToString("0.00", CultureInfo.InvariantCulture), "World"));
+                foreach (Player otherPlayer in GameGlobals.players)
+                {
+                    events.Add(RolePlayCharacter.EventHelper.PropertyChange("AllocatedBudgetPoints(" + otherPlayer.GetName() + ", Environment)", otherPlayer.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ENVIRONMENT].ToString("0", CultureInfo.InvariantCulture), "World"));
+                    events.Add(RolePlayCharacter.EventHelper.PropertyChange("AllocatedBudgetPoints(" + otherPlayer.GetName() + ", Economic)", otherPlayer.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ECONOMIC].ToString("0", CultureInfo.InvariantCulture), "World"));
+                }
+                player.Perceive(events);
             }
-            player.Perceive(events);
 
             if (!GameGlobals.isSimulation && GameGlobals.isNarrated)
             {
@@ -508,6 +518,11 @@ public class GameManager : MonoBehaviour {
 
 
     //------------------------------------------Responses---------------------------------------
+    public void RemoteBudgetAllocationPhaseResponse()
+    {
+        numPlayersToAllocateBudget--;
+    }
+
     public IEnumerator BudgetAllocationPhaseResponse(Player invoker)
     {
         Player currPlayer = GameGlobals.players[currPlayerIndex];

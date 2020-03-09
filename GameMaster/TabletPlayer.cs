@@ -8,15 +8,16 @@ using System.Threading.Tasks;
 class TabletPlayer
 {
 
-    public string ID;
+    public int ID;
     public string Name;
     public bool Connected;
+    public List<int> EnvInvestments;
 
-    public TabletPlayer(string _id, string _name)
+    public TabletPlayer(int _id)
     {
         this.ID = _id;
-        this.Name = _name;
-        this.Connected = true;
+        this.Connected = false;
+        this.EnvInvestments = new List<int>();
     }
 }
 

@@ -4,14 +4,14 @@ namespace ForThePlanetParallelScreens
 {
     public interface IGMTablets : IPerception
     {
-        void AllConnected(string p0Id, string p0Name, string p1Id, string p1Name, string p2Id, string p2Name);
+        void AllConnected(int p0Id, string p0Name, int p1Id, string p1Name, int p2Id, string p2Name);
         void FinishRound(int[] envAllocations);
     }
 
 
     public interface ITabletsGM : IAction
     {
-        void ConnectToGM(string id, string name);
-        void SendBudgetAllocation(int economyAllocation, int environmentAllocation);
+        void ConnectToGM(int id, string name);
+        void SendBudgetAllocation(int tabletID, int envAllocation);
     }
 }

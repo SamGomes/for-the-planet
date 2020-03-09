@@ -23,14 +23,14 @@ public class ThalamusConnector : ThalamusClient, IGMTablets
             _publisher.Dispose();
         }
 
-        public void ConnectToGM(string id, string name)
+        public void ConnectToGM(int id, string name)
         {
             _publisher.ConnectToGM(id, name);
         }
 
-        public void SendBudgetAllocation(int economyAllocation, int environmentAllocation)
+        public void SendBudgetAllocation(int tabletID, int envAllocation)
         {
-            _publisher.SendBudgetAllocation(economyAllocation, environmentAllocation);
+            _publisher.SendBudgetAllocation(tabletID, envAllocation);
         }
     }
 
@@ -47,7 +47,7 @@ public class ThalamusConnector : ThalamusClient, IGMTablets
         base.Dispose();
     }
 
-    public void AllConnected(string p0Id, string p0Name, string p1Id, string p1Name, string p2Id, string p2Name)
+    public void AllConnected(int p0Id, string p0Name, int p1Id, string p1Name, int p2Id, string p2Name)
     {
         UnityConnector.RPCProxy.AllConnected(p0Id, p0Name, p1Id, p1Name, p2Id, p2Name);
     }

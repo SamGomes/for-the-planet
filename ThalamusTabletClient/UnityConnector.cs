@@ -16,14 +16,14 @@ public class UnityListener : XmlRpcListenerService, IUnityTabletSubscriber
 
     public void Dispose() { }
 
-    public void ConnectToGM(string id, string name)
+    public void ConnectToGM(int id, string name)
     {
         _thalamusCS.TypifiedPublisher.ConnectToGM(id, name);
     }
 
-    public void SendBudgetAllocation(int economyAllocation, int environmentAllocation)
+    public void SendBudgetAllocation(int tabletID, int envAllocation)
     {
-        _thalamusCS.TypifiedPublisher.SendBudgetAllocation(economyAllocation, environmentAllocation);
+        _thalamusCS.TypifiedPublisher.SendBudgetAllocation(tabletID, envAllocation);
     }
 }
 

@@ -12,16 +12,16 @@ public interface IUnityTabletSubscriber : ITabletsGM
     void Dispose();
 
     [XmlRpcMethod]
-    new void ConnectToGM(string id, string name);
+    new void ConnectToGM(int id, string name);
     [XmlRpcMethod]
-    new void SendBudgetAllocation(int economyAllocation, int environmentAllocation);
+    new void SendBudgetAllocation(int tabletID, int envAllocation);
 
 }
 
 public interface IUnityTabletPublisher : IGMTablets, IXmlRpcProxy
 {
     [XmlRpcMethod]
-    new void AllConnected(string p0Id, string p0Name, string p1Id, string p1Name, string p2Id, string p2Name);
+    new void AllConnected(int p0Id, string p0Name, int p1Id, string p1Name, int p2Id, string p2Name);
     [XmlRpcMethod]
     new void FinishRound(int[] envAllocations);
 }

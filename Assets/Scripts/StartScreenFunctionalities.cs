@@ -192,7 +192,7 @@ public class StartScreenFunctionalities : MonoBehaviour {
     private void StartGame()
     {
         InputField idInputField = GameObject.Find("Canvas/StartScreen/tabletParams/IDInput").gameObject.GetComponent<InputField>();
-        GameGlobals.tabletID = idInputField.text;
+        GameGlobals.tabletID = int.Parse(idInputField.text);
         InputField ipInputField = GameObject.Find("Canvas/StartScreen/tabletParams/IPInput").gameObject.GetComponent<InputField>();
         GameGlobals.thalamusClientIP = ipInputField.text;
         InputField portInputField = GameObject.Find("Canvas/StartScreen/tabletParams/portInput").gameObject.GetComponent<InputField>();

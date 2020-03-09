@@ -24,7 +24,7 @@ public class TabletPlayer : Player
 
     public override int SendBudgetAllocationPhaseResponse()
     {
-        thalamusConnector.SendBudgetAllocation(currRoundInvestment[GameProperties.InvestmentTarget.ECONOMIC], currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT]);
+        thalamusConnector.SendBudgetAllocation(GameGlobals.tabletID, currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT]);
         budgetAllocationScreenUI.SetActive(false);
         displayHistoryScreenUI.SetActive(false);
         budgetExecutionScreenUI.SetActive(false);
@@ -48,6 +48,10 @@ public class RemotePlayer : Player
 
     internal void ReceiveRemoteBudgetAllocation(int envAllocation)
     {
-        throw new NotImplementedException();
+        currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT] += envAllocation;
+        currRoundInvestment[GameProperties.InvestmentTarget.ECONOMIC] += (GameGlobals.roundBudget - envAllocation);
+        investmentHistory[GameProperties.InvestmentTarget.ENVIRONMENT] += envAllocation;
+        investmentHistory[GameProperties.InvestmentTarget.ECONOMIC] += (GameGlobals.roundBudget - envAllocation);
+        gameManagerRef.RemoteBudgetAllocationPhaseResponse();
     }
 }

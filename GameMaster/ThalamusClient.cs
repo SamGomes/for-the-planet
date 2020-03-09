@@ -17,7 +17,7 @@ class GameMasterThalamusClient : ThalamusClient, ITabletsGM
             this.publisher = publisher;
         }
 
-        public void AllConnected(string p0Id, string p0Name, string p1Id, string p1Name, string p2Id, string p2Name)
+        public void AllConnected(int p0Id, string p0Name, int p1Id, string p1Name, int p2Id, string p2Name)
         {
             this.publisher.AllConnected(p0Id, p0Name, p1Id, p1Name, p2Id, p2Name);
         }
@@ -29,8 +29,10 @@ class GameMasterThalamusClient : ThalamusClient, ITabletsGM
     }
 
     private GameMasterPublisher _gameMaster;
-    private List<TabletPlayer> _tabletsConnected;
+    private TabletPlayer[] _tabletsConnected;
     private bool _connectedToMaster;
+    private int _currentRound;
+    private int _totalInvestmentsCurrentRound;
 
 
     public GameMasterThalamusClient(string clientName, string characterName)
@@ -38,8 +40,13 @@ class GameMasterThalamusClient : ThalamusClient, ITabletsGM
     {
         SetPublisher<IGameMasterPublisher>();
         _gameMaster = new GameMasterPublisher(base.Publisher);
-        _tabletsConnected = new List<TabletPlayer>();
+        TabletPlayer p0 = new TabletPlayer(0);
+        TabletPlayer p1 = new TabletPlayer(1);
+        TabletPlayer p2 = new TabletPlayer(2);
+        _tabletsConnected = new TabletPlayer[] { p0, p1, p2};
         _connectedToMaster = false;
+        _currentRound = 0;
+        _totalInvestmentsCurrentRound = 0;
     }
 
     public override void ConnectedToMaster()
@@ -48,12 +55,13 @@ class GameMasterThalamusClient : ThalamusClient, ITabletsGM
     }
 
 
-    public void ConnectToGM(string id, string name)
+    public void ConnectToGM(int id, string name)
     {
-        _tabletsConnected.Add(new TabletPlayer(id, name));
+        _tabletsConnected[id].Name = name;
+        _tabletsConnected[id].Connected = true;
         Console.WriteLine("Received a connection from Tablet");
 
-        if (_tabletsConnected.Count == 3)
+        if (_tabletsConnected[0].Connected & _tabletsConnected[1].Connected & _tabletsConnected[2].Connected)
         {
             Console.WriteLine("Sleeping for 3s to make sure the tablets load MainScene and GameManager is not null...");
             Thread.Sleep(3000);
@@ -65,9 +73,26 @@ class GameMasterThalamusClient : ThalamusClient, ITabletsGM
     }
 
 
-    public void SendBudgetAllocation(int economyAllocation, int environmentAllocation)
+    public void SendBudgetAllocation(int tabletID, int envAllocation)
     {
+        _tabletsConnected[tabletID].EnvInvestments.Add(envAllocation);
+        _totalInvestmentsCurrentRound++;
 
+        if (_totalInvestmentsCurrentRound == 3)
+        {
+            int[] currentRoundInvestments = new int[3] { 0, 0, 0};
+            for (int i = 0; i <_tabletsConnected.Length; i++)
+            {
+                TabletPlayer p = _tabletsConnected[i];
+                if (p.EnvInvestments.Count == 0)
+                {
+                    Console.WriteLine("LOL");
+                }
+                int roundInvestment = p.EnvInvestments[_currentRound];
+                currentRoundInvestments[i] = roundInvestment;
+            }
+            _gameMaster.FinishRound(currentRoundInvestments);
+        }
     }
 
 
