@@ -42,10 +42,6 @@ public class UnityConnector
     public UnityConnector(ThalamusConnector thalamusClient, string address, int port)
     {
         _thalamusClient = thalamusClient;
-        _dispatcherThread = new Thread(new ThreadStart(DispatcherThread));
-        _messageDispatcherThread = new Thread(new ThreadStart(MessageDispatcher));
-        _dispatcherThread.Start();
-        _messageDispatcherThread.Start();
 
         _remoteAddress = address;
         _localPort = port;
@@ -57,6 +53,11 @@ public class UnityConnector
         rpcProxy.KeepAlive = false;*/
         RPCProxy.Timeout = 5000;
         RPCProxy.Url = _remoteUri;
+
+        _dispatcherThread = new Thread(new ThreadStart(DispatcherThread));
+        _messageDispatcherThread = new Thread(new ThreadStart(MessageDispatcher));
+        _dispatcherThread.Start();
+        _messageDispatcherThread.Start();
 
     }
 
@@ -92,7 +93,6 @@ public class UnityConnector
         {
             try
             {
-                   
                 _listener = new HttpListener();
                 _listener.Prefixes.Add(string.Format("http://*:{0}/", _localPort));
                 _listener.Start();

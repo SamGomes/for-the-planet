@@ -46,7 +46,7 @@ class GameMasterThalamusClient : ThalamusClient, ITabletsGM
     public void ConnectToGM(string id, string name)
     {
         _tabletsConnected.Add(1);
-        Console.WriteLine("Received A from Tablet");
+        Console.WriteLine("Received a connection from Tablet");
 
         if (_tabletsConnected.Count == 3)
         {

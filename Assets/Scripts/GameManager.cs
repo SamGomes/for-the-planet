@@ -555,4 +555,13 @@ public class GameManager : MonoBehaviour {
         }
         return null;
     }
+
+
+    void OnApplicationQuit()
+    {
+        if (GameGlobals.areHumansOnSyncTablets && GameGlobals.players != null && GameGlobals.players[0] != null)
+        {
+            ((TabletPlayer)GameGlobals.players[0]).Dispose();
+        }
+    }
 }

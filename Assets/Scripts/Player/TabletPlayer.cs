@@ -18,6 +18,11 @@ public class TabletPlayer : Player
         thalamusConnector.ConnectToGM(GameGlobals.tabletID, GameGlobals.participantName);
     }
 
+    public void Dispose()
+    {
+        thalamusConnector.Dispose();
+    }
+
 }
 
 public class RemotePlayer : Player

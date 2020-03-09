@@ -23,9 +23,6 @@ class Program
             GameMasterThalamusClient _thalamusClient = new GameMasterThalamusClient(clientName, character);
             _thalamusClient.SessionWithTablets();
             _thalamusClient.Dispose();
-
-            Console.ReadLine();
-            _thalamusClient.Dispose();
         }
     }
 }

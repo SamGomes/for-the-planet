@@ -235,5 +235,14 @@ public class GameSetupFunctionalities : MonoBehaviour {
 //            UIResetButton.gameObject.SetActive(false);
         }
     }
-    
+
+
+    void OnApplicationQuit()
+    {
+        if (GameGlobals.areHumansOnSyncTablets && GameGlobals.players != null && GameGlobals.players[0] != null)
+        {
+            ((TabletPlayer)GameGlobals.players[0]).Dispose();
+        }
+    }
+
 }

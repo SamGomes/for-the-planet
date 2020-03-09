@@ -78,6 +78,7 @@ public abstract class ThalamusConnector
     {
         _shutdown = true;
 
+
         try
         {
             if (_listener != null) _listener.Stop();
