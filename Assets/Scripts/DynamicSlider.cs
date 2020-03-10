@@ -53,8 +53,11 @@ public class DynamicSlider
             yield return null;
         }
 
-        //make sure that the target value is within the slider range
-        targetSliderValue = Mathf.Clamp01(targetSliderValue);
+        if (!GameGlobals.areHumansOnSyncTablets)
+        {
+            //make sure that the target value is within the slider range
+            targetSliderValue = Mathf.Clamp01(targetSliderValue);
+        }
 
         float initialSliderValue = sliderUI.value;
         float currSliderValue = initialSliderValue;

@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
+using System;
 
 public class GameManager : MonoBehaviour {
     
@@ -102,7 +103,14 @@ public class GameManager : MonoBehaviour {
 
         gameMainSceneFinished = false;
         phaseEndDelay = 2.0f;
-        GameGlobals.envState = 0.5f;
+        if (GameGlobals.areHumansOnSyncTablets)
+        {
+            GameGlobals.envState = 150;
+        }
+        else
+        {
+            GameGlobals.envState = 0.5f;
+        }
 
         int numPlayers = GameGlobals.players.Count;
         
@@ -127,7 +135,10 @@ public class GameManager : MonoBehaviour {
             {
                 currPlayer = GameGlobals.players[i];
                 currPlayer.ReceiveGameManager(this);
-                StartCoroutine(currPlayer.SetMoney(0.1f));
+                if (!GameGlobals.areHumansOnSyncTablets)
+                {
+                    StartCoroutine(currPlayer.SetMoney(0.1f));
+                }
 
                 //Setup warnings
                 currPlayer.GetWarningScreenRef().AddOnShow(InterruptGame);
@@ -263,6 +274,7 @@ public class GameManager : MonoBehaviour {
 
             if (GameGlobals.areHumansOnSyncTablets)
             {
+                TakeMoneyFromCommonPot();
                 yield return new WaitForSeconds(10);
                 currGamePhase = GameProperties.GamePhase.BUDGET_EXECUTION;
 
@@ -395,6 +407,34 @@ public class GameManager : MonoBehaviour {
                     newRoundScreen.SetActive(true);
                 }
             }
+        }
+    }
+
+    private void TakeMoneyFromCommonPot()
+    {
+        List<int> votes = new List<int>();
+        foreach (Player p in GameGlobals.players)
+        {
+            votes.Add(p.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT]);
+        }
+        int[] sortedVotes = votes.ToArray();
+        Array.Sort(sortedVotes);
+        int len = sortedVotes.Length;
+        float medianVote;
+        if (len % 2 == 0)
+        {
+            int a = sortedVotes[len / 2 - 1];
+            int b = sortedVotes[len / 2];
+            medianVote = (a + b) / 2;
+        }
+        else
+        {
+            medianVote = sortedVotes[len / 2];
+        }
+
+        foreach (Player p in GameGlobals.players)
+        {
+            StartCoroutine(p.SetMoney(p.GetMoney() + medianVote));
         }
     }
 
