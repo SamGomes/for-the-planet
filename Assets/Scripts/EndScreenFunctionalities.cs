@@ -143,9 +143,9 @@ public class EndScreenFunctionalities : MonoBehaviour
             float envInv = (float) player.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ENVIRONMENT];
 
             gameLogEntry["playerId"] = player.GetId().ToString();
+            gameLogEntry["playerType"] = player.GetPlayerType();
 
             gameLogEntry["pos"] = i.ToString();
-            gameLogEntry["type"] = player.GetPlayerType();
             gameLogEntry["econ_state"] = player.GetMoney().ToString();
             gameLogEntry["econ_history_perc"] = econInv.ToString();
             gameLogEntry["env_history_perc"] = envInv.ToString();

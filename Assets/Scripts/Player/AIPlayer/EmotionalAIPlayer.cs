@@ -332,7 +332,7 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
 
 //        pDisrupt = pWeights[strongestEmotion.EmotionType] * ((strongestEmotion.Intensity + 10.0f) / 20.0f);
 
-        pDisrupt = 1.0f - (rpc.Mood + 10.0f) / 20.0f; //positive rule: positive mood-> invest in env
+//        pDisrupt = 1.0f - (rpc.Mood + 10.0f) / 20.0f; //positive rule: positive mood-> invest in env
         pDisrupt = (rpc.Mood + 10.0f) / 20.0f; //negative rule: positive mood-> invest in econ
         
         //bounded between 5 and 95%
