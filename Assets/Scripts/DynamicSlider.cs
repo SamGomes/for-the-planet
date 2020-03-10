@@ -63,8 +63,17 @@ public class DynamicSlider
         float currSliderValue = initialSliderValue;
         float growth = targetSliderValue - currSliderValue;
         float t = 0;
+        string textToDisplay;
 
-        string textToDisplay = string.Format("{0:+;-;+}{0,2:#;#;0}", growth*100.0f) + " %";
+
+        if (GameGlobals.areHumansOnSyncTablets)
+        {
+            textToDisplay = string.Format("{0:+;-;+}{0,2:#;#;0}", growth);
+        }
+        else
+        {
+            textToDisplay = string.Format("{0:+;-;+}{0,2:#;#;0}", growth * 100.0f) + " %";
+        }
         if (growth > 0)
         {
             valueUpdateUIup.SetActive(false);
