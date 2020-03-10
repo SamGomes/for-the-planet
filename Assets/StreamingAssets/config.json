@@ -5,7 +5,7 @@
     "isSimulation": false,
     "numGamesToPlay": 35,
 
-    "roundBudget": 5,
+    "roundBudget": 10,
     "environmentDecayBudget": [7,7],
     "playerDecayBudget": [2,2],
 

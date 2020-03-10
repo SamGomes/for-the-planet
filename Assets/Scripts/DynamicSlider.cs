@@ -9,6 +9,7 @@ public class DynamicSlider
     private GameObject valueUpdateUIup;
     private GameObject valueUpdateUIdown;
     private Slider sliderUI;
+    private Text sliderUITextLabel;
 
     public DynamicSlider(GameObject dynamicSliderUI)
     {
@@ -16,6 +17,25 @@ public class DynamicSlider
         valueUpdateUIup = this.dynamicSliderUI.transform.Find("valueUpdateUI/up").gameObject;
         valueUpdateUIdown = this.dynamicSliderUI.transform.Find("valueUpdateUI/down").gameObject;
         sliderUI = this.dynamicSliderUI.transform.GetComponent<Slider>();
+        sliderUITextLabel = null;
+        valueUpdateUIup.SetActive(false);
+        valueUpdateUIdown.SetActive(false);
+    }
+
+    public DynamicSlider(GameObject dynamicSliderUI, bool sliderWithLabel)
+    {
+        this.dynamicSliderUI = dynamicSliderUI;
+        valueUpdateUIup = this.dynamicSliderUI.transform.Find("valueUpdateUI/up").gameObject;
+        valueUpdateUIdown = this.dynamicSliderUI.transform.Find("valueUpdateUI/down").gameObject;
+        sliderUI = this.dynamicSliderUI.transform.GetComponent<Slider>();
+        if (sliderWithLabel)
+        {
+            sliderUITextLabel = sliderUI.transform.Find("HandleSlideArea/SliderPick/Text").GetComponent<Text>();
+        }
+        else
+        {
+            sliderUITextLabel = null;
+        }
         valueUpdateUIup.SetActive(false);
         valueUpdateUIdown.SetActive(false);
     }
@@ -63,6 +83,10 @@ public class DynamicSlider
             yield return new WaitForSeconds(0.0416f);
         }
         sliderUI.value = targetSliderValue; //to avoid rounding errors due to animation
+        if (sliderUITextLabel != null)
+        {
+            sliderUITextLabel.text = sliderUI.value.ToString();
+        }
         
         yield return null;
     }

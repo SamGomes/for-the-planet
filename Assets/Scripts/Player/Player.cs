@@ -117,7 +117,14 @@ public class Player
     {
         this.canvas = canvas;
 
-        playerUI = Object.Instantiate(Resources.Load<GameObject>("Prefabs/PlayerUI/playerUI"), canvas.transform);
+        if (GameGlobals.areHumansOnSyncTablets)
+        {
+            playerUI = Object.Instantiate(Resources.Load<GameObject>("Prefabs/PlayerUI/playerUItablet"), canvas.transform);
+        }
+        else
+        {
+            playerUI = Object.Instantiate(Resources.Load<GameObject>("Prefabs/PlayerUI/playerUI"), canvas.transform);
+        }
 
         playerMarkerUI = playerUI.transform.Find("marker").gameObject;
         playerDisablerUI = playerUI.transform.Find("disabler").gameObject;
@@ -130,7 +137,6 @@ public class Player
 
         nameTextUI = playerUI.transform.Find("nameText").gameObject.GetComponent<Text>();
         moneySliderUI = playerUI.transform.Find("playerStateSection/InvestmentUI/Slider").gameObject.GetComponent<Slider>();
-
 
         spendTokenInEconomicGrowthButtonUI = playerUI.transform.Find("playerActionSection/budgetAllocationUI/tokenSelection/alocateEconomicGrowth/Button").gameObject.GetComponent<Button>();
         spendTokenInEconomicGrowthButtonUI.onClick.AddListener(SpendTokenInEconomicGrowth);
@@ -153,7 +159,14 @@ public class Player
 
         nameTextUI.text = name;
 
-        dynamicSlider = new DynamicSlider(this.playerUI.transform.Find("playerStateSection/InvestmentUI/Slider").gameObject);
+        if (GameGlobals.areHumansOnSyncTablets)
+        {
+            dynamicSlider = new DynamicSlider(this.playerUI.transform.Find("playerStateSection/InvestmentUI/Slider").gameObject, true);
+        }
+        else
+        {
+            dynamicSlider = new DynamicSlider(this.playerUI.transform.Find("playerStateSection/InvestmentUI/Slider").gameObject);
+        }
 
         //position UI on canvas
         playerUI.transform.Translate(new Vector3(0, -GameGlobals.players.Count * (0.2f * Screen.height)*0.9f, 0));

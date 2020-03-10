@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Globalization;
-using System;
+using System.Threading;
 
 public class GameManager : MonoBehaviour {
     
@@ -135,7 +135,7 @@ public class GameManager : MonoBehaviour {
             }
 
 
-            envDynamicSlider = new DynamicSlider(environmentSliderSceneElement.gameObject);
+            envDynamicSlider = new DynamicSlider(environmentSliderSceneElement.gameObject, true);
             StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState));
             DontDestroyOnLoad(CommonAreaUI);
 
@@ -259,14 +259,31 @@ public class GameManager : MonoBehaviour {
         //end of second phase;
         if (numPlayersToDisplayHistory == 0)
         {
-            currGamePhase = GameProperties.GamePhase.BUDGET_EXECUTION;
-
             numPlayersToDisplayHistory = GameGlobals.players.Count;
-            if (!GameGlobals.isSimulation)
+
+            if (GameGlobals.areHumansOnSyncTablets)
             {
-                yield return new WaitForSeconds(phaseEndDelay);
+                yield return new WaitForSeconds(10);
+                currGamePhase = GameProperties.GamePhase.BUDGET_EXECUTION;
+
+                numPlayersToDisplayHistory = GameGlobals.players.Count;
+                if (!GameGlobals.isSimulation)
+                {
+                    yield return new WaitForSeconds(phaseEndDelay);
+                }
+                StartExecuteBudgetPhase();
             }
-            StartExecuteBudgetPhase();
+            else
+            {
+                currGamePhase = GameProperties.GamePhase.BUDGET_EXECUTION;
+
+                numPlayersToDisplayHistory = GameGlobals.players.Count;
+                if (!GameGlobals.isSimulation)
+                {
+                    yield return new WaitForSeconds(phaseEndDelay);
+                }
+                StartExecuteBudgetPhase();
+            }
         }
 
         //end of third phase
