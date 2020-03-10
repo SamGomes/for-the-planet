@@ -48,8 +48,10 @@ public class RemotePlayer : Player
 
     internal void ReceiveRemoteBudgetAllocation(int envAllocation)
     {
-        currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT] += envAllocation;
-        currRoundInvestment[GameProperties.InvestmentTarget.ECONOMIC] += (GameGlobals.roundBudget - envAllocation);
+        unallocatedBudget = GameGlobals.roundBudget;
+
+        currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT] = envAllocation;
+        currRoundInvestment[GameProperties.InvestmentTarget.ECONOMIC] = (GameGlobals.roundBudget - envAllocation);
         investmentHistory[GameProperties.InvestmentTarget.ENVIRONMENT] += envAllocation;
         investmentHistory[GameProperties.InvestmentTarget.ECONOMIC] += (GameGlobals.roundBudget - envAllocation);
         gameManagerRef.RemoteBudgetAllocationPhaseResponse();

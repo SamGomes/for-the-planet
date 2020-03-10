@@ -80,6 +80,8 @@ class GameMasterThalamusClient : ThalamusClient, ITabletsGM
 
         if (_totalInvestmentsCurrentRound == 3)
         {
+            _totalInvestmentsCurrentRound = 0;
+
             int[] currentRoundInvestments = new int[3] { 0, 0, 0};
             for (int i = 0; i <_tabletsConnected.Length; i++)
             {
@@ -87,6 +89,7 @@ class GameMasterThalamusClient : ThalamusClient, ITabletsGM
                 int roundInvestment = p.EnvInvestments[_currentRound];
                 currentRoundInvestments[i] = roundInvestment;
             }
+            _currentRound++;
             _gameMaster.FinishRound(currentRoundInvestments);
         }
     }

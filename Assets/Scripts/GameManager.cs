@@ -274,16 +274,30 @@ public class GameManager : MonoBehaviour {
 
             if (GameGlobals.areHumansOnSyncTablets)
             {
+                numPlayersToDisplayHistory = GameGlobals.players.Count;
                 TakeMoneyFromCommonPot();
                 yield return new WaitForSeconds(10);
-                currGamePhase = GameProperties.GamePhase.BUDGET_EXECUTION;
+                currGamePhase = GameProperties.GamePhase.BUDGET_ALLOCATION;
 
-                numPlayersToDisplayHistory = GameGlobals.players.Count;
-                if (!GameGlobals.isSimulation)
+                foreach (Player player in GameGlobals.players)
                 {
-                    yield return new WaitForSeconds(phaseEndDelay);
+                    Dictionary<string, string> logEntry = new Dictionary<string, string>()
+                    {
+                        {"currSessionId", GameGlobals.currSessionId},
+                        {"currGameId", GameGlobals.currGameId.ToString()},
+                        {"currRoundId", GameGlobals.currGameRoundId.ToString()},
+                        {"playerId", player.GetPlayerType()},
+                        {"playerType", player.GetPlayerType()},
+                        {"playerCurrInvestEcon", player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ECONOMIC].ToString()},
+                        {"playerCurrInvestEnv", player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT].ToString()},
+                        {"playerEconState", player.GetMoney().ToString()},
+                        {"envState", GameGlobals.envState.ToString()}
+                    };
+                    StartCoroutine(GameGlobals.gameLogManager.WriteToLog("fortheplanetlogs", "strategies", logEntry));
                 }
-                StartExecuteBudgetPhase();
+
+                GameGlobals.currGameRoundId++;
+                newRoundScreen.SetActive(true);
             }
             else
             {
@@ -434,6 +448,8 @@ public class GameManager : MonoBehaviour {
 
         foreach (Player p in GameGlobals.players)
         {
+            float m = p.GetMoney();
+            int lol = p.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ENVIRONMENT];
             StartCoroutine(p.SetMoney(p.GetMoney() + medianVote));
         }
     }
