@@ -84,10 +84,6 @@ class GameMasterThalamusClient : ThalamusClient, ITabletsGM
             for (int i = 0; i <_tabletsConnected.Length; i++)
             {
                 TabletPlayer p = _tabletsConnected[i];
-                if (p.EnvInvestments.Count == 0)
-                {
-                    Console.WriteLine("LOL");
-                }
                 int roundInvestment = p.EnvInvestments[_currentRound];
                 currentRoundInvestments[i] = roundInvestment;
             }
@@ -110,6 +106,15 @@ class GameMasterThalamusClient : ThalamusClient, ITabletsGM
             if (input == "q")
             {
                 stop = true;
+            }
+            if (input == "r")
+            {
+                TabletPlayer p0 = new TabletPlayer(0);
+                TabletPlayer p1 = new TabletPlayer(1);
+                TabletPlayer p2 = new TabletPlayer(2);
+                _tabletsConnected = new TabletPlayer[] { p0, p1, p2 };
+                _currentRound = 0;
+                _totalInvestmentsCurrentRound = 0;
             }
         }
     }
