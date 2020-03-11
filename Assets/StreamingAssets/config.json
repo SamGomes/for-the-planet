@@ -1,5 +1,5 @@
     {
-    "maxNumRounds": 200,
+    "maxNumRounds": 5,
 
     "areHumansOnSyncTablets": true,
     "isSimulation": false,

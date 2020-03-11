@@ -275,9 +275,6 @@ public class GameManager : MonoBehaviour {
             if (GameGlobals.areHumansOnSyncTablets)
             {
                 numPlayersToDisplayHistory = GameGlobals.players.Count;
-                TakeMoneyFromCommonPot();
-                yield return new WaitForSeconds(10);
-                currGamePhase = GameProperties.GamePhase.BUDGET_ALLOCATION;
 
                 foreach (Player player in GameGlobals.players)
                 {
@@ -296,8 +293,27 @@ public class GameManager : MonoBehaviour {
                     StartCoroutine(GameGlobals.gameLogManager.WriteToLog("fortheplanetlogs", "strategies", logEntry));
                 }
 
+
+                TakeMoneyFromCommonPot();
                 GameGlobals.currGameRoundId++;
-                newRoundScreen.SetActive(true);
+                yield return new WaitForSeconds(10);
+
+
+                if (GameGlobals.envState <= 74) //environment exploded
+                {
+                    GameGlobals.currGameState = GameProperties.GameState.LOSS;
+                    GameGlobals.gameSceneManager.LoadEndScene();
+                }
+                else if (GameGlobals.currGameRoundId == GameProperties.configurableProperties.maxNumRounds) //reached last round
+                {
+                    GameGlobals.currGameState = GameProperties.GameState.VICTORY;
+                    GameGlobals.gameSceneManager.LoadEndScene();
+                }
+                else //normal round finished
+                {
+                    currGamePhase = GameProperties.GamePhase.BUDGET_ALLOCATION;
+                    newRoundScreen.SetActive(true);
+                }
             }
             else
             {
