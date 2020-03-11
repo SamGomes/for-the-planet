@@ -35,6 +35,7 @@ public static class GameGlobals
 
 
     public static float envState;
+    public static List<float> envStatePerRound;
 
     //fatima stuff
     public static string FAtiMAScenarioPath;

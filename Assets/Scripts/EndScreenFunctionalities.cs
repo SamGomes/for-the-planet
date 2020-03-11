@@ -123,20 +123,57 @@ public class EndScreenFunctionalities : MonoBehaviour
                     if (i < p.environmentInvestmentPerRound.Count)
                     {
                         int playerInvestmentPerRound = p.environmentInvestmentPerRound[i];
-                        Text textGameObject = newTableEntry.GetComponentsInChildren<Text>()[i + 1];
-                        textGameObject.text = playerInvestmentPerRound.ToString();
+                        Text textEntry = newTableEntry.GetComponentsInChildren<Text>()[i + 1];
+                        textEntry.text = playerInvestmentPerRound.ToString();
 
                         if (playerInvestmentPerRound == p.environmentMedianInvestmentPerRound[i])
                         {
-                            textGameObject.color = Color.yellow;
+                            textEntry.color = Color.yellow;
                         }
-                        
                     }
                     else
                     {
                         newTableEntry.GetComponentsInChildren<Text>()[i + 1].text = "-";
                     }
                 }
+            }
+            GameObject newDummyLineEntry = Object.Instantiate(tableEntryPrefab, environmentContributionsTableUI.transform);
+            newDummyLineEntry.GetComponentsInChildren<Text>()[0].text = "";
+            newDummyLineEntry.GetComponentsInChildren<Text>()[1].text = "";
+            newDummyLineEntry.GetComponentsInChildren<Text>()[2].text = "";
+            newDummyLineEntry.GetComponentsInChildren<Text>()[3].text = "";
+            newDummyLineEntry.GetComponentsInChildren<Text>()[4].text = "";
+            newDummyLineEntry.GetComponentsInChildren<Text>()[5].text = "";
+
+            GameObject environmentEntry = Object.Instantiate(tableEntryPrefab, environmentContributionsTableUI.transform);
+            Text textGameObject = environmentEntry.GetComponentsInChildren<Text>()[0];
+            textGameObject.text = "ENVIRONMENT";
+            textGameObject.fontStyle = FontStyle.Bold;
+            for (int i = 0; i < GameProperties.configurableProperties.maxNumRounds; i++)
+            {
+                if (i < GameGlobals.envStatePerRound.Count)
+                {
+                    textGameObject = environmentEntry.GetComponentsInChildren<Text>()[i + 1];
+                    textGameObject.text = GameGlobals.envStatePerRound[i].ToString();
+                    textGameObject.fontStyle = FontStyle.Bold;
+
+                    if (GameGlobals.envStatePerRound[i] < 75)
+                    {
+                        textGameObject.color = Color.red;
+                    }
+                    else if (i == GameProperties.configurableProperties.maxNumRounds - 1)
+                    {
+                        textGameObject.color = Color.green;
+                    }
+                }
+                else
+                {
+                    textGameObject = environmentEntry.GetComponentsInChildren<Text>()[i + 1];
+                    textGameObject.text = "-";
+                    textGameObject.fontStyle = FontStyle.Bold;
+                    textGameObject.color = Color.red;
+                }
+
             }
         }
         else

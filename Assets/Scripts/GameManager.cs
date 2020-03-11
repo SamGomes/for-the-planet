@@ -106,6 +106,7 @@ public class GameManager : MonoBehaviour {
         if (GameGlobals.areHumansOnSyncTablets)
         {
             GameGlobals.envState = 150;
+            GameGlobals.envStatePerRound = new List<float>();
         }
         else
         {
@@ -470,6 +471,7 @@ public class GameManager : MonoBehaviour {
         }
 
         GameGlobals.envState -= (3 * medianVote);
+        GameGlobals.envStatePerRound.Add(GameGlobals.envState);
         StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState));
     }
 
