@@ -448,10 +448,12 @@ public class GameManager : MonoBehaviour {
 
         foreach (Player p in GameGlobals.players)
         {
-            float m = p.GetMoney();
-            int lol = p.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ENVIRONMENT];
-            StartCoroutine(p.SetMoney(p.GetMoney() + medianVote));
+            float medianBudget = p.GetMoney() + medianVote;
+            StartCoroutine(p.SetMoney(medianBudget));
         }
+
+        GameGlobals.envState -= (3 * medianVote);
+        StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState));
     }
 
     // Run update or fixed update if is or not simulation mode    
