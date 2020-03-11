@@ -464,8 +464,9 @@ public class GameManager : MonoBehaviour {
 
         foreach (Player p in GameGlobals.players)
         {
-            float medianBudget = p.GetMoney() + medianVote;
-            StartCoroutine(p.SetMoney(medianBudget));
+            p.environmentMedianInvestmentPerRound.Add(Convert.ToInt32(medianVote));
+            float newMoney = p.GetMoney() + medianVote;
+            StartCoroutine(p.SetMoney(newMoney));
         }
 
         GameGlobals.envState -= (3 * medianVote);

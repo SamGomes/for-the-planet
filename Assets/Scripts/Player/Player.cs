@@ -30,6 +30,7 @@ public class Player
     protected Dictionary<GameProperties.InvestmentTarget, int> currRoundInvestment;
     protected Dictionary<GameProperties.InvestmentTarget, int> investmentHistory;
     public List<int> environmentInvestmentPerRound;
+    public List<int> environmentMedianInvestmentPerRound;
 
 
     //UI Stuff
@@ -83,6 +84,7 @@ public class Player
         currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT] = 0;
 
         environmentInvestmentPerRound = new List<int>();
+        environmentMedianInvestmentPerRound = new List<int>();
 
         if (!GameGlobals.isSimulation)
         {

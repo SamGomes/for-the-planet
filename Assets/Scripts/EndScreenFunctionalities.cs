@@ -60,35 +60,38 @@ public class EndScreenFunctionalities : MonoBehaviour
     private void LoadEndScreenUIElements()
     {
         mainScene.SetActive(true);
-        
-        infoPoppupNeutralRef = new PopupScreenFunctionalities(false, null, null, poppupPrefab, mainScene, this.GetComponent<MonoBehaviourFunctionalities>(), Resources.Load<Sprite>("Textures/UI/Icons/Info"), new Color(0.9f, 0.9f, 0.9f));
-        Text UIRestartGameButtonText = UIRestartGameButton.GetComponentInChildren<Text>();
-        if (GameGlobals.currGameId >= GameProperties.configurableProperties.numGamesToPlay)
+
+        if (!GameGlobals.areHumansOnSyncTablets)
         {
-            infoPoppupNeutralRef.DisplayPoppup("You reached the end of the second game. Please write down your score, as well as the following gamecode, and fill the second questionnaire to finish the experiment.");
-            
-            UIEndGameButton.gameObject.SetActive(false);
-            UIEndGameButton.interactable = false;
-            UIRestartGameButton.gameObject.SetActive(false);
-            UIRestartGameButton.interactable = false;
-            
+            infoPoppupNeutralRef = new PopupScreenFunctionalities(false, null, null, poppupPrefab, mainScene, this.GetComponent<MonoBehaviourFunctionalities>(), Resources.Load<Sprite>("Textures/UI/Icons/Info"), new Color(0.9f, 0.9f, 0.9f));
+            Text UIRestartGameButtonText = UIRestartGameButton.GetComponentInChildren<Text>();
+            if (GameGlobals.currGameId >= GameProperties.configurableProperties.numGamesToPlay)
+            {
+                infoPoppupNeutralRef.DisplayPoppup("You reached the end of the second game. Please write down your score, as well as the following gamecode, and fill the second questionnaire to finish the experiment.");
+
+                UIEndGameButton.gameObject.SetActive(false);
+                UIEndGameButton.interactable = false;
+                UIRestartGameButton.gameObject.SetActive(false);
+                UIRestartGameButton.interactable = false;
+
+            }
+            else
+            {
+                //infoPoppupNeutralRef.DisplayPoppup("You reached the end of one of the games to play in this session. We assume that you are prepared for the experiment game. Good luck!");
+                infoPoppupNeutralRef.DisplayPoppup("You reached the end of the first game. Please write down your score (the total amount of money you made) and fill the first questionnaire. Please, do not move to next game until the questionnaire mentions you to do so.");
+                UIRestartGameButton.gameObject.SetActive(true);
+                UIRestartGameButton.interactable = true;
+                UIRestartGameButtonText.text = "Next game";
+                UIWarningText.text = "Please write down your score (the total amount of money you made) and fill the first questionnaire. Please, do not move to next game until the questionnaire mentions you to do so.";
+
+                UIEndGameButton.gameObject.SetActive(false);
+                UIEndGameButton.interactable = false;
+            }
+            UIRestartGameButtonText.text = "Restart game";
+            UIRestartGameButton.onClick.AddListener(delegate () {
+                RestartGame();
+            });
         }
-        else
-        {
-            //infoPoppupNeutralRef.DisplayPoppup("You reached the end of one of the games to play in this session. We assume that you are prepared for the experiment game. Good luck!");
-            infoPoppupNeutralRef.DisplayPoppup("You reached the end of the first game. Please write down your score (the total amount of money you made) and fill the first questionnaire. Please, do not move to next game until the questionnaire mentions you to do so.");
-            UIRestartGameButton.gameObject.SetActive(true);
-            UIRestartGameButton.interactable = true;
-            UIRestartGameButtonText.text = "Next game";
-            UIWarningText.text = "Please write down your score (the total amount of money you made) and fill the first questionnaire. Please, do not move to next game until the questionnaire mentions you to do so.";
-            
-            UIEndGameButton.gameObject.SetActive(false);
-            UIEndGameButton.interactable = false;
-        }
-        UIRestartGameButtonText.text = "Restart game";
-        UIRestartGameButton.onClick.AddListener(delegate () {
-            RestartGame();
-        });
     }
 
     
@@ -119,7 +122,15 @@ public class EndScreenFunctionalities : MonoBehaviour
                 {
                     if (i < p.environmentInvestmentPerRound.Count)
                     {
-                        newTableEntry.GetComponentsInChildren<Text>()[i + 1].text = p.environmentInvestmentPerRound[i].ToString();
+                        int playerInvestmentPerRound = p.environmentInvestmentPerRound[i];
+                        Text textGameObject = newTableEntry.GetComponentsInChildren<Text>()[i + 1];
+                        textGameObject.text = playerInvestmentPerRound.ToString();
+
+                        if (playerInvestmentPerRound == p.environmentMedianInvestmentPerRound[i])
+                        {
+                            textGameObject.color = Color.yellow;
+                        }
+                        
                     }
                     else
                     {
@@ -193,34 +204,31 @@ public class EndScreenFunctionalities : MonoBehaviour
         }
         else
         {
-            if (!GameGlobals.areHumansOnSyncTablets)
+            victoryOverlayUI.SetActive(false);
+            lossOverlayUI.SetActive(false);
+
+            victoryBackgroundUI.SetActive(false);
+            lossBackgroundUI.SetActive(false);
+
+            mainScene.SetActive(false);
+
+            if (GameGlobals.currGameState == GameProperties.GameState.VICTORY)
             {
-                victoryOverlayUI.SetActive(false);
-                lossOverlayUI.SetActive(false);
-
-                victoryBackgroundUI.SetActive(false);
-                lossBackgroundUI.SetActive(false);
-
-                mainScene.SetActive(false);
-
-                if (GameGlobals.currGameState == GameProperties.GameState.VICTORY)
-                {
-                    victoryOverlayUI.SetActive(true);
-                    victoryBackgroundUI.SetActive(true);
-                }
-                else if (GameGlobals.currGameState == GameProperties.GameState.LOSS)
-                {
-                    lossOverlayUI.SetActive(true);
-                    lossBackgroundUI.SetActive(true);
-
-                }
-                else
-                {
-                    Debug.Log("[ERROR]: Game state returned NON FINISHED on game end!");
-                    yield break;
-                }
-                StartCoroutine(LoadMainScreenAfterDelay(5.0f));
+                victoryOverlayUI.SetActive(true);
+                victoryBackgroundUI.SetActive(true);
             }
+            else if (GameGlobals.currGameState == GameProperties.GameState.LOSS)
+            {
+                lossOverlayUI.SetActive(true);
+                lossBackgroundUI.SetActive(true);
+
+            }
+            else
+            {
+                Debug.Log("[ERROR]: Game state returned NON FINISHED on game end!");
+                yield break;
+            }
+            StartCoroutine(LoadMainScreenAfterDelay(5.0f));
         }
     }
 
