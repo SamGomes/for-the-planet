@@ -109,22 +109,45 @@ public class EndScreenFunctionalities : MonoBehaviour
 
     IEnumerator YieldedStart()
     {
-        GameGlobals.players.Sort(SortPlayersByMoney);
-        int numPlayers = GameGlobals.players.Count;
-        for (int i = 0; i < numPlayers; i++)
+        if (GameGlobals.areHumansOnSyncTablets)
         {
-            Player currPlayer = GameGlobals.players[i];
-            GameObject newTableEntry = Object.Instantiate(tableEntryPrefab, economicTableUI.transform);
-            newTableEntry.GetComponentsInChildren<Text>()[0].text = currPlayer.GetName();
-            newTableEntry.GetComponentsInChildren<Text>()[1].text = currPlayer.GetMoney() * 100.0f + " %";
+            foreach (Player p in GameGlobals.players)
+            {
+                GameObject newTableEntry = Object.Instantiate(tableEntryPrefab, environmentContributionsTableUI.transform);
+                newTableEntry.GetComponentsInChildren<Text>()[0].text = p.GetName();
+                for (int i = 0; i < GameProperties.configurableProperties.maxNumRounds; i++)
+                {
+                    if (i < p.environmentInvestmentPerRound.Count)
+                    {
+                        newTableEntry.GetComponentsInChildren<Text>()[i + 1].text = p.environmentInvestmentPerRound[i].ToString();
+                    }
+                    else
+                    {
+                        newTableEntry.GetComponentsInChildren<Text>()[i + 1].text = "-";
+                    }
+                }
+            }
         }
-        for (int i = 0; i < numPlayers; i++)
+        else
         {
-            Player currPlayer = GameGlobals.players[i];
-            GameObject newTableEntry = Object.Instantiate(tableEntryPrefab, environmentContributionsTableUI.transform);
-            newTableEntry.GetComponentsInChildren<Text>()[0].text = currPlayer.GetName();
-            newTableEntry.GetComponentsInChildren<Text>()[1].text = currPlayer.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ENVIRONMENT].ToString();
+            GameGlobals.players.Sort(SortPlayersByMoney);
+            int numPlayers = GameGlobals.players.Count;
+            for (int i = 0; i < numPlayers; i++)
+            {
+                Player currPlayer = GameGlobals.players[i];
+                GameObject newTableEntry = Object.Instantiate(tableEntryPrefab, economicTableUI.transform);
+                newTableEntry.GetComponentsInChildren<Text>()[0].text = currPlayer.GetName();
+                newTableEntry.GetComponentsInChildren<Text>()[1].text = currPlayer.GetMoney() * 100.0f + " %";
+            }
+            for (int i = 0; i < numPlayers; i++)
+            {
+                Player currPlayer = GameGlobals.players[i];
+                GameObject newTableEntry = Object.Instantiate(tableEntryPrefab, environmentContributionsTableUI.transform);
+                newTableEntry.GetComponentsInChildren<Text>()[0].text = currPlayer.GetName();
+                newTableEntry.GetComponentsInChildren<Text>()[1].text = currPlayer.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ENVIRONMENT].ToString();
+            }
         }
+        
 
 
         for (int i = 0; i < GameGlobals.players.Count; i++)
@@ -170,31 +193,34 @@ public class EndScreenFunctionalities : MonoBehaviour
         }
         else
         {
-            victoryOverlayUI.SetActive(false);
-            lossOverlayUI.SetActive(false);
-
-            victoryBackgroundUI.SetActive(false);
-            lossBackgroundUI.SetActive(false);
-
-            mainScene.SetActive(false);
-
-            if (GameGlobals.currGameState == GameProperties.GameState.VICTORY)
+            if (!GameGlobals.areHumansOnSyncTablets)
             {
-                victoryOverlayUI.SetActive(true);
-                victoryBackgroundUI.SetActive(true);
-            }
-            else if (GameGlobals.currGameState == GameProperties.GameState.LOSS)
-            {
-                lossOverlayUI.SetActive(true);
-                lossBackgroundUI.SetActive(true);
+                victoryOverlayUI.SetActive(false);
+                lossOverlayUI.SetActive(false);
 
+                victoryBackgroundUI.SetActive(false);
+                lossBackgroundUI.SetActive(false);
+
+                mainScene.SetActive(false);
+
+                if (GameGlobals.currGameState == GameProperties.GameState.VICTORY)
+                {
+                    victoryOverlayUI.SetActive(true);
+                    victoryBackgroundUI.SetActive(true);
+                }
+                else if (GameGlobals.currGameState == GameProperties.GameState.LOSS)
+                {
+                    lossOverlayUI.SetActive(true);
+                    lossBackgroundUI.SetActive(true);
+
+                }
+                else
+                {
+                    Debug.Log("[ERROR]: Game state returned NON FINISHED on game end!");
+                    yield break;
+                }
+                StartCoroutine(LoadMainScreenAfterDelay(5.0f));
             }
-            else
-            {
-                Debug.Log("[ERROR]: Game state returned NON FINISHED on game end!");
-                yield break;
-            }
-            StartCoroutine(LoadMainScreenAfterDelay(5.0f));
         }
     }
 
