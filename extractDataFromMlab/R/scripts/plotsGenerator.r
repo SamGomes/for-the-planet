@@ -43,8 +43,6 @@ for(j in  seq(from=1, to=length(playerTypes), by=1)) {
 	}
 }
 totalGameResults <- data.frame(roundsNumL,num_played_roundsL,playerTypesL)
-# totalGameResults <- do.call(rbind, totalGameResults))
-print(totalGameResults)
 # plot <- ggplot(totalGameResults, aes(x = totalGameResults$roundsNumL , y=totalGameResults$num_played_roundsL)) + geom_line(stat="identity") 
 plot <- ggplot(totalGameResults, aes(x = totalGameResults$roundsNumL , y=totalGameResults$num_played_roundsL)) + geom_line(stat = "summary", fun.y = "mean")  + facet_grid(playerTypesL ~ .)
 plot <- plot + ylim(0, 1.0)
@@ -66,9 +64,9 @@ suppressMessages(ggsave(sprintf("plots/StratsEnv.png"), height=6, width=10, unit
 
 
 # plot state
-agg <- aggregate(env_state ~ playerType*num_played_rounds*outcome , gameresultslog , mean)
-victories <- agg[which(agg$outcome == "VICTORY"),]
-agg <- agg[agg$gameId %in% victories$gameId,]
+victories <- gameresultslog[gameresultslog$outcome == "VICTORY",]
+agg <- gameresultslog[gameresultslog$currGameId %in% victories$currGameId & gameresultslog$sessionId %in% victories$sessionId ,]
+agg <- aggregate(env_state ~ playerType*num_played_rounds , agg , mean)
 plot <- ggplot(agg, aes(x = agg$num_played_rounds, y=agg$env_state, group=agg$playerType, color=agg$playerType))
 plot <- plot + geom_line(stat="identity")
 plot <- plot + geom_point(aes(color=agg$playerType)) 
