@@ -24,42 +24,33 @@ suppressMessages(library(stringr))
 
 # plot game balance
 gameresultslog <- read.csv(file="input/gameresultslog.csv", header=TRUE, sep=",")
-totalGameResults <- data.frame(matrix(ncol = 0, nrow = max(gameresultslog$num_played_rounds)))
+roundsNumL <- c()
+num_played_roundsL <- c()
+playerTypesL <- c()
 
+playerTypes = c("AI-RANDOM","AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST","AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC","AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST", "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC")
+# print(playerTypes)
+k <- 0
+for(j in  seq(from=1, to=length(playerTypes), by=1)) {
+	gameresultsOfJ <- gameresultslog[gameresultslog$playerType == playerTypes[j],]
+	if(length(rownames(gameresultsOfJ)) > 0){
+		for(i in  seq(from=1, to=max(gameresultsOfJ$num_played_rounds), by=1)) {
+		  roundsNumL[k] <- i #assume the id of the group is the first id of the players
+		  num_played_roundsL[k] <- length(which(gameresultsOfJ$num_played_rounds >= i))/length(gameresultsOfJ$num_played_rounds)  #assume the id of the group is the first id of the players
+		  playerTypesL[k] <- playerTypes[j]
+		  k = k + 1
+		}
+	}
+}
+totalGameResults <- data.frame(roundsNumL,num_played_roundsL,playerTypesL)
+# totalGameResults <- do.call(rbind, totalGameResults))
+print(totalGameResults)
+# plot <- ggplot(totalGameResults, aes(x = totalGameResults$roundsNumL , y=totalGameResults$num_played_roundsL)) + geom_line(stat="identity") 
+plot <- ggplot(totalGameResults, aes(x = totalGameResults$roundsNumL , y=totalGameResults$num_played_roundsL)) + geom_line(stat = "summary", fun.y = "mean")  + facet_grid(playerTypesL ~ .)
+plot <- plot + ylim(0, 1.0)
+plot <- plot + labs(x = "num_played_rounds", y = "Survived Games (%)") + theme(axis.text=element_text(size = 15), axis.title=element_text(size = 15, face = "bold")) #+ scale_x_discrete(labels = as.character(c("Constructive\nCollectivist","Constructive\nIndividualist","Disruptive\nCollectivist","Disruptive\nIndividualistic","Random")))  
+suppressMessages(ggsave(sprintf("plots/OutcomeFrequencies.png"), height=6, width=10, units="in", dpi=500))
 
-# print("-------AI-RANDOM--------")
-# gameresultsOfJ <- gameresultslog[which(gameresultslog$playerType == "AI-RANDOM")]
-# print(gameresultsOfJ)
-# print("-------AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST--------")
-# gameresultsOfJ <- gameresultslog[which(gameresultslog$playerType  == "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST")]
-# print(gameresultsOfJ)
-# print("-------AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC--------")
-# gameresultsOfJ <- gameresultslog[which(gameresultslog$playerType == "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC")]
-# print(gameresultsOfJ)
-# print("-------AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST--------")
-# gameresultsOfJ <- gameresultslog[which(gameresultslog$playerType == "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST")]
-# print(gameresultsOfJ)
-# print("-------AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC--------")
-# gameresultsOfJ <- gameresultslog[which(gameresultslog$playerType == "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC")]
-# print(gameresultsOfJ)
-# dfsfds
-
-
-# for(j in  seq(from=1, to=length(names(gameresultslog[[playerType]])), by=1)) {
-# 	gameresultsOfJ <- which(gameresultslog["playerType"] == j)
-# 	print(gameresultsOfJ)
-# 	for(i in  seq(from=1, to=max(gameresultsOfJ$num_played_rounds), by=1)) {
-# 	  totalGameResults$playerType[i] <- j
-# 	  totalGameResults$roundsNum[i] <- i #assume the id of the group is the first id of the players
-# 	  totalGameResults$num_played_rounds[i] <- length(which(gameresultsOfJ$num_played_rounds >= i))/length(gameresultsOfJ$num_played_rounds)  #assume the id of the group is the first id of the players
-# 	}
-# }
-
-# plot <- ggplot(totalGameResults, aes(x = totalGameResults$roundsNum , y=totalGameResults$num_played_rounds)) + geom_line(stat="identity") + facet_grid(playerType ~ .)
-# print(colnames(gameresultslog))
-# plot <- plot + ylim(0, 1.0)
-# plot <- plot + labs(x = "num_played_rounds", y = "Survived Games (%)") + theme(axis.text=element_text(size = 15), axis.title=element_text(size = 15, face = "bold"))  #+ scale_x_discrete(labels = as.character(c("Constructive\nCollectivist","Constructive\nIndividualist","Disruptive\nCollectivist","Disruptive\nIndividualistic","Random")))  
-# suppressMessages(ggsave(sprintf("plots/OutcomeFrequencies.png"), height=6, width=10, units="in", dpi=500))
 
 
 
@@ -75,9 +66,9 @@ suppressMessages(ggsave(sprintf("plots/StratsEnv.png"), height=6, width=10, unit
 
 
 # plot state
-aggOld <- aggregate(env_state ~ playerType*num_played_rounds , gameresultslog , mean)
-agg <- aggOld[,which(agg$outcome == "VICTORY"),]
-print(agg)
+agg <- aggregate(env_state ~ playerType*num_played_rounds*outcome , gameresultslog , mean)
+victories <- agg[which(agg$outcome == "VICTORY"),]
+agg <- agg[agg$gameId %in% victories$gameId,]
 plot <- ggplot(agg, aes(x = agg$num_played_rounds, y=agg$env_state, group=agg$playerType, color=agg$playerType))
 plot <- plot + geom_line(stat="identity")
 plot <- plot + geom_point(aes(color=agg$playerType)) 
@@ -87,9 +78,8 @@ suppressMessages(ggsave(sprintf("plots/EnvState.png"), height=6, width=10, units
 
 
 # print(colnames(strategieslog))
-agg <- aggregate(econ_state ~ playerType*num_played_rounds , gameresultslog , mean)
-agg <- agg[which(agg$outcome == "VICTORY")]
-print(agg)
+agg <- aggregate(econ_state ~ playerType*num_played_rounds*outcome , gameresultslog , mean)
+agg <- agg[which(agg$outcome == "VICTORY"),]
 plot <- ggplot(agg, aes(x = agg$num_played_rounds, y=agg$econ_state, group=agg$playerType, color=agg$playerType))
 plot <- plot + geom_line(stat="identity")
 plot <- plot + geom_point(aes(color=agg$playerType)) 

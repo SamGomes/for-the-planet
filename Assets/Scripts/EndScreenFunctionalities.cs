@@ -132,6 +132,7 @@ public class EndScreenFunctionalities : MonoBehaviour
             Dictionary<string, string> gameLogEntry = new Dictionary<string, string>();
             gameLogEntry["sessionId"] = GameGlobals.currSessionId.ToString();
             gameLogEntry["currGameId"] = GameGlobals.currGameId.ToString();
+            gameLogEntry["num_played_rounds"] = (GameGlobals.currGameRoundId + 1).ToString();
             gameLogEntry["condition"] = GameProperties.currSessionParameterization.id;
             gameLogEntry["outcome"] = GameGlobals.currGameState.ToString();
 
@@ -149,7 +150,6 @@ public class EndScreenFunctionalities : MonoBehaviour
             gameLogEntry["econ_state"] = player.GetMoney().ToString();
             gameLogEntry["econ_history_perc"] = econInv.ToString();
             gameLogEntry["env_history_perc"] = envInv.ToString();
-            gameLogEntry["num_played_rounds"] = (GameGlobals.currGameRoundId + 1).ToString();
 
             yield return GameGlobals.gameLogManager.UpdateLog("fortheplanetlogs", "gameresultslog", "&q={\"currGameId\": \"" + GameGlobals.currGameId.ToString() + "\", \"sessionId\":\"" + GameGlobals.currSessionId.ToString() + "\", \"playerId\":\"" + player.GetId().ToString() + "\"}", gameLogEntry);
         }
