@@ -169,28 +169,6 @@ public class GameSetupFunctionalities : MonoBehaviour {
             return;
         }
 
-        //write game in log
-        foreach (Player player in GameGlobals.players)
-        {
-            Dictionary<string, string> gameLogEntry = new Dictionary<string, string>();
-            gameLogEntry["sessionId"] = GameGlobals.currSessionId.ToString();
-            gameLogEntry["currGameId"] = GameGlobals.currGameId.ToString();
-            gameLogEntry["condition"] = GameProperties.currSessionParameterization.id;
-            gameLogEntry["outcome"] = GameGlobals.currGameState.ToString();
-            gameLogEntry["env_state"] = "-";
-
-            gameLogEntry["playerId"] = player.GetId().ToString();
-
-            gameLogEntry["econ_state"] = "-";
-            gameLogEntry["type"] = "-";
-            gameLogEntry["pos"] = "-";
-            gameLogEntry["econ_history_perc"] = "-";
-            gameLogEntry["env_history_perc"] = "-";
-            gameLogEntry["num_played_rounds"] = "-";
-
-            StartCoroutine(GameGlobals.gameLogManager.WriteToLog("fortheplanetlogs", "gameresultslog", gameLogEntry));
-        }
-        
         string json = JsonUtility.ToJson(GameProperties.configurableProperties);
 
         //this init is not nice

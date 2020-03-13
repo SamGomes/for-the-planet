@@ -5,6 +5,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Globalization;
+using EmotionalAppraisal.DTOs;
+using RolePlayCharacter;
 
 public class GameManager : MonoBehaviour {
     
@@ -317,29 +319,99 @@ public class GameManager : MonoBehaviour {
                 Debug.Log("[Game: "+GameGlobals.currGameId+"; Round: " + (GameGlobals.currGameRoundId+1) +" of "+GameProperties.configurableProperties.maxNumRounds+"]");
             }
 
+            
+            foreach(Player player in GameGlobals.players)
+            {
+                Dictionary<string, string> logEntry = new Dictionary<string, string>()
+                {
+                    {"sessionId", GameGlobals.currSessionId},
+                    {"gameId", GameGlobals.currGameId.ToString()},
+                    {"roundId", GameGlobals.currGameRoundId.ToString()},
+                    {"condition", GameProperties.currSessionParameterization.id},
+                    {"gameState", GameGlobals.currGameState.ToString()},
+
+                    
+                    {"envState", GameGlobals.envState.ToString()},
+                    
+                    {"playerId", player.GetId().ToString()},
+                    {"playerType", player.GetPlayerType()},
+                    
+                    {"playerInvestEcon", player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ECONOMIC].ToString()},
+                    {"playerInvestEnv", player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT].ToString()},
+
+                    {"playerInvHistEcon", player.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ECONOMIC].ToString()},
+                    {"playerInvHistEnv", player.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ENVIRONMENT].ToString()},
+
+                    {"playerEconState", player.GetMoney().ToString()}
+                };
+
+                string playerType = player.GetPlayerType();
+                if (playerType == "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST" ||
+                    playerType == "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC" ||
+                    playerType == "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST" ||
+                    playerType == "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC")
+                {
+
+                    EmotionalAIPlayer emotPlayer = (EmotionalAIPlayer) player;
+                    RolePlayCharacterAsset rpc = emotPlayer.getRPC();
+                    EmotionalAppraisal.IActiveEmotion
+                        strongestEmotion = emotPlayer.getRPC().GetStrongestActiveEmotion();
+                    if (strongestEmotion != null)
+                    {
+                        Dictionary<string, float> emotionsStrI = new Dictionary<string, float>();
+                        emotionsStrI["Happy-for"] = emotionsStrI["Gloating"] = emotionsStrI["Satisfaction"] =
+                            emotionsStrI["Relief"] = emotionsStrI["Hope"] = emotionsStrI["Joy"] =
+                                emotionsStrI["Gratification"] =
+                                    emotionsStrI["Gratitude"] = emotionsStrI["Pride"] = emotionsStrI["Admiration"] =
+                                        emotionsStrI["Love"] =
+                                            emotionsStrI["Resentment"] = emotionsStrI["Pity"] =
+                                                emotionsStrI["Fear-confirmed"] =
+                                                    emotionsStrI["Disappointment"] = emotionsStrI["Fear"] =
+                                                        emotionsStrI["Distress"] = emotionsStrI["Remorse"] =
+                                                            emotionsStrI["Anger"] = emotionsStrI["Shame"] =
+                                                                emotionsStrI["Reproach"] = emotionsStrI["Hate"] = 0.0f;
+
+                        string str = "";
+                        foreach (EmotionDTO currEmotion in rpc.GetAllActiveEmotions())
+                        {
+                            if (currEmotion.Intensity > emotionsStrI[currEmotion.Type])
+                            {
+                                emotionsStrI[currEmotion.Type] = currEmotion.Intensity;
+                            }
+                        }
+
+                        foreach (string currEmotionKey in emotionsStrI.Keys)
+                        {
+                            string currEmotion = currEmotionKey;
+                            if (currEmotion == "Happy-for")
+                            {
+                                currEmotion = "HappyFor";
+                            }
+
+                            if (currEmotion == "Fear-confirmed")
+                            {
+                                currEmotion = "FearConfirmed";
+                            }
+                            str += "feltEmotionsLog$activeEmotions_" + currEmotion + ",";
+                            logEntry["activeEmotions_" + currEmotion] = emotionsStrI[currEmotionKey]
+                                .ToString("0.00", CultureInfo.InvariantCulture);
+                        }
+                        logEntry["strongestEmotionType"] = strongestEmotion.EmotionType;
+                        logEntry["strongestEmotionIntensity"] =
+                            strongestEmotion.Intensity.ToString("0.00", CultureInfo.InvariantCulture);
+                        logEntry["mood"] = rpc.Mood.ToString("0.00", CultureInfo.InvariantCulture);
+                    }
+                }
+
+                StartCoroutine(GameGlobals.gameLogManager.WriteToLog("fortheplanetlogs", "gameresultslog", logEntry));
+            }
+
             if (GameGlobals.currGameState != GameProperties.GameState.NOT_FINISHED)
             {
                 GameGlobals.gameSceneManager.LoadEndScene();
             }
             else
             {
-                foreach(Player player in GameGlobals.players)
-                {
-                    Dictionary<string, string> logEntry = new Dictionary<string, string>()
-                    {
-                        {"currSessionId", GameGlobals.currSessionId},
-                        {"currGameId", GameGlobals.currGameId.ToString()},
-                        {"currRoundId", GameGlobals.currGameRoundId.ToString()},
-                        {"playerId", player.GetPlayerType()},
-                        {"playerType", player.GetPlayerType()},
-                        {"playerCurrInvestEcon", player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ECONOMIC].ToString()},
-                        {"playerCurrInvestEnv", player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT].ToString()},
-                        {"playerEconState", player.GetMoney().ToString()},
-                        {"envState", GameGlobals.envState.ToString()}
-                    };
-                    StartCoroutine(GameGlobals.gameLogManager.WriteToLog("fortheplanetlogs", "strategies", logEntry));
-                }
-                
                 GameGlobals.currGameRoundId++;
                 if (GameGlobals.isSimulation)
                 {

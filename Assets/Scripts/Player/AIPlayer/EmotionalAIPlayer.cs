@@ -70,6 +70,10 @@ public class EmotionalAIPlayer: AIPlayer
         }
         return dialog;
     }
+    public RolePlayCharacterAsset getRPC()
+    {
+        return this.rpc;
+    }
 
 
     public virtual void Act() { }
@@ -79,19 +83,9 @@ public class EmotionalAIPlayer: AIPlayer
     {
         if (unperceivedEvents.Count > 0)
         {
-//            Debug.Log("[");
-//            foreach (WellFormedNames.Name name in unperceivedEvents)
-//            {                
-//                Debug.Log(name.ToString()+", ");
-//                rpc.Perceive(name);
-//
-//            }
-//            Debug.Log("]");
             rpc.Perceive(unperceivedEvents);
-//            Debug.Log(this.rpc.GetAllActiveEmotions().Count());
             unperceivedEvents.Clear();
         }
-
         try
         {
             Act();
@@ -109,10 +103,6 @@ public class EmotionalAIPlayer: AIPlayer
         playerMonoBehaviourFunctionalities.StartCoroutine(EmotionalUpdateLoop(delay));
     }
 
-    //void OnApplicationQuit()
-    //{
-    //    this.rpc.SaveToFile(Application.streamingAssetsPath + "/Runtimed/" + name + ".rpc");
-    //}
     public override IEnumerator AutoBudgetAllocation()
     {
         base.AutoBudgetAllocation();
@@ -127,67 +117,6 @@ public class EmotionalAIPlayer: AIPlayer
         
         econ = investmentIntentions[GameProperties.InvestmentTarget.ECONOMIC];
         env = investmentIntentions[GameProperties.InvestmentTarget.ENVIRONMENT];
-        
-        
-        EmotionalAppraisal.IActiveEmotion strongestEmotion = this.rpc.GetStrongestActiveEmotion();
-        if (strongestEmotion != null) {
-            Dictionary<string, float> emotionsStrI = new Dictionary<string, float>();
-            emotionsStrI["Happy-for"] = emotionsStrI["Gloating"] = emotionsStrI["Satisfaction"] = 
-                emotionsStrI["Relief"] = emotionsStrI["Hope"] = emotionsStrI["Joy"] = emotionsStrI["Gratification"] = 
-                    emotionsStrI["Gratitude"] = emotionsStrI["Pride"] = emotionsStrI["Admiration"] = emotionsStrI["Love"] = 
-                        emotionsStrI["Resentment"] = emotionsStrI["Pity"] = emotionsStrI["Fear-confirmed"] =
-                            emotionsStrI["Disappointment"] = emotionsStrI["Fear"] = emotionsStrI["Distress"] = emotionsStrI["Remorse"] =
-                                emotionsStrI["Anger"] = emotionsStrI["Shame"] = emotionsStrI["Reproach"] = emotionsStrI["Hate"] = 0.0f;
-            
-            string str = "";
-            foreach (EmotionDTO currEmotion in rpc.GetAllActiveEmotions())
-            {
-                if (currEmotion.Intensity > emotionsStrI[currEmotion.Type])
-                {
-                    emotionsStrI[currEmotion.Type] = currEmotion.Intensity;
-                }
-            }
-            
-            Dictionary<string, string> eventLogEntry = new Dictionary<string, string>();
-            eventLogEntry["currSessionId"] = GameGlobals.currSessionId.ToString();
-            eventLogEntry["currGameId"] = GameGlobals.currGameId.ToString();
-            eventLogEntry["currGameCondition"] = GameGlobals.currGameCondition.ToString();
-            eventLogEntry["currGameRoundId"] = GameGlobals.currGameRoundId.ToString();
-            eventLogEntry["currGamePhase"] = gameManagerRef.GetCurrGamePhase().ToString();
-            eventLogEntry["playerId"] = this.id.ToString();
-            eventLogEntry["playerType"] = this.GetPlayerType();
-            eventLogEntry["state"] = rpc.GetInternalStateString();
-            foreach (string currEmotionKey in emotionsStrI.Keys)
-            {
-                string currEmotion = currEmotionKey;
-                if (currEmotion == "Happy-for")
-                {
-                    currEmotion = "HappyFor";
-                }
-                if (currEmotion == "Fear-confirmed")
-                {
-                    currEmotion = "FearConfirmed";
-                }
-                str += "feltEmotionsLog$activeEmotions_" + currEmotion+",";
-                eventLogEntry["activeEmotions_" + currEmotion] = emotionsStrI[currEmotionKey].ToString("0.00", CultureInfo.InvariantCulture);
-            }
-            eventLogEntry["strongestEmotionType"] = strongestEmotion.EmotionType;
-            eventLogEntry["strongestEmotionIntensity"] = strongestEmotion.Intensity.ToString("0.00", CultureInfo.InvariantCulture);
-            playerMonoBehaviourFunctionalities.StartCoroutine(GameGlobals.gameLogManager.WriteToLog("fortheplanetlogs", "feltEmotionsLog", eventLogEntry));
-        }
-
-        
-        Dictionary<string, string> moodLogEntry = new Dictionary<string, string>();
-        moodLogEntry["currSessionId"] = GameGlobals.currSessionId.ToString();
-        moodLogEntry["currGameId"] = GameGlobals.currGameId.ToString();
-        moodLogEntry["currGameCondition"] = GameGlobals.currGameCondition.ToString();
-        moodLogEntry["currGameRoundId"] = GameGlobals.currGameRoundId.ToString();
-        moodLogEntry["currGamePhase"] = gameManagerRef.GetCurrGamePhase().ToString();
-        moodLogEntry["playerId"] = this.id.ToString();
-        moodLogEntry["playerType"] = this.GetPlayerType();
-        moodLogEntry["mood"] = rpc.Mood.ToString("0.00", CultureInfo.InvariantCulture);
-        playerMonoBehaviourFunctionalities.StartCoroutine(GameGlobals.gameLogManager.WriteToLog("fortheplanetlogs", "moodLog", moodLogEntry));
-
         
         yield return InvestInEconomy(econ);
         yield return InvestInEnvironment(env);
@@ -232,6 +161,8 @@ public class EmotionalAIPlayer: AIPlayer
     {
         yield return base.AutoInvestmentExecution();
     }
+
+
 }
 
 public class TableEmotionalAIPlayer : EmotionalAIPlayer
@@ -315,18 +246,6 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
 
         string rpcArr = "[";
         int j = 0;
-
-//        foreach (EmotionDTO currEmotion in emotions)
-//        {
-//            rpcArr += "{'type': '" + currEmotion.Type + "', 'intensity': '" + currEmotion.Intensity + "'}";
-//            if (j++ < emotions.Count - 1)
-//            {
-//                rpcArr += ",";
-//            }
-//        }
-//        rpcArr += "]";
-        
-      
         
         interactionModule.Speak("I'm feeling " + strongestEmotion.EmotionType);
 
