@@ -97,7 +97,6 @@ suppressMessages(ggsave(sprintf("plots/Mood.png"), height=6, width=10, units="in
 
 # plot emotions
 feltEmotionsLog <- gameresultslog[!is.na(gameresultslog$mood),]
-# print(feltEmotionsLog$playerType)
 varsToConsider <- c()
 vars <- c("activeEmotions_Hate","activeEmotions_Reproach","activeEmotions_Shame","activeEmotions_Anger","activeEmotions_Remorse","activeEmotions_Distress","activeEmotions_Fear","activeEmotions_Disappointment","activeEmotions_FearConfirmed","activeEmotions_Pity","activeEmotions_Resentment","activeEmotions_Love","activeEmotions_Admiration","activeEmotions_Pride","activeEmotions_Gratitude","activeEmotions_Gratification","activeEmotions_Joy","activeEmotions_Hope","activeEmotions_Relief","activeEmotions_Satisfaction","activeEmotions_Gloating","activeEmotions_HappyFor")
 j <- 1

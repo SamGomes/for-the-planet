@@ -185,8 +185,6 @@ public class TableEmotionalAIPlayer : EmotionalAIPlayer
                 case "Speak":
                     WellFormedNames.Name cs = action.Parameters[0];
                     WellFormedNames.Name ns = action.Parameters[1];
-                    //WellFormedNames.Name m = action.Parameters[2];
-                    //WellFormedNames.Name m = (WellFormedNames.Name) "happy-for";// (WellFormedNames.Name) rpc.GetStrongestActiveEmotion().EmotionType;
                     WellFormedNames.Name m = (WellFormedNames.Name)"-";
                     if (rpc.GetStrongestActiveEmotion() != null)
                     {
@@ -337,7 +335,7 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
         float gsp = CalcGoalSuccessProbabilityInvestment(state, this.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ECONOMIC]);
         
         List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
-        events.Add(RolePlayCharacter.EventHelper.PropertyChange("BudgetExecution(" + gsp.ToString("0.00", CultureInfo.InvariantCulture) + ")", this.id.ToString(), this.id.ToString()));
+//        events.Add(RolePlayCharacter.EventHelper.PropertyChange("BudgetExecution(" + gsp.ToString("0.00", CultureInfo.InvariantCulture) + ")", this.id.ToString(), this.id.ToString()));
         Perceive(events);
         UpdateStep();
     }
@@ -350,7 +348,7 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
         float gsp = CalcGoalSuccessProbabilityDecay(state);
 
         List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
-        events.Add(RolePlayCharacter.EventHelper.PropertyChange("DecaySimulation(" + gsp.ToString("0.00", CultureInfo.InvariantCulture) + ")", this.id.ToString(), this.id.ToString()));
+//        events.Add(RolePlayCharacter.EventHelper.PropertyChange("DecaySimulation(" + gsp.ToString("0.00", CultureInfo.InvariantCulture) + ")", this.id.ToString(), this.id.ToString()));
         Perceive(events);
         UpdateStep();
         

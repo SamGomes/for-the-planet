@@ -2,27 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0639d0ba-cf5a-493c-bca0-69d133fc9e06" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/EndScreenFunctionalities.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/EndScreenFunctionalities.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/GameManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/GameManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/GameSetupFunctionalities.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/GameSetupFunctionalities.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Player/AIPlayer/EmotionalAIPlayer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Player/AIPlayer/EmotionalAIPlayer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/StreamingAssets/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/StreamingAssets/config.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extractDataFromMlab/R/input/feltEmotionsLog.csv" beforeDir="false" afterPath="$PROJECT_DIR$/extractDataFromMlab/R/input/feltEmotionsLog.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extractDataFromMlab/R/input/gameresultslog.csv" beforeDir="false" afterPath="$PROJECT_DIR$/extractDataFromMlab/R/input/gameresultslog.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extractDataFromMlab/R/input/moodLog.csv" beforeDir="false" afterPath="$PROJECT_DIR$/extractDataFromMlab/R/input/moodLog.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extractDataFromMlab/R/input/strategies.csv" beforeDir="false" afterPath="$PROJECT_DIR$/extractDataFromMlab/R/input/strategies.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extractDataFromMlab/R/plots/EconState.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/extractDataFromMlab/R/plots/Emotions.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/extractDataFromMlab/R/plots/EnvState.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/extractDataFromMlab/R/plots/Mood.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/extractDataFromMlab/R/plots/OutcomeFrequencies.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/extractDataFromMlab/R/plots/StratsEnv.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/extractDataFromMlab/R/scripts/plotsGenerator.r" beforeDir="false" afterPath="$PROJECT_DIR$/extractDataFromMlab/R/scripts/plotsGenerator.r" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extractDataFromMlab/extractData.bat" beforeDir="false" afterPath="$PROJECT_DIR$/extractDataFromMlab/extractData.bat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extractDataFromMlab/feltEmotionsLog.csv" beforeDir="false" afterPath="$PROJECT_DIR$/extractDataFromMlab/feltEmotionsLog.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extractDataFromMlab/gameresultslog.csv" beforeDir="false" afterPath="$PROJECT_DIR$/extractDataFromMlab/gameresultslog.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extractDataFromMlab/moodLog.csv" beforeDir="false" afterPath="$PROJECT_DIR$/extractDataFromMlab/moodLog.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extractDataFromMlab/strategies.csv" beforeDir="false" afterPath="$PROJECT_DIR$/extractDataFromMlab/strategies.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.for-the-planet/.idea/indexLayout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.for-the-planet/.idea/indexLayout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.for-the-planet/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.for-the-planet/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -675,12 +656,12 @@
       <workItem from="1583156267148" duration="17428000" />
       <workItem from="1583331964257" duration="6642000" />
       <workItem from="1583766658244" duration="4013000" />
-      <workItem from="1584039760240" duration="7385000" />
+      <workItem from="1584039760240" duration="7926000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="116948000" />
+    <option name="totallyTimeSpent" value="117489000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
