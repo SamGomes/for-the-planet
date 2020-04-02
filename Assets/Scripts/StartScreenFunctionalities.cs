@@ -196,6 +196,9 @@ GameGlobals.gameLogManager = new DebugLogManager();
     private void StartGame()
     {
         GameGlobals.gameSceneManager.LoadPlayersSetupScene();
+        InputField nameInputField = GameObject.Find("Canvas/StartScreen/nameInput").gameObject.GetComponent<InputField>();
+        GameGlobals.participantName = nameInputField.text;
+        GameGlobals.players[0].SetName(GameGlobals.participantName);
     }
 
     public void InitGame()
@@ -237,6 +240,7 @@ GameGlobals.gameLogManager = new DebugLogManager();
         InitGame();
         
         Button[] allButtons = FindObjectsOfType<Button>();
+        
         foreach (Button button in allButtons)
         {
             button.onClick.AddListener(delegate () {

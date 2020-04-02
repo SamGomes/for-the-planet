@@ -48,6 +48,9 @@ public static class GameGlobals
     public static int[] playerDecayBudget;
 
     public static Dictionary<string, RolePlayCharacterAsset> storedRPCs;
+
+    // Intergenerational Goods Game stuff
+    public static string participantName;
 }
 
 public static class GameProperties

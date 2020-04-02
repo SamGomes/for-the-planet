@@ -189,6 +189,16 @@ public class Player
     {
         return this.money;
     }
+
+    public void SetName(string _name)
+    {
+        this.name = _name;
+    }
+    public void UpdateUIName()
+    {
+        nameTextUI.text = name;
+    }
+
     public Dictionary<GameProperties.InvestmentTarget, int> GetCurrRoundInvestment()
     {
         return this.currRoundInvestment;
@@ -389,7 +399,7 @@ public class Player
     public Sprite GetAvatarUI()
     {
         throw new NotImplementedException();
-        return this.UIAvatar;
+        //return this.UIAvatar;
     }
 
     
