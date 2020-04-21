@@ -125,28 +125,3 @@ public class SpeechBaloonInteractionModule: InteractionModule
     }
 
 }
-
-public class RobotInteractionModule : InteractionModule
-{
-    private ThalamusConnector thalamusConnector = null;
-
-    public override void Init(GameObject uiPrefab, GameObject uiContainer, bool locksInteraction)
-    {
-        base.Init(uiPrefab, uiContainer, locksInteraction);
-        thalamusConnector = new ThalamusConnector(7000);
-    }
-    
-
-    private void GazeAt(string target)
-    {
-        thalamusConnector.GazeAt(target);
-    }
-
-    public override void Speak(string utterance)
-    {
-        InterruptGame();
-        thalamusConnector.PerformUtterance(utterance, new string[] { }, new string[] { });
-        ContinueGame();
-    }
-    public override void Move() { }
-}

@@ -5,8 +5,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Globalization;
-using EmotionalAppraisal.DTOs;
-using RolePlayCharacter;
 
 public class GameManager : MonoBehaviour {
     
@@ -81,6 +79,8 @@ public class GameManager : MonoBehaviour {
         numPlayersToExecuteBudget = GameGlobals.players.Count;
         numPlayersToDisplayHistory = GameGlobals.players.Count;
         numPlayersToSimulateInvestment = GameGlobals.players.Count;
+
+        GameGlobals.players[0].UpdateNameUI();
 
         currPlayerIndex = 0;
 
@@ -345,64 +345,6 @@ public class GameManager : MonoBehaviour {
                     {"playerEconState", player.GetMoney().ToString()}
                 };
 
-                string playerType = player.GetPlayerType();
-                if (playerType == "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST" ||
-                    playerType == "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC" ||
-                    playerType == "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST" ||
-                    playerType == "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC")
-                {
-
-                    EmotionalAIPlayer emotPlayer = (EmotionalAIPlayer) player;
-                    RolePlayCharacterAsset rpc = emotPlayer.getRPC();
-                    EmotionalAppraisal.IActiveEmotion
-                        strongestEmotion = emotPlayer.getRPC().GetStrongestActiveEmotion();
-                    if (strongestEmotion != null)
-                    {
-                        Dictionary<string, float> emotionsStrI = new Dictionary<string, float>();
-                        emotionsStrI["Happy-for"] = emotionsStrI["Gloating"] = emotionsStrI["Satisfaction"] =
-                            emotionsStrI["Relief"] = emotionsStrI["Hope"] = emotionsStrI["Joy"] =
-                                emotionsStrI["Gratification"] =
-                                    emotionsStrI["Gratitude"] = emotionsStrI["Pride"] = emotionsStrI["Admiration"] =
-                                        emotionsStrI["Love"] =
-                                            emotionsStrI["Resentment"] = emotionsStrI["Pity"] =
-                                                emotionsStrI["Fear-confirmed"] =
-                                                    emotionsStrI["Disappointment"] = emotionsStrI["Fear"] =
-                                                        emotionsStrI["Distress"] = emotionsStrI["Remorse"] =
-                                                            emotionsStrI["Anger"] = emotionsStrI["Shame"] =
-                                                                emotionsStrI["Reproach"] = emotionsStrI["Hate"] = 0.0f;
-
-                        string str = "";
-                        foreach (EmotionDTO currEmotion in rpc.GetAllActiveEmotions())
-                        {
-                            if (currEmotion.Intensity > emotionsStrI[currEmotion.Type])
-                            {
-                                emotionsStrI[currEmotion.Type] = currEmotion.Intensity;
-                            }
-                        }
-
-                        foreach (string currEmotionKey in emotionsStrI.Keys)
-                        {
-                            string currEmotion = currEmotionKey;
-                            if (currEmotion == "Happy-for")
-                            {
-                                currEmotion = "HappyFor";
-                            }
-
-                            if (currEmotion == "Fear-confirmed")
-                            {
-                                currEmotion = "FearConfirmed";
-                            }
-                            str += "feltEmotionsLog$activeEmotions_" + currEmotion + ",";
-                            logEntry["activeEmotions_" + currEmotion] = emotionsStrI[currEmotionKey]
-                                .ToString("0.00", CultureInfo.InvariantCulture);
-                        }
-                        logEntry["strongestEmotionType"] = strongestEmotion.EmotionType;
-                        logEntry["strongestEmotionIntensity"] =
-                            strongestEmotion.Intensity.ToString("0.00", CultureInfo.InvariantCulture);
-                        logEntry["mood"] = rpc.Mood.ToString("0.00", CultureInfo.InvariantCulture);
-                    }
-                }
-
                 StartCoroutine(GameGlobals.gameLogManager.WriteToLog("fortheplanetlogs", "gameresultslog", logEntry));
             }
 
@@ -446,14 +388,14 @@ public class GameManager : MonoBehaviour {
     public void StartGameRoundForAllPlayers()
     {
         int numPlayers = GameGlobals.players.Count;
-        foreach (Player player in GameGlobals.players)
+        /*foreach (Player player in GameGlobals.players)
         {
             List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
 
             //players perceive round start
             events.Add(RolePlayCharacter.EventHelper.ActionEnd("World", "State(Round,Start)", player.GetName()));
             player.Perceive(events);
-        }
+        }*/
 
         if (!GameGlobals.isSimulation && GameGlobals.isNarrated)
         {
@@ -491,7 +433,7 @@ public class GameManager : MonoBehaviour {
             
             //Fatima updates
             //players see the history of each other
-            List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
+            /*List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
             events.Add(RolePlayCharacter.EventHelper.PropertyChange("AllocatedBudgetPoints(" + player.GetName() + ", Environment)", player.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ENVIRONMENT].ToString("0.00", CultureInfo.InvariantCulture), "World"));
             events.Add(RolePlayCharacter.EventHelper.PropertyChange("AllocatedBudgetPoints(" + player.GetName() + ", Economic)", player.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ECONOMIC].ToString("0.00", CultureInfo.InvariantCulture), "World"));
             foreach (Player otherPlayer in GameGlobals.players)
@@ -499,7 +441,7 @@ public class GameManager : MonoBehaviour {
                 events.Add(RolePlayCharacter.EventHelper.PropertyChange("AllocatedBudgetPoints(" + otherPlayer.GetName() + ", Environment)", otherPlayer.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ENVIRONMENT].ToString("0", CultureInfo.InvariantCulture), "World"));
                 events.Add(RolePlayCharacter.EventHelper.PropertyChange("AllocatedBudgetPoints(" + otherPlayer.GetName() + ", Economic)", otherPlayer.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ECONOMIC].ToString("0", CultureInfo.InvariantCulture), "World"));
             }
-            player.Perceive(events);
+            player.Perceive(events);*/
 
             if (!GameGlobals.isSimulation && GameGlobals.isNarrated)
             {

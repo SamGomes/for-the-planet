@@ -1,6 +1,4 @@
-﻿using IntegratedAuthoringTool;
-using RolePlayCharacter;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -38,7 +36,6 @@ public static class GameGlobals
 
     //fatima stuff
     public static string FAtiMAScenarioPath;
-    public static IntegratedAuthoringToolAsset FAtiMAIat;
 
     // @jbgrocha: Auto play if batchmode (or explicitly set it to true);
     public static bool isSimulation;
@@ -47,7 +44,6 @@ public static class GameGlobals
     public static int[] environmentDecayBudget;
     public static int[] playerDecayBudget;
 
-    public static Dictionary<string, RolePlayCharacterAsset> storedRPCs;
 
     // Intergenerational Goods Game stuff
     public static string participantName;

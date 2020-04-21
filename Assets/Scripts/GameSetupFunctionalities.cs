@@ -45,9 +45,6 @@ public class GameSetupFunctionalities : MonoBehaviour {
                     chosenIM = new SpeechBaloonInteractionModule();
                     break;
 
-                case "ROBOT":
-                    chosenIM = new RobotInteractionModule();
-                    break;
                 default:
                     isErrorEncountered = true;
                     setupWarningPoppupRef.DisplayPoppup("Error on parsing the interaction module named " + currParam.interactionType);
@@ -59,26 +56,6 @@ public class GameSetupFunctionalities : MonoBehaviour {
             {
                 case "HUMAN":
                     GameGlobals.players.Add(new Player(currParam.playerType, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/"+ currParam.spriteIndex), currPlayerId++, currParam.name));
-                    break;
-
-                case "AI-EMOTIONAL-TABLE":
-                    GameGlobals.players.Add(new TableEmotionalAIPlayer(currParam.playerType, chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name, 1.0f, currParam.fatimaRpcPath));
-                    break;
-
-                case "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST":
-                    GameGlobals.players.Add(new CompetitiveCooperativeEmotionalAIPlayer(currParam.playerType, chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name, 1.0f, currParam.fatimaRpcPath));
-                    break;
-
-                case "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC":
-                    GameGlobals.players.Add(new CompetitiveCooperativeEmotionalAIPlayer(currParam.playerType, chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name, 1.0f, currParam.fatimaRpcPath));
-                    break;
-
-                case "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST":
-                    GameGlobals.players.Add(new CompetitiveCooperativeEmotionalAIPlayer(currParam.playerType, chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name, 1.0f, currParam.fatimaRpcPath));
-                    break;
-
-                case "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC":
-                    GameGlobals.players.Add(new CompetitiveCooperativeEmotionalAIPlayer(currParam.playerType, chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name, 1.0f, currParam.fatimaRpcPath));
                     break;
 
                 case "AI-RANDOM":

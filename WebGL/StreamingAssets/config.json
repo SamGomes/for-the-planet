@@ -1,0 +1,37 @@
+    {
+    "maxNumRounds": 50,
+
+    "isSimulation": false,
+    "numGamesToPlay": 35,
+
+    "roundBudget": 5,
+    "environmentDecayBudget": [7,8],
+    "playerDecayBudget": [2,3],
+
+    "possibleParameterizations": [{
+            "id": "['CC', 'CC', 'CC']",
+            "gameParameterizations": [{
+                "diceLogic": "RANDOM",
+                "playerParameterizations": [{
+                        "name": "Player",
+                        "fatimaRpcPath": "NONE",
+                        "playerType": "HUMAN",
+                        "interactionType": "NONE"
+                    },
+                    {
+                        "name": "Agent1",
+                        "fatimaRpcPath": "Constructive - Collectivist.rpc",
+                        "playerType": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST",
+                        "interactionType": "NONE"
+                    },
+                    {
+                        "name": "Agent2",
+                        "fatimaRpcPath": "Constructive - Collectivist.rpc",
+                        "playerType": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST",
+                        "interactionType": "NONE"
+                    }
+                ],
+                "isNarrated": false
+            }]
+        }]
+    }

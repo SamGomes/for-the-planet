@@ -1,5 +1,4 @@
 ﻿using System;
-using RolePlayCharacter;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
@@ -194,7 +193,7 @@ public class Player
     {
         this.name = _name;
     }
-    public void UpdateUIName()
+    public void UpdateNameUI()
     {
         nameTextUI.text = name;
     }
@@ -425,5 +424,5 @@ public class Player
         return this.type;
     }
 
-    public virtual void Perceive(List<WellFormedNames.Name> events) { }
+ //   public virtual void Perceive(List<WellFormedNames.Name> events) { }
 }

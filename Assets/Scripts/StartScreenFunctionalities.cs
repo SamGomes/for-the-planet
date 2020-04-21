@@ -1,5 +1,4 @@
-﻿using IntegratedAuthoringTool;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -11,7 +10,6 @@ using System.Runtime.InteropServices;
 using UnityEngine.Networking;
 using System.Globalization;
 using System;
-using GAIPS.Rage;
 
 [Serializable]
 public class DataEntryGameResultLog
@@ -95,10 +93,6 @@ GameGlobals.gameLogManager = new DebugLogManager();
         GameGlobals.environmentDecayBudget = configs.environmentDecayBudget;
         GameGlobals.playerDecayBudget = configs.playerDecayBudget;
 
-        if (GameGlobals.storedRPCs == null) //maintain rpc cache when restarting
-        {
-            GameGlobals.storedRPCs = new Dictionary<string, RolePlayCharacter.RolePlayCharacterAsset>();
-        }
 
         //only generate session data in the first game
         if (GameGlobals.currGameId == 1)
@@ -125,14 +119,7 @@ GameGlobals.gameLogManager = new DebugLogManager();
 
         
         
-        // Making sure it works on Android and Web-GL
-        var storagePath = Application.streamingAssetsPath + "/Scenarios/for-the-planet-rules.json";
-        var storage = AssetStorage.FromJson(File.ReadAllText(storagePath));
         
-        //init fatima strings
-        GameGlobals.FAtiMAScenarioPath = Application.streamingAssetsPath + "/Scenarios/for-the-planet.json";
-        GameGlobals.FAtiMAIat =
-            IntegratedAuthoringToolAsset.FromJson(File.ReadAllText(GameGlobals.FAtiMAScenarioPath), storage);
     }
 
 
