@@ -20,14 +20,14 @@
                     },
                     {
                         "name": "Agent1",
-                        "fatimaRpcPath": "Constructive - Collectivist.rpc",
-                        "playerType": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST",
+                        "fatimaRpcPath": "NONE",
+                        "playerType": "AI-COOPERATOR",
                         "interactionType": "NONE"
                     },
                     {
                         "name": "Agent2",
-                        "fatimaRpcPath": "Constructive - Collectivist.rpc",
-                        "playerType": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST",
+                        "fatimaRpcPath": "NONE",
+                        "playerType": "AI-DEFECTOR",
                         "interactionType": "NONE"
                     }
                 ],
