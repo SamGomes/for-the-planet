@@ -60,35 +60,36 @@ public class EndScreenFunctionalities : MonoBehaviour
     private void LoadEndScreenUIElements()
     {
         mainScene.SetActive(true);
-        
-        infoPoppupNeutralRef = new PopupScreenFunctionalities(false, null, null, poppupPrefab, mainScene, this.GetComponent<MonoBehaviourFunctionalities>(), Resources.Load<Sprite>("Textures/UI/Icons/Info"), new Color(0.9f, 0.9f, 0.9f));
-        Text UIRestartGameButtonText = UIRestartGameButton.GetComponentInChildren<Text>();
-        if (GameGlobals.currGameId >= GameProperties.configurableProperties.numGamesToPlay)
-        {
-            infoPoppupNeutralRef.DisplayPoppup("You reached the end of the second game. Please write down your score, as well as the following gamecode, and fill the second questionnaire to finish the experiment.");
-            
-            UIEndGameButton.gameObject.SetActive(false);
-            UIEndGameButton.interactable = false;
-            UIRestartGameButton.gameObject.SetActive(false);
-            UIRestartGameButton.interactable = false;
-            
+
+            infoPoppupNeutralRef = new PopupScreenFunctionalities(false, null, null, poppupPrefab, mainScene, this.GetComponent<MonoBehaviourFunctionalities>(), Resources.Load<Sprite>("Textures/UI/Icons/Info"), new Color(0.9f, 0.9f, 0.9f));
+            Text UIRestartGameButtonText = UIRestartGameButton.GetComponentInChildren<Text>();
+            if (GameGlobals.currGameId >= GameProperties.configurableProperties.numGamesToPlay)
+            {
+                infoPoppupNeutralRef.DisplayPoppup("You reached the end of the second game. Please write down your score, as well as the following gamecode, and fill the second questionnaire to finish the experiment.");
+
+                UIEndGameButton.gameObject.SetActive(false);
+                UIEndGameButton.interactable = false;
+                UIRestartGameButton.gameObject.SetActive(false);
+                UIRestartGameButton.interactable = false;
+
+            /*
+            else
+            {
+                //infoPoppupNeutralRef.DisplayPoppup("You reached the end of one of the games to play in this session. We assume that you are prepared for the experiment game. Good luck!");
+                infoPoppupNeutralRef.DisplayPoppup("You reached the end of the first game. Please write down your score (the total amount of money you made) and fill the first questionnaire. Please, do not move to next game until the questionnaire mentions you to do so.");
+                UIRestartGameButton.gameObject.SetActive(true);
+                UIRestartGameButton.interactable = true;
+                UIRestartGameButtonText.text = "Next game";
+                UIWarningText.text = "Please write down your score (the total amount of money you made) and fill the first questionnaire. Please, do not move to next game until the questionnaire mentions you to do so.";
+
+                UIEndGameButton.gameObject.SetActive(false);
+                UIEndGameButton.interactable = false;
+            }*/
+            UIRestartGameButtonText.text = "Restart game";
+            UIRestartGameButton.onClick.AddListener(delegate () {
+                RestartGame();
+            });
         }
-        else
-        {
-            //infoPoppupNeutralRef.DisplayPoppup("You reached the end of one of the games to play in this session. We assume that you are prepared for the experiment game. Good luck!");
-            infoPoppupNeutralRef.DisplayPoppup("You reached the end of the first game. Please write down your score (the total amount of money you made) and fill the first questionnaire. Please, do not move to next game until the questionnaire mentions you to do so.");
-            UIRestartGameButton.gameObject.SetActive(true);
-            UIRestartGameButton.interactable = true;
-            UIRestartGameButtonText.text = "Next game";
-            UIWarningText.text = "Please write down your score (the total amount of money you made) and fill the first questionnaire. Please, do not move to next game until the questionnaire mentions you to do so.";
-            
-            UIEndGameButton.gameObject.SetActive(false);
-            UIEndGameButton.interactable = false;
-        }
-        UIRestartGameButtonText.text = "Restart game";
-        UIRestartGameButton.onClick.AddListener(delegate () {
-            RestartGame();
-        });
     }
 
     
@@ -109,22 +110,118 @@ public class EndScreenFunctionalities : MonoBehaviour
 
     IEnumerator YieldedStart()
     {
-        GameGlobals.players.Sort(SortPlayersByMoney);
-        int numPlayers = GameGlobals.players.Count;
-        for (int i = 0; i < numPlayers; i++)
+        
+            foreach (Player p in GameGlobals.players)
+            {
+                GameObject newTableEntry = Object.Instantiate(tableEntryPrefab, environmentContributionsTableUI.transform);
+                newTableEntry.GetComponentsInChildren<Text>()[0].text = p.GetName();
+                for (int i = 0; i < GameProperties.configurableProperties.maxNumRounds; i++)
+                {
+                    if (i < p.environmentInvestmentPerRound.Count)
+                    {
+                        int playerInvestmentPerRound = p.environmentInvestmentPerRound[i];
+                        Text textEntry = newTableEntry.GetComponentsInChildren<Text>()[i + 1];
+                        textEntry.text = playerInvestmentPerRound.ToString();
+
+                        if (playerInvestmentPerRound == p.environmentMedianInvestmentPerRound[i])
+                        {
+                            textEntry.color = Color.yellow;
+                        }
+                    }
+                    else
+                    {
+                        newTableEntry.GetComponentsInChildren<Text>()[i + 1].text = "-";
+                    }
+                }
+            }
+            GameObject newDummyLineEntry = Object.Instantiate(tableEntryPrefab, environmentContributionsTableUI.transform);
+            newDummyLineEntry.GetComponentsInChildren<Text>()[0].text = "";
+            newDummyLineEntry.GetComponentsInChildren<Text>()[1].text = "";
+            newDummyLineEntry.GetComponentsInChildren<Text>()[2].text = "";
+            newDummyLineEntry.GetComponentsInChildren<Text>()[3].text = "";
+            newDummyLineEntry.GetComponentsInChildren<Text>()[4].text = "";
+            newDummyLineEntry.GetComponentsInChildren<Text>()[5].text = "";
+
+            GameObject environmentEntry = Object.Instantiate(tableEntryPrefab, environmentContributionsTableUI.transform);
+            Text textGameObject = environmentEntry.GetComponentsInChildren<Text>()[0];
+            textGameObject.text = "ENVIRONMENT";
+            textGameObject.fontStyle = FontStyle.Bold;
+            for (int i = 0; i < GameProperties.configurableProperties.maxNumRounds; i++)
+            {
+                if (i < GameGlobals.envStatePerRound.Count)
+                {
+                    textGameObject = environmentEntry.GetComponentsInChildren<Text>()[i + 1];
+                    textGameObject.text = GameGlobals.envStatePerRound[i].ToString();
+                    textGameObject.fontStyle = FontStyle.Bold;
+
+                    if (GameGlobals.envStatePerRound[i] < 75)
+                    {
+                        textGameObject.color = Color.red;
+                    }
+                    else if (i == GameProperties.configurableProperties.maxNumRounds - 1)
+                    {
+                        textGameObject.color = Color.green;
+                    }
+                }
+                else
+                {
+                    textGameObject = environmentEntry.GetComponentsInChildren<Text>()[i + 1];
+                    textGameObject.text = "-";
+                    textGameObject.fontStyle = FontStyle.Bold;
+                    textGameObject.color = Color.red;
+                }
+
+            }
+        /*
+        else
         {
-            Player currPlayer = GameGlobals.players[i];
-            GameObject newTableEntry = Object.Instantiate(tableEntryPrefab, economicTableUI.transform);
-            newTableEntry.GetComponentsInChildren<Text>()[0].text = currPlayer.GetName();
-            newTableEntry.GetComponentsInChildren<Text>()[1].text = currPlayer.GetMoney() * 100.0f + " %";
-        }
-        for (int i = 0; i < numPlayers; i++)
+            GameGlobals.players.Sort(SortPlayersByMoney);
+            int numPlayers = GameGlobals.players.Count;
+            for (int i = 0; i < numPlayers; i++)
+            {
+                Player currPlayer = GameGlobals.players[i];
+                GameObject newTableEntry = Object.Instantiate(tableEntryPrefab, economicTableUI.transform);
+                newTableEntry.GetComponentsInChildren<Text>()[0].text = currPlayer.GetName();
+                newTableEntry.GetComponentsInChildren<Text>()[1].text = currPlayer.GetMoney() * 100.0f + " %";
+            }
+            for (int i = 0; i < numPlayers; i++)
+            {
+                Player currPlayer = GameGlobals.players[i];
+                GameObject newTableEntry = Object.Instantiate(tableEntryPrefab, environmentContributionsTableUI.transform);
+                newTableEntry.GetComponentsInChildren<Text>()[0].text = currPlayer.GetName();
+                newTableEntry.GetComponentsInChildren<Text>()[1].text = currPlayer.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ENVIRONMENT].ToString();
+            }
+        }*/
+        
+
+
+        for (int i = 0; i < GameGlobals.players.Count; i++)
         {
-            Player currPlayer = GameGlobals.players[i];
-            GameObject newTableEntry = Object.Instantiate(tableEntryPrefab, environmentContributionsTableUI.transform);
-            newTableEntry.GetComponentsInChildren<Text>()[0].text = currPlayer.GetName();
-            newTableEntry.GetComponentsInChildren<Text>()[1].text = currPlayer.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ENVIRONMENT].ToString();
+            Dictionary<string, string> gameLogEntry = new Dictionary<string, string>();
+            gameLogEntry["sessionId"] = GameGlobals.currSessionId.ToString();
+            gameLogEntry["currGameId"] = GameGlobals.currGameId.ToString();
+            gameLogEntry["condition"] = GameProperties.currSessionParameterization.id;
+            gameLogEntry["outcome"] = GameGlobals.currGameState.ToString();
+
+            gameLogEntry["env_state"] = GameGlobals.envState.ToString();
+
+
+            Player player = GameGlobals.players[i];
+            float econInv = (float) player.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ECONOMIC];
+            float envInv = (float) player.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ENVIRONMENT];
+
+            gameLogEntry["playerId"] = player.GetId().ToString();
+
+            gameLogEntry["pos"] = i.ToString();
+            gameLogEntry["type"] = player.GetPlayerType();
+            gameLogEntry["econ_state"] = player.GetMoney().ToString();
+            gameLogEntry["econ_history_perc"] = econInv.ToString();
+            gameLogEntry["env_history_perc"] = envInv.ToString();
+            gameLogEntry["num_played_rounds"] = (GameGlobals.currGameRoundId + 1).ToString();
+
+            yield return GameGlobals.gameLogManager.UpdateLog("fortheplanetlogs", "gameresultslog", "&q={\"currGameId\": \"" + GameGlobals.currGameId.ToString() + "\", \"sessionId\":\"" + GameGlobals.currSessionId.ToString() + "\", \"playerId\":\"" + player.GetId().ToString() + "\"}", gameLogEntry);
         }
+
 
         if (GameGlobals.isSimulation)
         {

@@ -5,6 +5,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Threading;
+using System;
 
 public class GameManager : MonoBehaviour {
     
@@ -92,7 +94,8 @@ public class GameManager : MonoBehaviour {
 
         gameMainSceneFinished = false;
         phaseEndDelay = 2.0f;
-        GameGlobals.envState = 0.5f;
+        GameGlobals.envState = 150;
+        GameGlobals.envStatePerRound = new List<float>();
 
         int numPlayers = GameGlobals.players.Count;
         
@@ -125,7 +128,7 @@ public class GameManager : MonoBehaviour {
             }
 
 
-            envDynamicSlider = new DynamicSlider(environmentSliderSceneElement.gameObject);
+            envDynamicSlider = new DynamicSlider(environmentSliderSceneElement.gameObject, true);
             StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState));
             DontDestroyOnLoad(CommonAreaUI);
 
@@ -233,14 +236,49 @@ public class GameManager : MonoBehaviour {
         //end of second phase;
         if (numPlayersToDisplayHistory == 0)
         {
-            currGamePhase = GameProperties.GamePhase.BUDGET_EXECUTION;
-
             numPlayersToDisplayHistory = GameGlobals.players.Count;
-            if (!GameGlobals.isSimulation)
-            {
-                yield return new WaitForSeconds(phaseEndDelay);
-            }
-            StartExecuteBudgetPhase();
+
+                numPlayersToDisplayHistory = GameGlobals.players.Count;
+
+                foreach (Player player in GameGlobals.players)
+                {
+                    Dictionary<string, string> logEntry = new Dictionary<string, string>()
+                    {
+                        {"currSessionId", GameGlobals.currSessionId},
+                        {"currGameId", GameGlobals.currGameId.ToString()},
+                        {"currRoundId", GameGlobals.currGameRoundId.ToString()},
+                        {"playerId", player.GetPlayerType()},
+                        {"playerType", player.GetPlayerType()},
+                        {"playerCurrInvestEcon", player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ECONOMIC].ToString()},
+                        {"playerCurrInvestEnv", player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT].ToString()},
+                        {"playerEconState", player.GetMoney().ToString()},
+                        {"envState", GameGlobals.envState.ToString()}
+                    };
+                    StartCoroutine(GameGlobals.gameLogManager.WriteToLog("fortheplanetlogs", "strategies", logEntry));
+                }
+
+
+                TakeMoneyFromCommonPot();
+                GameGlobals.currGameRoundId++;
+                yield return new WaitForSeconds(10);
+
+
+                if (GameGlobals.envState <= 74) //environment exploded
+                {
+                    GameGlobals.currGameState = GameProperties.GameState.LOSS;
+                    GameGlobals.gameSceneManager.LoadEndScene();
+                }
+                else if (GameGlobals.currGameRoundId == GameProperties.configurableProperties.maxNumRounds) //reached last round
+                {
+                    GameGlobals.currGameState = GameProperties.GameState.VICTORY;
+                    GameGlobals.gameSceneManager.LoadEndScene();
+                }
+                else //normal round finished
+                {
+                    currGamePhase = GameProperties.GamePhase.BUDGET_ALLOCATION;
+                    newRoundScreen.SetActive(true);
+                }
+           
         }
 
         //end of third phase
@@ -265,7 +303,7 @@ public class GameManager : MonoBehaviour {
             numPlayersToSimulateInvestment = GameGlobals.players.Count;
 
             string diceOverlayTitle = "Simulating environment decay ...";
-            yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, Random.Range(GameGlobals.environmentDecayBudget[0],GameGlobals.environmentDecayBudget[1]+1)));
+            yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, UnityEngine.Random.Range(GameGlobals.environmentDecayBudget[0],GameGlobals.environmentDecayBudget[1]+1)));
 
             int environmentDecay = diceManager.GetCurrDiceTotal();
             float envDecay = (float) environmentDecay / 100.0f;
@@ -285,7 +323,7 @@ public class GameManager : MonoBehaviour {
             foreach (Player player in GameGlobals.players)
             {
                 diceOverlayTitle = "Simulating economic decay ...";
-                yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, Random.Range(GameGlobals.playerDecayBudget[0],GameGlobals.playerDecayBudget[1]+1)));
+                yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, UnityEngine.Random.Range(GameGlobals.playerDecayBudget[0],GameGlobals.playerDecayBudget[1]+1)));
 
                 int economyDecay = diceManager.GetCurrDiceTotal();
                 float economicDecay = (float) economyDecay / 100.0f;
@@ -554,4 +592,38 @@ public class GameManager : MonoBehaviour {
         }
         return null;
     }
+
+    private void TakeMoneyFromCommonPot()
+    {
+        List<int> votes = new List<int>();
+        foreach (Player p in GameGlobals.players)
+        {
+            votes.Add(p.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT]);
+        }
+        int[] sortedVotes = votes.ToArray();
+        Array.Sort(sortedVotes);
+        int len = sortedVotes.Length;
+        float medianVote;
+        if (len % 2 == 0)
+        {
+            int a = sortedVotes[len / 2 - 1];
+            int b = sortedVotes[len / 2];
+            medianVote = (a + b) / 2;
+        }
+        else
+        {
+            medianVote = sortedVotes[len / 2];
+        }
+
+        foreach (Player p in GameGlobals.players)
+        {
+            p.environmentMedianInvestmentPerRound.Add(Convert.ToInt32(medianVote));
+            float newMoney = p.GetMoney() + medianVote;
+            StartCoroutine(p.SetMoney(newMoney));
+        }
+        GameGlobals.envState -= (3 * medianVote);
+        GameGlobals.envStatePerRound.Add(GameGlobals.envState);
+        StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState));
+    }
+
 }

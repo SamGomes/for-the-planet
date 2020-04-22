@@ -28,7 +28,8 @@ public class Player
 
     protected Dictionary<GameProperties.InvestmentTarget, int> currRoundInvestment;
     protected Dictionary<GameProperties.InvestmentTarget, int> investmentHistory;
-
+    public List<int> environmentInvestmentPerRound;
+    public List<int> environmentMedianInvestmentPerRound;
 
     //UI Stuff
     protected MonoBehaviourFunctionalities playerMonoBehaviourFunctionalities;
@@ -80,6 +81,9 @@ public class Player
         currRoundInvestment[GameProperties.InvestmentTarget.ECONOMIC] = 0;
         currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT] = 0;
 
+        environmentInvestmentPerRound = new List<int>();
+        environmentMedianInvestmentPerRound = new List<int>();
+
         if (!GameGlobals.isSimulation)
         {
             InitUI(playerCanvas, warningScreenRef, UIAvatar);
@@ -116,7 +120,8 @@ public class Player
     {
         this.canvas = canvas;
 
-        playerUI = Object.Instantiate(Resources.Load<GameObject>("Prefabs/PlayerUI/playerUI"), canvas.transform);
+        //playerUI = Object.Instantiate(Resources.Load<GameObject>("Prefabs/PlayerUI/playerUI"), canvas.transform);
+        playerUI = Object.Instantiate(Resources.Load<GameObject>("Prefabs/PlayerUI/playerUItablet"), canvas.transform);
 
         playerMarkerUI = playerUI.transform.Find("marker").gameObject;
         playerDisablerUI = playerUI.transform.Find("disabler").gameObject;
@@ -152,7 +157,7 @@ public class Player
 
         nameTextUI.text = name;
 
-        dynamicSlider = new DynamicSlider(this.playerUI.transform.Find("playerStateSection/InvestmentUI/Slider").gameObject);
+        dynamicSlider = new DynamicSlider(this.playerUI.transform.Find("playerStateSection/InvestmentUI/Slider").gameObject, true);
 
         //position UI on canvas
         playerUI.transform.Translate(new Vector3(0, -GameGlobals.players.Count * (0.2f * Screen.height)*0.9f, 0));
@@ -370,6 +375,8 @@ public class Player
     }
     private void UpdateHistoryUI()
     {
+        //economicGrowthHistoryDisplay.text = currRoundInvestment[GameProperties.InvestmentTarget.ECONOMIC].ToString();
+        //environmentHistoryDisplay.text = currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT].ToString();
         economicGrowthHistoryDisplay.text = currRoundInvestment[GameProperties.InvestmentTarget.ECONOMIC].ToString();
         environmentHistoryDisplay.text = currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT].ToString();
     }
