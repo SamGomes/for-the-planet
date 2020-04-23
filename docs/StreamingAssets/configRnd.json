@@ -1,0 +1,35 @@
+{
+    "maxNumRounds": 3,
+
+    "isSimulation": true,
+    "numGamesToPlay": 30,
+
+    "roundBudget": 5,
+    "environmentDecayBudget": 7,
+    "playerDecayBudget": 2,
+
+    "possibleParameterizations": [{
+            "id": "['RANDOM', 'RANDOM', 'RANDOM']",
+            "gameParameterizations": [{
+                "diceLogic": "RANDOM",
+                "playerParameterizations": [{
+                        "name": "RANDOM",
+                        "interactionType": "NONE",
+                        "playerType": "AI_RANDOM"
+                    },
+                    {
+                        "name": "RANDOM",
+                        "interactionType": "NONE",
+                        "playerType": "AI_RANDOM"
+                    },
+                    {
+                        "name": "RANDOM",
+                        "interactionType": "NONE",
+                        "playerType": "AI_RANDOM"
+                    }
+                ],
+                "isNarrated": false
+            }]
+        }
+    ]
+}

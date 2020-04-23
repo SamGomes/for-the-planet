@@ -1,0 +1,315 @@
+[
+"EmotionalAppraisalAsset", 
+{
+	"root":
+		{
+			"classId": 0,
+			"Description": null,
+			"AppraisalRules":
+				{
+					"AppraisalWeight": 1,
+					"Rules": [
+						{
+							"EventName": "Event(Property-Change, *, HistoryDisplay([econ], [env]), [target])",
+							"Conditions":
+								{
+									"Set": ["Math(Math(Math([econ], Minus, [env]), Div, Math([env], Plus, [econ])), Times, 10) = [p]", "Is(DI) = True"]
+								},
+							"AppraisalVariables":
+								{
+									"AppraisalVariables": [
+										{
+											"Name": "Praiseworthiness",
+											"Value": "[p]",
+											"Target": "[target]"
+										}]
+								}
+						}, 
+						{
+							"EventName": "Event(Property-Change, *, DecaySimulation([gs]), [target])",
+							"Conditions":
+								{
+									"Set": ["Is(DI) = True"]
+								},
+							"AppraisalVariables":
+								{
+									"AppraisalVariables": [
+										{
+											"Name": "Goal Success Probablity",
+											"Value": "[gs]",
+											"Target": "WinGame"
+										}]
+								}
+						}, 
+						{
+							"EventName": "Event(Property-Change, *, BudgetExecution([gs]), [target])",
+							"Conditions":
+								{
+									"Set": ["Is(DI) = True"]
+								},
+							"AppraisalVariables":
+								{
+									"AppraisalVariables": [
+										{
+											"Name": "Goal Success Probablity",
+											"Value": "[gs]",
+											"Target": "WinGame"
+										}]
+								}
+						}, 
+						{
+							"EventName": "Event(Property-Change, *, HistoryDisplay([econ], [env]), [target])",
+							"Conditions":
+								{
+									"Set": ["Math(Math(Math([env], Minus, [econ]), Div, Math([env], Plus, [econ])), Times, 10) = [p]", "Is(DC) = True"]
+								},
+							"AppraisalVariables":
+								{
+									"AppraisalVariables": [
+										{
+											"Name": "Praiseworthiness",
+											"Value": "[p]",
+											"Target": "[target]"
+										}]
+								}
+						}, 
+						{
+							"EventName": "Event(Property-Change, *, DecaySimulation([gs]), [target])",
+							"Conditions":
+								{
+									"Set": ["Is(DC) = True"]
+								},
+							"AppraisalVariables":
+								{
+									"AppraisalVariables": [
+										{
+											"Name": "Goal Success Probablity",
+											"Value": "[gs]",
+											"Target": "WinGame"
+										}]
+								}
+						}, 
+						{
+							"EventName": "Event(Property-Change, *, BudgetExecution([gs]), [target])",
+							"Conditions":
+								{
+									"Set": ["Is(DC) = True"]
+								},
+							"AppraisalVariables":
+								{
+									"AppraisalVariables": [
+										{
+											"Name": "Goal Success Probablity",
+											"Value": "[gs]",
+											"Target": "WinGame"
+										}]
+								}
+						}, 
+						{
+							"EventName": "Event(Property-Change, *, HistoryDisplay([econ], [env]), [target])",
+							"Conditions":
+								{
+									"Set": ["Math(Math(Math([env], Minus, [econ]), Div, Math([env], Plus, [econ])), Times, 10) = [p]", "Is(CC) = True"]
+								},
+							"AppraisalVariables":
+								{
+									"AppraisalVariables": [
+										{
+											"Name": "Praiseworthiness",
+											"Value": "[p]",
+											"Target": "[target]"
+										}]
+								}
+						}, 
+						{
+							"EventName": "Event(Property-Change, *, DecaySimulation([gs]), [target])",
+							"Conditions":
+								{
+									"Set": ["Is(CC) = True"]
+								},
+							"AppraisalVariables":
+								{
+									"AppraisalVariables": [
+										{
+											"Name": "Goal Success Probablity",
+											"Value": "[gs]",
+											"Target": "WinGame"
+										}]
+								}
+						}, 
+						{
+							"EventName": "Event(Property-Change, *, BudgetExecution([gs]), [target])",
+							"Conditions":
+								{
+									"Set": ["Is(CC) = True"]
+								},
+							"AppraisalVariables":
+								{
+									"AppraisalVariables": [
+										{
+											"Name": "Goal Success Probablity",
+											"Value": "[gs]",
+											"Target": "WinGame"
+										}]
+								}
+						}, 
+						{
+							"EventName": "Event(Property-Change, *, DecaySimulation([gs]), [target])",
+							"Conditions":
+								{
+									"Set": ["Is(CI) = True"]
+								},
+							"AppraisalVariables":
+								{
+									"AppraisalVariables": [
+										{
+											"Name": "Goal Success Probablity",
+											"Value": "[gs]",
+											"Target": "WinGame"
+										}]
+								}
+						}, 
+						{
+							"EventName": "Event(Property-Change, *, BudgetExecution([gs]), [target])",
+							"Conditions":
+								{
+									"Set": ["Is(CI) = True"]
+								},
+							"AppraisalVariables":
+								{
+									"AppraisalVariables": [
+										{
+											"Name": "Goal Success Probablity",
+											"Value": "[gs]",
+											"Target": "WinGame"
+										}]
+								}
+						}, 
+						{
+							"EventName": "Event(Property-Change, *, BeforeBudgetAllocation([econ], [env]), [target])",
+							"Conditions":
+								{
+									"Set": ["Math(Math(Math([env], Minus, [econ]), Div, Math([env], Plus, [econ])), Times, 10) = [d]", "Is(CC) = True"]
+								},
+							"AppraisalVariables":
+								{
+									"AppraisalVariables": [
+										{
+											"Name": "Desirability",
+											"Value": "[d]",
+											"Target": "[target]"
+										}]
+								}
+						}, 
+						{
+							"EventName": "Event(Property-Change, *, BeforeBudgetAllocation([econ], [env]), [target])",
+							"Conditions":
+								{
+									"Set": ["Math(Math(Math([econ], Minus, [env]), Div, Math([env], Plus, [econ])), Times, 10) = [d]", "Is(DC) = True"]
+								},
+							"AppraisalVariables":
+								{
+									"AppraisalVariables": [
+										{
+											"Name": "Desirability",
+											"Value": "[d]",
+											"Target": "[target]"
+										}]
+								}
+						}, 
+						{
+							"EventName": "Event(Property-Change, *, BeforeBudgetAllocation([econ], [env]), [target])",
+							"Conditions":
+								{
+									"Set": ["Math(Math(Math([econ], Minus, [env]), Div, Math([env], Plus, [econ])), Times, 10) = [d]", "Is(DI) = True"]
+								},
+							"AppraisalVariables":
+								{
+									"AppraisalVariables": [
+										{
+											"Name": "Desirability",
+											"Value": "[d]",
+											"Target": "[target]"
+										}]
+								}
+						}, 
+						{
+							"EventName": "Event(Property-Change, *, HistoryDisplay([econ], [env]), [target])",
+							"Conditions":
+								{
+									"Set": ["Math(Math(Math([econ], Minus, [env]), Div, Math([env], Plus, [econ])), Times, 10) = [p]", "Is(CI) = True"]
+								},
+							"AppraisalVariables":
+								{
+									"AppraisalVariables": [
+										{
+											"Name": "Praiseworthiness",
+											"Value": "[p]",
+											"Target": "[target]"
+										}]
+								}
+						}, 
+						{
+							"EventName": "Event(Property-Change, *, BeforeBudgetAllocation([econ], [env]), [target])",
+							"Conditions":
+								{
+									"Set": ["Math(Math(Math([env], Minus, [econ]), Div, Math([env], Plus, [econ])), Times, 10) = [d]", "Is(CI) = True"]
+								},
+							"AppraisalVariables":
+								{
+									"AppraisalVariables": [
+										{
+											"Name": "Desirability",
+											"Value": "[d]",
+											"Target": "[target]"
+										}]
+								}
+						}]
+				}
+		},
+	"types": [
+		{
+			"TypeId": 0,
+			"ClassName": "EmotionalAppraisal.EmotionalAppraisalAsset, EmotionalAppraisal, Version=1.4.1.0, Culture=neutral, PublicKeyToken=null"
+		}]
+},
+"EmotionalDecisionMakingAsset", 
+{
+	"root":
+		{
+			"classId": 0,
+			"ActionTendencies": []
+		},
+	"types": [
+		{
+			"TypeId": 0,
+			"ClassName": "EmotionalDecisionMaking.EmotionalDecisionMakingAsset, EmotionalDecisionMaking, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null"
+		}]
+},
+"SocialImportanceAsset", 
+{
+	"root":
+		{
+			"classId": 0,
+			"AttributionRules": []
+		},
+	"types": [
+		{
+			"TypeId": 0,
+			"ClassName": "SocialImportance.SocialImportanceAsset, SocialImportance, Version=1.5.0.0, Culture=neutral, PublicKeyToken=null"
+		}]
+},
+"CommeillFautAsset", 
+{
+	"root":
+		{
+			"classId": 0,
+			"SocialExchanges": []
+		},
+	"types": [
+		{
+			"TypeId": 0,
+			"ClassName": "CommeillFaut.CommeillFautAsset, CommeillFaut, Version=1.7.0.0, Culture=neutral, PublicKeyToken=null"
+		}]
+}
+]
