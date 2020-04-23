@@ -54,7 +54,7 @@ public class DynamicSlider
         }
 
         //make sure that the target value is within the slider range
-        targetSliderValue = Mathf.Clamp01(targetSliderValue);
+        //targetSliderValue = Mathf.Clamp01(targetSliderValue);
         
 
         float initialSliderValue = sliderUI.value;

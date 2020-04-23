@@ -596,11 +596,16 @@ public class GameManager : MonoBehaviour {
 
     private void TakeMoneyFromCommonPot()
     {
-        List<int> votes = new List<int>();
+        //List<int> votes = new List<int>();
         foreach (Player p in GameGlobals.players)
         {
-            votes.Add(p.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT]);
+            GameGlobals.envState -= p.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT];
+            
+            //votes.Add(p.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT]);
         }
+        GameGlobals.envStatePerRound.Add(GameGlobals.envState);
+        StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState));
+        /*
         int[] sortedVotes = votes.ToArray();
         Array.Sort(sortedVotes);
         int len = sortedVotes.Length;
@@ -625,6 +630,7 @@ public class GameManager : MonoBehaviour {
         GameGlobals.envState -= (3 * medianVote);
         GameGlobals.envStatePerRound.Add(GameGlobals.envState);
         StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState));
+        */
     }
 
 }

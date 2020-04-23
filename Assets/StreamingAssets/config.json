@@ -20,13 +20,13 @@
                         "interactionType": "NONE"
                     },
                     {
-                        "name": "Agent1",
+                        "name": "Cooperator",
                         "fatimaRpcPath": "NONE",
                         "playerType": "AI-COOPERATOR",
                         "interactionType": "NONE"
                     },
                     {
-                        "name": "Agent2",
+                        "name": "Defector",
                         "fatimaRpcPath": "NONE",
                         "playerType": "AI-DEFECTOR",
                         "interactionType": "NONE"

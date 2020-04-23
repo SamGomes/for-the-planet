@@ -186,7 +186,8 @@ public class AIPlayerCooperator : AIPlayer
     public override IEnumerator AutoBudgetAllocation()
     {
         // @jbgrocha: Fatima Speech Act (emotional engine call) - Start of Budget Allocation
-        yield return InvestAllInEvironment();
+        //Neste cenario e preciso trocar evironment por economic
+        yield return InvestAllInEconomy();
         // @jbgrocha: Fatima Speech Act (emotional engine call) - Before ending Budget Allocation
         yield return EndBudgetAllocationPhase();
         // @jbgrocha: Fatima Speech Act (emotional engine call) - End of Budget Allocation
@@ -203,7 +204,7 @@ public class AIPlayerDefector : AIPlayer
     public override IEnumerator AutoBudgetAllocation()
     {
         // @jbgrocha: Fatima Speech Act (emotional engine call) - Start of Budget Allocation
-        yield return InvestAllInEconomy();
+        yield return InvestAllInEvironment();
         // @jbgrocha: Fatima Speech Act (emotional engine call) - Before ending Budget Allocation
         yield return EndBudgetAllocationPhase();
         // @jbgrocha: Fatima Speech Act (emotional engine call) - End of Budget Allocation

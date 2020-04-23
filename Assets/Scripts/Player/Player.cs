@@ -72,6 +72,7 @@ public class Player
 
         money = 0.0f;
         this.type = type;
+        this.roundBudget = GameGlobals.roundBudget;
 
         investmentHistory = new Dictionary<GameProperties.InvestmentTarget, int>();
         investmentHistory[GameProperties.InvestmentTarget.ECONOMIC] = 0;
