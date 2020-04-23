@@ -291,10 +291,29 @@ public class Player
             environmentTokensDisplayUI.text = "-";
         }
         playerMonoBehaviourFunctionalities.StartCoroutine(gameManagerRef.BudgetAllocationPhaseResponse(this));
+
+        int currentInvestment = currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT];
+        environmentInvestmentPerRound.Add(currentInvestment);
+        budgetAllocationScreenUI.SetActive(false);
+        displayHistoryScreenUI.SetActive(false);
+        budgetExecutionScreenUI.SetActive(false);
+        investmentSimulationScreenUI.SetActive(false);
+        playerActionButtonUI.gameObject.SetActive(false);
+        playerMarkerUI.SetActive(false);
+        playerDisablerUI.SetActive(false);
         return 0;
     }
     public void SendBudgetAllocationPhaseResponseDelegate()
     {
+        int currentInvestment = currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT];
+        environmentInvestmentPerRound.Add(currentInvestment);
+        budgetAllocationScreenUI.SetActive(false);
+        displayHistoryScreenUI.SetActive(false);
+        budgetExecutionScreenUI.SetActive(false);
+        investmentSimulationScreenUI.SetActive(false);
+        playerActionButtonUI.gameObject.SetActive(false);
+        playerMarkerUI.SetActive(false);
+        playerDisablerUI.SetActive(false);
         SendBudgetAllocationPhaseResponse();
     }
     public int SendHistoryDisplayPhaseResponse()

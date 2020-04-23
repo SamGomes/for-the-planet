@@ -82,6 +82,7 @@ public class GameManager : MonoBehaviour {
         numPlayersToDisplayHistory = GameGlobals.players.Count;
         numPlayersToSimulateInvestment = GameGlobals.players.Count;
 
+        GameGlobals.players[0].SetName(GameGlobals.participantName);
         GameGlobals.players[0].UpdateNameUI();
 
         currPlayerIndex = 0;

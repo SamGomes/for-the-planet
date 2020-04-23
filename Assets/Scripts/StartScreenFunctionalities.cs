@@ -185,7 +185,6 @@ GameGlobals.gameLogManager = new DebugLogManager();
         GameGlobals.gameSceneManager.LoadPlayersSetupScene();
         InputField nameInputField = GameObject.Find("Canvas/StartScreen/nameInput").gameObject.GetComponent<InputField>();
         GameGlobals.participantName = nameInputField.text;
-        GameGlobals.players[0].SetName(GameGlobals.participantName);
     }
 
     public void InitGame()
