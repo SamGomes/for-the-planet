@@ -1,0 +1,187 @@
+{
+	"root":
+		{
+			"classId": 2,
+			"KnowledgeBase":
+				{
+					"Perspective": "P1",
+					"Knowledge":
+						{
+							"SELF":
+								{
+									"ExpectedResult(P1, Economy)": "0.5, 1",
+									"ExpectedResult(P1, Environment)": "0.5, 1",
+									"ExpectedResult(Other, Economy)": "0.5, 1",
+									"ExpectedResult(Other, Environment)": "0.5, 1",
+									"State(P1, Economy)": "0.1, 1",
+									"SimulationDecay(P1, Environment)": "0.5, 1",
+									"SimulationDecay(P1, Economy)": "0.5, 1",
+									"SimulationDecay(Other, Environment)": "0.5, 1",
+									"SimulationDecay(Other, Economy)": "0.5, 1",
+									"Investment(P1, Environment)": "4, 1",
+									"Investment(P1, Economy)": "1, 1",
+									"AllocatedBudgetPoints(SamG3, Environment)": "5, 1",
+									"AllocatedBudgetPoints(SamG3, Economic)": "0, 1",
+									"AllocatedBudgetPoints(SamG, Environment)": "5, 1",
+									"AllocatedBudgetPoints(SamG, Economic)": "0, 1",
+									"AllocatedBudgetPoints(SamG2, Environment)": "5, 1",
+									"AllocatedBudgetPoints(SamG2, Economic)": "0, 1",
+									"State(Environment)": "0.2, 1"
+								}
+						}
+				},
+			"BodyName": null,
+			"VoiceName": null,
+			"EmotionalAppraisalAssetSource": "/Scenarios/GenericAppraisalSamG.ea",
+			"EmotionalDecisionMakingSource": "/Scenarios/NormalPlayer.edm",
+			"SocialImportanceAssetSource": null,
+			"CommeillFautAssetSource": null,
+			"EmotionalState":
+				{
+					"Mood": -4.756828,
+					"initialTick": 0,
+					"EmotionalPool": [],
+					"AppraisalConfiguration":
+						{
+							"HalfLifeDecayConstant": 0.5,
+							"EmotionInfluenceOnMoodFactor": 0.3,
+							"MoodInfluenceOnEmotionFactor": 0.3,
+							"MinimumMoodValueForInfluencingEmotions": 0.5,
+							"EmotionalHalfLifeDecayTime": 15,
+							"MoodHalfLifeDecayTime": 60
+						}
+				},
+			"WorkingMemory":
+				{
+					"Values":
+						{
+
+						}
+				},
+			"AutobiographicMemory":
+				{
+					"Tick": 45,
+					"records": [
+						{
+							"classId": 0,
+							"Id": 1,
+							"Type": "Action-End",
+							"Subject": "World",
+							"Timestamp": 0,
+							"Action": "State(Round, Start)",
+							"Target": "SamG3"
+						}, 
+						{
+							"classId": 1,
+							"Id": 2,
+							"Type": "Property-Change",
+							"Subject": "World",
+							"Timestamp": 11,
+							"Property": "AllocatedBudgetPoints(SamG3, Environment)",
+							"NewValue": 5
+						}, 
+						{
+							"classId": 1,
+							"Id": 3,
+							"Type": "Property-Change",
+							"Subject": "World",
+							"Timestamp": 11,
+							"Property": "AllocatedBudgetPoints(SamG3, Economic)",
+							"NewValue": 0
+						}, 
+						{
+							"classId": 1,
+							"Id": 4,
+							"Type": "Property-Change",
+							"Subject": "World",
+							"Timestamp": 11,
+							"Property": "AllocatedBudgetPoints(SamG, Environment)",
+							"NewValue": 5
+						}, 
+						{
+							"classId": 1,
+							"Id": 5,
+							"Type": "Property-Change",
+							"Subject": "World",
+							"Timestamp": 11,
+							"Property": "AllocatedBudgetPoints(SamG, Economic)",
+							"NewValue": 0
+						}, 
+						{
+							"classId": 1,
+							"Id": 6,
+							"Type": "Property-Change",
+							"Subject": "World",
+							"Timestamp": 11,
+							"Property": "AllocatedBudgetPoints(SamG2, Environment)",
+							"NewValue": 5
+						}, 
+						{
+							"classId": 1,
+							"Id": 7,
+							"Type": "Property-Change",
+							"Subject": "World",
+							"Timestamp": 11,
+							"Property": "AllocatedBudgetPoints(SamG2, Economic)",
+							"NewValue": 0
+						}, 
+						{
+							"classId": 1,
+							"Id": 8,
+							"Type": "Property-Change",
+							"Subject": "World",
+							"Timestamp": 11,
+							"Property": "AllocatedBudgetPoints(SamG3, Environment)",
+							"NewValue": 5
+						}, 
+						{
+							"classId": 1,
+							"Id": 9,
+							"Type": "Property-Change",
+							"Subject": "World",
+							"Timestamp": 11,
+							"Property": "AllocatedBudgetPoints(SamG3, Economic)",
+							"NewValue": 0
+						}]
+				},
+			"OtherAgents":
+				{
+					"dictionary": [
+						{
+							"key": "World",
+							"value":
+								{
+									"Name": "World",
+									"EmotionalState":
+										{
+											"Mood": 0,
+											"initialTick": 0,
+											"EmotionalPool": [],
+											"AppraisalConfiguration":
+												{
+													"HalfLifeDecayConstant": 0.5,
+													"EmotionInfluenceOnMoodFactor": 0.3,
+													"MoodInfluenceOnEmotionFactor": 0.3,
+													"MinimumMoodValueForInfluencingEmotions": 0.5,
+													"EmotionalHalfLifeDecayTime": 15,
+													"MoodHalfLifeDecayTime": 60
+												}
+										}
+								}
+						}]
+				}
+		},
+	"types": [
+		{
+			"TypeId": 0,
+			"ClassName": "AutobiographicMemory.AM+ActionEvent, AutobiographicMemory, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+		}, 
+		{
+			"TypeId": 1,
+			"ClassName": "AutobiographicMemory.AM+PropertyChangeEvent, AutobiographicMemory, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+		}, 
+		{
+			"TypeId": 2,
+			"ClassName": "RolePlayCharacter.RolePlayCharacterAsset, RolePlayCharacter, Version=1.5.0.0, Culture=neutral, PublicKeyToken=null"
+		}]
+}

@@ -1,0 +1,38 @@
+    {
+    "maxNumRounds": 5,
+
+	"areHumansOnSyncTablets": false,
+    "isSimulation": false,
+    "numGamesToPlay": 35,
+
+    "roundBudget": 10,
+    "environmentDecayBudget": [7,7],
+    "playerDecayBudget": [2,2],
+
+    "possibleParameterizations": [{
+            "id": "['CC', 'CC', 'CC']",
+            "gameParameterizations": [{
+                "diceLogic": "RANDOM",
+                "playerParameterizations": [{
+                        "name": "Player",
+                        "fatimaRpcPath": "NONE",
+                        "playerType": "HUMAN",
+                        "interactionType": "NONE"
+                    },
+                    {
+                        "name": "Cooperator",
+                        "fatimaRpcPath": "NONE",
+                        "playerType": "AI-COOPERATOR",
+                        "interactionType": "NONE"
+                    },
+                    {
+                        "name": "Defector",
+                        "fatimaRpcPath": "NONE",
+                        "playerType": "AI-DEFECTOR",
+                        "interactionType": "NONE"
+                    }
+                ],
+                "isNarrated": false
+            }]
+        }]
+    }
