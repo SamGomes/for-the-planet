@@ -37,7 +37,7 @@ public class EndScreenFunctionalities : MonoBehaviour
         GameGlobals.gameSceneManager.LoadStartScene();
         if (!GameGlobals.isSimulation)
         {
-            foreach (Player player in GameGlobals.players) { 
+            foreach (Player player in GameGlobals.players) {
                 //destroy stuff saved between scenes (the dontdestroyonload scene is extracted through one of the players)
                 foreach (var root in player.GetPlayerUI().scene.GetRootGameObjects())
                 {
@@ -123,10 +123,10 @@ public class EndScreenFunctionalities : MonoBehaviour
                         Text textEntry = newTableEntry.GetComponentsInChildren<Text>()[i + 1];
                         textEntry.text = playerInvestmentPerRound.ToString();
 
-                        if (playerInvestmentPerRound == p.environmentMedianInvestmentPerRound[i])
+                        /*if (playerInvestmentPerRound == p.environmentMedianInvestmentPerRound[i])
                         {
                             textEntry.color = Color.yellow;
-                        }
+                        }*/
                     }
                     else
                     {

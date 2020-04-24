@@ -108,6 +108,8 @@ public class AIPlayer : Player
     public IEnumerator InvestAllInEvironment()
     {
         int quantity = roundBudget;
+        int currentInvestment = quantity;
+        environmentInvestmentPerRound.Add(currentInvestment);
         yield return InvestInEnvironment(quantity);
     }
 

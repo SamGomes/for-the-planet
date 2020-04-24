@@ -29,7 +29,7 @@ public class Player
     protected Dictionary<GameProperties.InvestmentTarget, int> currRoundInvestment;
     protected Dictionary<GameProperties.InvestmentTarget, int> investmentHistory;
     public List<int> environmentInvestmentPerRound;
-    public List<int> environmentMedianInvestmentPerRound;
+    //public List<int> environmentMedianInvestmentPerRound;
 
     //UI Stuff
     protected MonoBehaviourFunctionalities playerMonoBehaviourFunctionalities;
@@ -83,7 +83,7 @@ public class Player
         currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT] = 0;
 
         environmentInvestmentPerRound = new List<int>();
-        environmentMedianInvestmentPerRound = new List<int>();
+        //environmentMedianInvestmentPerRound = new List<int>();
 
         if (!GameGlobals.isSimulation)
         {
@@ -324,6 +324,8 @@ public class Player
     }
     public int SendBudgetExecutionPhaseResponse()
     {
+        int currentInvestment = currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT];
+        environmentInvestmentPerRound.Add(currentInvestment);
         playerMonoBehaviourFunctionalities.StartCoroutine(gameManagerRef.BudgetExecutionPhaseResponse(this));
         return 0;
     }
