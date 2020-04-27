@@ -154,7 +154,7 @@ public class EndScreenFunctionalities : MonoBehaviour
                     textGameObject.text = GameGlobals.envStatePerRound[i].ToString();
                     textGameObject.fontStyle = FontStyle.Bold;
 
-                    if (GameGlobals.envStatePerRound[i] < 75)
+                    if (GameGlobals.envStatePerRound[i] < GameGlobals.envThreshold)
                     {
                         textGameObject.color = Color.red;
                     }

@@ -95,7 +95,9 @@ public class GameManager : MonoBehaviour {
 
         gameMainSceneFinished = false;
         phaseEndDelay = 2.0f;
-        GameGlobals.envState = 150;
+        GameGlobals.envState = 60; //Common Pool Resource
+        GameGlobals.envThreshold = GameGlobals.envState / 2;
+        //GameGlobals.roundBudget = 2x Fair;
         GameGlobals.envStatePerRound = new List<float>();
 
         int numPlayers = GameGlobals.players.Count;
@@ -264,7 +266,7 @@ public class GameManager : MonoBehaviour {
                 yield return new WaitForSeconds(10);
 
 
-                if (GameGlobals.envState <= 74) //environment exploded
+                if (GameGlobals.envState <= GameGlobals.envThreshold) //environment exploded
                 {
                     GameGlobals.currGameState = GameProperties.GameState.LOSS;
                     GameGlobals.gameSceneManager.LoadEndScene();
@@ -605,7 +607,8 @@ public class GameManager : MonoBehaviour {
         }
         GameGlobals.envStatePerRound.Add(GameGlobals.envState);
         StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState));
-        /*
+        
+        /* Player take medianVote
         int[] sortedVotes = votes.ToArray();
         Array.Sort(sortedVotes);
         int len = sortedVotes.Length;

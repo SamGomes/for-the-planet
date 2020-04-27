@@ -33,6 +33,7 @@ public static class GameGlobals
 
 
     public static float envState;
+    public static float envThreshold;
     public static List<float> envStatePerRound;
 
     //fatima stuff
@@ -98,7 +99,7 @@ public class DynamicallyConfigurableGameProperties
 
     public List<SessionParameterization> possibleParameterizations = new List<SessionParameterization>(); //only used when generating the AI types automatically (for example when "isSimulation=true or isAutomaticBriefing==true")
 
-    public int roundBudget = 10; //Change in IGG to 10
+    public int roundBudget = 10; //Change in IGG to 2x Fair
     public int[] environmentDecayBudget = new int[]{5,5};
     public int[] playerDecayBudget = new int[]{5,5};
     public int maxNumRounds = 3;
