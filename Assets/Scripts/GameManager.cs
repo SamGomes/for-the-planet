@@ -353,9 +353,9 @@ public class GameManager : MonoBehaviour {
                 {
 
                     EmotionalAIPlayer emotPlayer = (EmotionalAIPlayer) player;
-                    RolePlayCharacterAsset rpc = emotPlayer.getRPC();
+                    RolePlayCharacterAsset rpc = emotPlayer.GetRpc();
                     EmotionalAppraisal.IActiveEmotion
-                        strongestEmotion = emotPlayer.getRPC().GetStrongestActiveEmotion();
+                        strongestEmotion = emotPlayer.GetRpc().GetStrongestActiveEmotion();
                     if (strongestEmotion != null)
                     {
                         Dictionary<string, float> emotionsStrI = new Dictionary<string, float>();
@@ -460,7 +460,6 @@ public class GameManager : MonoBehaviour {
             StartCoroutine(GameGlobals.narrator.RoundStart());
         }
         StartAlocateBudgetPhase();
-
     }
 
     
@@ -488,18 +487,6 @@ public class GameManager : MonoBehaviour {
                 player.ResetPlayerUI();
             }
             player.HistoryDisplayPhaseRequest();
-            
-            //Fatima updates
-            //players see the history of each other
-            List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
-            events.Add(RolePlayCharacter.EventHelper.PropertyChange("AllocatedBudgetPoints(" + player.GetName() + ", Environment)", player.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ENVIRONMENT].ToString("0.00", CultureInfo.InvariantCulture), "World"));
-            events.Add(RolePlayCharacter.EventHelper.PropertyChange("AllocatedBudgetPoints(" + player.GetName() + ", Economic)", player.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ECONOMIC].ToString("0.00", CultureInfo.InvariantCulture), "World"));
-            foreach (Player otherPlayer in GameGlobals.players)
-            {
-                events.Add(RolePlayCharacter.EventHelper.PropertyChange("AllocatedBudgetPoints(" + otherPlayer.GetName() + ", Environment)", otherPlayer.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ENVIRONMENT].ToString("0", CultureInfo.InvariantCulture), "World"));
-                events.Add(RolePlayCharacter.EventHelper.PropertyChange("AllocatedBudgetPoints(" + otherPlayer.GetName() + ", Economic)", otherPlayer.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ECONOMIC].ToString("0", CultureInfo.InvariantCulture), "World"));
-            }
-            player.Perceive(events);
 
             if (!GameGlobals.isSimulation && GameGlobals.isNarrated)
             {

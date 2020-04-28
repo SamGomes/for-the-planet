@@ -70,7 +70,7 @@ public class EmotionalAIPlayer: AIPlayer
         }
         return dialog;
     }
-    public RolePlayCharacterAsset getRPC()
+    public RolePlayCharacterAsset GetRpc()
     {
         return this.rpc;
     }
@@ -133,18 +133,25 @@ public class EmotionalAIPlayer: AIPlayer
         float env = 0;
         foreach (Player player in GameGlobals.players)
         {
-            econ = player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ECONOMIC];
-            env = player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT];
-       
-            events.Add(RolePlayCharacter.EventHelper.PropertyChange("HistoryDisplay(" + econ.ToString("0.00", CultureInfo.InvariantCulture) + "," + env.ToString("0.00", CultureInfo.InvariantCulture) + ")",
-                this.id.ToString(), player.GetId().ToString()));
-            
+//            econ = player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ECONOMIC];
+//            env = player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT];
+//
+//            events.Add(RolePlayCharacter.EventHelper.PropertyChange(
+//                "HistoryDisplay(" + econ.ToString("0.00", CultureInfo.InvariantCulture) + "," +
+//                env.ToString("0.00", CultureInfo.InvariantCulture) + ")",
+//                this.id.ToString(), player.GetId().ToString()));
+
+            //agregate
+            econ += player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ECONOMIC];
+            env += player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT];
         }
+        //agregate
         econ /= GameGlobals.players.Count;
         env /= GameGlobals.players.Count;
-            
-        string econStr = econ.ToString("0.00", CultureInfo.InvariantCulture);
-        string envStr = env.ToString("0.00", CultureInfo.InvariantCulture);
+        events.Add(RolePlayCharacter.EventHelper.PropertyChange(
+        "HistoryDisplay(" + econ.ToString("0.00", CultureInfo.InvariantCulture) + "," +
+        env.ToString("0.00", CultureInfo.InvariantCulture) + ")",
+        this.id.ToString(), "OtherPlayers"));
         
         Perceive(events);
         UpdateStep();
@@ -246,35 +253,38 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
         int j = 0;
         
         interactionModule.Speak("I'm feeling " + strongestEmotion.EmotionType);
-
-//        pDisrupt = pWeights[strongestEmotion.EmotionType] * ((strongestEmotion.Intensity + 10.0f) / 20.0f);
-
-//        pDisrupt = 1.0f - (rpc.Mood + 10.0f) / 20.0f; //positive rule: positive mood-> invest in env
-        pDisrupt = (rpc.Mood + 10.0f) / 20.0f; //negative rule: positive mood-> invest in econ
         
-        //bounded between 5 and 95%
-        if(pDisrupt > 0.95f)
-        {
-            pDisrupt = 0.95f;
-        }
-        if (pDisrupt < 0.05f)
-        {
-            pDisrupt = 0.05f;
-        }
+        float pMood = (rpc.Mood + 10.0f) / 20.0f; //negative rule: positive mood-> invest in econ
 
-        int econ = 0;
+        investmentIntentions = Analyse(GameGlobals.envState, GetMoney(), PredictAction, 1, 20, 
+            (int) pMood * 50, PredictAction); 
+//        investmentIntentions[GameProperties.InvestmentTarget.ENVIRONMENT] = env;
+//        investmentIntentions[GameProperties.InvestmentTarget.ECONOMIC] = econ;
+    }
+
+    public Dictionary<GameProperties.InvestmentTarget, int> Analyse(float envState, float econState,
+        Delegate move, int expDepth, int simDepth, int nSimsPerNode, Delegate actionEstimator)
+    {
+        //call MCTS
+        return new Dictionary<GameProperties.InvestmentTarget, int>();
+    }
+    
+    
+    public Dictionary<GameProperties.InvestmentTarget, int> PredictAction(Player player)
+    {
+        int env = 0;
         for (int i = 0; i < (GameGlobals.roundBudget); i++){
-            if (UnityEngine.Random.Range(0.0f, 1.0f) < pDisrupt)
+            if (UnityEngine.Random.Range(0.0f, 1.0f) < player.GetCoopPerc())
             {
-                econ++;
+                env++;
             }
         }
-        int env = GameGlobals.roundBudget - econ;
-    
-        investmentIntentions[GameProperties.InvestmentTarget.ENVIRONMENT] = env;
-        investmentIntentions[GameProperties.InvestmentTarget.ECONOMIC] = econ;
-
-        pDisrupt = 0.5f;
+        int econ = GameGlobals.roundBudget - env;
+        
+        Dictionary<GameProperties.InvestmentTarget, int> otherInvIntentions = new Dictionary<GameProperties.InvestmentTarget, int>();
+        otherInvIntentions[GameProperties.InvestmentTarget.ENVIRONMENT] = env;
+        otherInvIntentions[GameProperties.InvestmentTarget.ECONOMIC] = econ;
+        return otherInvIntentions;
     }
 
 
@@ -333,9 +343,10 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
 
         float state = this.GetMoney();
         float gsp = CalcGoalSuccessProbabilityInvestment(state, this.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ECONOMIC]);
-        
+//        float gsp = this.rpc.Mood; 
+            
         List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
-//        events.Add(RolePlayCharacter.EventHelper.PropertyChange("BudgetExecution(" + gsp.ToString("0.00", CultureInfo.InvariantCulture) + ")", this.id.ToString(), this.id.ToString()));
+        events.Add(RolePlayCharacter.EventHelper.PropertyChange("BudgetExecution(" + gsp.ToString("0.00", CultureInfo.InvariantCulture) + ")", this.id.ToString(), this.id.ToString()));
         Perceive(events);
         UpdateStep();
     }
@@ -346,9 +357,10 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
 
         float state = this.GetMoney();
         float gsp = CalcGoalSuccessProbabilityDecay(state);
+//        float gsp = this.rpc.Mood; 
 
         List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
-//        events.Add(RolePlayCharacter.EventHelper.PropertyChange("DecaySimulation(" + gsp.ToString("0.00", CultureInfo.InvariantCulture) + ")", this.id.ToString(), this.id.ToString()));
+        events.Add(RolePlayCharacter.EventHelper.PropertyChange("DecaySimulation(" + gsp.ToString("0.00", CultureInfo.InvariantCulture) + ")", this.id.ToString(), this.id.ToString()));
         Perceive(events);
         UpdateStep();
         
