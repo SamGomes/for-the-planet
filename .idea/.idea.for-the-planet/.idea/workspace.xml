@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0639d0ba-cf5a-493c-bca0-69d133fc9e06" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.for-the-planet/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.for-the-planet/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Player/AIPlayer/EmotionalAIPlayer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Player/AIPlayer/EmotionalAIPlayer.cs" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -136,79 +135,79 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Assets/Scripts/Player/AIPlayer/EmotionalAIPlayer.cs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-144">
-              <caret line="432" column="10" selection-start-line="432" selection-start-column="10" selection-end-line="432" selection-end-column="10" />
+            <state relative-caret-position="-2736">
+              <caret line="288" column="35" lean-forward="true" selection-start-line="288" selection-start-column="35" selection-end-line="288" selection-end-column="35" />
               <folding>
-                <marker date="1588182161279" expanded="true" signature="6:265" ph="..." />
-                <marker date="1588182161279" expanded="true" signature="377:5771" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="1012:1692" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="1762:1818" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="1893:1962" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="2059:2437" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="2193:2408" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="2480:2517" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="2587:2951" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="2634:2738" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="2750:2789" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="2817:2923" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="3008:3155" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="3211:4031" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="4085:5527" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="4320:5066" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="4331:4864" ph="/* econ = player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ECONOMIC]; ... */" />
-                <marker date="1588182161279" expanded="true" signature="5582:5643" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="5702:5767" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="5828:8075" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="6184:6205" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="6238:8073" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="6400:8067" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="6453:8056" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="6770:6909" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="7133:7208" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="8125:8972" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="8197:8253" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="8395:8577" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="8429:8549" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="8675:8717" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="8818:8970" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="9023:11882" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="9211:9460" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="9496:9797" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="9942:10070" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="10219:10270" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="10393:10604" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="10508:10567" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="10732:10774" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="10890:10937" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="10943:11090" ph="/// Gives a rich text string representation of this board &lt;para/&gt; ... " />
-                <marker date="1588182161279" expanded="true" signature="11132:11153" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="11159:11396" ph="/// Returns amount of players playing on this board &lt;para/&gt; ... " />
-                <marker date="1588182161279" expanded="true" signature="11437:11458" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="11616:11637" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="11643:11804" ph="/// A more efficient method of determining if there is a winner &lt;para/&gt; ... " />
-                <marker date="1588182161279" expanded="true" signature="11859:11880" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="11961:18008" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="12467:13131" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="13163:14099" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="13307:13338" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="13692:13760" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="13930:14093" ph="/* investmentIntentions[GameProperties.InvestmentTarget.ENVIRONMENT] = env; ... */" />
-                <marker date="1588182161279" expanded="true" signature="14213:14732" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="14403:14448" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="14655:14725" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="14831:15460" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="14918:15057" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="14996:15047" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="15545:16065" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="15810:15851" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="15900:15945" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="15994:16039" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="16131:16766" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="16513:16554" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="16602:16647" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="16695:16740" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="16821:17422" ph="{...}" />
-                <marker date="1588182161279" expanded="true" signature="17481:18005" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="6:265" ph="..." />
+                <marker date="1588182547273" expanded="true" signature="377:5771" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="1012:1692" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="1762:1818" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="1893:1962" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="2059:2437" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="2193:2408" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="2480:2517" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="2587:2951" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="2634:2738" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="2750:2789" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="2817:2923" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="3008:3155" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="3211:4031" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="4085:5527" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="4320:5066" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="4331:4864" ph="/* econ = player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ECONOMIC]; ... */" />
+                <marker date="1588182547273" expanded="true" signature="5582:5643" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="5702:5767" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="5828:8075" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="6184:6205" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="6238:8073" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="6400:8067" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="6453:8056" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="6770:6909" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="7133:7208" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="8125:8972" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="8197:8253" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="8395:8577" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="8429:8549" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="8675:8717" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="8818:8970" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="9023:11944" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="9211:9460" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="9496:9799" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="9944:10072" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="10221:10272" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="10395:10606" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="10510:10569" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="10734:10776" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="10892:10939" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="10945:11092" ph="/// Gives a rich text string representation of this board &lt;para/&gt; ... " />
+                <marker date="1588182547273" expanded="true" signature="11134:11155" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="11161:11398" ph="/// Returns amount of players playing on this board &lt;para/&gt; ... " />
+                <marker date="1588182547273" expanded="true" signature="11439:11460" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="11618:11669" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="11675:11836" ph="/// A more efficient method of determining if there is a winner &lt;para/&gt; ... " />
+                <marker date="1588182547273" expanded="true" signature="11891:11942" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="12023:18070" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="12529:13193" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="13225:14161" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="13369:13400" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="13754:13822" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="13992:14155" ph="/* investmentIntentions[GameProperties.InvestmentTarget.ENVIRONMENT] = env; ... */" />
+                <marker date="1588182547273" expanded="true" signature="14275:14794" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="14465:14510" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="14717:14787" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="14893:15522" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="14980:15119" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="15058:15109" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="15607:16127" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="15872:15913" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="15962:16007" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="16056:16101" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="16193:16828" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="16575:16616" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="16664:16709" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="16757:16802" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="16883:17484" ph="{...}" />
+                <marker date="1588182547273" expanded="true" signature="17543:18067" ph="{...}" />
               </folding>
             </state>
           </provider>
@@ -724,12 +723,12 @@
       <workItem from="1584460487353" duration="1887000" />
       <workItem from="1584785550093" duration="2150000" />
       <workItem from="1587994132903" duration="2466000" />
-      <workItem from="1588064600050" duration="13704000" />
+      <workItem from="1588064600050" duration="14093000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="142991000" />
+    <option name="totallyTimeSpent" value="143380000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1755,79 +1754,79 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Assets/Scripts/Player/AIPlayer/EmotionalAIPlayer.cs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-144">
-          <caret line="432" column="10" selection-start-line="432" selection-start-column="10" selection-end-line="432" selection-end-column="10" />
+        <state relative-caret-position="-2736">
+          <caret line="288" column="35" lean-forward="true" selection-start-line="288" selection-start-column="35" selection-end-line="288" selection-end-column="35" />
           <folding>
-            <marker date="1588182161279" expanded="true" signature="6:265" ph="..." />
-            <marker date="1588182161279" expanded="true" signature="377:5771" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="1012:1692" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="1762:1818" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="1893:1962" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="2059:2437" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="2193:2408" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="2480:2517" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="2587:2951" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="2634:2738" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="2750:2789" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="2817:2923" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="3008:3155" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="3211:4031" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="4085:5527" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="4320:5066" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="4331:4864" ph="/* econ = player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ECONOMIC]; ... */" />
-            <marker date="1588182161279" expanded="true" signature="5582:5643" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="5702:5767" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="5828:8075" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="6184:6205" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="6238:8073" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="6400:8067" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="6453:8056" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="6770:6909" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="7133:7208" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="8125:8972" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="8197:8253" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="8395:8577" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="8429:8549" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="8675:8717" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="8818:8970" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="9023:11882" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="9211:9460" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="9496:9797" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="9942:10070" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="10219:10270" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="10393:10604" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="10508:10567" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="10732:10774" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="10890:10937" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="10943:11090" ph="/// Gives a rich text string representation of this board &lt;para/&gt; ... " />
-            <marker date="1588182161279" expanded="true" signature="11132:11153" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="11159:11396" ph="/// Returns amount of players playing on this board &lt;para/&gt; ... " />
-            <marker date="1588182161279" expanded="true" signature="11437:11458" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="11616:11637" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="11643:11804" ph="/// A more efficient method of determining if there is a winner &lt;para/&gt; ... " />
-            <marker date="1588182161279" expanded="true" signature="11859:11880" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="11961:18008" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="12467:13131" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="13163:14099" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="13307:13338" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="13692:13760" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="13930:14093" ph="/* investmentIntentions[GameProperties.InvestmentTarget.ENVIRONMENT] = env; ... */" />
-            <marker date="1588182161279" expanded="true" signature="14213:14732" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="14403:14448" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="14655:14725" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="14831:15460" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="14918:15057" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="14996:15047" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="15545:16065" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="15810:15851" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="15900:15945" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="15994:16039" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="16131:16766" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="16513:16554" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="16602:16647" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="16695:16740" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="16821:17422" ph="{...}" />
-            <marker date="1588182161279" expanded="true" signature="17481:18005" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="6:265" ph="..." />
+            <marker date="1588182547273" expanded="true" signature="377:5771" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="1012:1692" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="1762:1818" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="1893:1962" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="2059:2437" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="2193:2408" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="2480:2517" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="2587:2951" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="2634:2738" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="2750:2789" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="2817:2923" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="3008:3155" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="3211:4031" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="4085:5527" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="4320:5066" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="4331:4864" ph="/* econ = player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ECONOMIC]; ... */" />
+            <marker date="1588182547273" expanded="true" signature="5582:5643" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="5702:5767" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="5828:8075" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="6184:6205" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="6238:8073" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="6400:8067" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="6453:8056" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="6770:6909" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="7133:7208" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="8125:8972" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="8197:8253" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="8395:8577" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="8429:8549" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="8675:8717" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="8818:8970" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="9023:11944" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="9211:9460" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="9496:9799" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="9944:10072" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="10221:10272" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="10395:10606" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="10510:10569" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="10734:10776" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="10892:10939" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="10945:11092" ph="/// Gives a rich text string representation of this board &lt;para/&gt; ... " />
+            <marker date="1588182547273" expanded="true" signature="11134:11155" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="11161:11398" ph="/// Returns amount of players playing on this board &lt;para/&gt; ... " />
+            <marker date="1588182547273" expanded="true" signature="11439:11460" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="11618:11669" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="11675:11836" ph="/// A more efficient method of determining if there is a winner &lt;para/&gt; ... " />
+            <marker date="1588182547273" expanded="true" signature="11891:11942" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="12023:18070" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="12529:13193" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="13225:14161" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="13369:13400" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="13754:13822" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="13992:14155" ph="/* investmentIntentions[GameProperties.InvestmentTarget.ENVIRONMENT] = env; ... */" />
+            <marker date="1588182547273" expanded="true" signature="14275:14794" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="14465:14510" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="14717:14787" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="14893:15522" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="14980:15119" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="15058:15109" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="15607:16127" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="15872:15913" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="15962:16007" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="16056:16101" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="16193:16828" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="16575:16616" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="16664:16709" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="16757:16802" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="16883:17484" ph="{...}" />
+            <marker date="1588182547273" expanded="true" signature="17543:18067" ph="{...}" />
           </folding>
         </state>
       </provider>

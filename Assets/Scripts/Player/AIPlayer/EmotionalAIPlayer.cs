@@ -288,7 +288,7 @@ public class FTPBoard : Board
         
         this.actionPredictorCallback = actionPredictorCallback;
         this.env = board.env;
-        this.econs = new List<int>(board.econs);
+        this.econs = new List<float>(board.econs);
     }
     public FTPBoard(Func<Player,Dictionary<GameProperties.InvestmentTarget, int>> actionPredictorCallback, float env, List<float> econs): this()
     {
@@ -347,14 +347,14 @@ public class FTPBoard : Board
     /// Determines if there is a winner or not for this board state and updates the winner integer accordingly
     protected override void DetermineWinner()
     {
-        
+        //no winner, no chicken dinner
     }
 
     /// A more efficient method of determining if there is a winner <para/>
     /// Saves time by using knowledge of the last move to remove unnessessary computation
     protected override void DetermineWinner(Move move)
     {
-        
+        //no winner, no chicken dinner
     }
 }
 
