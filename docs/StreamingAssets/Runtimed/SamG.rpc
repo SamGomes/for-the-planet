@@ -1,0 +1,624 @@
+{
+	"root":
+		{
+			"classId": 2,
+			"KnowledgeBase":
+				{
+					"Perspective": "P1",
+					"Knowledge":
+						{
+							"SELF":
+								{
+									"ExpectedResult(P1, Economy)": "0.5, 1",
+									"ExpectedResult(P1, Environment)": "0.5, 1",
+									"ExpectedResult(Other, Economy)": "0.5, 1",
+									"ExpectedResult(Other, Environment)": "0.5, 1",
+									"State(P1, Economy)": "0.1, 1",
+									"State(World, Environment)": "0.59, 1",
+									"State(SamG, Economy)": "0.02, 1",
+									"State(Others, Economy)": "0.01, 1",
+									"SimulationDecay(P1, Environment)": "0.5, 1",
+									"SimulationDecay(P1, Economy)": "0.5, 1",
+									"SimulationDecay(Other, Environment)": "0.5, 1",
+									"SimulationDecay(Other, Economy)": "0.5, 1",
+									"SimulationDecay(World, Environment)": "0.05, 1",
+									"SimulationDecay(SamG, Economy)": "0.08, 1",
+									"Investment(P1, Environment)": "4, 1",
+									"Investment(P1, Economy)": "1, 1",
+									"AllocatedBudgetPoints(SamG, Environment)": "5, 1",
+									"AllocatedBudgetPoints(SamG, Economic)": "0, 1",
+									"AllocatedBudgetPoints(SamG2, Environment)": "5, 1",
+									"AllocatedBudgetPoints(SamG2, Economic)": "0, 1",
+									"AllocatedBudgetPoints(SamG3, Environment)": "5, 1",
+									"AllocatedBudgetPoints(SamG3, Economic)": "0, 1",
+									"State(Environment)": "0.2, 1"
+								}
+						}
+				},
+			"BodyName": null,
+			"VoiceName": null,
+			"EmotionalAppraisalAssetSource": "/Scenarios/GenericAppraisalSamG.ea",
+			"EmotionalDecisionMakingSource": "/Scenarios/NormalPlayer.edm",
+			"SocialImportanceAssetSource": null,
+			"CommeillFautAssetSource": null,
+			"EmotionalState":
+				{
+					"Mood": -4.756828,
+					"initialTick": 0,
+					"EmotionalPool": [],
+					"AppraisalConfiguration":
+						{
+							"HalfLifeDecayConstant": 0.5,
+							"EmotionInfluenceOnMoodFactor": 0.3,
+							"MoodInfluenceOnEmotionFactor": 0.3,
+							"MinimumMoodValueForInfluencingEmotions": 0.5,
+							"EmotionalHalfLifeDecayTime": 15,
+							"MoodHalfLifeDecayTime": 60
+						}
+				},
+			"WorkingMemory":
+				{
+					"Values":
+						{
+
+						}
+				},
+			"AutobiographicMemory":
+				{
+					"Tick": 45,
+					"records": [
+						{
+							"classId": 0,
+							"Id": 1,
+							"Type": "Action-End",
+							"Subject": "World",
+							"Timestamp": 0,
+							"Action": "State(Round, Start)",
+							"Target": "SamG"
+						}, 
+						{
+							"classId": 1,
+							"Id": 2,
+							"Type": "Property-Change",
+							"Subject": "World",
+							"Timestamp": 11,
+							"Property": "AllocatedBudgetPoints(SamG, Environment)",
+							"NewValue": 5
+						}, 
+						{
+							"classId": 1,
+							"Id": 3,
+							"Type": "Property-Change",
+							"Subject": "World",
+							"Timestamp": 11,
+							"Property": "AllocatedBudgetPoints(SamG, Economic)",
+							"NewValue": 0
+						}, 
+						{
+							"classId": 1,
+							"Id": 4,
+							"Type": "Property-Change",
+							"Subject": "World",
+							"Timestamp": 11,
+							"Property": "AllocatedBudgetPoints(SamG, Environment)",
+							"NewValue": 5
+						}, 
+						{
+							"classId": 1,
+							"Id": 5,
+							"Type": "Property-Change",
+							"Subject": "World",
+							"Timestamp": 11,
+							"Property": "AllocatedBudgetPoints(SamG, Economic)",
+							"NewValue": 0
+						}, 
+						{
+							"classId": 1,
+							"Id": 6,
+							"Type": "Property-Change",
+							"Subject": "World",
+							"Timestamp": 11,
+							"Property": "AllocatedBudgetPoints(SamG2, Environment)",
+							"NewValue": 5
+						}, 
+						{
+							"classId": 1,
+							"Id": 7,
+							"Type": "Property-Change",
+							"Subject": "World",
+							"Timestamp": 11,
+							"Property": "AllocatedBudgetPoints(SamG2, Economic)",
+							"NewValue": 0
+						}, 
+						{
+							"classId": 1,
+							"Id": 8,
+							"Type": "Property-Change",
+							"Subject": "World",
+							"Timestamp": 11,
+							"Property": "AllocatedBudgetPoints(SamG3, Environment)",
+							"NewValue": 5
+						}, 
+						{
+							"classId": 1,
+							"Id": 9,
+							"Type": "Property-Change",
+							"Subject": "World",
+							"Timestamp": 11,
+							"Property": "AllocatedBudgetPoints(SamG3, Economic)",
+							"NewValue": 0
+						}, 
+						{
+							"classId": 1,
+							"Id": 10,
+							"Type": "Property-Change",
+							"Subject": "World",
+							"Timestamp": 39,
+							"Property": "SimulationDecay(World, Environment)",
+							"NewValue": 0.05
+						}, 
+						{
+							"classId": 1,
+							"Id": 11,
+							"Type": "Property-Change",
+							"Subject": "World",
+							"Timestamp": 39,
+							"Property": "SimulationDecay(SamG, Economy)",
+							"NewValue": 0.08
+						}, 
+						{
+							"classId": 1,
+							"Id": 12,
+							"Type": "Property-Change",
+							"Subject": "World",
+							"Timestamp": 39,
+							"Property": "State(World, Environment)",
+							"NewValue": 0.59
+						}, 
+						{
+							"classId": 1,
+							"Id": 13,
+							"Type": "Property-Change",
+							"Subject": "World",
+							"Timestamp": 39,
+							"Property": "State(SamG, Economy)",
+							"NewValue": 0.02
+						}, 
+						{
+							"classId": 1,
+							"Id": 14,
+							"Type": "Property-Change",
+							"Subject": "World",
+							"Timestamp": 39,
+							"Property": "State(Others, Economy)",
+							"NewValue": 0.01
+						}, 
+						{
+							"classId": 0,
+							"Id": 15,
+							"Type": "Action-End",
+							"Subject": "World",
+							"Timestamp": 45,
+							"Action": "State(Round, Start)",
+							"Target": "SamG"
+						}, 
+						{
+							"classId": 0,
+							"Id": 16,
+							"Type": "Action-End",
+							"Subject": "World",
+							"Timestamp": 45,
+							"Action": "State(Round, Start)",
+							"Target": "SamG"
+						}, 
+						{
+							"classId": 0,
+							"Id": 17,
+							"Type": "Action-End",
+							"Subject": "World",
+							"Timestamp": 45,
+							"Action": "State(Round, Start)",
+							"Target": "SamG"
+						}, 
+						{
+							"classId": 0,
+							"Id": 18,
+							"Type": "Action-End",
+							"Subject": "World",
+							"Timestamp": 45,
+							"Action": "State(Round, Start)",
+							"Target": "SamG"
+						}, 
+						{
+							"classId": 0,
+							"Id": 19,
+							"Type": "Action-End",
+							"Subject": "World",
+							"Timestamp": 45,
+							"Action": "State(Round, Start)",
+							"Target": "SamG"
+						}, 
+						{
+							"classId": 0,
+							"Id": 20,
+							"Type": "Action-End",
+							"Subject": "World",
+							"Timestamp": 45,
+							"Action": "State(Round, Start)",
+							"Target": "SamG"
+						}, 
+						{
+							"classId": 0,
+							"Id": 21,
+							"Type": "Action-End",
+							"Subject": "World",
+							"Timestamp": 45,
+							"Action": "State(Round, Start)",
+							"Target": "SamG"
+						}, 
+						{
+							"classId": 0,
+							"Id": 22,
+							"Type": "Action-End",
+							"Subject": "World",
+							"Timestamp": 45,
+							"Action": "State(Round, Start)",
+							"Target": "SamG"
+						}, 
+						{
+							"classId": 0,
+							"Id": 23,
+							"Type": "Action-End",
+							"Subject": "World",
+							"Timestamp": 45,
+							"Action": "State(Round, Start)",
+							"Target": "SamG"
+						}, 
+						{
+							"classId": 0,
+							"Id": 24,
+							"Type": "Action-End",
+							"Subject": "World",
+							"Timestamp": 45,
+							"Action": "State(Round, Start)",
+							"Target": "SamG"
+						}, 
+						{
+							"classId": 0,
+							"Id": 25,
+							"Type": "Action-End",
+							"Subject": "World",
+							"Timestamp": 45,
+							"Action": "State(Round, Start)",
+							"Target": "SamG"
+						}, 
+						{
+							"classId": 0,
+							"Id": 26,
+							"Type": "Action-End",
+							"Subject": "World",
+							"Timestamp": 45,
+							"Action": "State(Round, Start)",
+							"Target": "SamG"
+						}, 
+						{
+							"classId": 0,
+							"Id": 27,
+							"Type": "Action-End",
+							"Subject": "World",
+							"Timestamp": 45,
+							"Action": "State(Round, Start)",
+							"Target": "SamG"
+						}, 
+						{
+							"classId": 0,
+							"Id": 28,
+							"Type": "Action-End",
+							"Subject": "World",
+							"Timestamp": 45,
+							"Action": "State(Round, Start)",
+							"Target": "SamG"
+						}, 
+						{
+							"classId": 0,
+							"Id": 29,
+							"Type": "Action-End",
+							"Subject": "World",
+							"Timestamp": 45,
+							"Action": "State(Round, Start)",
+							"Target": "SamG"
+						}, 
+						{
+							"classId": 0,
+							"Id": 30,
+							"Type": "Action-End",
+							"Subject": "World",
+							"Timestamp": 45,
+							"Action": "State(Round, Start)",
+							"Target": "SamG"
+						}, 
+						{
+							"classId": 0,
+							"Id": 31,
+							"Type": "Action-End",
+							"Subject": "World",
+							"Timestamp": 45,
+							"Action": "State(Round, Start)",
+							"Target": "SamG"
+						}, 
+						{
+							"classId": 0,
+							"Id": 32,
+							"Type": "Action-End",
+							"Subject": "World",
+							"Timestamp": 45,
+							"Action": "State(Round, Start)",
+							"Target": "SamG"
+						}, 
+						{
+							"classId": 0,
+							"Id": 33,
+							"Type": "Action-End",
+							"Subject": "World",
+							"Timestamp": 45,
+							"Action": "State(Round, Start)",
+							"Target": "SamG"
+						}, 
+						{
+							"classId": 0,
+							"Id": 34,
+							"Type": "Action-End",
+							"Subject": "World",
+							"Timestamp": 45,
+							"Action": "State(Round, Start)",
+							"Target": "SamG"
+						}, 
+						{
+							"classId": 0,
+							"Id": 35,
+							"Type": "Action-End",
+							"Subject": "World",
+							"Timestamp": 45,
+							"Action": "State(Round, Start)",
+							"Target": "SamG"
+						}, 
+						{
+							"classId": 0,
+							"Id": 36,
+							"Type": "Action-End",
+							"Subject": "World",
+							"Timestamp": 45,
+							"Action": "State(Round, Start)",
+							"Target": "SamG"
+						}, 
+						{
+							"classId": 0,
+							"Id": 37,
+							"Type": "Action-End",
+							"Subject": "World",
+							"Timestamp": 45,
+							"Action": "State(Round, Start)",
+							"Target": "SamG"
+						}, 
+						{
+							"classId": 0,
+							"Id": 38,
+							"Type": "Action-End",
+							"Subject": "World",
+							"Timestamp": 45,
+							"Action": "State(Round, Start)",
+							"Target": "SamG"
+						}, 
+						{
+							"classId": 0,
+							"Id": 39,
+							"Type": "Action-End",
+							"Subject": "World",
+							"Timestamp": 45,
+							"Action": "State(Round, Start)",
+							"Target": "SamG"
+						}, 
+						{
+							"classId": 0,
+							"Id": 40,
+							"Type": "Action-End",
+							"Subject": "World",
+							"Timestamp": 45,
+							"Action": "State(Round, Start)",
+							"Target": "SamG"
+						}, 
+						{
+							"classId": 0,
+							"Id": 41,
+							"Type": "Action-End",
+							"Subject": "World",
+							"Timestamp": 45,
+							"Action": "State(Round, Start)",
+							"Target": "SamG"
+						}, 
+						{
+							"classId": 0,
+							"Id": 42,
+							"Type": "Action-End",
+							"Subject": "World",
+							"Timestamp": 45,
+							"Action": "State(Round, Start)",
+							"Target": "SamG"
+						}, 
+						{
+							"classId": 0,
+							"Id": 43,
+							"Type": "Action-End",
+							"Subject": "World",
+							"Timestamp": 45,
+							"Action": "State(Round, Start)",
+							"Target": "SamG"
+						}, 
+						{
+							"classId": 0,
+							"Id": 44,
+							"Type": "Action-End",
+							"Subject": "World",
+							"Timestamp": 45,
+							"Action": "State(Round, Start)",
+							"Target": "SamG"
+						}, 
+						{
+							"classId": 0,
+							"Id": 45,
+							"Type": "Action-End",
+							"Subject": "World",
+							"Timestamp": 45,
+							"Action": "State(Round, Start)",
+							"Target": "SamG"
+						}, 
+						{
+							"classId": 0,
+							"Id": 46,
+							"Type": "Action-End",
+							"Subject": "World",
+							"Timestamp": 45,
+							"Action": "State(Round, Start)",
+							"Target": "SamG"
+						}, 
+						{
+							"classId": 0,
+							"Id": 47,
+							"Type": "Action-End",
+							"Subject": "World",
+							"Timestamp": 45,
+							"Action": "State(Round, Start)",
+							"Target": "SamG"
+						}, 
+						{
+							"classId": 0,
+							"Id": 48,
+							"Type": "Action-End",
+							"Subject": "World",
+							"Timestamp": 45,
+							"Action": "State(Round, Start)",
+							"Target": "SamG"
+						}, 
+						{
+							"classId": 0,
+							"Id": 49,
+							"Type": "Action-End",
+							"Subject": "World",
+							"Timestamp": 45,
+							"Action": "State(Round, Start)",
+							"Target": "SamG"
+						}, 
+						{
+							"classId": 0,
+							"Id": 50,
+							"Type": "Action-End",
+							"Subject": "World",
+							"Timestamp": 45,
+							"Action": "State(Round, Start)",
+							"Target": "SamG"
+						}, 
+						{
+							"classId": 0,
+							"Id": 51,
+							"Type": "Action-End",
+							"Subject": "World",
+							"Timestamp": 45,
+							"Action": "State(Round, Start)",
+							"Target": "SamG"
+						}, 
+						{
+							"classId": 0,
+							"Id": 52,
+							"Type": "Action-End",
+							"Subject": "World",
+							"Timestamp": 45,
+							"Action": "State(Round, Start)",
+							"Target": "SamG"
+						}, 
+						{
+							"classId": 0,
+							"Id": 53,
+							"Type": "Action-End",
+							"Subject": "World",
+							"Timestamp": 45,
+							"Action": "State(Round, Start)",
+							"Target": "SamG"
+						}, 
+						{
+							"classId": 0,
+							"Id": 54,
+							"Type": "Action-End",
+							"Subject": "World",
+							"Timestamp": 45,
+							"Action": "State(Round, Start)",
+							"Target": "SamG"
+						}, 
+						{
+							"classId": 0,
+							"Id": 55,
+							"Type": "Action-End",
+							"Subject": "World",
+							"Timestamp": 45,
+							"Action": "State(Round, Start)",
+							"Target": "SamG"
+						}, 
+						{
+							"classId": 0,
+							"Id": 56,
+							"Type": "Action-End",
+							"Subject": "World",
+							"Timestamp": 45,
+							"Action": "State(Round, Start)",
+							"Target": "SamG"
+						}, 
+						{
+							"classId": 0,
+							"Id": 57,
+							"Type": "Action-End",
+							"Subject": "World",
+							"Timestamp": 45,
+							"Action": "State(Round, Start)",
+							"Target": "SamG"
+						}]
+				},
+			"OtherAgents":
+				{
+					"dictionary": [
+						{
+							"key": "World",
+							"value":
+								{
+									"Name": "World",
+									"EmotionalState":
+										{
+											"Mood": 0,
+											"initialTick": 0,
+											"EmotionalPool": [],
+											"AppraisalConfiguration":
+												{
+													"HalfLifeDecayConstant": 0.5,
+													"EmotionInfluenceOnMoodFactor": 0.3,
+													"MoodInfluenceOnEmotionFactor": 0.3,
+													"MinimumMoodValueForInfluencingEmotions": 0.5,
+													"EmotionalHalfLifeDecayTime": 15,
+													"MoodHalfLifeDecayTime": 60
+												}
+										}
+								}
+						}]
+				}
+		},
+	"types": [
+		{
+			"TypeId": 0,
+			"ClassName": "AutobiographicMemory.AM+ActionEvent, AutobiographicMemory, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+		}, 
+		{
+			"TypeId": 1,
+			"ClassName": "AutobiographicMemory.AM+PropertyChangeEvent, AutobiographicMemory, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+		}, 
+		{
+			"TypeId": 2,
+			"ClassName": "RolePlayCharacter.RolePlayCharacterAsset, RolePlayCharacter, Version=1.5.0.0, Culture=neutral, PublicKeyToken=null"
+		}]
+}
