@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour {
 
     public GameObject newRoundScreen;
     public Button advanceRoundButton;
+    public GameObject GenerationText;
     public GameObject simulateInvestmentScreen;
     public Button simulateEvolutionButton;
     
@@ -82,7 +83,7 @@ public class GameManager : MonoBehaviour {
         numPlayersToDisplayHistory = GameGlobals.players.Count;
         numPlayersToSimulateInvestment = GameGlobals.players.Count;
 
-        GameGlobals.players[0].SetName(GameGlobals.participantName);
+        GameGlobals.players[0].SetName(GameGlobals.participantName + "  (YOU)");
         GameGlobals.players[0].UpdateNameUI();
 
         currPlayerIndex = 0;
@@ -97,8 +98,12 @@ public class GameManager : MonoBehaviour {
         phaseEndDelay = 2.0f;
         GameGlobals.envState = 60; //Common Pool Resource
         GameGlobals.envThreshold = GameGlobals.envState / 2;
-        //GameGlobals.roundBudget = 2x Fair;
+        GameGlobals.envRenew = 0.5; // At the end of the round the env renew 50%
+        GameGlobals.envRenewperRound = 0;
+        GameGlobals.roundBudget = 20;  // 2 x (Threshold / #number of players)
         GameGlobals.envStatePerRound = new List<float>();
+
+        GenerationText = GameObject.Find("GenerationText"); //Out of place
 
         int numPlayers = GameGlobals.players.Count;
         
@@ -114,6 +119,7 @@ public class GameManager : MonoBehaviour {
             }
 
             newRoundScreen.SetActive(false);
+            GenerationText.SetActive(false);
             StartGameRoundForAllPlayers();
         }
         else
@@ -137,11 +143,15 @@ public class GameManager : MonoBehaviour {
 
             rollDiceOverlay.SetActive(false);
 
-            advanceRoundButton.onClick.AddListener(delegate()
+
+            advanceRoundButton.onClick.AddListener(delegate ()
             {
                 newRoundScreen.SetActive(false);
+                GenerationText.SetActive(false);
                 StartGameRoundForAllPlayers();
             });
+
+
 
             simulateEvolutionButton.onClick.AddListener(delegate()
             {
@@ -280,7 +290,8 @@ public class GameManager : MonoBehaviour {
                 {
                     currGamePhase = GameProperties.GamePhase.BUDGET_ALLOCATION;
                     newRoundScreen.SetActive(true);
-                }
+                    GenerationText.SetActive(false);
+            }
            
         }
 
@@ -402,6 +413,7 @@ public class GameManager : MonoBehaviour {
                 }
                 else
                 {
+                    GenerationText.SetActive(true);
                     newRoundScreen.SetActive(true);
                 }
             }
@@ -605,6 +617,9 @@ public class GameManager : MonoBehaviour {
             
             //votes.Add(p.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT]);
         }
+        //renew envState
+        GameGlobals.envRenewperRound = (float)(GameGlobals.envState * GameGlobals.envRenew);
+        GameGlobals.envState += GameGlobals.envRenewperRound;
         GameGlobals.envStatePerRound.Add(GameGlobals.envState);
         StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState));
         

@@ -1704,7 +1704,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Budget Allocation Phase:'
+  m_Text: 'Take from Resource Pool:'
 --- !u!1 &3193846616775747641
 GameObject:
   m_ObjectHideFlags: 0
