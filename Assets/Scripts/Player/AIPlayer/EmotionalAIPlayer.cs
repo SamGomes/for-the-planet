@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Security.Policy;
 using System.Text.RegularExpressions;
 using UnityEngine;
 using Utilities;
@@ -243,6 +244,12 @@ public class FTPMove: Move
         return false;
     }
 
+    /// Returns a unique hash code for this move instance
+    public int GetInvestmentEnv()
+    {
+        return this.investmentEnv;
+    }
+
 
     /// Returns a unique hash code for this move instance
     public override int GetHashCode()
@@ -265,18 +272,20 @@ public class FTPBoard : Board
 {
     protected float env;
     protected List<float> econs;
-    protected Func<Player,Dictionary<GameProperties.InvestmentTarget, int>> actionPredictorCallback;
+    protected Func<Player, int> actionPredictorCallback;
+
+    protected int currGameRound;
+    protected int maxGameRound;
     
     public FTPBoard()
     {
         this.env = 0;
-        this.econs = new List<int>();
+        this.econs = new List<float>();
         
-        CurrentPlayer = 1;
+        CurrentPlayer = 0;
 
         this.actionPredictorCallback = null;
-
-        //Create the list of possible moves
+        this.maxGameRound = 0;
         possibleMoves = GeneratePossibleMoves();
 
     }
@@ -286,12 +295,14 @@ public class FTPBoard : Board
         winner = board.Winner;
         possibleMoves = new List<Move>(board.possibleMoves);
         
-        this.actionPredictorCallback = actionPredictorCallback;
+        this.maxGameRound = board.maxGameRound;
+        this.actionPredictorCallback = board.actionPredictorCallback;
         this.env = board.env;
         this.econs = new List<float>(board.econs);
     }
-    public FTPBoard(Func<Player,Dictionary<GameProperties.InvestmentTarget, int>> actionPredictorCallback, float env, List<float> econs): this()
+    public FTPBoard(int maxGameRound, Func<Player, int> actionPredictorCallback, float env, List<float> econs): this()
     {
+        this.maxGameRound = maxGameRound;
         this.actionPredictorCallback = actionPredictorCallback;
         this.env = env;
         this.econs = econs;
@@ -301,8 +312,45 @@ public class FTPBoard : Board
     public override Board MakeMove(Move move)
     {
         base.MakeMove(move);
-        
+        FTPMove moveFTP = (FTPMove) move;
+        int myInvestmentEnv = moveFTP.GetInvestmentEnv();
 
+        List<float> estEcons = new List<float>();
+
+        int estEnvDice = 0;
+        foreach(Player player in GameGlobals.players)
+        {
+            float estGainEcon = 0.0f;
+            float estDecayEcon = (GameGlobals.playerDecayBudget[0] + GameGlobals.playerDecayBudget[1]) / 2.0f;
+
+            if (player.GetId() == CurrentPlayer)
+            {
+                estEnvDice += myInvestmentEnv;
+                estGainEcon =((GameGlobals.roundBudget - myInvestmentEnv)*3.5f)/ 100.0f;
+            }
+            else
+            { 
+                int opponentEnvDice = actionPredictorCallback(player);
+                estEnvDice += opponentEnvDice;
+                estGainEcon =((GameGlobals.roundBudget - opponentEnvDice)*3.5f)/ 100.0f;
+
+            }
+            estEcons.Add(estGainEcon - estDecayEcon);
+        }
+
+        float estGainEnv = (estEnvDice * 3.5f) / 100.0f;
+        float estDecayEnv = (GameGlobals.environmentDecayBudget[0] + GameGlobals.environmentDecayBudget[1]) / 2.0f;
+        estDecayEnv = (estDecayEnv*3.5f) / 100.0f;
+        
+        float estEnv = estGainEnv - estDecayEnv;
+
+        FTPBoard newBoard = (FTPBoard) this.Duplicate();
+        newBoard.econs = estEcons;
+        newBoard.env = estEnv;
+
+        newBoard.currGameRound = this.currGameRound + 1;
+
+        return newBoard;
     }
 
     /// Gets a list of possible moves that can follow from this board state
@@ -333,7 +381,7 @@ public class FTPBoard : Board
     /// The output string will have color tags that make the board easier to read
     public override string ToRichString()
     {
-        
+        return "";
     }
 
     /// Returns amount of players playing on this board <para/>
@@ -341,20 +389,46 @@ public class FTPBoard : Board
     /// Compromise is to have every instance contain the player count
     protected override int PlayerCount()
     {
-        
+        return GameGlobals.players.Count;
     }
 
     /// Determines if there is a winner or not for this board state and updates the winner integer accordingly
     protected override void DetermineWinner()
     {
-        //no winner, no chicken dinner
+        this.winner = -1;
+        if ((currGameRound == maxGameRound) && env > 0)
+        {
+            float bestEcon = -1.0f;
+            int bestPlayerId = 0;
+            int winnerCount = 0;
+            for (int i = 0; i < GameGlobals.players.Count; i++)
+            {
+                float currEcon = econs[i];
+                if (bestEcon >= currEcon)
+                {
+                    bestEcon = currEcon;
+                    bestPlayerId = i;
+                    winnerCount++;
+                }
+            }
+
+            if (winnerCount > 1)
+            {
+                this.winner = 0;
+            }
+            else
+            {
+                this.winner = bestPlayerId + 1;
+            }
+        }
     }
 
     /// A more efficient method of determining if there is a winner <para/>
     /// Saves time by using knowledge of the last move to remove unnessessary computation
     protected override void DetermineWinner(Move move)
     {
-        //no winner, no chicken dinner
+        FTPBoard newBoard = (FTPBoard) MakeMove(move);
+        newBoard.DetermineWinner();
     }
 }
 
@@ -407,34 +481,33 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
         {
             moneyValues.Add(player.GetMoney());
         }
-        FTPBoard currentState = new FTPBoard(PredictAction, GameGlobals.envState, moneyValues);
-        investmentIntentions = Analyse(currentState, (int) pMood * 50); 
-//        investmentIntentions[GameProperties.InvestmentTarget.ENVIRONMENT] = env;
-//        investmentIntentions[GameProperties.InvestmentTarget.ECONOMIC] = econ;
+
+        int numMctsSteps = (int) pMood * 50;
+        FTPBoard currentState = new FTPBoard(20, PredictAction, GameGlobals.envState, moneyValues);
+        investmentIntentions = Analyse(numMctsSteps, currentState); 
     }
 
-    public Dictionary<GameProperties.InvestmentTarget, int> Analyse(FTPBoard currentState,
-        int simDepth)
+    public Dictionary<GameProperties.InvestmentTarget, int> Analyse(int numMctsSteps, FTPBoard currentState)
     {
         // big brain time: call MCTS
     
         mcts = new TreeSearch<Node>(currentState); //only makes 1 sim per node and expands all
         
-        for(int i=0; i<simDepth; i++)
+        for(int i=0; i<numMctsSteps; i++)
         {
             mcts.Step();
         }
 
         Node bestNodeChoice = mcts.BestNodeChoice(mcts.Root);
-        Move investment = bestNodeChoice.GameBoard.LastMoveMade;
-        return new Dictionary<GameProperties.InvestmentTarget, int>()
-        {
-//            GameProperties.InvestmentTarget.ECONOMIC =  
-        };
+        int env = ((FTPMove) bestNodeChoice.GameBoard.LastMoveMade).GetInvestmentEnv();
+        Dictionary<GameProperties.InvestmentTarget, int> inv = new Dictionary<GameProperties.InvestmentTarget, int>();
+        inv[GameProperties.InvestmentTarget.ENVIRONMENT] = env; 
+        inv[GameProperties.InvestmentTarget.ECONOMIC] = GameGlobals.roundBudget - env;
+        return inv;
     }
     
     
-    public Dictionary<GameProperties.InvestmentTarget, int> PredictAction(Player player)
+    public int PredictAction(Player player)
     {
         int env = 0;
         for (int i = 0; i < (GameGlobals.roundBudget); i++){
@@ -444,12 +517,7 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
             }
         }
         int econ = GameGlobals.roundBudget - env;
-        
-        Dictionary<GameProperties.InvestmentTarget, int> otherInvIntentions = 
-            new Dictionary<GameProperties.InvestmentTarget, int>();
-        otherInvIntentions[GameProperties.InvestmentTarget.ENVIRONMENT] = env;
-        otherInvIntentions[GameProperties.InvestmentTarget.ECONOMIC] = econ;
-        return otherInvIntentions;
+        return env;
     }
 
 
