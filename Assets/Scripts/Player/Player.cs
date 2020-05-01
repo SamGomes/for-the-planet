@@ -307,7 +307,7 @@ public class Player
     public void SendBudgetAllocationPhaseResponseDelegate()
     {
         int currentInvestment = currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT];
-        environmentInvestmentPerRound.Add(currentInvestment);
+        //environmentInvestmentPerRound.Add(currentInvestment);
         budgetAllocationScreenUI.SetActive(false);
         displayHistoryScreenUI.SetActive(false);
         budgetExecutionScreenUI.SetActive(false);
@@ -325,7 +325,7 @@ public class Player
     public int SendBudgetExecutionPhaseResponse()
     {
         int currentInvestment = currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT];
-        environmentInvestmentPerRound.Add(currentInvestment);
+        //environmentInvestmentPerRound.Add(currentInvestment);
         playerMonoBehaviourFunctionalities.StartCoroutine(gameManagerRef.BudgetExecutionPhaseResponse(this));
         return 0;
     }

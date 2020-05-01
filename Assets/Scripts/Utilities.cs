@@ -36,7 +36,8 @@ public static class GameGlobals
     public static float envThreshold;
     public static double envRenew;
     public static float envRenewperRound;
-    public static List<float> envStatePerRound;
+    public static int generation;
+    public static List<int> envStatePerRound;
 
     //fatima stuff
     public static string FAtiMAScenarioPath;

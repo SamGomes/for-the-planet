@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour {
     public GameObject newRoundScreen;
     public Button advanceRoundButton;
     public GameObject GenerationText;
+    public GameObject GenerationNumberText;
     public GameObject simulateInvestmentScreen;
     public Button simulateEvolutionButton;
     
@@ -51,6 +52,9 @@ public class GameManager : MonoBehaviour {
 
     private int marketLimit;
     private int currNumberOfMarketDices;
+
+    private Text GenerationTextUI;
+    private Text GenerationNumberTextUI;
 
     public int InterruptGame()
     {
@@ -100,10 +104,17 @@ public class GameManager : MonoBehaviour {
         GameGlobals.envThreshold = GameGlobals.envState / 2;
         GameGlobals.envRenew = 0.5; // At the end of the round the env renew 50%
         GameGlobals.envRenewperRound = 0;
-        GameGlobals.roundBudget = 20;  // 2 x (Threshold / #number of players)
-        GameGlobals.envStatePerRound = new List<float>();
+        GameGlobals.roundBudget = 14; 
+        GameGlobals.generation = 1; // First Generation
+        GameGlobals.envStatePerRound = new List<int>();
 
-        GenerationText = GameObject.Find("GenerationText"); //Out of place
+        GenerationText = GameObject.Find("GenerationText");
+        GenerationTextUI = GenerationText.transform.Find("genText").gameObject.GetComponent<Text>();
+        GenerationTextUI.text = "Hello!\n" +"You belong to the First Generation";
+
+        GenerationNumberText = GameObject.Find("GenerationNumber");
+        GenerationNumberTextUI = GenerationNumberText.transform.Find("genNumText").gameObject.GetComponent<Text>();
+        GenerationNumberTextUI.text = "Generation: "+ GameGlobals.generation.ToString();
 
         int numPlayers = GameGlobals.players.Count;
         
@@ -276,7 +287,8 @@ public class GameManager : MonoBehaviour {
                 yield return new WaitForSeconds(10);
 
 
-                if (GameGlobals.envState <= GameGlobals.envThreshold) //environment exploded
+                if ((GameGlobals.currGameRoundId == GameProperties.configurableProperties.maxNumRounds) && 
+                (GameGlobals.envState <= GameGlobals.envThreshold)) //environment exploded
                 {
                     GameGlobals.currGameState = GameProperties.GameState.LOSS;
                     GameGlobals.gameSceneManager.LoadEndScene();
@@ -290,6 +302,8 @@ public class GameManager : MonoBehaviour {
                 {
                     currGamePhase = GameProperties.GamePhase.BUDGET_ALLOCATION;
                     newRoundScreen.SetActive(true);
+                    GameGlobals.generation += 1;
+                    GenerationNumberTextUI.text = "Generation: " + GameGlobals.generation.ToString();
                     GenerationText.SetActive(false);
             }
            
@@ -620,7 +634,7 @@ public class GameManager : MonoBehaviour {
         //renew envState
         GameGlobals.envRenewperRound = (float)(GameGlobals.envState * GameGlobals.envRenew);
         GameGlobals.envState += GameGlobals.envRenewperRound;
-        GameGlobals.envStatePerRound.Add(GameGlobals.envState);
+        GameGlobals.envStatePerRound.Add(Convert.ToInt32(GameGlobals.envState));
         StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState));
         
         /* Player take medianVote

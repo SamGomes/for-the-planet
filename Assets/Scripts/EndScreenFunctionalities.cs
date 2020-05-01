@@ -120,7 +120,7 @@ public class EndScreenFunctionalities : MonoBehaviour
                     if (i < p.environmentInvestmentPerRound.Count)
                     {
                         int playerInvestmentPerRound = p.environmentInvestmentPerRound[i];
-                        Text textEntry = newTableEntry.GetComponentsInChildren<Text>()[i + 1];
+                        Text textEntry = newTableEntry.GetComponentsInChildren<Text>()[i+1];
                         textEntry.text = playerInvestmentPerRound.ToString();
 
                         /*if (playerInvestmentPerRound == p.environmentMedianInvestmentPerRound[i])
