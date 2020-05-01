@@ -30,6 +30,7 @@ public class Player
     protected Dictionary<GameProperties.InvestmentTarget, int> currRoundInvestment;
     protected Dictionary<GameProperties.InvestmentTarget, int> investmentHistory;
 
+    protected float coopPerc; //based on previous actions
 
     //UI Stuff
     protected MonoBehaviourFunctionalities playerMonoBehaviourFunctionalities;
@@ -198,6 +199,10 @@ public class Player
         return this.investmentHistory;
     }
 
+    public float GetCoopPerc()
+    {
+        return this.coopPerc;
+    }
 
     public virtual void BudgetAllocationPhaseRequest()
     {
@@ -241,6 +246,10 @@ public class Player
             playerDisablerUI.SetActive(false);
         }
 
+        coopPerc = (float) investmentHistory[GameProperties.InvestmentTarget.ENVIRONMENT] /
+                   (float) (investmentHistory[GameProperties.InvestmentTarget.ENVIRONMENT] +
+                            investmentHistory[GameProperties.InvestmentTarget.ENVIRONMENT]);
+        
         SendHistoryDisplayPhaseResponse();
     }
     public virtual void BudgetExecutionPhaseRequest()

@@ -1,5 +1,5 @@
-rem sh extractData.bat
-rem cp *.csv ./R/input
+sh extractData.bat
+cp *.csv ./R/input
 
 cd R
 ./compileData

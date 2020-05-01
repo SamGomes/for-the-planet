@@ -4,18 +4,19 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using EmotionalAppraisal.DTOs;
 using UnityEngine;
-using UnityEngine.Networking;
 using Utilities;
-using Object = System.Object;
+using MCTS.Core;
+using UnityEngine.TestTools;
+
+//Using the MCTS implementation originally provided by @Mikeywalsh
+
+
 
 public class EmotionalAIPlayer: AIPlayer
 {
+    
     //Emotional stuff
     protected RolePlayCharacterAsset rpc;
     private List<WellFormedNames.Name> unperceivedEvents;
@@ -42,10 +43,6 @@ public class EmotionalAIPlayer: AIPlayer
         //default investment intention
         investmentIntentions[GameProperties.InvestmentTarget.ECONOMIC] = 3;
         investmentIntentions[GameProperties.InvestmentTarget.ENVIRONMENT] = 2;
-
-        //if (!GameGlobals.isSimulation) {
-        //    playerMonoBehaviourFunctionalities.StartCoroutine(EmotionalUpdateLoop(updateDelay));
-        //}
     }
 
     public override void Perceive(List<WellFormedNames.Name> events)
@@ -70,7 +67,7 @@ public class EmotionalAIPlayer: AIPlayer
         }
         return dialog;
     }
-    public RolePlayCharacterAsset getRPC()
+    public RolePlayCharacterAsset GetRpc()
     {
         return this.rpc;
     }
@@ -133,18 +130,25 @@ public class EmotionalAIPlayer: AIPlayer
         float env = 0;
         foreach (Player player in GameGlobals.players)
         {
-            econ = player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ECONOMIC];
-            env = player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT];
-       
-            events.Add(RolePlayCharacter.EventHelper.PropertyChange("HistoryDisplay(" + econ.ToString("0.00", CultureInfo.InvariantCulture) + "," + env.ToString("0.00", CultureInfo.InvariantCulture) + ")",
-                this.id.ToString(), player.GetId().ToString()));
-            
+//            econ = player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ECONOMIC];
+//            env = player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT];
+//
+//            events.Add(RolePlayCharacter.EventHelper.PropertyChange(
+//                "HistoryDisplay(" + econ.ToString("0.00", CultureInfo.InvariantCulture) + "," +
+//                env.ToString("0.00", CultureInfo.InvariantCulture) + ")",
+//                this.id.ToString(), player.GetId().ToString()));
+
+            //aggregate
+            econ += player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ECONOMIC];
+            env += player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT];
         }
+        //aggregate
         econ /= GameGlobals.players.Count;
         env /= GameGlobals.players.Count;
-            
-        string econStr = econ.ToString("0.00", CultureInfo.InvariantCulture);
-        string envStr = env.ToString("0.00", CultureInfo.InvariantCulture);
+        events.Add(RolePlayCharacter.EventHelper.PropertyChange(
+        "HistoryDisplay(" + econ.ToString("0.00", CultureInfo.InvariantCulture) + "," +
+        env.ToString("0.00", CultureInfo.InvariantCulture) + ")",
+        this.id.ToString(), "OtherPlayers"));
         
         Perceive(events);
         UpdateStep();
@@ -185,8 +189,6 @@ public class TableEmotionalAIPlayer : EmotionalAIPlayer
                 case "Speak":
                     WellFormedNames.Name cs = action.Parameters[0];
                     WellFormedNames.Name ns = action.Parameters[1];
-                    //WellFormedNames.Name m = action.Parameters[2];
-                    //WellFormedNames.Name m = (WellFormedNames.Name) "happy-for";// (WellFormedNames.Name) rpc.GetStrongestActiveEmotion().EmotionType;
                     WellFormedNames.Name m = (WellFormedNames.Name)"-";
                     if (rpc.GetStrongestActiveEmotion() != null)
                     {
@@ -217,11 +219,160 @@ public class TableEmotionalAIPlayer : EmotionalAIPlayer
     }
 }
 
+
+
+
+//concrete actions
+public class FTPMove: Move
+{
+    private int investmentEnv;
+
+    public FTPMove(int investmentEnv)
+    {
+        this.investmentEnv = investmentEnv;
+    }
+    
+    /// Equality override which returns true if this instance is equal to a passed in object
+    public override bool Equals(object obj)
+    {
+        if (obj is FTPMove)
+        {
+            FTPMove other = (FTPMove) obj;
+            return other.investmentEnv == investmentEnv;
+        }
+        return false;
+    }
+
+
+    /// Returns a unique hash code for this move instance
+    public override int GetHashCode()
+    {
+        return investmentEnv;
+    }
+
+    /// Returns a string representation of this move instance
+    public override string ToString()
+    {
+        return "investment Env: " + investmentEnv + ";\n"
+               + "investment Econ: " + (GameGlobals.roundBudget - investmentEnv);
+    }
+}
+
+
+
+//concrete states
+public class FTPBoard : Board
+{
+    protected float env;
+    protected List<float> econs;
+    protected Func<Player,Dictionary<GameProperties.InvestmentTarget, int>> actionPredictorCallback;
+    
+    public FTPBoard()
+    {
+        this.env = 0;
+        this.econs = new List<int>();
+        
+        CurrentPlayer = 1;
+
+        this.actionPredictorCallback = null;
+
+        //Create the list of possible moves
+        possibleMoves = GeneratePossibleMoves();
+
+    }
+    public FTPBoard(FTPBoard board)
+    {
+        CurrentPlayer = board.CurrentPlayer;
+        winner = board.Winner;
+        possibleMoves = new List<Move>(board.possibleMoves);
+        
+        this.actionPredictorCallback = actionPredictorCallback;
+        this.env = board.env;
+        this.econs = new List<float>(board.econs);
+    }
+    public FTPBoard(Func<Player,Dictionary<GameProperties.InvestmentTarget, int>> actionPredictorCallback, float env, List<float> econs): this()
+    {
+        this.actionPredictorCallback = actionPredictorCallback;
+        this.env = env;
+        this.econs = econs;
+    }
+    
+    /// Performs a move on this board state for the current player and returns the updated state.
+    public override Board MakeMove(Move move)
+    {
+        base.MakeMove(move);
+        
+
+    }
+
+    /// Gets a list of possible moves that can follow from this board state
+    public List<Move> GeneratePossibleMoves()
+    {
+        List<Move> moves = new List<Move>();
+        for (int i = 0; i < (GameGlobals.roundBudget + 1); i++)
+        {
+            moves.Add(new FTPMove(i));
+        }
+        
+        return moves;
+    }
+    
+    /// Gets a list of possible moves that can follow from this board state
+    public override List<Move> PossibleMoves()
+    {
+        return possibleMoves;
+    }
+
+    /// Performs a deep copy of the current board state and returns the copy
+    public override Board Duplicate()
+    {
+        return new FTPBoard(this);
+    }
+
+    /// Gives a rich text string representation of this board <para/>
+    /// The output string will have color tags that make the board easier to read
+    public override string ToRichString()
+    {
+        
+    }
+
+    /// Returns amount of players playing on this board <para/>
+    /// Can't have static polymorphism and a workaround would be less efficient for execution speed <para/>
+    /// Compromise is to have every instance contain the player count
+    protected override int PlayerCount()
+    {
+        
+    }
+
+    /// Determines if there is a winner or not for this board state and updates the winner integer accordingly
+    protected override void DetermineWinner()
+    {
+        //no winner, no chicken dinner
+    }
+
+    /// A more efficient method of determining if there is a winner <para/>
+    /// Saves time by using knowledge of the last move to remove unnessessary computation
+    protected override void DetermineWinner(Move move)
+    {
+        //no winner, no chicken dinner
+    }
+}
+
+
+
+
+
+
 public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
 {
     float pDisrupt;
     Dictionary<string, float> pWeights;
+    
+    
+    // big brain
+    private static TreeSearch<Node> mcts;
 
+    
     public CompetitiveCooperativeEmotionalAIPlayer(string type, InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name, float updateDelay, string fatimaRpcPath) :
        base(type, interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name, updateDelay, fatimaRpcPath)
     {
@@ -248,35 +399,57 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
         int j = 0;
         
         interactionModule.Speak("I'm feeling " + strongestEmotion.EmotionType);
-
-//        pDisrupt = pWeights[strongestEmotion.EmotionType] * ((strongestEmotion.Intensity + 10.0f) / 20.0f);
-
-//        pDisrupt = 1.0f - (rpc.Mood + 10.0f) / 20.0f; //positive rule: positive mood-> invest in env
-        pDisrupt = (rpc.Mood + 10.0f) / 20.0f; //negative rule: positive mood-> invest in econ
         
-        //bounded between 5 and 95%
-        if(pDisrupt > 0.95f)
+        float pMood = (rpc.Mood + 10.0f) / 20.0f; //negative rule: positive mood-> invest in econ
+
+        List<float> moneyValues = new List<float>();
+        foreach (Player player in GameGlobals.players)
         {
-            pDisrupt = 0.95f;
+            moneyValues.Add(player.GetMoney());
         }
-        if (pDisrupt < 0.05f)
+        FTPBoard currentState = new FTPBoard(PredictAction, GameGlobals.envState, moneyValues);
+        investmentIntentions = Analyse(currentState, (int) pMood * 50); 
+//        investmentIntentions[GameProperties.InvestmentTarget.ENVIRONMENT] = env;
+//        investmentIntentions[GameProperties.InvestmentTarget.ECONOMIC] = econ;
+    }
+
+    public Dictionary<GameProperties.InvestmentTarget, int> Analyse(FTPBoard currentState,
+        int simDepth)
+    {
+        // big brain time: call MCTS
+    
+        mcts = new TreeSearch<Node>(currentState); //only makes 1 sim per node and expands all
+        
+        for(int i=0; i<simDepth; i++)
         {
-            pDisrupt = 0.05f;
+            mcts.Step();
         }
 
-        int econ = 0;
+        Node bestNodeChoice = mcts.BestNodeChoice(mcts.Root);
+        Move investment = bestNodeChoice.GameBoard.LastMoveMade;
+        return new Dictionary<GameProperties.InvestmentTarget, int>()
+        {
+//            GameProperties.InvestmentTarget.ECONOMIC =  
+        };
+    }
+    
+    
+    public Dictionary<GameProperties.InvestmentTarget, int> PredictAction(Player player)
+    {
+        int env = 0;
         for (int i = 0; i < (GameGlobals.roundBudget); i++){
-            if (UnityEngine.Random.Range(0.0f, 1.0f) < pDisrupt)
+            if (UnityEngine.Random.Range(0.0f, 1.0f) < player.GetCoopPerc())
             {
-                econ++;
+                env++;
             }
         }
-        int env = GameGlobals.roundBudget - econ;
-    
-        investmentIntentions[GameProperties.InvestmentTarget.ENVIRONMENT] = env;
-        investmentIntentions[GameProperties.InvestmentTarget.ECONOMIC] = econ;
-
-        pDisrupt = 0.5f;
+        int econ = GameGlobals.roundBudget - env;
+        
+        Dictionary<GameProperties.InvestmentTarget, int> otherInvIntentions = 
+            new Dictionary<GameProperties.InvestmentTarget, int>();
+        otherInvIntentions[GameProperties.InvestmentTarget.ENVIRONMENT] = env;
+        otherInvIntentions[GameProperties.InvestmentTarget.ECONOMIC] = econ;
+        return otherInvIntentions;
     }
 
 
@@ -335,7 +508,8 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
 
         float state = this.GetMoney();
         float gsp = CalcGoalSuccessProbabilityInvestment(state, this.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ECONOMIC]);
-        
+//        float gsp = this.rpc.Mood; 
+            
         List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
         events.Add(RolePlayCharacter.EventHelper.PropertyChange("BudgetExecution(" + gsp.ToString("0.00", CultureInfo.InvariantCulture) + ")", this.id.ToString(), this.id.ToString()));
         Perceive(events);
@@ -348,6 +522,7 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
 
         float state = this.GetMoney();
         float gsp = CalcGoalSuccessProbabilityDecay(state);
+//        float gsp = this.rpc.Mood; 
 
         List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
         events.Add(RolePlayCharacter.EventHelper.PropertyChange("DecaySimulation(" + gsp.ToString("0.00", CultureInfo.InvariantCulture) + ")", this.id.ToString(), this.id.ToString()));
