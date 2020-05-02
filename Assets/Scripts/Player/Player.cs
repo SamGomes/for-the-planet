@@ -65,6 +65,9 @@ public class Player
 
     public Player(string type, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name)
     {
+
+        this.coopPerc = 0.5f;
+        
         gameManagerRef = GameGlobals.gameManager;
         this.id = id;
         this.name = name;

@@ -293,7 +293,7 @@ public class FTPBoard : Board
     {
         CurrentPlayer = board.CurrentPlayer;
         winner = board.Winner;
-        possibleMoves = new List<Move>(board.possibleMoves);
+        possibleMoves = GeneratePossibleMoves();
         
         this.maxGameRound = board.maxGameRound;
         this.actionPredictorCallback = board.actionPredictorCallback;
@@ -311,7 +311,9 @@ public class FTPBoard : Board
     /// Performs a move on this board state for the current player and returns the updated state.
     public override Board MakeMove(Move move)
     {
-        base.MakeMove(move);
+        DetermineWinner(move);
+//        possibleMoves.Remove(move);
+        
         FTPMove moveFTP = (FTPMove) move;
         int myInvestmentEnv = moveFTP.GetInvestmentEnv();
 
@@ -343,14 +345,12 @@ public class FTPBoard : Board
         estDecayEnv = (estDecayEnv*3.5f) / 100.0f;
         
         float estEnv = estGainEnv - estDecayEnv;
+        
+        econs = estEcons;
+        env = estEnv;
+        this.currGameRound = this.currGameRound + 1;
 
-        FTPBoard newBoard = (FTPBoard) this.Duplicate();
-        newBoard.econs = estEcons;
-        newBoard.env = estEnv;
-
-        newBoard.currGameRound = this.currGameRound + 1;
-
-        return newBoard;
+        return base.MakeMove(move);
     }
 
     /// Gets a list of possible moves that can follow from this board state
@@ -396,7 +396,11 @@ public class FTPBoard : Board
     protected override void DetermineWinner()
     {
         this.winner = -1;
-        if ((currGameRound == maxGameRound) && env > 0)
+        if (env < 0.05)
+        {
+            this.winner = 0;
+        }
+        else if (currGameRound >= maxGameRound)
         {
             float bestEcon = -1.0f;
             int bestPlayerId = 0;
@@ -427,8 +431,7 @@ public class FTPBoard : Board
     /// Saves time by using knowledge of the last move to remove unnessessary computation
     protected override void DetermineWinner(Move move)
     {
-        FTPBoard newBoard = (FTPBoard) MakeMove(move);
-        newBoard.DetermineWinner();
+        DetermineWinner();
     }
 }
 
@@ -482,7 +485,7 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
             moneyValues.Add(player.GetMoney());
         }
 
-        int numMctsSteps = (int) pMood * 50;
+        int numMctsSteps = 1 + (int)((1.0f + pMood/-20.0f)/2.0f * 49);
         FTPBoard currentState = new FTPBoard(20, PredictAction, GameGlobals.envState, moneyValues);
         investmentIntentions = Analyse(numMctsSteps, currentState); 
     }
