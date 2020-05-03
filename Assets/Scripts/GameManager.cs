@@ -287,8 +287,8 @@ public class GameManager : MonoBehaviour {
                 yield return new WaitForSeconds(10);
 
 
-                if ((GameGlobals.currGameRoundId == GameProperties.configurableProperties.maxNumRounds) && 
-                (GameGlobals.envState <= GameGlobals.envThreshold)) //environment exploded
+                if (((GameGlobals.currGameRoundId == GameProperties.configurableProperties.maxNumRounds) && 
+                (GameGlobals.envState <= GameGlobals.envThreshold)) || (GameGlobals.envState <= 0)) //environment exploded
                 {
                     GameGlobals.currGameState = GameProperties.GameState.LOSS;
                     GameGlobals.gameSceneManager.LoadEndScene();
@@ -634,7 +634,12 @@ public class GameManager : MonoBehaviour {
         //renew envState
         GameGlobals.envRenewperRound = (float)(GameGlobals.envState * GameGlobals.envRenew);
         GameGlobals.envState += GameGlobals.envRenewperRound;
-        GameGlobals.envStatePerRound.Add(Convert.ToInt32(GameGlobals.envState));
+        if (GameGlobals.envState<=0) {
+            GameGlobals.envStatePerRound.Add(0);
+        }
+        else{
+            GameGlobals.envStatePerRound.Add(Convert.ToInt32(GameGlobals.envState));
+        }
         StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState));
         
         /* Player take medianVote
