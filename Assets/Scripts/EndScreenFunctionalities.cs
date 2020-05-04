@@ -133,6 +133,7 @@ public class EndScreenFunctionalities : MonoBehaviour
                         newTableEntry.GetComponentsInChildren<Text>()[i + 1].text = "-";
                     }
                 }
+            newTableEntry.GetComponentsInChildren<Text>()[6].text = p.gains.ToString();
             }
             GameObject newDummyLineEntry = Object.Instantiate(tableEntryPrefab, environmentContributionsTableUI.transform);
             newDummyLineEntry.GetComponentsInChildren<Text>()[0].text = "";
@@ -141,10 +142,12 @@ public class EndScreenFunctionalities : MonoBehaviour
             newDummyLineEntry.GetComponentsInChildren<Text>()[3].text = "";
             newDummyLineEntry.GetComponentsInChildren<Text>()[4].text = "";
             newDummyLineEntry.GetComponentsInChildren<Text>()[5].text = "";
+            newDummyLineEntry.GetComponentsInChildren<Text>()[6].text = "";
 
-            GameObject environmentEntry = Object.Instantiate(tableEntryPrefab, environmentContributionsTableUI.transform);
+        GameObject environmentEntry = Object.Instantiate(tableEntryPrefab, environmentContributionsTableUI.transform);
             Text textGameObject = environmentEntry.GetComponentsInChildren<Text>()[0];
             textGameObject.text = "ENVIRONMENT";
+            environmentEntry.GetComponentsInChildren<Text>()[6].text = "";
             textGameObject.fontStyle = FontStyle.Bold;
             for (int i = 0; i < GameProperties.configurableProperties.maxNumRounds; i++)
             {

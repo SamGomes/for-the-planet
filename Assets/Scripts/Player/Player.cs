@@ -25,6 +25,7 @@ public class Player
     protected int roundBudget;
     protected int unallocatedBudget;
     protected float money;
+    public int gains;
 
     protected Dictionary<GameProperties.InvestmentTarget, int> currRoundInvestment;
     protected Dictionary<GameProperties.InvestmentTarget, int> investmentHistory;
@@ -42,8 +43,9 @@ public class Player
     protected GameObject playerSelfDisablerUI;
     protected Button playerActionButtonUI;
 
-    private Text nameTextUI;
+    private Text   nameTextUI;
     private Slider moneySliderUI;
+    private Text   moneyTextUI;
 
     private GameObject budgetAllocationScreenUI;
     private GameObject displayHistoryScreenUI;
@@ -71,6 +73,7 @@ public class Player
         this.warningScreenRef = warningScreenRef;
 
         money = 0.0f;
+        this.gains = 0;
         this.type = type;
         this.roundBudget = GameGlobals.roundBudget;
 
@@ -135,7 +138,7 @@ public class Player
 
         nameTextUI = playerUI.transform.Find("nameText").gameObject.GetComponent<Text>();
         moneySliderUI = playerUI.transform.Find("playerStateSection/InvestmentUI/Slider").gameObject.GetComponent<Slider>();
-
+        moneyTextUI = playerUI.transform.Find("playerStateSection/InvestmentUI/GainsText").gameObject.GetComponent<Text>();
 
         spendTokenInEconomicGrowthButtonUI = playerUI.transform.Find("playerActionSection/budgetAllocationUI/tokenSelection/alocateEconomicGrowth/Button").gameObject.GetComponent<Button>();
         spendTokenInEconomicGrowthButtonUI.onClick.AddListener(SpendTokenInEconomicGrowth);
@@ -295,6 +298,8 @@ public class Player
 
         int currentInvestment = currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT];
         environmentInvestmentPerRound.Add(currentInvestment);
+        this.gains += currentInvestment;
+        moneyTextUI.text = "Gains: " + gains.ToString();
         budgetAllocationScreenUI.SetActive(false);
         displayHistoryScreenUI.SetActive(false);
         budgetExecutionScreenUI.SetActive(false);
