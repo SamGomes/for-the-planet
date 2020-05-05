@@ -1,14 +1,15 @@
 
-# install.packages("ggplot2", repos = 'http://cran.us.r-project.org')
-# install.packages("multcomp", repos = 'http://cran.us.r-project.org')
-# install.packages("nlme", repos = 'http://cran.us.r-project.org')
-# install.packages("pastecs", repos = 'http://cran.us.r-project.org')
-# install.packages("reshape", repos = 'http://cran.us.r-project.org')
-# install.packages("tidyverse", repos = 'http://cran.us.r-project.org')
-# install.packages("sjPlot", repos = 'http://cran.us.r-project.org')
-# install.packages("sjmisc", repos = 'http://cran.us.r-project.org')
-# install.packages("jsonlite", repos = 'http://cran.rstudio.com/')
-# install.packages("stringr", repos = 'http://cran.rstudio.com/')
+# install.packages("multcomp", dep = TRUE, repos = 'http://cran.us.r-project.org')
+# install.packages("nlme", dep = TRUE, repos = 'http://cran.us.r-project.org')
+# install.packages("pastecs", dep = TRUE, repos = 'http://cran.us.r-project.org')
+# install.packages("reshape", dep = TRUE, repos = 'http://cran.us.r-project.org')
+# install.packages("tidyverse", dep = TRUE, repos = 'http://cran.us.r-project.org')
+# install.packages("sjPlot", dep = TRUE, repos = 'http://cran.us.r-project.org')
+# install.packages("sjmisc", dep = TRUE, repos = 'http://cran.us.r-project.org')
+# install.packages("jsonlite", dep = TRUE, repos = 'http://cran.rstudio.com/')
+# install.packages("stringr", dep = TRUE, repos = 'http://cran.rstudio.com/')
+# install.packages("ggplot2", dep=TRUE, repos = "http://cran.us.r-project.org")
+
 
 suppressMessages(library(ggplot2))
 suppressMessages(library(multcomp))
@@ -45,7 +46,7 @@ for(j in  seq(from=1, to=length(playerTypes), by=1)) {
 	}
 }
 totalGameResults <- data.frame(roundsNumL,num_played_roundsL,playerTypesL)
-plot <- ggplot(totalGameResults, aes(x = totalGameResults$roundsNumL , y=totalGameResults$num_played_roundsL)) + geom_line(stat = "summary", fun.y = "mean")  + facet_grid(playerTypesL ~ .)
+plot <- ggplot(totalGameResults, aes(x = totalGameResults$roundsNumL , y=totalGameResults$num_played_roundsL, color=playerTypesL )) + geom_line(stat = "summary", fun.y = "mean")#  + facet_grid(playerTypesL ~ .)
 plot <- plot + ylim(0, 1.0)
 plot <- plot + labs(x = "num_played_rounds", y = "Survived Games (%)") + theme(axis.text=element_text(size = 15), axis.title=element_text(size = 15, face = "bold")) #+ scale_x_discrete(labels = as.character(c("Constructive\nCollectivist","Constructive\nIndividualist","Disruptive\nCollectivist","Disruptive\nIndividualistic","Random")))  
 suppressMessages(ggsave(sprintf("plots/OutcomeFrequencies.png"), height=6, width=10, units="in", dpi=500))
@@ -86,9 +87,9 @@ suppressMessages(ggsave(sprintf("plots/EconState.png"), height=6, width=10, unit
 
 # plot mood
 moodlog <- gameresultslog[!is.na(gameresultslog$mood),]
-plot <- ggplot(moodlog, aes(x = moodlog$roundId, y=moodlog$mood, color = "")) + facet_grid(playerType ~ .)
+plot <- ggplot(moodlog, aes(x = moodlog$roundId, y=moodlog$mood, color=playerType)) #+ facet_grid(playerType ~ .)
 plot <- plot + geom_line(stat = "summary", fun.y = "mean")
-plot <- plot + geom_point(aes(x = moodlog$roundId, y=moodlog$mood), stat = "summary", fun.y = "mean") 
+plot <- plot + geom_point(aes(x = moodlog$roundId, y=moodlog$mood, color=playerType ), stat = "summary", fun.y = "mean") 
 plot <- plot + labs(x = "Curr Round Id", y = "Mood", color="Player Type") + theme(axis.text = element_text(size = 15), axis.title = element_text(size = 15, face = "bold")) #+ scale_group_discrete(labels = as.character(c("Constructive\nCollectivist","Constructive\nIndividualist","Disruptive\nCollectivist","Disruptive\nIndividualistic","Random")))  
 plot <- plot + ylim(-10.0, 10.0)
 suppressMessages(ggsave(sprintf("plots/Mood.png"), height=6, width=10, units="in", dpi=500))

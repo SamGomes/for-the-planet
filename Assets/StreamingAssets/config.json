@@ -2,7 +2,7 @@
     "maxNumRounds": 50,
 
     "isSimulation": true,
-    "numGamesToPlay": 1,
+    "numGamesToPlay": 35,
 
     "roundBudget": 5,
     "environmentDecayBudget": [7,8],

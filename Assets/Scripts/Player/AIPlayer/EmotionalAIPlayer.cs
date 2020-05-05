@@ -4,11 +4,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Security.Policy;
 using System.Text.RegularExpressions;
 using UnityEngine;
 using Utilities;
 using MCTS.Core;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
 using UnityEngine.TestTools;
 
 //Using the MCTS implementation originally provided by @Mikeywalsh
@@ -286,6 +286,7 @@ public class FTPBoard : Board
 
         this.actionPredictorCallback = null;
         this.maxGameRound = 0;
+        this.currGameRound = 0;
         possibleMoves = GeneratePossibleMoves();
 
     }
@@ -296,6 +297,7 @@ public class FTPBoard : Board
         possibleMoves = GeneratePossibleMoves();
         
         this.maxGameRound = board.maxGameRound;
+        this.currGameRound = board.currGameRound;
         this.actionPredictorCallback = board.actionPredictorCallback;
         this.env = board.env;
         this.econs = new List<float>(board.econs);
@@ -303,6 +305,7 @@ public class FTPBoard : Board
     public FTPBoard(int maxGameRound, Func<Player, int> actionPredictorCallback, float env, List<float> econs): this()
     {
         this.maxGameRound = maxGameRound;
+        this.currGameRound = 0;
         this.actionPredictorCallback = actionPredictorCallback;
         this.env = env;
         this.econs = econs;
@@ -312,7 +315,6 @@ public class FTPBoard : Board
     public override Board MakeMove(Move move)
     {
         DetermineWinner(move);
-//        possibleMoves.Remove(move);
         
         FTPMove moveFTP = (FTPMove) move;
         int myInvestmentEnv = moveFTP.GetInvestmentEnv();
@@ -485,7 +487,7 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
             moneyValues.Add(player.GetMoney());
         }
 
-        int numMctsSteps = 1 + (int)((1.0f + pMood/-20.0f)/2.0f * 49);
+        int numMctsSteps = 1 + (int)((1.0f + pMood/-20.0f)/2.0f * 9);
         FTPBoard currentState = new FTPBoard(20, PredictAction, GameGlobals.envState, moneyValues);
         investmentIntentions = Analyse(numMctsSteps, currentState); 
     }
@@ -495,8 +497,8 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
         // big brain time: call MCTS
     
         mcts = new TreeSearch<Node>(currentState); //only makes 1 sim per node and expands all
-        
-        for(int i=0; i<numMctsSteps; i++)
+
+        for (int i = 0; i < (Math.Pow(6, numMctsSteps)); i++)
         {
             mcts.Step();
         }
@@ -524,82 +526,14 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
     }
 
 
-    protected float CalcGoalSuccessProbabilityInvestment(float state, int numDice)
-    {
-        float gsp = 0.0f;
-        float threshold = 0.6f; //property
-
-        float maxInvest = 6 * numDice / 100.0f;
-        float avgInvest = 3 * numDice / 100.0f;
-        float minInvest = 1 * numDice / 100.0f;
-
-        if (state + minInvest >= threshold)
-        {
-            gsp = 1;
-        }
-        else if (state + avgInvest >= threshold)
-        {
-            gsp = 0.75f;
-        }
-        else if (state + maxInvest >= threshold)
-        {
-            gsp = 0.25f;
-        }
-        return gsp;
-    }
-
-    protected float CalcGoalSuccessProbabilityDecay(float state)
-    {
-        float gsp = 0.0f;
-        float threshold = 0.6f;
-
-        float numDecayDice = (GameGlobals.environmentDecayBudget[0] + GameGlobals.environmentDecayBudget[1]) / 2.0f;
-        float maxDecay = 6 * numDecayDice / 100.0f;
-        float avgDecay = 3 * numDecayDice / 100.0f;
-        float minDecay = 1 * numDecayDice / 100.0f;
-
-        if (state - maxDecay >= threshold)
-        {
-            gsp = 1;
-        }
-        else if (state - avgDecay >= threshold)
-        {
-            gsp = 0.75f;
-        }
-        else if (state - minDecay >= threshold)
-        {
-            gsp = 0.25f;
-        }
-        return gsp;
-    }
-
     public override IEnumerator AutoBudgetExecution()
     {
         yield return base.AutoBudgetExecution();
-
-        float state = this.GetMoney();
-        float gsp = CalcGoalSuccessProbabilityInvestment(state, this.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ECONOMIC]);
-//        float gsp = this.rpc.Mood; 
-            
-        List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
-        events.Add(RolePlayCharacter.EventHelper.PropertyChange("BudgetExecution(" + gsp.ToString("0.00", CultureInfo.InvariantCulture) + ")", this.id.ToString(), this.id.ToString()));
-        Perceive(events);
-        UpdateStep();
     }
 
     public override IEnumerator AutoInvestmentExecution()
     {
         yield return base.AutoInvestmentExecution();
-
-        float state = this.GetMoney();
-        float gsp = CalcGoalSuccessProbabilityDecay(state);
-//        float gsp = this.rpc.Mood; 
-
-        List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
-        events.Add(RolePlayCharacter.EventHelper.PropertyChange("DecaySimulation(" + gsp.ToString("0.00", CultureInfo.InvariantCulture) + ")", this.id.ToString(), this.id.ToString()));
-        Perceive(events);
-        UpdateStep();
-        
     }
 
 }
