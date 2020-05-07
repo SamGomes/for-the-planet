@@ -46,6 +46,7 @@ public class Player
     private Text   nameTextUI;
     private Slider moneySliderUI;
     private Text   moneyTextUI;
+    private Image faceUI;
 
     private GameObject budgetAllocationScreenUI;
     private GameObject displayHistoryScreenUI;
@@ -139,6 +140,7 @@ public class Player
         nameTextUI = playerUI.transform.Find("nameText").gameObject.GetComponent<Text>();
         moneySliderUI = playerUI.transform.Find("playerStateSection/InvestmentUI/Slider").gameObject.GetComponent<Slider>();
         moneyTextUI = playerUI.transform.Find("playerStateSection/InvestmentUI/GainsText").gameObject.GetComponent<Text>();
+        faceUI = playerUI.transform.Find("playerFace").gameObject.GetComponent<Image>();
 
         spendTokenInEconomicGrowthButtonUI = playerUI.transform.Find("playerActionSection/budgetAllocationUI/tokenSelection/alocateEconomicGrowth/Button").gameObject.GetComponent<Button>();
         spendTokenInEconomicGrowthButtonUI.onClick.AddListener(SpendTokenInEconomicGrowth);
@@ -164,8 +166,8 @@ public class Player
         dynamicSlider = new DynamicSlider(this.playerUI.transform.Find("playerStateSection/InvestmentUI/Slider").gameObject, true);
 
         //position UI on canvas
-        playerUI.transform.Translate(new Vector3(0, -GameGlobals.players.Count * (0.2f * Screen.height)*0.9f, 0));
-
+        //playerUI.transform.Translate(new Vector3(Screen.width/3, -GameGlobals.players.Count * (0.2f * Screen.height)*0.9f, 0));
+        playerUI.transform.Translate(GameGlobals.players.Count * (0.4f * Screen.width) * 0.9f, -Screen.height/5, 0);
         ResetPlayerUI();
     }
 
@@ -201,6 +203,11 @@ public class Player
     public void SetName(string _name)
     {
         this.name = _name;
+    }
+
+    public void SetFace(Sprite sprite)
+    {
+        this.faceUI.sprite = sprite;
     }
     public void UpdateNameUI()
     {

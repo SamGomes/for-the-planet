@@ -23,7 +23,9 @@ public class GameManager : MonoBehaviour {
 
 
     public GameObject newRoundScreen;
+    public GameObject tutorialScreen;
     public Button advanceRoundButton;
+    public Button advanceTutorialButton;
     public GameObject GenerationText;
     public GameObject GenerationNumberText;
     public GameObject simulateInvestmentScreen;
@@ -55,6 +57,9 @@ public class GameManager : MonoBehaviour {
 
     private Text GenerationTextUI;
     private Text GenerationNumberTextUI;
+    private Image GenPhotoUI;
+
+    private Sprite firstGenPhoto;
 
     public int InterruptGame()
     {
@@ -108,14 +113,24 @@ public class GameManager : MonoBehaviour {
         GameGlobals.generation = 1; // First Generation
         GameGlobals.envStatePerRound = new List<int>();
 
+
+        //Init Gen UI
+
+        tutorialScreen = GameObject.Find("TutorialScreen");
+        advanceTutorialButton = tutorialScreen.transform.Find("advanceTutorialButton").gameObject.GetComponent<Button>();
+
         GenerationText = GameObject.Find("GenerationText");
         GenerationTextUI = GenerationText.transform.Find("genText").gameObject.GetComponent<Text>();
-        GenerationTextUI.text = "Hello!\n" +"You belong to the First Generation. Take from Common-Pool but if too much" +
+        GenerationTextUI.text = "Hello!\n" +"You belong to the First Generation.\n" + "Take from Common-Pool but if you take too much " +
             "the planet will die";
 
         GenerationNumberText = GameObject.Find("GenerationNumber");
         GenerationNumberTextUI = GenerationNumberText.transform.Find("genNumText").gameObject.GetComponent<Text>();
         GenerationNumberTextUI.text = "Generation: "+ GameGlobals.generation.ToString();
+        GenPhotoUI = GenerationNumberText.transform.Find("GenPhoto").gameObject.GetComponent<Image>();
+
+        firstGenPhoto = Resources.Load<Sprite>("Textures/Generation/1stgen_icon");
+        GenPhotoUI.sprite = firstGenPhoto;
 
         int numPlayers = GameGlobals.players.Count;
         
@@ -130,6 +145,7 @@ public class GameManager : MonoBehaviour {
                 StartCoroutine(currPlayer.SetMoney(0.1f));
             }
 
+            tutorialScreen.SetActive(false);
             newRoundScreen.SetActive(false);
             GenerationText.SetActive(false);
             StartGameRoundForAllPlayers();
@@ -143,11 +159,17 @@ public class GameManager : MonoBehaviour {
                 currPlayer.ReceiveGameManager(this);
                 StartCoroutine(currPlayer.SetMoney(0.1f));
 
+                
+                
+
                 //Setup warnings
                 currPlayer.GetWarningScreenRef().AddOnShow(InterruptGame);
                 currPlayer.GetWarningScreenRef().AddOnHide(ContinueGame);
             }
-
+            //Set Players faces
+            GameGlobals.players[0].SetFace(Resources.Load<Sprite>("Textures/Generation/player_icon"));
+            GameGlobals.players[1].SetFace(Resources.Load<Sprite>("Textures/Generation/Girl_icon"));
+            GameGlobals.players[2].SetFace(Resources.Load<Sprite>("Textures/Generation/man_icon"));
 
             envDynamicSlider = new DynamicSlider(environmentSliderSceneElement.gameObject, true);
             StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState));
@@ -161,6 +183,13 @@ public class GameManager : MonoBehaviour {
                 newRoundScreen.SetActive(false);
                 GenerationText.SetActive(false);
                 StartGameRoundForAllPlayers();
+            });
+
+            advanceTutorialButton.onClick.AddListener(delegate ()
+            {
+                tutorialScreen.SetActive(false);
+                GenerationText.SetActive(true);
+                newRoundScreen.SetActive(true);
             });
 
 
@@ -305,6 +334,7 @@ public class GameManager : MonoBehaviour {
                     newRoundScreen.SetActive(true);
                     GameGlobals.generation += 1;
                     GenerationNumberTextUI.text = "Generation: " + GameGlobals.generation.ToString();
+                    ChangePhotoinGenPhoto(GameGlobals.generation);
                     GenerationText.SetActive(false);
             }
            
@@ -428,8 +458,7 @@ public class GameManager : MonoBehaviour {
                 }
                 else
                 {
-                    GenerationText.SetActive(true);
-                    newRoundScreen.SetActive(true);
+                    tutorialScreen.SetActive(true);
                 }
             }
         }
@@ -621,6 +650,29 @@ public class GameManager : MonoBehaviour {
             currPlayer.GetPlayerDisablerUI().SetActive(false);
         }
         return null;
+    }
+
+
+    private void ChangePhotoinGenPhoto(int genNumber)
+    {
+        switch (genNumber)
+        {
+            case 1:
+                GenPhotoUI.sprite = firstGenPhoto;
+                break;
+            case 2:
+                GenPhotoUI.sprite = Resources.Load<Sprite>("Textures/Generation/2ndgen_icon");
+                break;
+            case 3:
+                GenPhotoUI.sprite = Resources.Load<Sprite>("Textures/Generation/3rdgen_icon");
+                break;
+            case 4:
+                GenPhotoUI.sprite = Resources.Load<Sprite>("Textures/Generation/4thgen_icon");
+                break;
+            case 5:
+                GenPhotoUI.sprite = Resources.Load<Sprite>("Textures/Generation/5thgen_icon");
+                break;
+        }
     }
 
     private void TakeMoneyFromCommonPot()
