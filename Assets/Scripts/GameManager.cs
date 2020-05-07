@@ -122,7 +122,7 @@ public class GameManager : MonoBehaviour {
         GenerationText = GameObject.Find("GenerationText");
         GenerationTextUI = GenerationText.transform.Find("genText").gameObject.GetComponent<Text>();
         GenerationTextUI.text = "Hello!\n" +"You belong to the First Generation.\n" + "Take from Common-Pool but if you take too much " +
-            "the planet will die";
+            "there will be no next generation.";
 
         GenerationNumberText = GameObject.Find("GenerationNumber");
         GenerationNumberTextUI = GenerationNumberText.transform.Find("genNumText").gameObject.GetComponent<Text>();
