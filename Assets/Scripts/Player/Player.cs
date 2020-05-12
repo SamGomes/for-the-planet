@@ -265,7 +265,6 @@ public class Player
             playerMarkerUI.SetActive(false);
             playerDisablerUI.SetActive(false);
         }
-
         SendHistoryDisplayPhaseResponse();
     }
     public virtual void BudgetExecutionPhaseRequest()

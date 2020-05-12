@@ -35,6 +35,7 @@ public class StartScreenFunctionalities : MonoBehaviour {
     public GameObject UILoadExternalConfigPrefab;
 
     private Button UIStartGameButton;
+    private Button UISkipTutorialButton;
     public GameObject UIGameCodeDisplayPrefab;
     public GameObject monoBehaviourDummyPrefab;
 
@@ -115,6 +116,7 @@ GameGlobals.gameLogManager = new DebugLogManager();
         if (!GameGlobals.isSimulation)
         {
             this.UIStartGameButton.interactable = true;
+            this.UISkipTutorialButton.interactable = true;
         }
 
         
@@ -185,6 +187,15 @@ GameGlobals.gameLogManager = new DebugLogManager();
         GameGlobals.gameSceneManager.LoadPlayersSetupScene();
         InputField nameInputField = GameObject.Find("Canvas/StartScreen/nameInput").gameObject.GetComponent<InputField>();
         GameGlobals.participantName = nameInputField.text;
+        GameGlobals.skipTutorial = false;
+    }
+
+    private void SkipTutorial()
+    {
+        GameGlobals.gameSceneManager.LoadPlayersSetupScene();
+        InputField nameInputField = GameObject.Find("Canvas/StartScreen/nameInput").gameObject.GetComponent<InputField>();
+        GameGlobals.participantName = nameInputField.text;
+        GameGlobals.skipTutorial = true;
     }
 
     public void InitGame()
@@ -195,6 +206,8 @@ GameGlobals.gameLogManager = new DebugLogManager();
             //GameGlobals.audioManager.PlayInfinitClip("Audio/theme/themeIntro", "Audio/theme/themeLoop");
             if (UIStartGameButton != null)
                 UIStartGameButton.onClick.AddListener(delegate() { StartGame(); });
+            if (UISkipTutorialButton != null)
+                UISkipTutorialButton.onClick.AddListener(delegate () { SkipTutorial(); });
         }
 
         //thanks WebGL, because of you I've got to init a game global to init the rest of the game globals!
@@ -221,6 +234,8 @@ GameGlobals.gameLogManager = new DebugLogManager();
             this.UIStartGameButton =
                 GameObject.Find("Canvas/StartScreen/startGameButton").gameObject.GetComponent<Button>();
             this.UIStartGameButton.interactable = false;
+            this.UISkipTutorialButton = GameObject.Find("Canvas/StartScreen/skipTutorialButton").gameObject.GetComponent<Button>();
+            this.UISkipTutorialButton.interactable = false;
         }
 
         InitGame();
