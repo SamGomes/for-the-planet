@@ -20,15 +20,15 @@
                         "interactionType": "NONE"
                     },
                     {
-                        "name": "Rita",
+                        "name": "Rita17",
                         "fatimaRpcPath": "NONE",
-                        "playerType": "AI-RANDOM",
+                        "playerType": "AI-FAIR",
                         "interactionType": "NONE"
                     },
                     {
-                        "name": "João",
+                        "name": "Greta2003",
                         "fatimaRpcPath": "NONE",
-                        "playerType": "AI-RANDOM",
+                        "playerType": "AI-FAIR",
                         "interactionType": "NONE"
                     }
                 ],
