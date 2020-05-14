@@ -22,6 +22,7 @@ public class EndScreenFunctionalities : MonoBehaviour
     public GameObject lossOverlayUI;
 
     public GameObject mainScene;
+    public GameObject endScreen;
 
     public GameObject victoryBackgroundUI;
     public GameObject lossBackgroundUI;
@@ -44,6 +45,7 @@ public class EndScreenFunctionalities : MonoBehaviour
                     Destroy(root);
                 }
             }
+            GameGlobals.gameSceneManager.LoadStartScene();
         }
         else
         {
@@ -59,15 +61,21 @@ public class EndScreenFunctionalities : MonoBehaviour
 
     private void LoadEndScreenUIElements()
     {
+        endScreen = GameObject.Find("EndScreen");
         mainScene.SetActive(true);
 
             infoPoppupNeutralRef = new PopupScreenFunctionalities(false, null, null, poppupPrefab, mainScene, this.GetComponent<MonoBehaviourFunctionalities>(), Resources.Load<Sprite>("Textures/UI/Icons/Info"), new Color(0.9f, 0.9f, 0.9f));
+            Button UIRestartGameButton = endScreen.transform.Find("restartGameButton").gameObject.GetComponent<Button>();
             Text UIRestartGameButtonText = UIRestartGameButton.GetComponentInChildren<Text>();
+            UIRestartGameButton.gameObject.SetActive(false);
+            UIRestartGameButton.interactable = false;
+            //Button UIEndGameButton = mainScreen.transform.Find("endGameButton").gameObject.GetComponent<Button>();
+
             if (GameGlobals.currGameId >= GameProperties.configurableProperties.numGamesToPlay)
             {
                 infoPoppupNeutralRef.DisplayPoppup("You reached the end of the second game. Please write down your score, as well as the following gamecode, and fill the second questionnaire to finish the experiment.");
 
-                UIEndGameButton.gameObject.SetActive(false);
+                /*UIEndGameButton.gameObject.SetActive(false);
                 UIEndGameButton.interactable = false;
                 UIRestartGameButton.gameObject.SetActive(false);
                 UIRestartGameButton.interactable = false;
@@ -89,6 +97,10 @@ public class EndScreenFunctionalities : MonoBehaviour
             UIRestartGameButton.onClick.AddListener(delegate () {
                 RestartGame();
             });
+
+            /*UIEndGameButton.onClick.AddListener(delegate () {
+                //Do nothing
+            });*/
         }
     }
 

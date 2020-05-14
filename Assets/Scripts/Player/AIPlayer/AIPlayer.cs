@@ -212,6 +212,46 @@ public class AIPlayerDefector : AIPlayer
     }
 }
 
+public class AIPlayerFair : AIPlayer
+{
+    public AIPlayerFair(string type, InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
+        base(type, interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name)
+    { }
+
+    public override IEnumerator AutoBudgetAllocation()
+    {
+
+        int environmentInvestment = GameGlobals.roundBudget / 2 + UnityEngine.Random.Range(-1, 1);
+        int economyInvestment = GameGlobals.roundBudget - environmentInvestment;
+
+        yield return InvestInEnvironment(environmentInvestment);
+        yield return InvestInEconomy(economyInvestment);
+
+        yield return EndBudgetAllocationPhase();
+    }
+
+}
+
+public class AIPlayerUltraFair : AIPlayer
+{
+    public AIPlayerUltraFair(string type, InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
+        base(type, interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name)
+    { }
+
+    public override IEnumerator AutoBudgetAllocation()
+    {
+
+        int environmentInvestment = UnityEngine.Random.Range(0, 2);
+        int economyInvestment = GameGlobals.roundBudget - environmentInvestment;
+
+        yield return InvestInEnvironment(environmentInvestment);
+        yield return InvestInEconomy(economyInvestment);
+
+        yield return EndBudgetAllocationPhase();
+    }
+
+}
+
 public class AIPlayerBalancedCooperator : AIPlayer
 {
     public AIPlayerBalancedCooperator(string type, InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :

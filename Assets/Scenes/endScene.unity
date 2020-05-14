@@ -964,7 +964,7 @@ RectTransform:
   m_LocalScale: {x: 1.1995847, y: 1.0196558, z: 1.1995851}
   m_Children: []
   m_Father: {fileID: 1482099983}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -1801,6 +1801,7 @@ RectTransform:
   - {fileID: 58061073}
   - {fileID: 786403145}
   - {fileID: 1740423390}
+  - {fileID: 1876273208}
   - {fileID: 1482099983}
   m_Father: {fileID: 748826611}
   m_RootOrder: 0
@@ -1834,6 +1835,7 @@ MonoBehaviour:
   victoryOverlayUI: {fileID: 1740423389}
   lossOverlayUI: {fileID: 786403144}
   mainScene: {fileID: 1482099982}
+  endScreen: {fileID: 0}
   victoryBackgroundUI: {fileID: 2051623093}
   lossBackgroundUI: {fileID: 58061072}
 --- !u!1 &675763395
@@ -2737,11 +2739,11 @@ RectTransform:
   m_Children:
   - {fileID: 172480409}
   m_Father: {fileID: 1482099983}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0.763}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 219, y: -270}
+  m_AnchoredPosition: {x: 254, y: -257}
   m_SizeDelta: {x: 271, y: 87.6}
   m_Pivot: {x: 0.50000006, y: 0.5}
 --- !u!95 &902754775
@@ -2801,7 +2803,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Highlighted
     m_DisabledTrigger: Disabled
-  m_Interactable: 0
+  m_Interactable: 1
   m_TargetGraphic: {fileID: 902754777}
   m_OnClick:
     m_PersistentCalls:
@@ -3117,7 +3119,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Ready for experiment game
+  m_Text: Restart
 --- !u!222 &935567650
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4280,11 +4282,10 @@ RectTransform:
   - {fileID: 1140918703}
   - {fileID: 1243252343}
   - {fileID: 2113520797}
-  - {fileID: 1876273208}
   - {fileID: 902754774}
   - {fileID: 404544876}
   m_Father: {fileID: 622632826}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -4808,7 +4809,7 @@ GameObject:
   - component: {fileID: 1876273209}
   - component: {fileID: 1876273212}
   m_Layer: 5
-  m_Name: startGameButton
+  m_Name: restartGameButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4823,15 +4824,15 @@ RectTransform:
   m_GameObject: {fileID: 1876273207}
   m_LocalRotation: {x: -0, y: -0, z: 0.006659344, w: 0.9999778}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.4658849, y: 1.4658842, z: 1.4658843}
+  m_LocalScale: {x: 1.7989933, y: 1.7989922, z: 1.7989929}
   m_Children:
   - {fileID: 935567648}
-  m_Father: {fileID: 1482099983}
-  m_RootOrder: 3
+  m_Father: {fileID: 622632826}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0.763}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 220.59999, y: -268.19998}
+  m_AnchoredPosition: {x: 3, y: -337}
   m_SizeDelta: {x: 271, y: 87.6}
   m_Pivot: {x: 0.50000006, y: 0.5}
 --- !u!114 &1876273209
@@ -4852,7 +4853,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 0
   m_Colors:
     m_NormalColor: {r: 0.8773585, g: 0.8773585, b: 0.8773585, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -4922,7 +4923,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1876273207}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 2ad826d4bb7e4e04a968bf7dd9ec68fd, type: 2}
   m_CullingMode: 0
@@ -5325,7 +5326,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 30}
   m_SizeDelta: {x: 1000, y: 300}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2113520798
