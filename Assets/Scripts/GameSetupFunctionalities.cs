@@ -100,6 +100,10 @@ public class GameSetupFunctionalities : MonoBehaviour {
                 case "AI-BALANCED-DEFECTOR":
                     GameGlobals.players.Add(new AIPlayerBalancedDefector(currParam.playerType, chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
                     break;
+                
+                case "AI-MCTS":
+                    GameGlobals.players.Add(new AIMCTSPlayer(currParam.playerType, chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
+                    break;
 
                 default:
                     isErrorEncountered = true;

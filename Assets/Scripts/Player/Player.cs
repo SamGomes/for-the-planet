@@ -249,9 +249,9 @@ public class Player
             playerDisablerUI.SetActive(false);
         }
 
-        coopPerc = (float) investmentHistory[GameProperties.InvestmentTarget.ENVIRONMENT] /
+        coopPerc = 0.5f*coopPerc + 0.5f*((float) investmentHistory[GameProperties.InvestmentTarget.ENVIRONMENT] /
                    (float) (investmentHistory[GameProperties.InvestmentTarget.ENVIRONMENT] +
-                            investmentHistory[GameProperties.InvestmentTarget.ENVIRONMENT]);
+                            investmentHistory[GameProperties.InvestmentTarget.ENVIRONMENT]));
         
         SendHistoryDisplayPhaseResponse();
     }

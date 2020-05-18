@@ -334,6 +334,7 @@ public class GameManager : MonoBehaviour {
                     {"envState", GameGlobals.envState.ToString()},
                     
                     {"playerId", player.GetId().ToString()},
+                    {"playerName", player.GetName()},
                     {"playerType", player.GetPlayerType()},
                     
                     {"playerInvestEcon", player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ECONOMIC].ToString()},

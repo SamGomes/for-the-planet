@@ -8,8 +8,6 @@ using System.Text.RegularExpressions;
 using UnityEngine;
 using Utilities;
 using MCTS.Core;
-using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
-using UnityEngine.TestTools;
 
 //Using the MCTS implementation originally provided by @Mikeywalsh
 
@@ -302,8 +300,9 @@ public class FTPBoard : Board
         this.env = board.env;
         this.econs = new List<float>(board.econs);
     }
-    public FTPBoard(int maxGameRound, Func<Player, int> actionPredictorCallback, float env, List<float> econs): this()
+    public FTPBoard(int id, int maxGameRound, Func<Player, int> actionPredictorCallback, float env, List<float> econs): this()
     {
+        this.CurrentPlayer = id;
         this.maxGameRound = maxGameRound;
         this.currGameRound = 0;
         this.actionPredictorCallback = actionPredictorCallback;
@@ -330,21 +329,20 @@ public class FTPBoard : Board
             if (player.GetId() == CurrentPlayer)
             {
                 estEnvDice += myInvestmentEnv;
-                estGainEcon =((GameGlobals.roundBudget - myInvestmentEnv)*3.5f)/ 100.0f;
+                estGainEcon = ((GameGlobals.roundBudget - myInvestmentEnv)*3.5f)/ 100.0f;
             }
             else
             { 
                 int opponentEnvDice = actionPredictorCallback(player);
                 estEnvDice += opponentEnvDice;
-                estGainEcon =((GameGlobals.roundBudget - opponentEnvDice)*3.5f)/ 100.0f;
-
+                estGainEcon = ((GameGlobals.roundBudget - opponentEnvDice)*3.5f)/ 100.0f;
             }
             estEcons.Add(estGainEcon - estDecayEcon);
         }
 
         float estGainEnv = (estEnvDice * 3.5f) / 100.0f;
         float estDecayEnv = (GameGlobals.environmentDecayBudget[0] + GameGlobals.environmentDecayBudget[1]) / 2.0f;
-        estDecayEnv = (estDecayEnv*3.5f) / 100.0f;
+        estDecayEnv = (estDecayEnv * 3.5f) / 100.0f;
         
         float estEnv = estGainEnv - estDecayEnv;
         
@@ -400,7 +398,7 @@ public class FTPBoard : Board
         this.winner = -1;
         if (env < 0.05)
         {
-            this.winner = 0;
+            this.winner = 5;
         }
         else if (currGameRound >= maxGameRound)
         {
@@ -450,7 +448,6 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
     
     // big brain
     private static TreeSearch<Node> mcts;
-
     
     public CompetitiveCooperativeEmotionalAIPlayer(string type, InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name, float updateDelay, string fatimaRpcPath) :
        base(type, interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name, updateDelay, fatimaRpcPath)
@@ -487,15 +484,14 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
             moneyValues.Add(player.GetMoney());
         }
 
-        int numMctsSteps = 1 + (int)((1.0f + pMood/-20.0f)/2.0f * 9);
-        FTPBoard currentState = new FTPBoard(20, PredictAction, GameGlobals.envState, moneyValues);
+        int numMctsSteps = 1 + (int)((1.0f + pMood/-20.0f)/2.0f * 4);
+        FTPBoard currentState = new FTPBoard(this.id + 1, GameProperties.configurableProperties.maxNumRounds, PredictAction, GameGlobals.envState, moneyValues);
         investmentIntentions = Analyse(numMctsSteps, currentState); 
     }
 
     public Dictionary<GameProperties.InvestmentTarget, int> Analyse(int numMctsSteps, FTPBoard currentState)
     {
         // big brain time: call MCTS
-    
         mcts = new TreeSearch<Node>(currentState); //only makes 1 sim per node and expands all
 
         for (int i = 0; i < (Math.Pow(6, numMctsSteps)); i++)
@@ -523,6 +519,74 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
         }
         int econ = GameGlobals.roundBudget - env;
         return env;
+    }
+
+
+    public override IEnumerator AutoBudgetExecution()
+    {
+        yield return base.AutoBudgetExecution();
+    }
+
+    public override IEnumerator AutoInvestmentExecution()
+    {
+        yield return base.AutoInvestmentExecution();
+    }
+
+}
+
+
+public class AIMCTSPlayer : AIPlayer
+{
+    Dictionary<string, float> pWeights;
+    
+    
+    // big brain
+    private static TreeSearch<Node> mcts;
+
+    
+    public AIMCTSPlayer(string type, InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
+        base(type, interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name)
+    {
+    }
+
+    public override IEnumerator AutoBudgetAllocation()
+    {
+        List<float> moneyValues = new List<float>();
+        foreach (Player player in GameGlobals.players)
+        {
+            moneyValues.Add(player.GetMoney());
+        }
+
+        FTPBoard currentState = new FTPBoard(this.id + 1, GameProperties.configurableProperties.maxNumRounds, PredictAction, GameGlobals.envState, moneyValues);
+        currRoundInvestment = Analyse(5, currentState);
+        
+        yield return InvestInEconomy(currRoundInvestment[GameProperties.InvestmentTarget.ECONOMIC]);
+        yield return InvestInEnvironment(currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT]);
+        yield return EndBudgetAllocationPhase();
+    }
+
+    public Dictionary<GameProperties.InvestmentTarget, int> Analyse(int numMctsSteps, FTPBoard currentState)
+    {
+        // big brain time: call MCTS
+        mcts = new TreeSearch<Node>(currentState); //only makes 1 sim per node and expands all
+
+        for (int i = 0; i < (Math.Pow(6, numMctsSteps)); i++)
+        {
+            mcts.Step();
+        }
+
+        Node bestNodeChoice = mcts.BestNodeChoice(mcts.Root);
+        int env = ((FTPMove) bestNodeChoice.GameBoard.LastMoveMade).GetInvestmentEnv();
+        Dictionary<GameProperties.InvestmentTarget, int> inv = new Dictionary<GameProperties.InvestmentTarget, int>();
+        inv[GameProperties.InvestmentTarget.ENVIRONMENT] = env; 
+        inv[GameProperties.InvestmentTarget.ECONOMIC] = GameGlobals.roundBudget - env;
+        return inv;
+    }
+    
+    
+    public int PredictAction(Player player)
+    {
+        return (int) (player.GetCoopPerc() * GameGlobals.roundBudget);
     }
 
 
