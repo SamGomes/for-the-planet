@@ -212,6 +212,7 @@ public class AIPlayerDefector : AIPlayer
     }
 }
 
+// TIT-FOR-THAT
 public class AIPlayerFair : AIPlayer
 {
     public AIPlayerFair(string type, InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
@@ -220,13 +221,25 @@ public class AIPlayerFair : AIPlayer
 
     public override IEnumerator AutoBudgetAllocation()
     {
+        //cooperative round
+        if (GameGlobals.currGameRoundId == 0)
+        {
 
-        int environmentInvestment = GameGlobals.roundBudget / 2 + UnityEngine.Random.Range(-1, 1);
-        int economyInvestment = GameGlobals.roundBudget - environmentInvestment;
+            int environmentInvestment = GameGlobals.roundBudget / 2 + UnityEngine.Random.Range(-1, 2);
+            int economyInvestment = GameGlobals.roundBudget - environmentInvestment;
 
-        yield return InvestInEnvironment(environmentInvestment);
-        yield return InvestInEconomy(economyInvestment);
+            yield return InvestInEnvironment(environmentInvestment);
+            yield return InvestInEconomy(economyInvestment);
+        }
+        //last play of the player with +1 -1 diff
+        else
+        {
+            int environmentInvestment = GameGlobals.players[0].environmentInvestmentPerRound[GameGlobals.currGameRoundId-1] + UnityEngine.Random.Range(-1, 2);
+            int economyInvestment = GameGlobals.roundBudget - environmentInvestment;
 
+            yield return InvestInEnvironment(environmentInvestment);
+            yield return InvestInEconomy(economyInvestment);
+        }
         yield return EndBudgetAllocationPhase();
     }
 
