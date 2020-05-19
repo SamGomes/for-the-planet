@@ -102,6 +102,9 @@ public class DynamicallyConfigurableGameProperties
     public bool isSimulation = false;
     public int numGamesToPlay = 1;
 
+    public string logManagerStyle;
+    public string mongoConnector;
+
     public List<SessionParameterization> possibleParameterizations = new List<SessionParameterization>(); //only used when generating the AI types automatically (for example when "isSimulation=true or isAutomaticBriefing==true")
 
     public int roundBudget = 20; //Change in IGG to 2x Fair

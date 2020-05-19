@@ -83,9 +83,23 @@ public class StartScreenFunctionalities : MonoBehaviour {
         
         GameGlobals.players = new List<Player>();
 
-        //GameGlobals.gameLogManager = new SilentLogManager();
-        //meGlobals.gameLogManager = new MongoDBLogManager();
-        GameGlobals.gameLogManager = new DebugLogManager();
+        switch (GameProperties.configurableProperties.logManagerStyle)
+        {
+           /* case "SILENT":
+                GameGlobals.gameLogManager = new SilentLogManager();
+                break;*/
+            case "DEBUG":
+                GameGlobals.gameLogManager = new DebugLogManager();
+                break;
+            case "MONGO":
+                GameGlobals.gameLogManager = new MongoAtlasLogManager();
+                break;
+            default:
+                Debug.Log("The log style " + GameProperties.configurableProperties.logManagerStyle +
+                          "cannot be interpreted");
+                Application.Quit();
+                break;
+        }
 
         GameGlobals.gameLogManager.InitLogs(GameGlobals.monoBehaviourFunctionalities);
 
@@ -111,7 +125,8 @@ public class StartScreenFunctionalities : MonoBehaviour {
             GameGlobals.currSessionId = generatedCode;
         }
         
-        StartCoroutine(GameGlobals.gameLogManager.GetFromLog("fortheplanetlogs","gameresultslog", "&s={\"_id\": -1}&l=1", YieldedActionsAfterGet)); //changes session code
+        StartCoroutine(GameGlobals.gameLogManager.GetFromLog("fortheplanetlogs","gameresultslog",
+            "{\"find\": \"{}\",\"sort\": \"{_id: -1}\",\"limit\": 1}", YieldedActionsAfterGet));
         if (!GameGlobals.isSimulation)
         {
             this.UIStartGameButton.interactable = true;

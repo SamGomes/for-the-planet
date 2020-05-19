@@ -200,6 +200,11 @@ public class Player
         return this.money;
     }
 
+    public float GetGains()
+    {
+        return this.gains;
+    }
+
     public void SetName(string _name)
     {
         this.name = _name;

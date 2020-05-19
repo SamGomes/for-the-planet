@@ -339,13 +339,14 @@ public class GameManager : MonoBehaviour {
                     {
                         {"currSessionId", GameGlobals.currSessionId},
                         {"currGameId", GameGlobals.currGameId.ToString()},
-                        {"currRoundId", GameGlobals.currGameRoundId.ToString()},
-                        {"playerId", player.GetPlayerType()},
+                        //{"currRoundId", GameGlobals.currGameRoundId.ToString()},
+                        {"generation", GameGlobals.generation.ToString()},
+                        {"playerName", player.GetName()},
                         {"playerType", player.GetPlayerType()},
-                        {"playerCurrInvestEcon", player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ECONOMIC].ToString()},
-                        {"playerCurrInvestEnv", player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT].ToString()},
-                        {"playerEconState", player.GetMoney().ToString()},
-                        {"envState", GameGlobals.envState.ToString()}
+                        //{"playerCurrInvestEcon", player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ECONOMIC].ToString()},
+                        {"playerTookFromCP", player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT].ToString()},
+                        {"playerGain", player.GetGains().ToString()},
+                        {"envState", Convert.ToInt32(GameGlobals.envState).ToString()}
                     };
                     StartCoroutine(GameGlobals.gameLogManager.WriteToLog("fortheplanetlogs", "strategies", logEntry));
                 }
