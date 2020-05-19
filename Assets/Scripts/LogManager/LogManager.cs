@@ -48,7 +48,7 @@ public abstract class LogManager
     public abstract void InitLogs(MonoBehaviour monoBehaviourObject);
     public abstract IEnumerator WriteToLog(string database, string table, Dictionary<string, string> argsNValues);
    
-    public abstract IEnumerator GetFromLog(string database, string table, string query, Func<string, int> yieldedReactionToGet);
-    public abstract IEnumerator UpdateLog(string database, string table, string query, Dictionary<string, string> argsNValues);
+    public abstract IEnumerator GetFromLog(string database, string table, List<string> query, Func<string, int> yieldedReactionToGet);
+    public abstract IEnumerator UpdateLog(string database, string table, List<string> query, Dictionary<string, string> argsNValues);
     public abstract IEnumerator EndLogs();
 }

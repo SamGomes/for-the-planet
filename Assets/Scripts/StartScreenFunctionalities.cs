@@ -16,10 +16,7 @@ using GAIPS.Rage;
 [Serializable]
 public class DataEntryGameResultLog
 {
-    public string sessionId;
-    public string currGameId;
     public string condition;
-    public string outcome;
 }
 
 [Serializable]
@@ -116,7 +113,8 @@ public class StartScreenFunctionalities : MonoBehaviour {
             GameGlobals.currSessionId = generatedCode;
         }
         
-        StartCoroutine(GameGlobals.gameLogManager.GetFromLog("fortheplanetlogs","gameresultslog", "&s={\"_id\": -1}&l=1", YieldedActionsAfterGet)); //changes session code
+        StartCoroutine(GameGlobals.gameLogManager.GetFromLog("fortheplanetlogs","gameresultslog", 
+            new List<string>(){"{}","desc","0,1"}, YieldedActionsAfterGet)); //changes session code
         if (!GameGlobals.isSimulation)
         {
             this.UIStartGameButton.interactable = true;
@@ -139,7 +137,7 @@ public class StartScreenFunctionalities : MonoBehaviour {
     {
         getResult = "{ \"results\":"+ getResult + "}";
         string lastConditionString = "";
-        List <DataEntryGameResultLog> results = JsonUtility.FromJson<DataEntryGameResultLogQueryResult>(getResult).results;
+        List <DataEntryGameResultLog> results = JsonUtility.FromJson<DataEntryGameResultLogQueryResult>(getResult.Replace('\n', ' ')).results;
         if (results.Count < 1) //no games were found
         {
             List<SessionParameterization> possibleConditions = GameProperties.configurableProperties.possibleParameterizations;
