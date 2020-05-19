@@ -38,6 +38,7 @@ public static class GameGlobals
     public static float envRenewperRound;
     public static int generation;
     public static Boolean skipTutorial;
+    public static Boolean firstGeneration;
     public static List<int> envStatePerRound;
 
     //fatima stuff

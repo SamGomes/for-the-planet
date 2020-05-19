@@ -115,8 +115,17 @@ public class GameManager : MonoBehaviour {
         GameGlobals.envRenew = 0.5; // At the end of the round the env renew 50%
         GameGlobals.envRenewperRound = 0;
         GameGlobals.roundBudget = 14; 
-        GameGlobals.generation = 1; // First Generation
         GameGlobals.envStatePerRound = new List<int>();
+        GameGlobals.firstGeneration = true;
+
+        if (GameGlobals.firstGeneration)
+        {
+            GameGlobals.generation = 1;
+        }
+        else
+        {
+            GameGlobals.generation = 6;
+        }
 
 
         //Init Gen UI
@@ -126,8 +135,17 @@ public class GameManager : MonoBehaviour {
 
         GenerationText = GameObject.Find("GenerationText");
         GenerationTextUI = GenerationText.transform.Find("genText").gameObject.GetComponent<Text>();
-        GenerationTextUI.text = "Hello!\n" +"You belong to the First Generation.\n" + "Take from Common-Pool but if you take too much " +
-            "there will be no next generation.";
+
+        if (GameGlobals.firstGeneration)
+        {
+            GenerationTextUI.text = "Hello!\n" + "You belong to the First Generation.\n" + "Take from Common-Pool but if you take too much " +
+    "there will be no next generation.";
+        }
+        else
+        {
+            GenerationTextUI.text = "Hello!\n" + "You belong to the Sixth Generation.\n" + "Take from Common-Pool but if you take too much " +
+    "there will be no next generation.";
+        }
 
         GenerationNumberText = GameObject.Find("GenerationNumber");
         GenerationNumberTextUI = GenerationNumberText.transform.Find("genNumText").gameObject.GetComponent<Text>();
@@ -687,19 +705,19 @@ public class GameManager : MonoBehaviour {
     {
         switch (genNumber)
         {
-            case 1:
+            case 1: case 6:
                 GenPhotoUI.sprite = firstGenPhoto;
                 break;
-            case 2:
+            case 2: case 7:
                 GenPhotoUI.sprite = Resources.Load<Sprite>("Textures/Generation/2ndgen_icon");
                 break;
-            case 3:
+            case 3: case 8:
                 GenPhotoUI.sprite = Resources.Load<Sprite>("Textures/Generation/3rdgen_icon");
                 break;
-            case 4:
+            case 4: case 9:
                 GenPhotoUI.sprite = Resources.Load<Sprite>("Textures/Generation/4thgen_icon");
                 break;
-            case 5:
+            case 5: case 10:
                 GenPhotoUI.sprite = Resources.Load<Sprite>("Textures/Generation/5thgen_icon");
                 break;
         }
