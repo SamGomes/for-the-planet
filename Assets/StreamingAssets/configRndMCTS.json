@@ -1,0 +1,59 @@
+{
+    "maxNumRounds": 20,
+
+    "isSimulation": true,
+    "numGamesToPlay": 60,
+
+    "roundBudget": 5,
+    "environmentDecayBudget": [8,9],
+    "playerDecayBudget": [3,3],
+
+    "possibleParameterizations": [
+        {
+            "id": "['RANDOM1', 'RANDOM', 'RANDOM']",
+            "gameParameterizations": [{
+                "diceLogic": "RANDOM",
+                "playerParameterizations": [{
+                        "name": "RANDOM1",
+                        "interactionType": "NONE",
+                        "playerType": "AI-RANDOM"
+                    },
+                    {
+                        "name": "RANDOM",
+                        "interactionType": "NONE",
+                        "playerType": "AI-RANDOM"
+                    },
+                    {
+                        "name": "RANDOM",
+                        "interactionType": "NONE",
+                        "playerType": "AI-RANDOM"
+                    }
+                ],
+                "isNarrated": false
+            }]
+        },
+        {
+            "id": "['MCTS', 'RANDOM', 'RANDOM']",
+            "gameParameterizations": [{
+                "diceLogic": "RANDOM",
+                "playerParameterizations": [{
+                        "name": "MCTS",
+                        "interactionType": "NONE",
+                        "playerType": "AI-MCTS"
+                    },
+                    {
+                        "name": "RANDOM",
+                        "interactionType": "NONE",
+                        "playerType": "AI-RANDOM"
+                    },
+                    {
+                        "name": "RANDOM",
+                        "interactionType": "NONE",
+                        "playerType": "AI-RANDOM"
+                    }
+                ],
+                "isNarrated": false
+            }]
+        }
+    ]
+}

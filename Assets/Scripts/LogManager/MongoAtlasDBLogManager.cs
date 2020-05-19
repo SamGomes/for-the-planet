@@ -60,6 +60,7 @@ public class MongoAtlasLogManager : LogManager
     {
         var databaseObj = client.GetDatabase(database);
         var collection = databaseObj.GetCollection<BsonDocument>(table);
+        
 //        collection.FindOneAndReplace(user => user._id == newModelUser._id, newModelUser);
         return null;
     }
