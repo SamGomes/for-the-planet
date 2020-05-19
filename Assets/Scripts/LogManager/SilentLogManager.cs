@@ -14,11 +14,11 @@ public class SilentLogManager : LogManager
     }
 
 
-    public override IEnumerator GetFromLog(string database, string table, List<string> query, Func<string, int> yieldedReactionToGet) {
+    public override IEnumerator GetFromLog(string database, string table, string query, Func<string, int> yieldedReactionToGet) {
         yield return yieldedReactionToGet("[]");
     }
 
-    public override IEnumerator UpdateLog(string database, string table, List<string> query, Dictionary<string, string> argsNValues)
+    public override IEnumerator UpdateLog(string database, string table, string query, Dictionary<string, string> argsNValues)
     {
         yield return null;
     }

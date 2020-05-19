@@ -10,7 +10,13 @@ using UnityEngine.Networking;
 
 
 
-
+[Serializable]
+public class QueryObject
+{
+    public string find;
+    public string sort;
+    public int limit;
+}
 
 //Debug log manager
 public class MongoAtlasLogManager : LogManager
@@ -46,27 +52,27 @@ public class MongoAtlasLogManager : LogManager
         yield return null;
     }
 
-    public override IEnumerator GetFromLog(string database, string table, List<string> query, Func<string, int> yieldedReactionToGet)
+    public override IEnumerator GetFromLog(string database, string table, string query, Func<string, int> yieldedReactionToGet)
     {
         var databaseObj = client.GetDatabase(database);
         var collection = databaseObj.GetCollection<BsonDocument>(table);
-        var allElements = collection.Find(query[0]).ToList();
 
-        if (query[1] == "desc")
-        {
-            allElements.Reverse();
-        }
-
-        string[] cropLims = query[2].Split(',');
-        allElements = allElements.GetRange(Int32.Parse(cropLims[0]), Int32.Parse(cropLims[1]));
+        QueryObject queryObj = JsonUtility.FromJson<QueryObject>(query);
         
-//        yield return yieldedReactionToGet(allElements.ToJson());
-        yield return yieldedReactionToGet("[]");
+        var queryRes = collection.Find(queryObj.find).Sort(queryObj.sort).Limit(queryObj.limit).ToList();
+        //remove _id attributes
+        foreach(var queryItem in queryRes)
+        {
+            queryItem.RemoveAt(0);
+        }
+        yield return yieldedReactionToGet(queryRes.ToJson());
     }
 
-    public override IEnumerator UpdateLog(string database, string table, List<string> query, Dictionary<string, string> argsNValues)
+    public override IEnumerator UpdateLog(string database, string table, string query, Dictionary<string, string> argsNValues)
     {
         var databaseObj = client.GetDatabase(database);
+        var collection = databaseObj.GetCollection<BsonDocument>(table);
+//        collection.FindOneAndReplace(user => user._id == newModelUser._id, newModelUser);
         return null;
     }
 

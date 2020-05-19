@@ -14,12 +14,14 @@
       <Path>Library/PackageCache/com.unity.timeline@1.2.10</Path>
       <Path>Packages</Path>
       <Path>ProjectSettings</Path>
+      <Path>packages</Path>
     </explicitIncludes>
     <explicitExcludes>
       <Path>.git</Path>
       <Path>.idea</Path>
       <Path>Library</Path>
       <Path>Logs</Path>
+      <Path>Temp</Path>
       <Path>build</Path>
       <Path>docs</Path>
       <Path>extractDataFromMlab</Path>

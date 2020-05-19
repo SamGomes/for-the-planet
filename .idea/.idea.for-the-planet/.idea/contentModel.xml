@@ -35,7 +35,7 @@
           <e p="LogManager" t="Include">
             <e p="DebugLogManager.cs" t="Include" />
             <e p="LogManager.cs" t="Include" />
-            <e p="MongoDBLogManager.cs" t="Include" />
+            <e p="MongoAtlasDBLogManager.cs" t="Include" />
             <e p="SilentLogManager.cs" t="Include" />
           </e>
           <e p="MonoBehaviourFunctionalities.cs" t="Include" />

@@ -16,12 +16,12 @@ public class DebugLogManager : LogManager
     }
 
 
-    public override IEnumerator GetFromLog(string database, string table, List<string> query, Func<string, int> yieldedReactionToGet) {
+    public override IEnumerator GetFromLog(string database, string table, string query, Func<string, int> yieldedReactionToGet) {
         Debug.Log("database: " + database + " ; " + table + " ; ");
         yield return yieldedReactionToGet("[]");
     }
 
-    public override IEnumerator UpdateLog(string database, string table, List<string> query, Dictionary<string, string> argsNValues)
+    public override IEnumerator UpdateLog(string database, string table, string query, Dictionary<string, string> argsNValues)
     {
         Debug.Log("database: " + database + " ; " + table + " ; ");
         yield return null;

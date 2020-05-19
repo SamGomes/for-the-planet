@@ -114,7 +114,7 @@ public class StartScreenFunctionalities : MonoBehaviour {
         }
         
         StartCoroutine(GameGlobals.gameLogManager.GetFromLog("fortheplanetlogs","gameresultslog", 
-            new List<string>(){"{}","desc","0,1"}, YieldedActionsAfterGet)); //changes session code
+            "{\"find\": \"{}\",\"sort\": \"{_id: -1}\",\"limit\": 1}", YieldedActionsAfterGet)); //changes session code
         if (!GameGlobals.isSimulation)
         {
             this.UIStartGameButton.interactable = true;
