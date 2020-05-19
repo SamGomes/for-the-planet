@@ -25,22 +25,10 @@ public class MongoAtlasLogManager : LogManager
     private MongoClient client;
 
     
-//    public static List<T> GetItems<T>(MongoCollection collection, string queryString, string orderString) where T : class 
-//    {
-//        var queryDoc = BsonSerializer.Deserialize<BsonDocument>(queryString);
-//        var orderDoc = BsonSerializer.Deserialize<BsonDocument>(orderString);
-//
-//        var cursor = collection.Find(query);
-//        cursor.SetSortOrder(order);
-//
-//        return cursor.ToList();
-//    }
-    
     public override void InitLogs(MonoBehaviour monoBehaviourObject)
     {
         this.monoBehaviourObject = monoBehaviourObject;
-        this.client = new MongoClient("mongodb+srv://studyAC1:studyAC1@cluster0-nfksn.mongodb.net/test?retryWrites=true&w=majority");
-   
+        this.client = new MongoClient(GameProperties.configurableProperties.mongoConnector);
     }
     
 

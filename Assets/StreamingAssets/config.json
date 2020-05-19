@@ -1,4 +1,8 @@
 {
+
+    "logManagerStyle": "MONGO",
+    "mongoConnector": "mongodb+srv://studyAC1:studyAC1@cluster0-nfksn.mongodb.net/test?retryWrites=true&w=majority",
+
     "maxNumRounds": 20,
 
     "isSimulation": true,
