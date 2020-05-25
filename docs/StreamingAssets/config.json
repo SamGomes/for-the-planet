@@ -1,5 +1,8 @@
     {
     "maxNumRounds": 5,
+	
+	"logManagerStyle": "DEBUG",
+	"mongoConnector": "mongodb+srv://admin:admin@fortheplanet-ya50d.mongodb.net/test?retryWrites=true&w=majority",
 
 	"areHumansOnSyncTablets": false,
     "isSimulation": false,
