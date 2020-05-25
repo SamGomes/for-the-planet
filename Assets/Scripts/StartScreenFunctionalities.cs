@@ -2,8 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
-using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -45,65 +43,77 @@ public class StartScreenFunctionalities : MonoBehaviour {
 
     private IEnumerator InitGameGlobals()
     {
-        string configText = "";
-        GameProperties.configurableProperties = new DynamicallyConfigurableGameProperties();
-
-        //Assign configurable game properties from file if any
-        string path = Application.streamingAssetsPath + "/config.json";
-        if (path.Contains("://") || path.Contains(":///")) //url instead of path
+        if (GameProperties.configurableProperties == null)
         {
-            UnityWebRequest www = UnityWebRequest.Get(path);
-            yield return www.SendWebRequest();
-            configText = www.downloadHandler.text;
-        }
-        else
-        {
-            configText = File.ReadAllText(path);
-        }
+            string configText = "";
+            GameProperties.configurableProperties = new DynamicallyConfigurableGameProperties();
 
-        DynamicallyConfigurableGameProperties configs = JsonUtility.FromJson<DynamicallyConfigurableGameProperties>(configText);
-        GameProperties.configurableProperties = configs;
+            //Assign configurable game properties from file if any
+            string path = Application.streamingAssetsPath + "/config.json";
+            if (path.Contains("://") || path.Contains(":///")) //url instead of path
+            {
+                UnityWebRequest www = UnityWebRequest.Get(path);
+                yield return www.SendWebRequest();
+                configText = www.downloadHandler.text;
+            }
+            else
+            {
+                configText = File.ReadAllText(path);
+            }
 
-        GameGlobals.isSimulation = configs.isSimulation || Application.isBatchMode;
+            DynamicallyConfigurableGameProperties configs =
+                JsonUtility.FromJson<DynamicallyConfigurableGameProperties>(configText);
+            GameProperties.configurableProperties = configs;
+
+            GameGlobals.isSimulation = configs.isSimulation || Application.isBatchMode;
+            GameGlobals.roundBudget = configs.roundBudget;
+            GameGlobals.environmentDecayBudget = configs.environmentDecayBudget;
+            GameGlobals.playerDecayBudget = configs.playerDecayBudget;
+        }
 
         GameGlobals.numberOfSpeakingPlayers = 0;
         GameGlobals.currGameId++;
         GameGlobals.currGameRoundId = 0;
 
         //only init audio manager if is not simulation
-        if (!GameGlobals.isSimulation)
+        if (!GameGlobals.isSimulation && GameGlobals.audioManager == null)
         {
             GameGlobals.audioManager = new AudioManager();
         }
-        GameGlobals.gameSceneManager = new GameSceneManager();
+
+        if (GameGlobals.gameSceneManager == null)
+        {
+            GameGlobals.gameSceneManager = new GameSceneManager();
+        }
 
         GameGlobals.currGameState = GameProperties.GameState.NOT_FINISHED;
         
         GameGlobals.players = new List<Player>();
 
-        switch (GameProperties.configurableProperties.logManagerStyle)
+        if (GameGlobals.gameLogManager == null)
         {
-            case "SILENT":
-                GameGlobals.gameLogManager = new SilentLogManager();
-                break;
-            case "DEBUG":
-                GameGlobals.gameLogManager = new DebugLogManager();
-                break;
-            case "MONGO":
-                GameGlobals.gameLogManager = new MongoAtlasLogManager();
-                break;
-            default:
-                Debug.Log("The log style " + GameProperties.configurableProperties.logManagerStyle +
-                          "cannot be interpreted");
-                Application.Quit();
-                break;
+            switch (GameProperties.configurableProperties.logManagerStyle)
+            {
+                case "SILENT":
+                    GameGlobals.gameLogManager = new SilentLogManager();
+                    break;
+                case "DEBUG":
+                    GameGlobals.gameLogManager = new DebugLogManager();
+                    break;
+                case "MONGO":
+                    GameGlobals.gameLogManager = new MongoAtlasLogManager();
+                    break;
+                default:
+                    Debug.Log("[ERROR]: The log style " + GameProperties.configurableProperties.logManagerStyle +
+                              "cannot be interpreted");
+                    Application.Quit();
+                    break;
+            }
         }
+        
 
         GameGlobals.gameLogManager.InitLogs(GameGlobals.monoBehaviourFunctionalities);
 
-        GameGlobals.roundBudget = configs.roundBudget;
-        GameGlobals.environmentDecayBudget = configs.environmentDecayBudget;
-        GameGlobals.playerDecayBudget = configs.playerDecayBudget;
 
         if (GameGlobals.storedRPCs == null) //maintain rpc cache when restarting
         {
@@ -162,11 +172,12 @@ public class StartScreenFunctionalities : MonoBehaviour {
             lastConditionString = results[results.Count - 1].condition.ToString();
         }
         SetParameterizationCondition(lastConditionString);
-        GameGlobals.currGameCondition = lastConditionString;
+        GameGlobals.currGameCondition = GameProperties.currSessionParameterization.id;
 
-        // @jbgrocha: auto start if on batchmode
+        //auto start if on batchmode
         if (GameGlobals.isSimulation)
         {
+            Debug.Log("[Game: " + GameGlobals.currGameId +" of "+GameProperties.configurableProperties.numGamesToPlay+" (Curr Condition: "+GameGlobals.currGameCondition+")]");
             StartGame();
         }
         return 0;
@@ -246,6 +257,8 @@ public class StartScreenFunctionalities : MonoBehaviour {
         }
 
         InitGame();
+
+        
         
         Button[] allButtons = FindObjectsOfType<Button>();
         foreach (Button button in allButtons)

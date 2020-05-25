@@ -6,6 +6,7 @@ using UnityEngine;
 //Debug log manager
 public class SilentLogManager : LogManager
 {
+    private int currI = 0;
     public override void InitLogs(MonoBehaviour monoBehaviourObject)
     {
     }
@@ -14,8 +15,11 @@ public class SilentLogManager : LogManager
     }
 
 
-    public override IEnumerator GetFromLog(string database, string table, string query, Func<string, int> yieldedReactionToGet) {
-        yield return yieldedReactionToGet("[]");
+    public override IEnumerator GetFromLog(string database, string table, string query, Func<string, int> yieldedReactionToGet)
+    {
+        List<SessionParameterization> possibleParams = GameProperties.configurableProperties.possibleParameterizations;
+        currI = (currI+1) % possibleParams.Count;
+        yield return yieldedReactionToGet("[{ \"condition\" : \""+possibleParams[currI].id+"\" }]");
     }
 
     public override IEnumerator UpdateLog(string database, string table, string query, Dictionary<string, string> argsNValues)

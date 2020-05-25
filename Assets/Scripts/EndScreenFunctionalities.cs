@@ -45,10 +45,6 @@ public class EndScreenFunctionalities : MonoBehaviour
                 }
             }
         }
-        else
-        {
-            Debug.Log("[Game: " + GameGlobals.currGameId +" of "+GameProperties.configurableProperties.numGamesToPlay+"]");
-        }
     }
 
     private IEnumerator LoadMainScreenAfterDelay(float delay)

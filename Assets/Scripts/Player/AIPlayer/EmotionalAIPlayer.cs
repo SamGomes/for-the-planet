@@ -337,14 +337,16 @@ public class FTPBoard : Board
                 estEnvDice += opponentEnvDice;
                 estGainEcon = ((GameGlobals.roundBudget - opponentEnvDice)*3.5f)/ 100.0f;
             }
-            estEcons.Add(estGainEcon - estDecayEcon);
+            float econToPop = econs[0];
+            econs.RemoveAt(0);
+            estEcons.Add( econToPop + (estGainEcon - estDecayEcon));
         }
 
         float estGainEnv = (estEnvDice * 3.5f) / 100.0f;
         float estDecayEnv = (GameGlobals.environmentDecayBudget[0] + GameGlobals.environmentDecayBudget[1]) / 2.0f;
         estDecayEnv = (estDecayEnv * 3.5f) / 100.0f;
         
-        float estEnv = estGainEnv - estDecayEnv;
+        float estEnv = env + (estGainEnv - estDecayEnv);
         
         econs = estEcons;
         env = estEnv;
@@ -396,9 +398,11 @@ public class FTPBoard : Board
     protected override void DetermineWinner()
     {
         this.winner = -1;
-        if (env < 0.05)
+//        Debug.Log(env);
+
+        if (env < 0.05) //be conservative, account for estimation flaws
         {
-            this.winner = 5;
+            this.winner = 10;
         }
         else if (currGameRound >= maxGameRound)
         {
@@ -412,13 +416,16 @@ public class FTPBoard : Board
                 {
                     bestEcon = currEcon;
                     bestPlayerId = i;
-                    winnerCount++;
+                    if (bestEcon == currEcon)
+                    {                    
+                        winnerCount++;
+                    }
                 }
             }
 
             if (winnerCount > 1)
             {
-                this.winner = 0;
+                this.winner = 10;
             }
             else
             {
@@ -558,7 +565,7 @@ public class AIMCTSPlayer : AIPlayer
         }
 
         FTPBoard currentState = new FTPBoard(this.id + 1, GameProperties.configurableProperties.maxNumRounds, PredictAction, GameGlobals.envState, moneyValues);
-        currRoundInvestment = Analyse(5, currentState);
+        currRoundInvestment = Analyse(4, currentState);
         
         yield return InvestInEconomy(currRoundInvestment[GameProperties.InvestmentTarget.ECONOMIC]);
         yield return InvestInEnvironment(currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT]);

@@ -23,7 +23,6 @@ public class Player
     protected GameManager gameManagerRef;
     protected string type;
     protected string name;
-    protected int roundBudget;
     protected int unallocatedBudget;
     protected float money;
 

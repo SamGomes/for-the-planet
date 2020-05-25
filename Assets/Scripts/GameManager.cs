@@ -327,7 +327,7 @@ public class GameManager : MonoBehaviour {
                     {"sessionId", GameGlobals.currSessionId},
                     {"gameId", GameGlobals.currGameId.ToString()},
                     {"roundId", GameGlobals.currGameRoundId.ToString()},
-                    {"condition", GameProperties.currSessionParameterization.id},
+                    {"condition", GameGlobals.currGameCondition},
                     {"gameState", GameGlobals.currGameState.ToString()},
 
                     

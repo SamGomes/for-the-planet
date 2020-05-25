@@ -74,7 +74,7 @@ public class AIPlayer : Player
 
     public IEnumerator InvestAllInEconomy()
     {
-        int quantity = roundBudget;
+        int quantity = GameGlobals.roundBudget;
         yield return InvestInEconomy(quantity);
     }
 
@@ -107,7 +107,7 @@ public class AIPlayer : Player
 
     public IEnumerator InvestAllInEvironment()
     {
-        int quantity = roundBudget;
+        int quantity = GameGlobals.roundBudget;
         yield return InvestInEnvironment(quantity);
     }
 
@@ -185,11 +185,8 @@ public class AIPlayerCooperator : AIPlayer
 
     public override IEnumerator AutoBudgetAllocation()
     {
-        // @jbgrocha: Fatima Speech Act (emotional engine call) - Start of Budget Allocation
         yield return InvestAllInEvironment();
-        // @jbgrocha: Fatima Speech Act (emotional engine call) - Before ending Budget Allocation
         yield return EndBudgetAllocationPhase();
-        // @jbgrocha: Fatima Speech Act (emotional engine call) - End of Budget Allocation
     }
 
 }
@@ -202,11 +199,8 @@ public class AIPlayerDefector : AIPlayer
 
     public override IEnumerator AutoBudgetAllocation()
     {
-        // @jbgrocha: Fatima Speech Act (emotional engine call) - Start of Budget Allocation
         yield return InvestAllInEconomy();
-        // @jbgrocha: Fatima Speech Act (emotional engine call) - Before ending Budget Allocation
         yield return EndBudgetAllocationPhase();
-        // @jbgrocha: Fatima Speech Act (emotional engine call) - End of Budget Allocation
     }
 }
 
@@ -219,17 +213,13 @@ public class AIPlayerBalancedCooperator : AIPlayer
     public override IEnumerator AutoBudgetAllocation()
     {
 
-        int environmentInvestment = roundBudget / 2 + roundBudget % 2;
-        int economyInvestment = roundBudget / 2;
+        int environmentInvestment = GameGlobals.roundBudget / 2 + GameGlobals.roundBudget % 2;
+        int economyInvestment = GameGlobals.roundBudget / 2;
 
-        // @jbgrocha: Fatima Speech Act (emotional engine call) - Start of Budget Allocation
         yield return InvestInEconomy(economyInvestment);
-
         yield return InvestInEnvironment(environmentInvestment);
 
-        // @jbgrocha: Fatima Speech Act (emotional engine call) - Before ending Budget Allocation
         yield return EndBudgetAllocationPhase();
-        // @jbgrocha: Fatima Speech Act (emotional engine call) - End of Budget Allocation
     }
 
 }
@@ -243,17 +233,12 @@ public class AIPlayerBalancedDefector : AIPlayer
     public override IEnumerator AutoBudgetAllocation()
     {
 
-        int environmentInvestment = roundBudget / 2;
-        int economyInvestment = roundBudget / 2 + roundBudget % 2;
+        int environmentInvestment = GameGlobals.roundBudget / 2;
+        int economyInvestment = GameGlobals.roundBudget / 2 + GameGlobals.roundBudget % 2;
 
-        // @jbgrocha: Fatima Speech Act (emotional engine call) - Start of Budget Allocation
         yield return InvestInEconomy(economyInvestment);
-
         yield return InvestInEnvironment(environmentInvestment);
-
-        // @jbgrocha: Fatima Speech Act (emotional engine call) - Before ending Budget Allocation
         yield return EndBudgetAllocationPhase();
-        // @jbgrocha: Fatima Speech Act (emotional engine call) - End of Budget Allocation
     }
 }
 
