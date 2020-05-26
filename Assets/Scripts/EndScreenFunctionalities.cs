@@ -13,10 +13,14 @@ public class EndScreenFunctionalities : MonoBehaviour
     public Button UIRestartGameButton;
     public Button UIEndGameButton;
     public Text UIWarningText;
+
+    public int WinnerID;
     
     public GameObject economicTableUI;
     public GameObject environmentContributionsTableUI;
     public GameObject tableEntryPrefab;
+    public Image crownUI;
+    public Text summaryText;
 
     public GameObject victoryOverlayUI;
     public GameObject lossOverlayUI;
@@ -113,6 +117,20 @@ public class EndScreenFunctionalities : MonoBehaviour
         return -1*(p1.GetMoney().CompareTo(p2.GetMoney()));
     }
 
+    //check which player won
+    public void CheckWinner()
+    {
+        int gains = 0;
+        foreach (Player p in GameGlobals.players)
+        {
+            if(p.gains > gains)
+            {
+                gains = p.gains;
+                WinnerID = p.GetId();
+            }
+        }
+    }
+
 
     // Use this for initialization
     void Start()
@@ -122,11 +140,29 @@ public class EndScreenFunctionalities : MonoBehaviour
 
     IEnumerator YieldedStart()
     {
-        
+        CheckWinner();
             foreach (Player p in GameGlobals.players)
             {
                 GameObject newTableEntry = Object.Instantiate(tableEntryPrefab, environmentContributionsTableUI.transform);
-                newTableEntry.GetComponentsInChildren<Text>()[0].text = p.GetName();
+                this.crownUI = newTableEntry.transform.Find("winner").gameObject.GetComponent<Image>();
+                if(p.GetId() == this.WinnerID && p.GetId() == 0)
+                {
+                    crownUI.sprite = Resources.Load<Sprite>("Textures/Generation/crown");
+                    newTableEntry.GetComponentsInChildren<Text>()[0].text = p.GetName() + " (YOU)";
+                    newTableEntry.GetComponentsInChildren<Text>()[0].color = Color.yellow;
+                    newTableEntry.GetComponentsInChildren<Text>()[0].fontStyle = FontStyle.Bold;
+                }
+                else if(p.GetId() == 0)
+                {
+                    crownUI.enabled = false;
+                    newTableEntry.GetComponentsInChildren<Text>()[0].text = p.GetName() + " (YOU)";
+            }
+                else {
+                    crownUI.enabled = false;
+                    newTableEntry.GetComponentsInChildren<Text>()[0].text = p.GetName();
+
+                }
+                
                 for (int i = 0; i < GameProperties.configurableProperties.maxNumRounds; i++)
                 {
                     if (i < p.environmentInvestmentPerRound.Count)
@@ -148,6 +184,8 @@ public class EndScreenFunctionalities : MonoBehaviour
             newTableEntry.GetComponentsInChildren<Text>()[6].text = p.gains.ToString();
             }
             GameObject newDummyLineEntry = Object.Instantiate(tableEntryPrefab, environmentContributionsTableUI.transform);
+            this.crownUI = newDummyLineEntry.transform.Find("winner").gameObject.GetComponent<Image>();
+            crownUI.enabled = false;
             newDummyLineEntry.GetComponentsInChildren<Text>()[0].text = "";
             newDummyLineEntry.GetComponentsInChildren<Text>()[1].text = "";
             newDummyLineEntry.GetComponentsInChildren<Text>()[2].text = "";
@@ -156,7 +194,9 @@ public class EndScreenFunctionalities : MonoBehaviour
             newDummyLineEntry.GetComponentsInChildren<Text>()[5].text = "";
             newDummyLineEntry.GetComponentsInChildren<Text>()[6].text = "";
 
-        GameObject environmentEntry = Object.Instantiate(tableEntryPrefab, environmentContributionsTableUI.transform);
+            GameObject environmentEntry = Object.Instantiate(tableEntryPrefab, environmentContributionsTableUI.transform);
+            this.crownUI = environmentEntry.transform.Find("winner").gameObject.GetComponent<Image>();
+            crownUI.enabled = false;
             Text textGameObject = environmentEntry.GetComponentsInChildren<Text>()[0];
             textGameObject.text = "ENVIRONMENT";
             environmentEntry.GetComponentsInChildren<Text>()[6].text = "";
@@ -187,6 +227,9 @@ public class EndScreenFunctionalities : MonoBehaviour
                 }
 
             }
+            summaryText = GameObject.Find("SummaryText").GetComponent<Text>(); ;
+            summaryText.text = "Winner of the Game: " + GameGlobals.players[WinnerID].GetName() +"!";
+            //summaryText.text += "\n" + "YOU WON";
         /*
         else
         {
@@ -207,7 +250,7 @@ public class EndScreenFunctionalities : MonoBehaviour
                 newTableEntry.GetComponentsInChildren<Text>()[1].text = currPlayer.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ENVIRONMENT].ToString();
             }
         }*/
-        
+
 
 
         for (int i = 0; i < GameGlobals.players.Count; i++)

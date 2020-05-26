@@ -212,6 +212,8 @@ public class StartScreenFunctionalities : MonoBehaviour {
         GameGlobals.skipTutorial = true;
     }
 
+
+
     public void InitGame()
     {
         //play theme song
@@ -253,7 +255,10 @@ public class StartScreenFunctionalities : MonoBehaviour {
         }
 
         InitGame();
-        
+
+ 
+
+
         Button[] allButtons = FindObjectsOfType<Button>();
         
         foreach (Button button in allButtons)

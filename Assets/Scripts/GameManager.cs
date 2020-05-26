@@ -30,10 +30,13 @@ public class GameManager : MonoBehaviour {
     public GameObject GenerationNumberText;
     public GameObject simulateInvestmentScreen;
     public Button simulateEvolutionButton;
+    public GameObject waitingForPlayers;
 
     public GameObject UIroundSum;
     public Text roundSumTex;
-    
+
+    public Button passRoundButton;
+
     public GameObject rollDiceOverlay;
     public GameObject diceUIPrefab;
     private DiceManager diceManager;
@@ -56,6 +59,7 @@ public class GameManager : MonoBehaviour {
     private float phaseEndDelay;
 
     public int roundTaken = 0;
+    public Boolean stopbugButton = false;
 
     private int marketLimit;
     private int currNumberOfMarketDices;
@@ -77,6 +81,13 @@ public class GameManager : MonoBehaviour {
         return 0;
     }
 
+        IEnumerator WaitingForAIPlayers() {
+
+        waitingForPlayers.SetActive(true);
+        yield return new WaitForSeconds(5);
+        waitingForPlayers.SetActive(false);
+
+    }
    
     void Start()
     {
@@ -97,7 +108,7 @@ public class GameManager : MonoBehaviour {
         numPlayersToDisplayHistory = GameGlobals.players.Count;
         numPlayersToSimulateInvestment = GameGlobals.players.Count;
 
-        GameGlobals.players[0].SetName(GameGlobals.participantName + "  (YOU)");
+        GameGlobals.players[0].SetName(GameGlobals.participantName);
         GameGlobals.players[0].UpdateNameUI();
 
         currPlayerIndex = 0;
@@ -136,9 +147,14 @@ public class GameManager : MonoBehaviour {
         GenerationText = GameObject.Find("GenerationText");
         GenerationTextUI = GenerationText.transform.Find("genText").gameObject.GetComponent<Text>();
 
+        passRoundButton = GameObject.Find("passRoundButton").GetComponent<Button>();
+        passRoundButton.gameObject.SetActive(false);
+
+        waitingForPlayers = GameObject.Find("WaitingForPlayers");
+
         if (GameGlobals.firstGeneration)
         {
-            GenerationTextUI.text = "Hello!\n" + "You belong to the First Generation.\n" + "Take from Common-Pool but if you take too much " +
+            GenerationTextUI.text = "Hello!\n" + "You belong to the First Generation.\n" + "Take resources from the Common-Pool to win the game, but if you take too much " +
     "there will be no next generation.";
         }
         else
@@ -174,6 +190,7 @@ public class GameManager : MonoBehaviour {
             tutorialScreen.SetActive(false);
             newRoundScreen.SetActive(false);
             GenerationText.SetActive(false);
+            waitingForPlayers.SetActive(false);
             UIroundSum.SetActive(false);
             StartGameRoundForAllPlayers();
         }
@@ -209,6 +226,7 @@ public class GameManager : MonoBehaviour {
                 tutorialScreen.SetActive(false);
                 newRoundScreen.SetActive(true);
                 GenerationText.SetActive(true);
+                StartCoroutine(WaitingForAIPlayers());
                 UIroundSum.SetActive(false);
             }
             else
@@ -228,6 +246,7 @@ public class GameManager : MonoBehaviour {
                 tutorialScreen.SetActive(false);
                 UIroundSum.SetActive(false);
                 GenerationText.SetActive(true);
+                StartCoroutine(WaitingForAIPlayers());
                 newRoundScreen.SetActive(true);
             });
 
@@ -354,32 +373,40 @@ public class GameManager : MonoBehaviour {
 
                 TakeMoneyFromCommonPot();
                 GameGlobals.currGameRoundId++;
-                yield return new WaitForSeconds(15);
+                yield return new WaitForSeconds(1);
+                passRoundButton.gameObject.SetActive(true);
+                passRoundButton.onClick.AddListener(delegate ()
+                {
+                    if (this.stopbugButton) { //DO NOTHING}
+                    }
+                    else if (((GameGlobals.currGameRoundId == GameProperties.configurableProperties.maxNumRounds) &&
+    (GameGlobals.envState <= GameGlobals.envThreshold)) || (GameGlobals.envState <= 0)) //environment exploded
+                    {
+                        this.stopbugButton = true;
+                        GameGlobals.currGameState = GameProperties.GameState.LOSS;
+                        GameGlobals.gameSceneManager.LoadEndScene();
+                        UIroundSum.SetActive(false);
+                    }
+                    else if (GameGlobals.currGameRoundId == GameProperties.configurableProperties.maxNumRounds) //reached last round
+                    {
+                        this.stopbugButton = true;
+                        GameGlobals.currGameState = GameProperties.GameState.VICTORY;
+                        GameGlobals.gameSceneManager.LoadEndScene();
+                        UIroundSum.SetActive(false);
+                    }
+                    else //normal round finished
+                    {
+                        currGamePhase = GameProperties.GamePhase.BUDGET_ALLOCATION;
+                        newRoundScreen.SetActive(true);
+                        UIroundSum.SetActive(false);
+                        GenerationNumberTextUI.text = "Generation: " + GameGlobals.generation.ToString();
+                        ChangePhotoinGenPhoto(GameGlobals.generation);
+                        GenerationText.SetActive(false);
+                    }
 
+                    passRoundButton.gameObject.SetActive(false);
+                });
 
-                if (((GameGlobals.currGameRoundId == GameProperties.configurableProperties.maxNumRounds) && 
-                (GameGlobals.envState <= GameGlobals.envThreshold)) || (GameGlobals.envState <= 0)) //environment exploded
-                {
-                    GameGlobals.currGameState = GameProperties.GameState.LOSS;
-                    GameGlobals.gameSceneManager.LoadEndScene();
-                    UIroundSum.SetActive(false);
-                }
-                else if (GameGlobals.currGameRoundId == GameProperties.configurableProperties.maxNumRounds) //reached last round
-                {
-                    GameGlobals.currGameState = GameProperties.GameState.VICTORY;
-                    GameGlobals.gameSceneManager.LoadEndScene();
-                    UIroundSum.SetActive(false);
-                }
-                else //normal round finished
-                {
-                    currGamePhase = GameProperties.GamePhase.BUDGET_ALLOCATION;
-                    newRoundScreen.SetActive(true);
-                    UIroundSum.SetActive(false);
-                    GameGlobals.generation += 1;
-                    GenerationNumberTextUI.text = "Generation: " + GameGlobals.generation.ToString();
-                    ChangePhotoinGenPhoto(GameGlobals.generation);
-                    GenerationText.SetActive(false);
-                }
            
         }
 
@@ -502,6 +529,7 @@ public class GameManager : MonoBehaviour {
                 else
                 {
                     if (GameGlobals.skipTutorial) {
+                        StartCoroutine(WaitingForAIPlayers());
                         newRoundScreen.SetActive(true);
                         GenerationText.SetActive(true);
                     }
@@ -731,12 +759,14 @@ public class GameManager : MonoBehaviour {
         {
             GameGlobals.envState -= p.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT];
             this.roundTaken += p.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT];
+            GameGlobals.diffCP -= p.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT];
 
             //votes.Add(p.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT]);
         }
         //renew envState
         GameGlobals.envRenewperRound = (float)(GameGlobals.envState * GameGlobals.envRenew);
         GameGlobals.envState += GameGlobals.envRenewperRound;
+        GameGlobals.diffCP += GameGlobals.envRenewperRound;
         if (GameGlobals.envState<=0) {
             GameGlobals.envStatePerRound.Add(0);
         }
@@ -746,8 +776,19 @@ public class GameManager : MonoBehaviour {
         StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState));
 
         UIroundSum.SetActive(true);
-        roundSumTex.text = "Taken-From Common-Pool: " + this.roundTaken.ToString();
+        if(GameGlobals.diffCP > 0) { 
+        roundSumTex.text = "Taken-From Common-Pool: " + this.roundTaken.ToString() + "\n" 
+            + "Impact on the Common-Pool: " + "+" + Convert.ToInt32(GameGlobals.diffCP).ToString();
+        }
+        else{
+            roundSumTex.text = "Taken-From Common-Pool: " + this.roundTaken.ToString() + "\n"
+            + "Impact on the Common-Pool: " + Convert.ToInt32(GameGlobals.diffCP).ToString();
+        }
         this.roundTaken = 0;
+        GameGlobals.diffCP = 0;
+
+        //end generation
+        GameGlobals.generation += 1;
 
         /* Player take medianVote
         int[] sortedVotes = votes.ToArray();

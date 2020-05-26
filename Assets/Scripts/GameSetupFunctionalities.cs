@@ -164,7 +164,6 @@ public class GameSetupFunctionalities : MonoBehaviour {
                 GameGlobals.audioManager.PlayClip("Audio/snap");
             });
         }
-
         GameGlobals.gameSceneManager.LoadMainScene();
     }
 

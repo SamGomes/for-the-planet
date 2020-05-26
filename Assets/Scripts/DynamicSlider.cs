@@ -72,13 +72,13 @@ public class DynamicSlider
         {
             valueUpdateUIup.SetActive(false);
             valueUpdateUIup.SetActive(true);
-            valueUpdateUIup.GetComponentInChildren<Text>().text = textToDisplay;
+            valueUpdateUIup.GetComponentInChildren<Text>().text = System.Convert.ToInt32(GameGlobals.diffCP).ToString();
         }
         else if (growth < 0)
         {
             valueUpdateUIdown.SetActive(false);
             valueUpdateUIdown.SetActive(true);
-            valueUpdateUIdown.GetComponentInChildren<Text>().text = textToDisplay;
+            valueUpdateUIdown.GetComponentInChildren<Text>().text = System.Convert.ToInt32(GameGlobals.diffCP).ToString();
         }
 
         while (Mathf.Abs(targetSliderValue - currSliderValue) > 0.02f)

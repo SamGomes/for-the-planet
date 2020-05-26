@@ -161,7 +161,13 @@ public class Player
         budgetExecutionScreenUI = playerUI.transform.Find("playerActionSection/budgetExecutionUI").gameObject;
         investmentSimulationScreenUI = playerUI.transform.Find("playerActionSection/investmentSimulationUI").gameObject;
 
-        nameTextUI.text = name;
+        if(this.GetId() == 0)
+        {
+            nameTextUI.text = name + " (YOU)";
+        }
+        else {
+            nameTextUI.text = name;
+        }
 
         dynamicSlider = new DynamicSlider(this.playerUI.transform.Find("playerStateSection/InvestmentUI/Slider").gameObject, true);
 
@@ -216,7 +222,14 @@ public class Player
     }
     public void UpdateNameUI()
     {
-        nameTextUI.text = name;
+        if (this.GetId() == 0)
+        {
+            nameTextUI.text = name + " (YOU)";
+        }
+        else
+        {
+            nameTextUI.text = name;
+        }
     }
 
     public Dictionary<GameProperties.InvestmentTarget, int> GetCurrRoundInvestment()
