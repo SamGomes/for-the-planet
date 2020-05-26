@@ -33,8 +33,8 @@ num_played_roundsL <- c()
 playerNamesL <- c()
 
 # gameresultslog <- gameresultslog[gameresultslog$playerName != "BALANCED-COOPERATOR" & gameresultslog$playerName != "BALANCED-DEFECTOR" ,]
-# gameresultslog <- gameresultslog[gameresultslog$playerName != "BALANCED-DEFECTOR"  & gameresultslog$playerName != "RANDOM_CMP_VS_DEF"  & gameresultslog$playerName != "MCTS_VS_DEF" ,]
-gameresultslog <- gameresultslog[gameresultslog$playerName != "BALANCED-COOPERATOR" & gameresultslog$playerName != "RANDOM_CMP_VS_COOP"  & gameresultslog$playerName != "MCTS_VS_COOP" ,]
+gameresultslog <- gameresultslog[gameresultslog$playerName != "BALANCED-DEFECTOR"  & gameresultslog$playerName != "RANDOM_CMP_VS_DEF"  & gameresultslog$playerName != "MCTS_VS_DEF" ,]
+# gameresultslog <- gameresultslog[gameresultslog$playerName != "BALANCED-COOPERATOR" & gameresultslog$playerName != "RANDOM_CMP_VS_COOP"  & gameresultslog$playerName != "MCTS_VS_COOP" ,]
 
 playerNames = unlist(distinct(gameresultslog, playerName))
 print(playerNames)
@@ -61,8 +61,8 @@ suppressMessages(ggsave(sprintf("plots/OutcomeFrequencies.png"), height=6, width
 
 
 # plot strategies
-agg <- aggregate(playerInvestEnv ~ playerName*roundId , gameresultslog , mean)
-plot <- ggplot(agg, aes(x = agg$roundId, y=agg$playerInvestEnv, group=agg$playerName, color=agg$playerName)) 
+agg <- aggregate(playerInvestEnv ~ playerName*envState , gameresultslog , mean)
+plot <- ggplot(agg, aes(x = agg$envState, y=agg$playerInvestEnv, group=agg$playerName, color=agg$playerName)) 
 plot <- plot + geom_line(stat="identity")
 plot <- plot + geom_point(aes(color=agg$playerName)) 
 plot <- plot + labs(x = "Curr Round Id", y = "Cooperation Investment", color="Player Type") + theme(axis.text = element_text(size = 15), axis.title = element_text(size = 15, face = "bold")) #+ scale_group_discrete(labels = as.character(c("Constructive\nCollectivist","Constructive\nIndividualist","Disruptive\nCollectivist","Disruptive\nIndividualistic","Random")))  

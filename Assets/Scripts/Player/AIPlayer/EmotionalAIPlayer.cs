@@ -275,6 +275,23 @@ public class FTPBoard : Board
     protected int currGameRound;
     protected int maxGameRound;
     
+        
+        
+    public override float GetScore(int player)
+    {
+        if(winner == 0)
+        {
+            return DRAW_SCORE;
+        }
+        if(winner == player)
+        {
+            return WIN_SCORE;
+        }
+
+        return 0.1f*((float)currGameRound)/((float)maxGameRound);
+    }
+
+        
     public FTPBoard()
     {
         this.env = 0;
@@ -321,11 +338,12 @@ public class FTPBoard : Board
         List<float> estEcons = new List<float>();
 
         int estEnvDice = 0;
+        
+        float estDecayEcon = (GameGlobals.playerDecayBudget[0] + GameGlobals.playerDecayBudget[1]) / 2.0f;
+        estDecayEcon = (estDecayEcon * 3.5f) / 100.0f;
         foreach(Player player in GameGlobals.players)
         {
             float estGainEcon = 0.0f;
-            float estDecayEcon = (GameGlobals.playerDecayBudget[0] + GameGlobals.playerDecayBudget[1]) / 2.0f;
-
             if (player.GetId() == CurrentPlayer)
             {
                 estEnvDice += myInvestmentEnv;
@@ -339,12 +357,16 @@ public class FTPBoard : Board
             }
             float econToPop = econs[0];
             econs.RemoveAt(0);
-            estEcons.Add( econToPop + (estGainEcon - estDecayEcon));
+            estEcons.Add(econToPop + (estGainEcon - estDecayEcon));
         }
 
         float estGainEnv = (estEnvDice * 3.5f) / 100.0f;
         float estDecayEnv = (GameGlobals.environmentDecayBudget[0] + GameGlobals.environmentDecayBudget[1]) / 2.0f;
         estDecayEnv = (estDecayEnv * 3.5f) / 100.0f;
+        
+//        float estGainEnv = (estEnvDice * 2.5f) / 100.0f;
+//        float estDecayEnv = (GameGlobals.environmentDecayBudget[0] + GameGlobals.environmentDecayBudget[1]) / 2.0f;
+//        estDecayEnv = (estDecayEnv * 4.5f) / 100.0f;
         
         float estEnv = env + (estGainEnv - estDecayEnv);
         
@@ -398,38 +420,38 @@ public class FTPBoard : Board
     protected override void DetermineWinner()
     {
         this.winner = -1;
-//        Debug.Log(env);
-
-        if (env < 0.05) //be conservative, account for estimation flaws
+        if (env < 0.05)
         {
             this.winner = 10;
         }
         else if (currGameRound >= maxGameRound)
         {
             float bestEcon = -1.0f;
-            int bestPlayerId = 0;
-            int winnerCount = 0;
+            List<int> bestPlayers = new List<int>();
             for (int i = 0; i < GameGlobals.players.Count; i++)
             {
                 float currEcon = econs[i];
-                if (bestEcon >= currEcon)
+                if (currEcon > bestEcon)
                 {
                     bestEcon = currEcon;
-                    bestPlayerId = i;
-                    if (bestEcon == currEcon)
-                    {                    
-                        winnerCount++;
-                    }
+                    bestPlayers.Add(i);
+                }else if (currEcon == bestEcon)
+                {
+                    bestPlayers.Add(i);
                 }
             }
 
-            if (winnerCount > 1)
+            if (bestPlayers.Count() > 1)
             {
                 this.winner = 10;
+                if (bestPlayers.Contains(CurrentPlayer))
+                {
+                    this.winner = 0;
+                }
             }
             else
             {
-                this.winner = bestPlayerId + 1;
+                this.winner = bestPlayers[0] + 1;
             }
         }
     }

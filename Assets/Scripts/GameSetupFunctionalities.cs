@@ -136,6 +136,9 @@ public class GameSetupFunctionalities : MonoBehaviour {
             case "RANDOM":
                 GameGlobals.diceLogic = new RandomDiceLogic();
                 break;
+            case "ALWAYS-HALF":
+                GameGlobals.diceLogic = new AlwaysHalfDiceLogic();
+                break;
             default:
                 isErrorEncountered = true;
                 setupWarningPoppupRef.DisplayPoppup("Error on parsing the dice logic of parameterization " + parameterization.diceLogic);

@@ -37,13 +37,14 @@ namespace MCTS.Core
         /// <summary>
         /// The score awarded to a player after a win
         /// </summary>
-        private const float WIN_SCORE = 1;
+        protected const float WIN_SCORE = 1;
 
         /// <summary>
         /// The score awarded to a player after a draw
         /// </summary>
-        private const float DRAW_SCORE = 0.5f;
+        protected const float DRAW_SCORE = 0.5f;
 
+        
         /// <summary>
         /// Simulates random plays on this board until the game has ended
         /// </summary>
@@ -66,7 +67,7 @@ namespace MCTS.Core
         /// </summary>
         /// <param name="player">The player to get the score of at this board state</param>
         /// <returns>The score for the given player at this board state</returns>
-        public float GetScore(int player)
+        public virtual float GetScore(int player)
         {
             if(winner == 0)
             {
