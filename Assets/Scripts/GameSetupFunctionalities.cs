@@ -101,8 +101,20 @@ public class GameSetupFunctionalities : MonoBehaviour {
                     GameGlobals.players.Add(new AIPlayerBalancedDefector(currParam.playerType, chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
                     break;
                 
-                case "AI-MCTS":
-                    GameGlobals.players.Add(new AIMCTSPlayer(currParam.playerType, chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
+                case "AI-MCTS-1":
+                    GameGlobals.players.Add(new AIMCTSPlayer(1,currParam.playerType, chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
+                    break;
+
+                case "AI-MCTS-2":
+                    GameGlobals.players.Add(new AIMCTSPlayer(2,currParam.playerType, chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
+                    break;
+
+                case "AI-MCTS-3":
+                    GameGlobals.players.Add(new AIMCTSPlayer(3,currParam.playerType, chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
+                    break;
+
+                case "AI-MCTS-4":
+                    GameGlobals.players.Add(new AIMCTSPlayer(4,currParam.playerType, chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
                     break;
 
                 default:

@@ -59,13 +59,13 @@
             }]
         },
         {
-            "id": "['MCTS', 'BALANCED-COOPERATOR', 'BALANCED-COOPERATOR']",
+            "id": "['MCTS_1', 'BALANCED-COOPERATOR', 'BALANCED-COOPERATOR']",
             "gameParameterizations": [{
                 "diceLogic": "RANDOM",
                 "playerParameterizations": [{
-                        "name": "MCTS_VS_COOP",
+                        "name": "MCTS_1_VS_COOP",
                         "interactionType": "NONE",
-                        "playerType": "AI-MCTS"
+                        "playerType": "AI-MCTS-1"
                     },
                     {
                         "name": "BALANCED-COOPERATOR",
@@ -82,13 +82,151 @@
             }]
         },
         {
-            "id": "['MCTS', 'BALANCED-DEFECTOR', 'BALANCED-DEFECTOR']",
+            "id": "['MCTS_1', 'BALANCED-DEFECTOR', 'BALANCED-DEFECTOR']",
             "gameParameterizations": [{
                 "diceLogic": "RANDOM",
                 "playerParameterizations": [{
-                        "name": "MCTS_VS_DEF",
+                        "name": "MCTS_1_VS_DEF",
                         "interactionType": "NONE",
-                        "playerType": "AI-MCTS"
+                        "playerType": "AI-MCTS-1"
+                    },
+                    {
+                        "name": "BALANCED-DEFECTOR",
+                        "interactionType": "NONE",
+                        "playerType": "AI-BALANCED-DEFECTOR"
+                    },
+                    {
+                        "name": "BALANCED-DEFECTOR",
+                        "interactionType": "NONE",
+                        "playerType": "AI-BALANCED-DEFECTOR"
+                    }
+                ],
+                "isNarrated": false
+            }]
+        },
+        {
+            "id": "['MCTS_2', 'BALANCED-COOPERATOR', 'BALANCED-COOPERATOR']",
+            "gameParameterizations": [{
+                "diceLogic": "RANDOM",
+                "playerParameterizations": [{
+                        "name": "MCTS_2_VS_COOP",
+                        "interactionType": "NONE",
+                        "playerType": "AI-MCTS-2"
+                    },
+                    {
+                        "name": "BALANCED-COOPERATOR",
+                        "interactionType": "NONE",
+                        "playerType": "AI-BALANCED-COOPERATOR"
+                    },
+                    {
+                        "name": "BALANCED-COOPERATOR",
+                        "interactionType": "NONE",
+                        "playerType": "AI-BALANCED-COOPERATOR"
+                    }
+                ],
+                "isNarrated": false
+            }]
+        },
+        {
+            "id": "['MCTS_2', 'BALANCED-DEFECTOR', 'BALANCED-DEFECTOR']",
+            "gameParameterizations": [{
+                "diceLogic": "RANDOM",
+                "playerParameterizations": [{
+                        "name": "MCTS_2_VS_DEF",
+                        "interactionType": "NONE",
+                        "playerType": "AI-MCTS-2"
+                    },
+                    {
+                        "name": "BALANCED-DEFECTOR",
+                        "interactionType": "NONE",
+                        "playerType": "AI-BALANCED-DEFECTOR"
+                    },
+                    {
+                        "name": "BALANCED-DEFECTOR",
+                        "interactionType": "NONE",
+                        "playerType": "AI-BALANCED-DEFECTOR"
+                    }
+                ],
+                "isNarrated": false
+            }]
+        },
+        {
+            "id": "['MCTS_3', 'BALANCED-COOPERATOR', 'BALANCED-COOPERATOR']",
+            "gameParameterizations": [{
+                "diceLogic": "RANDOM",
+                "playerParameterizations": [{
+                        "name": "MCTS_3_VS_COOP",
+                        "interactionType": "NONE",
+                        "playerType": "AI-MCTS-3"
+                    },
+                    {
+                        "name": "BALANCED-COOPERATOR",
+                        "interactionType": "NONE",
+                        "playerType": "AI-BALANCED-COOPERATOR"
+                    },
+                    {
+                        "name": "BALANCED-COOPERATOR",
+                        "interactionType": "NONE",
+                        "playerType": "AI-BALANCED-COOPERATOR"
+                    }
+                ],
+                "isNarrated": false
+            }]
+        },
+        {
+            "id": "['MCTS_3', 'BALANCED-DEFECTOR', 'BALANCED-DEFECTOR']",
+            "gameParameterizations": [{
+                "diceLogic": "RANDOM",
+                "playerParameterizations": [{
+                        "name": "MCTS_3_VS_DEF",
+                        "interactionType": "NONE",
+                        "playerType": "AI-MCTS-3"
+                    },
+                    {
+                        "name": "BALANCED-DEFECTOR",
+                        "interactionType": "NONE",
+                        "playerType": "AI-BALANCED-DEFECTOR"
+                    },
+                    {
+                        "name": "BALANCED-DEFECTOR",
+                        "interactionType": "NONE",
+                        "playerType": "AI-BALANCED-DEFECTOR"
+                    }
+                ],
+                "isNarrated": false
+            }]
+        },
+        {
+            "id": "['MCTS_4', 'BALANCED-COOPERATOR', 'BALANCED-COOPERATOR']",
+            "gameParameterizations": [{
+                "diceLogic": "RANDOM",
+                "playerParameterizations": [{
+                        "name": "MCTS_4_VS_COOP",
+                        "interactionType": "NONE",
+                        "playerType": "AI-MCTS-4"
+                    },
+                    {
+                        "name": "BALANCED-COOPERATOR",
+                        "interactionType": "NONE",
+                        "playerType": "AI-BALANCED-COOPERATOR"
+                    },
+                    {
+                        "name": "BALANCED-COOPERATOR",
+                        "interactionType": "NONE",
+                        "playerType": "AI-BALANCED-COOPERATOR"
+                    }
+                ],
+                "isNarrated": false
+            }]
+        },
+        {
+            "id": "['MCTS_4', 'BALANCED-DEFECTOR', 'BALANCED-DEFECTOR']",
+            "gameParameterizations": [{
+                "diceLogic": "RANDOM",
+                "playerParameterizations": [{
+                        "name": "MCTS_4_VS_DEF",
+                        "interactionType": "NONE",
+                        "playerType": "AI-MCTS-4"
                     },
                     {
                         "name": "BALANCED-DEFECTOR",

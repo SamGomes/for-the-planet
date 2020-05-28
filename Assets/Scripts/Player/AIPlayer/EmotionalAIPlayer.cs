@@ -288,7 +288,18 @@ public class FTPBoard : Board
             return WIN_SCORE;
         }
 
-        return 0.1f*((float)currGameRound)/((float)maxGameRound);
+        float econComp = 0.0f;
+        foreach (Player innerPlayer in GameGlobals.players)
+        {
+            int id = innerPlayer.GetId();
+            if (id != (player - 1))
+            {
+                econComp += (econs[player - 1] - econs[id]);
+            }
+        }
+        
+        econComp *= 0.065f;
+        return econComp;       
     }
 
         
@@ -357,7 +368,7 @@ public class FTPBoard : Board
             }
             float econToPop = econs[0];
             econs.RemoveAt(0);
-            estEcons.Add(econToPop + (estGainEcon - estDecayEcon));
+            estEcons.Add(Mathf.Clamp01(econToPop + (estGainEcon - estDecayEcon)));
         }
 
         float estGainEnv = (estEnvDice * 3.5f) / 100.0f;
@@ -368,7 +379,7 @@ public class FTPBoard : Board
 //        float estDecayEnv = (GameGlobals.environmentDecayBudget[0] + GameGlobals.environmentDecayBudget[1]) / 2.0f;
 //        estDecayEnv = (estDecayEnv * 4.5f) / 100.0f;
         
-        float estEnv = env + (estGainEnv - estDecayEnv);
+        float estEnv = Mathf.Clamp01( env + (estGainEnv - estDecayEnv));
         
         econs = estEcons;
         env = estEnv;
@@ -467,8 +478,6 @@ public class FTPBoard : Board
 
 
 
-
-
 public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
 {
     float pDisrupt;
@@ -539,16 +548,9 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
     
     public int PredictAction(Player player)
     {
-        int env = 0;
-        for (int i = 0; i < (GameGlobals.roundBudget); i++){
-            if (UnityEngine.Random.Range(0.0f, 1.0f) < player.GetCoopPerc())
-            {
-                env++;
-            }
-        }
-        int econ = GameGlobals.roundBudget - env;
-        return env;
+        return (int) (player.GetCoopPerc() * GameGlobals.roundBudget);
     }
+
 
 
     public override IEnumerator AutoBudgetExecution()
@@ -571,11 +573,12 @@ public class AIMCTSPlayer : AIPlayer
     
     // big brain
     private static TreeSearch<Node> mcts;
-
+    private int depth;
     
-    public AIMCTSPlayer(string type, InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
+    public AIMCTSPlayer(int depth, string type, InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
         base(type, interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name)
     {
+        this.depth = depth;
     }
 
     public override IEnumerator AutoBudgetAllocation()
@@ -587,7 +590,7 @@ public class AIMCTSPlayer : AIPlayer
         }
 
         FTPBoard currentState = new FTPBoard(this.id + 1, GameProperties.configurableProperties.maxNumRounds, PredictAction, GameGlobals.envState, moneyValues);
-        currRoundInvestment = Analyse(4, currentState);
+        currRoundInvestment = Analyse(depth, currentState);
         
         yield return InvestInEconomy(currRoundInvestment[GameProperties.InvestmentTarget.ECONOMIC]);
         yield return InvestInEnvironment(currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT]);
