@@ -25,7 +25,7 @@ roundsNumL <- c()
 num_played_roundsL <- c()
 playerNamesL <- c()
 
-gameresultslog <- gameresultslog[gameresultslog$playerName != "BALANCED-COOPERATOR" & gameresultslog$playerName != "BALANCED-DEFECTOR" ,]
+gameresultslog <- gameresultslog[!grepl("RANDOM", gameresultslog$playerName) & gameresultslog$playerName != "BALANCED-COOPERATOR" & gameresultslog$playerName != "BALANCED-DEFECTOR" ,]
 gameresultslogD <- gameresultslog[grepl("DEF", gameresultslog$playerName),]
 gameresultslogC <- gameresultslog[grepl("COOP", gameresultslog$playerName),]
 
@@ -37,8 +37,6 @@ buildPlots <- function(gameresultslog, subfolder){
 	}
 
 	playerNames = unlist(distinct(gameresultslog, playerName))
-	# print(playerNames)
-	# playerNames = c("AI-RANDOM","AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST","AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC","AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST", "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC")
 	k <- 0
 	for(j in  seq(from=1, to=length(playerNames), by=1)) {
 		gameresultsOfJ <- endGames[endGames$playerName == playerNames[j],]
@@ -59,27 +57,23 @@ buildPlots <- function(gameresultslog, subfolder){
 
 
 
-
 	# plot strategies
-	agg <- aggregate(playerInvestEnv ~ playerName*roundId , gameresultslog , mean)
-	plot <- ggplot(agg, aes(x = agg$roundId, y=agg$playerInvestEnv, group=agg$playerName, color=agg$playerName)) 
-	plot <- plot + geom_line(stat="identity")
-	plot <- plot + geom_point(aes(color=agg$playerName)) 
+	agg <- aggregate(playerInvestEnv ~ playerName*envState , gameresultslog , mean)
+	plot <- ggplot(agg, aes(x = agg$envState, y=agg$playerInvestEnv, group=agg$playerName, color=agg$playerName)) 
+	plot <- plot + stat_summary_bin(fun.y='mean', bins=20, geom='point', aes(color=agg$playerName))
+	plot <- plot + stat_summary_bin(fun.y='mean', bins=20, geom='line', aes(color=agg$playerName))
 	plot <- plot + labs(x = "Curr Round Id", y = "Cooperation Investment", color="Player Type") + theme(axis.text = element_text(size = 15), axis.title = element_text(size = 15, face = "bold")) #+ scale_group_discrete(labels = as.character(c("Constructive\nCollectivist","Constructive\nIndividualist","Disruptive\nCollectivist","Disruptive\nIndividualistic","Random")))  
-	plot <- plot + ylim(0, 5.0)
+	plot <- plot + xlim(0.0, 1.0) + ylim(0.0, 5.0)
 	suppressMessages(ggsave(sprintf("plots/%s/StratsEnv.png", subfolder), height=6, width=10, units="in", dpi=500))
 
 
 	# plot state
-	# victories <- gameresultslog[gameresultslog$gameState == "VICTORY",]
-	# allWinRouns <- gameresultslog[gameresultslog$gameId %in% victories$gameId & gameresultslog$sessionId %in% victories$sessionId,]
-
 	agg <- aggregate(envState ~ playerName*roundId , gameresultslog , mean)
 	plot <- ggplot(agg, aes(x = agg$roundId, y=agg$envState, group=agg$playerName, color=agg$playerName))
 	plot <- plot + geom_line(stat="identity")
 	plot <- plot + geom_point(aes(color=agg$playerName)) 
 	plot <- plot + labs(x = "Curr Round Id", y = "Env State", color="Player Type") + theme(axis.text = element_text(size = 15), axis.title = element_text(size = 15, face = "bold")) #+ scale_group_discrete(labels = as.character(c("Constructive\nCollectivist","Constructive\nIndividualist","Disruptive\nCollectivist","Disruptive\nIndividualistic","Random")))  
-	# plot <- plot + ylim(0, 1.0)
+	plot <- plot + ylim(0, 1.0)
 	suppressMessages(ggsave(sprintf("plots/%s/EnvState.png", subfolder), height=6, width=10, units="in", dpi=500))
 
 
@@ -88,7 +82,7 @@ buildPlots <- function(gameresultslog, subfolder){
 	plot <- plot + geom_line(stat="identity")
 	plot <- plot + geom_point(aes(color=agg$playerName)) 
 	plot <- plot + labs(x = "Curr Round Id", y = "Econ State", color="Player Type") + theme(axis.text = element_text(size = 15), axis.title = element_text(size = 15, face = "bold")) #+ scale_group_discrete(labels = as.character(c("Constructive\nCollectivist","Constructive\nIndividualist","Disruptive\nCollectivist","Disruptive\nIndividualistic","Random")))  
-	# plot <- plot + ylim(0, 1.0)
+	plot <- plot + ylim(0, 1.0)
 	suppressMessages(ggsave(sprintf("plots/%s/EconState.png", subfolder), height=6, width=10, units="in", dpi=500))
 
 
@@ -131,7 +125,7 @@ buildPlots <- function(gameresultslog, subfolder){
 	plot <- plot + geom_line(stat = "summary", fun.y = "mean")
 	plot <- plot + geom_point(aes(x = agg$roundId, y = agg$value, color = agg$variable), stat = "summary", fun.y = "mean") 
 	plot <- plot + labs(x = "Curr Round Id", y = "Max. Emotion Intensity", color="Emotion Type") + theme(axis.text = element_text(size = 15), axis.title = element_text(size = 15, face = "bold")) #+ scale_group_discrete(labels = as.character(c("Constructive\nCollectivist","Constructive\nIndividualist","Disruptive\nCollectivist","Disruptive\nIndividualistic","Random")))  
-	plot <- plot + ylim(0, 5.0)
+	plot <- plot + ylim(0.0, 5.0)
 	suppressMessages(ggsave(sprintf("plots/%s/Emotions.png", subfolder), height=6, width=10, units="in", dpi=500))
 
 }

@@ -1,19 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0639d0ba-cf5a-493c-bca0-69d133fc9e06" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/Assets/StreamingAssets/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/StreamingAssets/config.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extractDataFromMongo/R/input/gameresultslog.csv" beforeDir="false" afterPath="$PROJECT_DIR$/extractDataFromMongo/R/input/gameresultslog.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extractDataFromMongo/R/plots/BALANCED-COOPERATOR/EconState.png" beforeDir="false" afterPath="$PROJECT_DIR$/extractDataFromMongo/R/plots/BALANCED-COOPERATOR/EconState.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extractDataFromMongo/R/plots/BALANCED-COOPERATOR/EnvState.png" beforeDir="false" afterPath="$PROJECT_DIR$/extractDataFromMongo/R/plots/BALANCED-COOPERATOR/EnvState.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extractDataFromMongo/R/plots/BALANCED-COOPERATOR/OutcomeFrequencies.png" beforeDir="false" afterPath="$PROJECT_DIR$/extractDataFromMongo/R/plots/BALANCED-COOPERATOR/OutcomeFrequencies.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extractDataFromMongo/R/plots/BALANCED-COOPERATOR/StratsEnv.png" beforeDir="false" afterPath="$PROJECT_DIR$/extractDataFromMongo/R/plots/BALANCED-COOPERATOR/StratsEnv.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extractDataFromMongo/R/plots/BALANCED-DEFECTOR/EconState.png" beforeDir="false" afterPath="$PROJECT_DIR$/extractDataFromMongo/R/plots/BALANCED-DEFECTOR/EconState.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extractDataFromMongo/R/plots/BALANCED-DEFECTOR/EnvState.png" beforeDir="false" afterPath="$PROJECT_DIR$/extractDataFromMongo/R/plots/BALANCED-DEFECTOR/EnvState.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extractDataFromMongo/R/plots/BALANCED-DEFECTOR/OutcomeFrequencies.png" beforeDir="false" afterPath="$PROJECT_DIR$/extractDataFromMongo/R/plots/BALANCED-DEFECTOR/OutcomeFrequencies.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extractDataFromMongo/R/plots/BALANCED-DEFECTOR/StratsEnv.png" beforeDir="false" afterPath="$PROJECT_DIR$/extractDataFromMongo/R/plots/BALANCED-DEFECTOR/StratsEnv.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extractDataFromMongo/R/scripts/plotsGenerator.r" beforeDir="false" afterPath="$PROJECT_DIR$/extractDataFromMongo/R/scripts/plotsGenerator.r" afterDir="false" />
-    </list>
+    <list default="true" id="0639d0ba-cf5a-493c-bca0-69d133fc9e06" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -668,12 +656,12 @@
       <workItem from="1590275590458" duration="2057000" />
       <workItem from="1590278195757" duration="3807000" />
       <workItem from="1590440398475" duration="15818000" />
-      <workItem from="1590603074383" duration="16060000" />
+      <workItem from="1590603074383" duration="16677000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="225216000" />
+    <option name="totallyTimeSpent" value="225833000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -688,13 +676,13 @@
     <frame x="0" y="0" width="1920" height="1080" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49870467" visible="true" weight="0.16008538" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49870467" visible="true" weight="0.16008538" />
       <window_info id="Structure" order="1" sideWeight="0.5012953" side_tool="true" weight="0.18005739" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32983193" />
       <window_info anchor="bottom" id="Run" order="2" />
-      <window_info anchor="bottom" id="Debug" order="3" visible="true" weight="0.25945377" />
+      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.25945377" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32983193" />
