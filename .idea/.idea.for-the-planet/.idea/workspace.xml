@@ -2,21 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0639d0ba-cf5a-493c-bca0-69d133fc9e06" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.for-the-planet/.idea/indexLayout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.for-the-planet/.idea/indexLayout.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.for-the-planet/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.for-the-planet/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/GameSetupFunctionalities.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/GameSetupFunctionalities.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Player/AIPlayer/EmotionalAIPlayer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Player/AIPlayer/EmotionalAIPlayer.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/StreamingAssets/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/StreamingAssets/config.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/extractDataFromMongo/R/input/gameresultslog.csv" beforeDir="false" afterPath="$PROJECT_DIR$/extractDataFromMongo/R/input/gameresultslog.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extractDataFromMongo/R/plots.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/extractDataFromMongo/R/plots/EconState.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/extractDataFromMongo/R/plots/EnvState.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/extractDataFromMongo/R/plots/Mood.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/extractDataFromMongo/R/plots/OutcomeFrequencies.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/extractDataFromMongo/R/plots/StratsEnv.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/extractDataFromMongo/R/plots/BALANCED-COOPERATOR/EconState.png" beforeDir="false" afterPath="$PROJECT_DIR$/extractDataFromMongo/R/plots/BALANCED-COOPERATOR/EconState.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extractDataFromMongo/R/plots/BALANCED-COOPERATOR/EnvState.png" beforeDir="false" afterPath="$PROJECT_DIR$/extractDataFromMongo/R/plots/BALANCED-COOPERATOR/EnvState.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extractDataFromMongo/R/plots/BALANCED-COOPERATOR/OutcomeFrequencies.png" beforeDir="false" afterPath="$PROJECT_DIR$/extractDataFromMongo/R/plots/BALANCED-COOPERATOR/OutcomeFrequencies.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extractDataFromMongo/R/plots/BALANCED-COOPERATOR/StratsEnv.png" beforeDir="false" afterPath="$PROJECT_DIR$/extractDataFromMongo/R/plots/BALANCED-COOPERATOR/StratsEnv.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extractDataFromMongo/R/plots/BALANCED-DEFECTOR/EconState.png" beforeDir="false" afterPath="$PROJECT_DIR$/extractDataFromMongo/R/plots/BALANCED-DEFECTOR/EconState.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extractDataFromMongo/R/plots/BALANCED-DEFECTOR/EnvState.png" beforeDir="false" afterPath="$PROJECT_DIR$/extractDataFromMongo/R/plots/BALANCED-DEFECTOR/EnvState.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extractDataFromMongo/R/plots/BALANCED-DEFECTOR/OutcomeFrequencies.png" beforeDir="false" afterPath="$PROJECT_DIR$/extractDataFromMongo/R/plots/BALANCED-DEFECTOR/OutcomeFrequencies.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extractDataFromMongo/R/plots/BALANCED-DEFECTOR/StratsEnv.png" beforeDir="false" afterPath="$PROJECT_DIR$/extractDataFromMongo/R/plots/BALANCED-DEFECTOR/StratsEnv.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/extractDataFromMongo/R/scripts/plotsGenerator.r" beforeDir="false" afterPath="$PROJECT_DIR$/extractDataFromMongo/R/scripts/plotsGenerator.r" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pdiTransformation/pdiTransformation2.ktr" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pdiTransformation/transformation.ktr" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -29,8 +25,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Assets/Scripts/GameManager.cs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="97">
-              <caret line="341" selection-start-line="341" selection-end-line="341" />
+            <state relative-caret-position="313">
+              <caret line="356" column="32" selection-start-line="356" selection-start-column="32" selection-end-line="356" selection-end-column="32" />
               <folding>
                 <marker date="1590279716831" expanded="false" signature="7:204" ph="..." />
                 <marker date="1590279716831" expanded="true" signature="247:23796" ph="{...}" />
@@ -247,8 +243,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Assets/Scripts/GameSetupFunctionalities.cs">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="173">
-              <caret line="104" column="54" lean-forward="true" selection-start-line="104" selection-start-column="54" selection-end-line="104" selection-end-column="54" />
+            <state relative-caret-position="293">
+              <caret line="73" column="26" selection-start-line="73" selection-start-column="26" selection-end-line="73" selection-end-column="26" />
               <folding>
                 <marker date="1590693950377" expanded="false" signature="6:112" ph="..." />
                 <marker date="1590693950377" expanded="true" signature="168:11057" ph="{...}" />
@@ -549,8 +545,8 @@
         <option value="$PROJECT_DIR$/Assets/Scripts/GameManager.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/DiceManager/DiceLogic.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Player/AIPlayer/MCTS-Core/Classes/Board.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/GameSetupFunctionalities.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Player/AIPlayer/EmotionalAIPlayer.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/GameSetupFunctionalities.cs" />
       </list>
     </option>
   </component>
@@ -672,12 +668,12 @@
       <workItem from="1590275590458" duration="2057000" />
       <workItem from="1590278195757" duration="3807000" />
       <workItem from="1590440398475" duration="15818000" />
-      <workItem from="1590603074383" duration="14538000" />
+      <workItem from="1590603074383" duration="16060000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="223694000" />
+    <option name="totallyTimeSpent" value="225216000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -767,6 +763,25 @@
   </component>
   <component name="UnityProjectConfiguration" hasMinimizedUI="true" />
   <component name="UnityUnitTestConfiguration" currentTestLauncher="NUnit" />
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Assets/Scripts/GameManager.cs</url>
+          <line>348</line>
+          <properties documentPath="$PROJECT_DIR$/Assets/Scripts/GameManager.cs" initialLine="348">
+            <startOffsets>
+              <option value="14271" />
+            </startOffsets>
+            <endOffsets>
+              <option value="14314" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
   <component name="debuggerHistoryManager">
     <expressions id="evaluateExpression">
       <expression>
@@ -1629,35 +1644,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Assets/Scripts/GameSetupFunctionalities.cs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="173">
-          <caret line="104" column="54" lean-forward="true" selection-start-line="104" selection-start-column="54" selection-end-line="104" selection-end-column="54" />
-          <folding>
-            <marker date="1590693950377" expanded="false" signature="6:112" ph="..." />
-            <marker date="1590693950377" expanded="true" signature="168:11057" ph="{...}" />
-            <marker date="1590693950377" expanded="true" signature="487:8737" ph="{...}" />
-            <marker date="1590693950377" expanded="true" signature="533:1030" ph="{...}" />
-            <marker date="1590693950377" expanded="true" signature="1200:1283" ph="{...}" />
-            <marker date="1590693950377" expanded="true" signature="1395:7721" ph="{...}" />
-            <marker date="1590693950377" expanded="true" signature="1619:2228" ph="{...}" />
-            <marker date="1590693950377" expanded="true" signature="2283:7711" ph="{...}" />
-            <marker date="1590693950377" expanded="true" signature="7441:7556" ph="{...}" />
-            <marker date="1590693950377" expanded="true" signature="7581:7670" ph="{...}" />
-            <marker date="1590693950377" expanded="true" signature="7786:8195" ph="/* string pattern = &quot;FIXED:[WL]+&quot;; ... */" />
-            <marker date="1590693950377" expanded="true" signature="8239:8719" ph="{...}" />
-            <marker date="1590693950377" expanded="true" signature="8756:9786" ph="{...}" />
-            <marker date="1590693950377" expanded="true" signature="8837:9472" ph="{...}" />
-            <marker date="1590693950377" expanded="true" signature="9806:10392" ph="{...}" />
-            <marker date="1590693950377" expanded="true" signature="9917:9957" ph="{...}" />
-            <marker date="1590693950377" expanded="true" signature="10177:10331" ph="{...}" />
-            <marker date="1590693950377" expanded="true" signature="10459:11050" ph="{...}" />
-            <marker date="1590693950377" expanded="true" signature="10588:11044" ph="{...}" />
-            <marker date="1590693950377" expanded="true" signature="10661:11034" ph="/* UIStartGameButton.gameObject.SetActive(true); ... */" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Assets/Scripts/Player/AIPlayer/EmotionalAIPlayer.cs">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-428">
@@ -1752,10 +1738,39 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Assets/Scripts/GameSetupFunctionalities.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="293">
+          <caret line="73" column="26" selection-start-line="73" selection-start-column="26" selection-end-line="73" selection-end-column="26" />
+          <folding>
+            <marker date="1590693950377" expanded="false" signature="6:112" ph="..." />
+            <marker date="1590693950377" expanded="true" signature="168:11057" ph="{...}" />
+            <marker date="1590693950377" expanded="true" signature="487:8737" ph="{...}" />
+            <marker date="1590693950377" expanded="true" signature="533:1030" ph="{...}" />
+            <marker date="1590693950377" expanded="true" signature="1200:1283" ph="{...}" />
+            <marker date="1590693950377" expanded="true" signature="1395:7721" ph="{...}" />
+            <marker date="1590693950377" expanded="true" signature="1619:2228" ph="{...}" />
+            <marker date="1590693950377" expanded="true" signature="2283:7711" ph="{...}" />
+            <marker date="1590693950377" expanded="true" signature="7441:7556" ph="{...}" />
+            <marker date="1590693950377" expanded="true" signature="7581:7670" ph="{...}" />
+            <marker date="1590693950377" expanded="true" signature="7786:8195" ph="/* string pattern = &quot;FIXED:[WL]+&quot;; ... */" />
+            <marker date="1590693950377" expanded="true" signature="8239:8719" ph="{...}" />
+            <marker date="1590693950377" expanded="true" signature="8756:9786" ph="{...}" />
+            <marker date="1590693950377" expanded="true" signature="8837:9472" ph="{...}" />
+            <marker date="1590693950377" expanded="true" signature="9806:10392" ph="{...}" />
+            <marker date="1590693950377" expanded="true" signature="9917:9957" ph="{...}" />
+            <marker date="1590693950377" expanded="true" signature="10177:10331" ph="{...}" />
+            <marker date="1590693950377" expanded="true" signature="10459:11050" ph="{...}" />
+            <marker date="1590693950377" expanded="true" signature="10588:11044" ph="{...}" />
+            <marker date="1590693950377" expanded="true" signature="10661:11034" ph="/* UIStartGameButton.gameObject.SetActive(true); ... */" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Assets/Scripts/GameManager.cs">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="97">
-          <caret line="341" selection-start-line="341" selection-end-line="341" />
+        <state relative-caret-position="313">
+          <caret line="356" column="32" selection-start-line="356" selection-start-column="32" selection-end-line="356" selection-end-column="32" />
           <folding>
             <marker date="1590279716831" expanded="false" signature="7:204" ph="..." />
             <marker date="1590279716831" expanded="true" signature="247:23796" ph="{...}" />
