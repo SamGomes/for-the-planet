@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0639d0ba-cf5a-493c-bca0-69d133fc9e06" name="Default Changelist" comment="" />
+    <list default="true" id="0639d0ba-cf5a-493c-bca0-69d133fc9e06" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.for-the-planet/.idea/indexLayout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.for-the-planet/.idea/indexLayout.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.for-the-planet/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.for-the-planet/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -103,7 +106,7 @@
         <entry file="file://$PROJECT_DIR$/Assets/Scripts/Player/AIPlayer/EmotionalAIPlayer.cs">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="-428">
-              <caret line="593" column="8" lean-forward="true" selection-start-line="593" selection-start-column="8" selection-end-line="593" selection-end-column="8" />
+              <caret line="593" column="8" selection-start-line="593" selection-start-column="8" selection-end-line="593" selection-end-column="8" />
               <folding>
                 <marker date="1590693942991" expanded="true" signature="6:236" ph="..." />
                 <marker date="1590693942991" expanded="true" signature="348:5742" ph="{...}" />
@@ -656,12 +659,12 @@
       <workItem from="1590275590458" duration="2057000" />
       <workItem from="1590278195757" duration="3807000" />
       <workItem from="1590440398475" duration="15818000" />
-      <workItem from="1590603074383" duration="16677000" />
+      <workItem from="1590603074383" duration="17276000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="225833000" />
+    <option name="totallyTimeSpent" value="226432000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -682,7 +685,7 @@
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32983193" />
       <window_info anchor="bottom" id="Run" order="2" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.25945377" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.25945377" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32983193" />
@@ -1635,7 +1638,7 @@
     <entry file="file://$PROJECT_DIR$/Assets/Scripts/Player/AIPlayer/EmotionalAIPlayer.cs">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-428">
-          <caret line="593" column="8" lean-forward="true" selection-start-line="593" selection-start-column="8" selection-end-line="593" selection-end-column="8" />
+          <caret line="593" column="8" selection-start-line="593" selection-start-column="8" selection-end-line="593" selection-end-column="8" />
           <folding>
             <marker date="1590693942991" expanded="true" signature="6:236" ph="..." />
             <marker date="1590693942991" expanded="true" signature="348:5742" ph="{...}" />
