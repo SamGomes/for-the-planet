@@ -20,16 +20,17 @@ gameresultslog <- read.csv(file="input/gameresultslog.csv", header=TRUE, sep=","
 
 
 # plot game balance
-endGames <- gameresultslog[gameresultslog$gameState == "VICTORY" | gameresultslog$gameState == "LOSS" ,]
 roundsNumL <- c()
 num_played_roundsL <- c()
 playerNamesL <- c()
 
-gameresultslog <- gameresultslog[!grepl("RANDOM", gameresultslog$playerName) & gameresultslog$playerName != "BALANCED-COOPERATOR" & gameresultslog$playerName != "BALANCED-DEFECTOR" ,]
+gameresultslog <- gameresultslog[gameresultslog$playerName != "BALANCED-COOPERATOR" & gameresultslog$playerName != "BALANCED-DEFECTOR" ,]
 gameresultslogD <- gameresultslog[grepl("DEF", gameresultslog$playerName),]
 gameresultslogC <- gameresultslog[grepl("COOP", gameresultslog$playerName),]
 
 buildPlots <- function(gameresultslog, subfolder){
+
+	endGames <- gameresultslog[gameresultslog$gameState == "VICTORY" | gameresultslog$gameState == "LOSS" ,]
 
 	path = sprintf("plots/%s", subfolder)
 	if(!dir.exists(path)){
@@ -69,10 +70,20 @@ buildPlots <- function(gameresultslog, subfolder){
 	joined2 <- full_join(filteredJoined, cnt)
 	winners = joined2[joined2$n==1,]
 	drawers = joined2[joined2$n!=1,]
-	totalGameResults <- data.frame(roundsNumL,num_played_roundsL,playerNamesL)
-	plot <- ggplot(totalGameResults, aes(x = totalGameResults$roundsNumL , y=totalGameResults$num_played_roundsL, color=playerNamesL )) + geom_line(stat = "summary", fun.y = "mean")#  + facet_grid(playerNamesL ~ .)
+
+	wonGames <- winners  %>% count(playerName)
+	playedGames <- endGames  %>% count(playerName)
+	colnames(wonGames) <- c("playerName", "wins")
+	colnames(playedGames) <- c("playerName", "total")
+	ratio <- full_join(wonGames, playedGames)
+
+	ratio[is.na(ratio)] <- 0
+
+	plot <- ggplot(ratio, aes(x = playerName , y=wins/total, fill=playerName)) 
+	plot <- plot + geom_bar(stat = "identity")#  + facet_grid(playerNamesL ~ .)
 	plot <- plot + ylim(0, 1.0)
-	plot <- plot + labs(x = "num_played_rounds", y = "WinRate (%)") + theme(axis.text=element_text(size = 15), axis.title=element_text(size = 15, face = "bold")) #+ scale_x_discrete(labels = as.character(c("Constructive\nCollectivist","Constructive\nIndividualist","Disruptive\nCollectivist","Disruptive\nIndividualistic","Random")))  
+	plot <- plot + labs(x = "Player Type", y = "WinRate (%)") 
+	plot <- plot + theme(axis.ticks = element_blank(), axis.text.x = element_blank())
 	suppressMessages(ggsave(sprintf("plots/%s/WinRate.png", subfolder), height=6, width=10, units="in", dpi=500))
 
 
