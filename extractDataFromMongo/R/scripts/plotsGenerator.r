@@ -38,26 +38,23 @@ buildPlots <- function(gameresultslog, subfolder){
 	}
 
 
-	playerNames = unlist(distinct(gameresultslog, playerName))
-	k <- 0
-	for(j in  seq(from=1, to=length(playerNames), by=1)) {
-		gameresultsOfJ <- endGames[endGames$playerName == playerNames[j],]
-		if(length(rownames(gameresultsOfJ)) > 0){
-			for(i in  seq(from=1, to=max(gameresultsOfJ$roundId), by=1)) {
-			  roundsNumL[k] <- i #assume the id of the group is the first id of the players
-			  num_played_roundsL[k] <- length(which(gameresultsOfJ$roundId >= i))/length(gameresultsOfJ$roundId)  #assume the id of the group is the first id of the players
-			  playerNamesL[k] <- playerNames[j]
-			  k = k + 1
-			}
-		}
-	}
-	totalGameResults <- data.frame(roundsNumL,num_played_roundsL,playerNamesL)
-	plot <- ggplot(totalGameResults, aes(x = totalGameResults$roundsNumL , y=totalGameResults$num_played_roundsL, color=playerNamesL )) + geom_line(stat = "summary", fun.y = "mean")#  + facet_grid(playerNamesL ~ .)
+	# plot survival rates
+ 	agg <- gameresultslog  %>% count(roundId, playerName)
+	agg2 <- endGames  %>% count(playerName)
+
+	colnames(agg) <- c("roundId", "playerName", "survived")
+	colnames(agg2) <- c("playerName", "total")
+	
+	aggJ <- full_join(agg,agg2)
+
+	aggJDiv <- aggJ$survived / aggJ$total
+	aggJDiv[is.na(aggJDiv)] <- 0
+
+	plot <- ggplot(aggJ, aes(x = roundId, y=aggJDiv, color=playerName)) 
+	plot <- plot + geom_line(stat = "identity")#  + facet_grid(playerNamesL ~ .)
 	plot <- plot + ylim(0, 1.0)
-	plot <- plot + labs(x = "num_played_rounds", y = "Survived Games (%)") + theme(axis.text=element_text(size = 15), axis.title=element_text(size = 15, face = "bold")) #+ scale_x_discrete(labels = as.character(c("Constructive\nCollectivist","Constructive\nIndividualist","Disruptive\nCollectivist","Disruptive\nIndividualistic","Random")))  
-	suppressMessages(ggsave(sprintf("plots/%s/OutcomeFrequencies.png", subfolder), height=6, width=10, units="in", dpi=500))
-
-
+	plot <- plot + labs(x = "Round Num", y = "Survived Games (%)") + theme(axis.text=element_text(size = 15), axis.title=element_text(size = 15, face = "bold")) #+ scale_x_discrete(labels = as.character(c("Constructive\nCollectivist","Constructive\nIndividualist","Disruptive\nCollectivist","Disruptive\nIndividualistic","Random")))  
+	suppressMessages(ggsave(sprintf("plots/%s/SurvivalRate.png", subfolder), height=6, width=10, units="in", dpi=500))
 
 
 	# plot win rate and draw rate
