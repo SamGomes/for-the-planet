@@ -1,5 +1,5 @@
     {
-    "maxNumRounds": 5,
+    "maxNumRounds": 10,
 	
 	"logManagerStyle": "DEBUG",
 	"mongoConnector": "mongodb+srv://admin:admin@fortheplanet-ya50d.mongodb.net/test?retryWrites=true&w=majority",
@@ -8,7 +8,7 @@
     "isSimulation": false,
     "numGamesToPlay": 35,
 
-    "roundBudget": 10,
+    "roundBudget": 14,
     "environmentDecayBudget": [7,7],
     "playerDecayBudget": [2,2],
 
@@ -23,13 +23,13 @@
                         "interactionType": "NONE"
                     },
                     {
-                        "name": "Rita17",
+                        "name": "Player423",
                         "fatimaRpcPath": "NONE",
                         "playerType": "AI-FAIR",
                         "interactionType": "NONE"
                     },
                     {
-                        "name": "Greta2003",
+                        "name": "Player71",
                         "fatimaRpcPath": "NONE",
                         "playerType": "AI-FAIR",
                         "interactionType": "NONE"
