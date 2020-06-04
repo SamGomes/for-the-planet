@@ -153,7 +153,7 @@ public class PopupScreenFunctionalities
         StopAllAnimations();
     }
 
-    private IEnumerator DisplayPoppupWithDelayCoroutine(string text, float delay)
+    public IEnumerator DisplayPoppupWithDelayCoroutine(string text, float delay)
     {
         yield return new WaitForSeconds(delay);
         DisplayPoppup(text);

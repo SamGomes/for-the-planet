@@ -406,14 +406,14 @@ public class Player
     public IEnumerator TakeAllMoney()
     {
         this.money = 0;
-        yield return playerMonoBehaviourFunctionalities.StartCoroutine(this.dynamicSlider.UpdateSliderValue(money));
+        yield return playerMonoBehaviourFunctionalities.StartCoroutine(this.dynamicSlider.UpdateSliderValue(money,true));
     }
     public IEnumerator SetMoney(float money)
     {
         this.money = Mathf.Clamp01(money);
         if (dynamicSlider != null)
         {
-            yield return playerMonoBehaviourFunctionalities.StartCoroutine(this.dynamicSlider.UpdateSliderValue(money));
+            yield return playerMonoBehaviourFunctionalities.StartCoroutine(this.dynamicSlider.UpdateSliderValue(money,true));
         }
     }
 

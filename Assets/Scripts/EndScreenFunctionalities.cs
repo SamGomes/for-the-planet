@@ -181,7 +181,7 @@ public class EndScreenFunctionalities : MonoBehaviour
                         newTableEntry.GetComponentsInChildren<Text>()[i + 1].text = "-";
                     }
                 }
-            newTableEntry.GetComponentsInChildren<Text>()[6].text = p.gains.ToString();
+            newTableEntry.GetComponentsInChildren<Text>()[11].text = p.gains.ToString();
             }
             GameObject newDummyLineEntry = Object.Instantiate(tableEntryPrefab, environmentContributionsTableUI.transform);
             this.crownUI = newDummyLineEntry.transform.Find("winner").gameObject.GetComponent<Image>();
@@ -193,13 +193,18 @@ public class EndScreenFunctionalities : MonoBehaviour
             newDummyLineEntry.GetComponentsInChildren<Text>()[4].text = "";
             newDummyLineEntry.GetComponentsInChildren<Text>()[5].text = "";
             newDummyLineEntry.GetComponentsInChildren<Text>()[6].text = "";
+            newDummyLineEntry.GetComponentsInChildren<Text>()[7].text = "";
+            newDummyLineEntry.GetComponentsInChildren<Text>()[8].text = "";
+            newDummyLineEntry.GetComponentsInChildren<Text>()[9].text = "";
+            newDummyLineEntry.GetComponentsInChildren<Text>()[10].text = "";
+            newDummyLineEntry.GetComponentsInChildren<Text>()[11].text = "";
 
             GameObject environmentEntry = Object.Instantiate(tableEntryPrefab, environmentContributionsTableUI.transform);
             this.crownUI = environmentEntry.transform.Find("winner").gameObject.GetComponent<Image>();
             crownUI.enabled = false;
             Text textGameObject = environmentEntry.GetComponentsInChildren<Text>()[0];
             textGameObject.text = "ENVIRONMENT";
-            environmentEntry.GetComponentsInChildren<Text>()[6].text = "";
+            environmentEntry.GetComponentsInChildren<Text>()[11].text = "";
             textGameObject.fontStyle = FontStyle.Bold;
             for (int i = 0; i < GameProperties.configurableProperties.maxNumRounds; i++)
             {

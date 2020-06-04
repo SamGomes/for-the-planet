@@ -235,6 +235,7 @@ public class AIPlayerFair : AIPlayer
         else
         {
             int environmentInvestment = GameGlobals.players[0].environmentInvestmentPerRound[GameGlobals.currGameRoundId-1] + UnityEngine.Random.Range(-1, 2);
+            if(environmentInvestment == 15) { environmentInvestment = 14; }
             int economyInvestment = GameGlobals.roundBudget - environmentInvestment;
 
             yield return InvestInEnvironment(environmentInvestment);

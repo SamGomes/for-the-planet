@@ -111,7 +111,7 @@ public class DynamicallyConfigurableGameProperties
     public int roundBudget = 20; //Change in IGG to 2x Fair
     public int[] environmentDecayBudget = new int[]{5,5};
     public int[] playerDecayBudget = new int[]{5,5};
-    public int maxNumRounds = 3;
+    public int maxNumRounds = 10; //10 generations
 }
 
 [Serializable]

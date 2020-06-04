@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -45,7 +46,7 @@ public class DynamicSlider
         return sliderUI.value;
     }
 
-    public IEnumerator UpdateSliderValue(float targetSliderValue)
+    public IEnumerator UpdateSliderValue(float targetSliderValue,Boolean arrows)
     {
         if (GameGlobals.isSimulation)
         {
@@ -67,18 +68,21 @@ public class DynamicSlider
 
         textToDisplay = string.Format("{0:+;-;+}{0,2:#;#;0}", growth);
 
-
-        if (growth > 0)
+        if (arrows)
         {
-            valueUpdateUIup.SetActive(false);
-            valueUpdateUIup.SetActive(true);
-            valueUpdateUIup.GetComponentInChildren<Text>().text = System.Convert.ToInt32(GameGlobals.diffCP).ToString();
-        }
-        else if (growth < 0)
-        {
-            valueUpdateUIdown.SetActive(false);
-            valueUpdateUIdown.SetActive(true);
-            valueUpdateUIdown.GetComponentInChildren<Text>().text = System.Convert.ToInt32(GameGlobals.diffCP).ToString();
+            if (growth > 0)
+            {
+                valueUpdateUIup.SetActive(false);
+                valueUpdateUIup.SetActive(true);
+                textToDisplay = string.Format("{0:+;-;+}{0,2:#;#;0}", System.Convert.ToInt32(GameGlobals.diffCP));
+                valueUpdateUIup.GetComponentInChildren<Text>().text = textToDisplay;
+            }
+            else if (growth < 0)
+            {
+                valueUpdateUIdown.SetActive(false);
+                valueUpdateUIdown.SetActive(true);
+                valueUpdateUIdown.GetComponentInChildren<Text>().text = System.Convert.ToInt32(GameGlobals.diffCP).ToString();
+            }
         }
 
         while (Mathf.Abs(targetSliderValue - currSliderValue) > 0.02f)

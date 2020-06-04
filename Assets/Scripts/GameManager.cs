@@ -46,6 +46,8 @@ public class GameManager : MonoBehaviour {
     public PopupScreenFunctionalities infoPoppupLossRef;
     public PopupScreenFunctionalities infoPoppupWinRef;
 
+    public GameObject poppupScreen;
+
     public GameObject CommonAreaUI;
     public Slider environmentSliderSceneElement;
     private DynamicSlider envDynamicSlider;
@@ -81,14 +83,21 @@ public class GameManager : MonoBehaviour {
         return 0;
     }
 
-        IEnumerator WaitingForAIPlayers() {
+    IEnumerator WaitingForAIPlayers() {
 
         waitingForPlayers.SetActive(true);
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(UnityEngine.Random.Range(5, 11));
         waitingForPlayers.SetActive(false);
 
     }
-   
+
+    //Waiting for popScreen
+    IEnumerator WaitingForAIPlayersToPlay()
+    {
+        yield return new WaitForSeconds(UnityEngine.Random.Range(0, 2));
+
+    }
+
     void Start()
     {
         currGamePhase = GameProperties.GamePhase.BUDGET_ALLOCATION;
@@ -117,7 +126,6 @@ public class GameManager : MonoBehaviour {
         infoPoppupLossRef = new PopupScreenFunctionalities(false, InterruptGame, ContinueGame, poppupPrefab, canvas, GameGlobals.monoBehaviourFunctionalities, Resources.Load<Sprite>("Textures/UI/Icons/InfoLoss"), new Color(0.9f, 0.8f, 0.8f), "Audio/albumLoss");
         infoPoppupWinRef = new PopupScreenFunctionalities(false, InterruptGame, ContinueGame, poppupPrefab, canvas, GameGlobals.monoBehaviourFunctionalities, Resources.Load<Sprite>("Textures/UI/Icons/InfoWin"), new Color(0.9f, 0.9f, 0.8f), "Audio/albumVictory");
         infoPoppupNeutralRef = new PopupScreenFunctionalities(false, InterruptGame, ContinueGame, poppupPrefab, canvas, GameGlobals.monoBehaviourFunctionalities, Resources.Load<Sprite>("Textures/UI/Icons/Info"), new Color(0.9f, 0.9f, 0.9f), "Audio/snap");
-        
 
         gameMainSceneFinished = false;
         phaseEndDelay = 2.0f;
@@ -127,7 +135,7 @@ public class GameManager : MonoBehaviour {
         GameGlobals.envRenewperRound = 0;
         GameGlobals.roundBudget = 14; 
         GameGlobals.envStatePerRound = new List<int>();
-        GameGlobals.firstGeneration = true;
+        GameGlobals.firstGeneration = false;
 
         if (GameGlobals.firstGeneration)
         {
@@ -152,14 +160,16 @@ public class GameManager : MonoBehaviour {
 
         waitingForPlayers = GameObject.Find("WaitingForPlayers");
 
+        poppupScreen = GameObject.Find("PoppupScreen");
+
         if (GameGlobals.firstGeneration)
         {
-            GenerationTextUI.text = "Hello!\n" + "You belong to the First Generation.\n" + "Take resources from the Common-Pool to win the game, but if you take too much " +
+            GenerationTextUI.text = "Hello!\n" + "You belong to a First Generation.\n" + "Take resources from the Common-Pool to win the game, but if you take too much " +
     "there will be no next generation.";
         }
         else
         {
-            GenerationTextUI.text = "Hello!\n" + "You belong to the Sixth Generation.\n" + "Take from Common-Pool but if you take too much " +
+            GenerationTextUI.text = "Hello!\n" + "You belong to a Sixth Generation.\n" + "Take from Common-Pool but if you take too much " +
     "there will be no next generation.";
         }
 
@@ -192,6 +202,7 @@ public class GameManager : MonoBehaviour {
             GenerationText.SetActive(false);
             waitingForPlayers.SetActive(false);
             UIroundSum.SetActive(false);
+            poppupScreen.SetActive(false);
             StartGameRoundForAllPlayers();
         }
         else
@@ -216,12 +227,13 @@ public class GameManager : MonoBehaviour {
             GameGlobals.players[2].SetFace(Resources.Load<Sprite>("Textures/Generation/player_icon"));
 
             envDynamicSlider = new DynamicSlider(environmentSliderSceneElement.gameObject, true);
-            StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState));
+            StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState,true));
             DontDestroyOnLoad(CommonAreaUI);
 
             rollDiceOverlay.SetActive(false);
+            poppupScreen.SetActive(false);
 
-            if(GameGlobals.skipTutorial)
+            if (GameGlobals.skipTutorial)
             {
                 tutorialScreen.SetActive(false);
                 newRoundScreen.SetActive(true);
@@ -310,7 +322,7 @@ public class GameManager : MonoBehaviour {
         if (!GameGlobals.isSimulation)
         {
             yield return GameGlobals.monoBehaviourFunctionalities.StartCoroutine(
-                envDynamicSlider.UpdateSliderValue(GameGlobals.envState));
+                envDynamicSlider.UpdateSliderValue(GameGlobals.envState,true));
         }
 
         currPlayer.SetEnvironmentResult(envIncrease);
@@ -340,7 +352,9 @@ public class GameManager : MonoBehaviour {
         if (numPlayersToAllocateBudget == 0)
         {
             currGamePhase = GameProperties.GamePhase.HISTORY_DISPLAY;
-            
+            StartCoroutine(WaitingForAIPlayersToPlay());
+            poppupScreen.SetActive(false);
+
             StartDisplayHistoryPhase();
             numPlayersToAllocateBudget = GameGlobals.players.Count;
         }
@@ -375,13 +389,16 @@ public class GameManager : MonoBehaviour {
                 GameGlobals.currGameRoundId++;
                 yield return new WaitForSeconds(1);
                 passRoundButton.gameObject.SetActive(true);
+                passRoundButton.onClick.RemoveAllListeners();
                 passRoundButton.onClick.AddListener(delegate ()
                 {
+                    RenewCommonPool(true);
                     if (this.stopbugButton) { //DO NOTHING}
                     }
                     else if (((GameGlobals.currGameRoundId == GameProperties.configurableProperties.maxNumRounds) &&
     (GameGlobals.envState <= GameGlobals.envThreshold)) || (GameGlobals.envState <= 0)) //environment exploded
                     {
+                        //RenewCommonPool(false);
                         this.stopbugButton = true;
                         GameGlobals.currGameState = GameProperties.GameState.LOSS;
                         GameGlobals.gameSceneManager.LoadEndScene();
@@ -389,6 +406,7 @@ public class GameManager : MonoBehaviour {
                     }
                     else if (GameGlobals.currGameRoundId == GameProperties.configurableProperties.maxNumRounds) //reached last round
                     {
+                        //RenewCommonPool(false);
                         this.stopbugButton = true;
                         GameGlobals.currGameState = GameProperties.GameState.VICTORY;
                         GameGlobals.gameSceneManager.LoadEndScene();
@@ -396,6 +414,7 @@ public class GameManager : MonoBehaviour {
                     }
                     else //normal round finished
                     {
+                        //RenewCommonPool(true);
                         currGamePhase = GameProperties.GamePhase.BUDGET_ALLOCATION;
                         newRoundScreen.SetActive(true);
                         UIroundSum.SetActive(false);
@@ -441,7 +460,7 @@ public class GameManager : MonoBehaviour {
             GameGlobals.envState = Mathf.Clamp01(GameGlobals.envState - envDecay);
             if (!GameGlobals.isSimulation)
             {
-                yield return StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState));
+                yield return StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState,true));
             }
 
             if (!GameGlobals.isSimulation && GameGlobals.isNarrated)
@@ -655,6 +674,7 @@ public class GameManager : MonoBehaviour {
     {
         Player currPlayer = GameGlobals.players[currPlayerIndex];
         Player nextPlayer = ChangeToNextPlayer(currPlayer);
+        poppupScreen.SetActive(true);
 
         numPlayersToAllocateBudget--;
 
@@ -734,24 +754,25 @@ public class GameManager : MonoBehaviour {
     {
         switch (genNumber)
         {
-            case 1: case 6:
+            case 1: case 6: case 7:
                 GenPhotoUI.sprite = firstGenPhoto;
                 break;
-            case 2: case 7:
+            case 2: case 8: case 9: case 10:
                 GenPhotoUI.sprite = Resources.Load<Sprite>("Textures/Generation/2ndgen_icon");
                 break;
-            case 3: case 8:
+            case 3: case 11: case 12: 
                 GenPhotoUI.sprite = Resources.Load<Sprite>("Textures/Generation/3rdgen_icon");
                 break;
-            case 4: case 9:
+            case 4: case 13: case 14:
                 GenPhotoUI.sprite = Resources.Load<Sprite>("Textures/Generation/4thgen_icon");
                 break;
-            case 5: case 10:
+            case 5: case 15:
                 GenPhotoUI.sprite = Resources.Load<Sprite>("Textures/Generation/5thgen_icon");
                 break;
         }
     }
 
+    //Take from common-pool what players choose
     private void TakeMoneyFromCommonPot()
     {
         //List<int> votes = new List<int>();
@@ -759,30 +780,22 @@ public class GameManager : MonoBehaviour {
         {
             GameGlobals.envState -= p.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT];
             this.roundTaken += p.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT];
-            GameGlobals.diffCP -= p.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT];
+            //GameGlobals.diffCP -= p.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT];
 
             //votes.Add(p.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT]);
         }
         //renew envState
-        GameGlobals.envRenewperRound = (float)(GameGlobals.envState * GameGlobals.envRenew);
-        GameGlobals.envState += GameGlobals.envRenewperRound;
-        GameGlobals.diffCP += GameGlobals.envRenewperRound;
-        if (GameGlobals.envState<=0) {
-            GameGlobals.envStatePerRound.Add(0);
-        }
-        else{
-            GameGlobals.envStatePerRound.Add(Convert.ToInt32(GameGlobals.envState));
-        }
-        StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState));
+        //GameGlobals.diffCP += GameGlobals.envRenewperRound;
+        StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState,false));
 
         UIroundSum.SetActive(true);
-        if(GameGlobals.diffCP > 0) { 
-        roundSumTex.text = "Taken-From Common-Pool: " + this.roundTaken.ToString() + "\n" 
-            + "Impact on the Common-Pool: " + "+" + Convert.ToInt32(GameGlobals.diffCP).ToString();
+        if(GameGlobals.diffCP > 0) {
+            roundSumTex.text = "Taken-From Common-Pool: " + this.roundTaken.ToString();/* + "\n" 
+            + "Impact on the Common-Pool: " + "+" + Convert.ToInt32(GameGlobals.diffCP).ToString();*/
         }
         else{
-            roundSumTex.text = "Taken-From Common-Pool: " + this.roundTaken.ToString() + "\n"
-            + "Impact on the Common-Pool: " + Convert.ToInt32(GameGlobals.diffCP).ToString();
+            roundSumTex.text = "Taken-From Common-Pool: " + this.roundTaken.ToString();/* + "\n"
+            + "Impact on the Common-Pool: " + Convert.ToInt32(GameGlobals.diffCP).ToString();*/
         }
         this.roundTaken = 0;
         GameGlobals.diffCP = 0;
@@ -817,5 +830,23 @@ public class GameManager : MonoBehaviour {
         StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState));
         */
     }
+    private void RenewCommonPool(Boolean arrows)
+    {
+        GameGlobals.envRenewperRound = (float)(GameGlobals.envState * GameGlobals.envRenew);
+        GameGlobals.envState += GameGlobals.envRenewperRound;
+        GameGlobals.diffCP += GameGlobals.envRenewperRound;
 
-}
+        if (GameGlobals.envState <= 0)
+        {
+            GameGlobals.envStatePerRound.Add(0);
+        }
+        else
+        {
+            GameGlobals.envStatePerRound.Add(Convert.ToInt32(GameGlobals.envState));
+        }
+
+        StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState, arrows));
+        GameGlobals.diffCP = 0;
+    }
+
+   }
