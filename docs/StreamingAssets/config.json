@@ -6,7 +6,7 @@
 
 	"areHumansOnSyncTablets": false,
     "isSimulation": false,
-    "numGamesToPlay": 35,
+    "numGamesToPlay": 1,
 
     "roundBudget": 14,
     "environmentDecayBudget": [7,7],
@@ -17,19 +17,19 @@
             "gameParameterizations": [{
                 "diceLogic": "RANDOM",
                 "playerParameterizations": [{
-                        "name": "Player",
+                        "name": "Player1",
                         "fatimaRpcPath": "NONE",
                         "playerType": "HUMAN",
                         "interactionType": "NONE"
                     },
                     {
-                        "name": "Player423",
+                        "name": "Player523",
                         "fatimaRpcPath": "NONE",
                         "playerType": "AI-FAIR",
                         "interactionType": "NONE"
                     },
                     {
-                        "name": "Player71",
+                        "name": "Player81",
                         "fatimaRpcPath": "NONE",
                         "playerType": "AI-FAIR",
                         "interactionType": "NONE"
