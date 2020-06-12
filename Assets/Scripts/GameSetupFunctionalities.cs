@@ -70,8 +70,12 @@ public class GameSetupFunctionalities : MonoBehaviour {
                     GameGlobals.players.Add(new AIPlayerBalancedCooperator(currParam.playerType, chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
                     break;
 
-                case "AI-FAIR":
-                    GameGlobals.players.Add(new AIPlayerFair(currParam.playerType, chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
+                case "AI-TIT-FOR-TAT":
+                    GameGlobals.players.Add(new AIPlayerTitForTat(currParam.playerType, chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
+                    break;
+
+                case "AI-COMPENSATOR":
+                    GameGlobals.players.Add(new AIPlayerCompensator(currParam.playerType, chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
                     break;
 
                 case "AI-ULTRA-FAIR":

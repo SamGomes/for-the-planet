@@ -31,6 +31,9 @@ public class GameManager : MonoBehaviour {
     public GameObject simulateInvestmentScreen;
     public Button simulateEvolutionButton;
     public GameObject waitingForPlayers;
+    
+    public GameObject ImpactCP;
+    public Text ImpactCPtext;
 
     public GameObject UIroundSum;
     public Text roundSumTex;
@@ -169,8 +172,8 @@ public class GameManager : MonoBehaviour {
         }
         else
         {
-            GenerationTextUI.text = "Hello!\n" + "You belong to a Sixth Generation.\n" + "Take from Common-Pool but if you take too much " +
-    "there will be no next generation.";
+            GenerationTextUI.text = "Hello!" + " You belong to a Sixth Generation.\n" + "The previous Generations left the Planet with the resources of value 60.\n" +
+                "Bellow, you can see their choices.\n" + "Take from Common-Pool but if you take too much there will be no next generation.";
         }
 
         GenerationNumberText = GameObject.Find("GenerationNumber");
@@ -183,6 +186,9 @@ public class GameManager : MonoBehaviour {
 
         UIroundSum = GameObject.Find("roundSumUI");
         roundSumTex = UIroundSum.transform.Find("roundSumTex").gameObject.GetComponent<Text>();
+
+        ImpactCP = GameObject.Find("ImpactCP");
+        ImpactCPtext = ImpactCP.transform.Find("ImpactCPtext").gameObject.GetComponent<Text>();
 
         int numPlayers = GameGlobals.players.Count;
         
@@ -203,6 +209,7 @@ public class GameManager : MonoBehaviour {
             waitingForPlayers.SetActive(false);
             UIroundSum.SetActive(false);
             poppupScreen.SetActive(false);
+            ImpactCP.SetActive(false);
             StartGameRoundForAllPlayers();
         }
         else
@@ -226,7 +233,7 @@ public class GameManager : MonoBehaviour {
             GameGlobals.players[1].SetFace(Resources.Load<Sprite>("Textures/Generation/player_icon"));
             GameGlobals.players[2].SetFace(Resources.Load<Sprite>("Textures/Generation/player_icon"));
 
-            envDynamicSlider = new DynamicSlider(environmentSliderSceneElement.gameObject, true);
+            envDynamicSlider = new DynamicSlider(environmentSliderSceneElement.gameObject, true, true);
             StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState,true));
             DontDestroyOnLoad(CommonAreaUI);
 
@@ -237,6 +244,7 @@ public class GameManager : MonoBehaviour {
             {
                 tutorialScreen.SetActive(false);
                 newRoundScreen.SetActive(true);
+                ImpactCP.SetActive(false);
                 GenerationText.SetActive(true);
                 StartCoroutine(WaitingForAIPlayers());
                 UIroundSum.SetActive(false);
@@ -249,6 +257,7 @@ public class GameManager : MonoBehaviour {
             advanceRoundButton.onClick.AddListener(delegate ()
             {
                 newRoundScreen.SetActive(false);
+                ImpactCP.SetActive(false);
                 GenerationText.SetActive(false);
                 StartGameRoundForAllPlayers();
             });
@@ -260,6 +269,7 @@ public class GameManager : MonoBehaviour {
                 GenerationText.SetActive(true);
                 StartCoroutine(WaitingForAIPlayers());
                 newRoundScreen.SetActive(true);
+                ImpactCP.SetActive(false);
             });
 
 
@@ -381,7 +391,11 @@ public class GameManager : MonoBehaviour {
                         {"playerGain", player.GetGains().ToString()},
                         {"envState", Convert.ToInt32(GameGlobals.envState).ToString()}
                     };
-                    StartCoroutine(GameGlobals.gameLogManager.WriteToLog("fortheplanetlogs", "strategies", logEntry));
+                //string data1 = {"id": 104,"name": "TESTE1"};
+
+                //StartCoroutine(GameGlobals.mongoAtlasLogManager.WriteToLog(logEntry));
+                //GameGlobals.mongoAtlasLogManager.Start(logEntry);
+
                 }
 
 
@@ -550,6 +564,7 @@ public class GameManager : MonoBehaviour {
                     if (GameGlobals.skipTutorial) {
                         StartCoroutine(WaitingForAIPlayers());
                         newRoundScreen.SetActive(true);
+                        ImpactCP.SetActive(false);
                         GenerationText.SetActive(true);
                     }
                     else { 
@@ -786,19 +801,17 @@ public class GameManager : MonoBehaviour {
         }
         //renew envState
         //GameGlobals.diffCP += GameGlobals.envRenewperRound;
-        StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState,false));
+        //StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState,false));
 
         UIroundSum.SetActive(true);
-        if(GameGlobals.diffCP > 0) {
-            roundSumTex.text = "Taken-From Common-Pool: " + this.roundTaken.ToString();/* + "\n" 
+        if(this.roundTaken > 0) {
+            roundSumTex.text = "To Take From the Common-Pool: " + this.roundTaken.ToString();/* + "\n" 
             + "Impact on the Common-Pool: " + "+" + Convert.ToInt32(GameGlobals.diffCP).ToString();*/
         }
         else{
-            roundSumTex.text = "Taken-From Common-Pool: " + this.roundTaken.ToString();/* + "\n"
+            roundSumTex.text = "To Take From the Common-Pool: " + this.roundTaken.ToString();/* + "\n"
             + "Impact on the Common-Pool: " + Convert.ToInt32(GameGlobals.diffCP).ToString();*/
         }
-        this.roundTaken = 0;
-        GameGlobals.diffCP = 0;
 
         //end generation
         GameGlobals.generation += 1;
@@ -845,7 +858,13 @@ public class GameManager : MonoBehaviour {
             GameGlobals.envStatePerRound.Add(Convert.ToInt32(GameGlobals.envState));
         }
 
+        ImpactCP.SetActive(true);
+        ImpactCPtext.GetComponent<Text>().text = "Taken-From the Common-Pool: -" + this.roundTaken.ToString() + "\n" +
+        "Common-Pool Renewed: +" + Convert.ToInt32(GameGlobals.diffCP).ToString() + "\n" +
+        "Impact on the Common-Pool: " + (Convert.ToInt32(GameGlobals.diffCP) - this.roundTaken).ToString();
+
         StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState, arrows));
+        this.roundTaken = 0;
         GameGlobals.diffCP = 0;
     }
 

@@ -28,6 +28,7 @@ public static class GameGlobals
     public static LogManager gameLogManager;
     public static AudioManager audioManager;
     public static GameManager gameManager;
+    public static MongoAtlasLogManager mongoAtlasLogManager;
 
     public static GameSceneManager gameSceneManager;
 

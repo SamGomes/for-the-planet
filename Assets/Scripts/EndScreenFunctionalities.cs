@@ -232,8 +232,17 @@ public class EndScreenFunctionalities : MonoBehaviour
                 }
 
             }
-            summaryText = GameObject.Find("SummaryText").GetComponent<Text>(); ;
-            summaryText.text = "Winner of the Game: " + GameGlobals.players[WinnerID].GetName() +"!";
+            summaryText = GameObject.Find("SummaryText").GetComponent<Text>();
+            if(GameGlobals.envStatePerRound[GameGlobals.currGameRoundId - 1]>0)
+            {
+            summaryText.text = "Winner of the Game: " + GameGlobals.players[WinnerID].GetName() + "!\n" +
+            "You start with 60 and ended with " + GameGlobals.envStatePerRound[GameGlobals.currGameRoundId - 1].ToString();
+            }
+            else
+            {
+            summaryText.text = "Winner of the Game: " + GameGlobals.players[WinnerID].GetName() + "!\n" +
+            "You start with 60 and ended with 0";
+             }
             //summaryText.text += "\n" + "YOU WON";
         /*
         else

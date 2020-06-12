@@ -23,15 +23,15 @@
                         "interactionType": "NONE"
                     },
                     {
-                        "name": "Player423",
+                        "name": "Player541",
                         "fatimaRpcPath": "NONE",
-                        "playerType": "AI-FAIR",
+                        "playerType": "AI-COMPENSATOR",
                         "interactionType": "NONE"
                     },
                     {
-                        "name": "Player71",
+                        "name": "Player76",
                         "fatimaRpcPath": "NONE",
-                        "playerType": "AI-FAIR",
+                        "playerType": "AI-COMPENSATOR",
                         "interactionType": "NONE"
                     }
                 ],

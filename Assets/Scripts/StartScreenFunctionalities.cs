@@ -83,6 +83,8 @@ public class StartScreenFunctionalities : MonoBehaviour {
         
         GameGlobals.players = new List<Player>();
 
+        GameGlobals.mongoAtlasLogManager = new MongoAtlasLogManager();
+
         switch (GameProperties.configurableProperties.logManagerStyle)
         {
            /* case "SILENT":
@@ -91,9 +93,9 @@ public class StartScreenFunctionalities : MonoBehaviour {
             case "DEBUG":
                 GameGlobals.gameLogManager = new DebugLogManager();
                 break;
-            case "MONGO":
-                GameGlobals.gameLogManager = new MongoAtlasLogManager();
-                break;
+            //case "MONGO":
+                //GameGlobals.gameLogManager = new MongoAtlasLogManager();
+                //break;
             default:
                 Debug.Log("The log style " + GameProperties.configurableProperties.logManagerStyle +
                           "cannot be interpreted");
@@ -102,6 +104,7 @@ public class StartScreenFunctionalities : MonoBehaviour {
         }
 
         GameGlobals.gameLogManager.InitLogs(GameGlobals.monoBehaviourFunctionalities);
+        GameGlobals.mongoAtlasLogManager.InitLogs(GameGlobals.monoBehaviourFunctionalities);
 
         GameGlobals.roundBudget = configs.roundBudget;
         GameGlobals.environmentDecayBudget = configs.environmentDecayBudget;
