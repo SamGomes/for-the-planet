@@ -202,21 +202,4 @@ public class GameSetupFunctionalities : MonoBehaviour {
         GameGlobals.gameSceneManager.LoadMainScene();
     }
 
-    void CheckForAllPlayersRegistered(GameParameterization param)
-    {
-//        UINameSelectionInputBox.text = "";
-        if (param.playerParameterizations.Count == GameGlobals.players.Count)
-        {
-            GameProperties.currGameParameterization = param;
-
-//            UIStartGameButton.gameObject.SetActive(true);
-//            UIAddPlayerButton.gameObject.SetActive(false);
-//            UINameSelectionInputBox.gameObject.SetActive(false);
-//
-//            UIAIPlayerSelectionButtonsObject.SetActive(false);
-//            configSelectionButtonsObject.SetActive(false);
-//            UIResetButton.gameObject.SetActive(false);
-        }
-    }
-    
 }

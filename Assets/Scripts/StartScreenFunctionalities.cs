@@ -159,27 +159,39 @@ public class StartScreenFunctionalities : MonoBehaviour {
 
     private int YieldedActionsAfterGet(string getResult)
     {
-        getResult = "{ \"results\":"+ getResult + "}";
-        string lastConditionString = "";
-        List <DataEntryGameResultLog> results = JsonUtility.FromJson<DataEntryGameResultLogQueryResult>(getResult.Replace('\n', ' ')).results;
-        if (results.Count < 1) //no games were found
-        {
-            List<SessionParameterization> possibleConditions = GameProperties.configurableProperties.possibleParameterizations;
-            lastConditionString = possibleConditions[0].id;
-        }
-        else
-        {
-            lastConditionString = results[results.Count - 1].condition.ToString();
-        }
-        SetParameterizationCondition(lastConditionString);
-        GameGlobals.currGameCondition = GameProperties.currSessionParameterization.id;
-
-        //auto start if on batchmode
+        //auto start if in batchmode
         if (GameGlobals.isSimulation)
         {
+            if (GameGlobals.currGameCondition == null)
+            {
+                SetParameterizationCondition(GameProperties.configurableProperties.possibleParameterizations[0].id);
+            }
+            else
+            {
+                SetParameterizationCondition(GameGlobals.currGameCondition);
+            }
+            GameGlobals.currGameCondition = GameProperties.currSessionParameterization.id;
             Debug.Log("[Game: " + GameGlobals.currGameId +" of "+GameProperties.configurableProperties.numGamesToPlay+" (Curr Condition: "+GameGlobals.currGameCondition+")]");
             StartGame();
         }
+        else
+        {
+            getResult = "{ \"results\":"+ getResult + "}";
+            string lastConditionString = "";
+            List <DataEntryGameResultLog> results = JsonUtility.FromJson<DataEntryGameResultLogQueryResult>(getResult.Replace('\n', ' ')).results;
+            if (results.Count < 1) //no games were found
+            {
+                List<SessionParameterization> possibleConditions = GameProperties.configurableProperties.possibleParameterizations;
+                lastConditionString = possibleConditions[0].id;
+            }
+            else
+            {
+                lastConditionString = results[results.Count - 1].condition.ToString();
+            }
+            SetParameterizationCondition(lastConditionString);
+            GameGlobals.currGameCondition = GameProperties.currSessionParameterization.id;
+        }
+        
         return 0;
     }
 
