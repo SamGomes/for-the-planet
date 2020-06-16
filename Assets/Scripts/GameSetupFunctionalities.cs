@@ -116,6 +116,10 @@ public class GameSetupFunctionalities : MonoBehaviour {
                 case "AI-MCTS-4":
                     GameGlobals.players.Add(new AIMCTSPlayer(4,currParam.playerType, chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
                     break;
+                
+                case "AI-MCTS-5":
+                    GameGlobals.players.Add(new AIMCTSPlayer(5,currParam.playerType, chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
+                    break;
 
                 default:
                     isErrorEncountered = true;

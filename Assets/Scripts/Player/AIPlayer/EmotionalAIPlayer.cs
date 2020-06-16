@@ -288,18 +288,18 @@ public class FTPBoard : Board
             return WIN_SCORE;
         }
 
-        float econComp = 0.0f;
+        float bestEcon = -1.0f;
         foreach (Player innerPlayer in GameGlobals.players)
         {
             int id = innerPlayer.GetId();
-            if (id != (player - 1))
+            float currEcon = econs[id];
+            if (currEcon > bestEcon)
             {
-                econComp += (econs[player - 1] - econs[id]);
+                bestEcon = currEcon;
             }
         }
         
-        econComp *= 0.065f;
-        return econComp;       
+        return (econs[player - 1] - bestEcon)* 0.065f;       
     }
 
         
@@ -379,7 +379,7 @@ public class FTPBoard : Board
 //        float estDecayEnv = (GameGlobals.environmentDecayBudget[0] + GameGlobals.environmentDecayBudget[1]) / 2.0f;
 //        estDecayEnv = (estDecayEnv * 4.5f) / 100.0f;
         
-        float estEnv = Mathf.Clamp01( env + (estGainEnv - estDecayEnv));
+        float estEnv = Mathf.Clamp01(env + (estGainEnv - estDecayEnv));
         
         econs = estEcons;
         env = estEnv;
@@ -446,7 +446,7 @@ public class FTPBoard : Board
                 {
                     bestEcon = currEcon;
                     bestPlayers.Add(i);
-                }else if (currEcon == bestEcon)
+                }else if ((currEcon - bestEcon) < 0.002)
                 {
                     bestPlayers.Add(i);
                 }
@@ -514,15 +514,48 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
         
         interactionModule.Speak("I'm feeling " + strongestEmotion.EmotionType);
         
-        float pMood = (rpc.Mood + 10.0f) / 20.0f; //negative rule: positive mood-> invest in econ
-
+        
         List<float> moneyValues = new List<float>();
         foreach (Player player in GameGlobals.players)
         {
             moneyValues.Add(player.GetMoney());
         }
 
-        int numMctsSteps = 1 + (int)((1.0f + pMood/-20.0f)/2.0f * 4);
+        float rpcMood = rpc.Mood;
+        int numMctsSteps = 0;
+        // if(rpcMood >= -10.0f && rpcMood < -6.0f)
+        // { 
+        //     numMctsSteps = 5;
+        // }
+        // else if (rpcMood >= -6.0f && rpcMood < -2.0f)
+        // {
+        //     numMctsSteps = 4;
+        // }
+        // else if (rpcMood >= -2.0f && rpcMood <= 2.0f)
+        // {
+        //     numMctsSteps = 3;
+        // }
+        // else if (rpcMood > 2.0f && rpcMood <= 6.0f)
+        // {
+        //     numMctsSteps = 2;
+        // }
+        // else if (rpcMood > 6.0f && rpcMood <= 10.0f) 
+        // {
+        //     numMctsSteps = 1;
+        // }
+        if(rpcMood >= -10.0f && rpcMood < -3.0f)
+        { 
+            numMctsSteps = 3;
+        }
+        else if (rpcMood >= -3.0f && rpcMood <= 3.0f)
+        {
+            numMctsSteps = 2;
+        }
+        else if (rpcMood > 3.0f && rpcMood <= 10.0f) 
+        {
+            numMctsSteps = 1;
+        }
+        
         FTPBoard currentState = new FTPBoard(this.id + 1, GameProperties.configurableProperties.maxNumRounds, PredictAction, GameGlobals.envState, moneyValues);
         investmentIntentions = Analyse(numMctsSteps, currentState); 
     }

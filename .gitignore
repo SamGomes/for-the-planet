@@ -5,6 +5,12 @@
 [Bb]uilds/
 Assets/AssetStoreTools*
 
+./**/*.csv
+/extractDataFromMongo/*.png
+/extractDataFromMongo/*.zip
+.idea/**/
+
+
 # Visual Studio cache directory
 .vs/
 

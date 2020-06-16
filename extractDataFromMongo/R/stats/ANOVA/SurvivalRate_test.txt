@@ -1,0 +1,5 @@
+             Df Sum Sq Mean Sq F value Pr(>F)    
+indepVar1     9  8.081  0.8979   18.61 <2e-16 ***
+Residuals   200  9.649  0.0482                   
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
