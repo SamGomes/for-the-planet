@@ -83,7 +83,8 @@ public class StartScreenFunctionalities : MonoBehaviour {
         
         GameGlobals.players = new List<Player>();
 
-        GameGlobals.mongoAtlasLogManager = new MongoAtlasLogManager();
+        //GameGlobals.mongoAtlasLogManager = new MongoAtlasLogManager();
+        GameGlobals.callMongoLogServer = gameObject.AddComponent<CallMongoLogServer>();
 
         switch (GameProperties.configurableProperties.logManagerStyle)
         {
@@ -104,7 +105,7 @@ public class StartScreenFunctionalities : MonoBehaviour {
         }
 
         GameGlobals.gameLogManager.InitLogs(GameGlobals.monoBehaviourFunctionalities);
-        GameGlobals.mongoAtlasLogManager.InitLogs(GameGlobals.monoBehaviourFunctionalities);
+        GameGlobals.callMongoLogServer.InitLogs(GameGlobals.monoBehaviourFunctionalities);
 
         GameGlobals.roundBudget = configs.roundBudget;
         GameGlobals.environmentDecayBudget = configs.environmentDecayBudget;

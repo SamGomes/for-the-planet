@@ -140,6 +140,8 @@ public class GameManager : MonoBehaviour {
         GameGlobals.envStatePerRound = new List<int>();
         GameGlobals.firstGeneration = false;
 
+        GameGlobals.callMongoLogServer = gameObject.AddComponent<CallMongoLogServer>();
+
         if (GameGlobals.firstGeneration)
         {
             GameGlobals.generation = 1;
@@ -395,8 +397,9 @@ public class GameManager : MonoBehaviour {
 
                 //StartCoroutine(GameGlobals.mongoAtlasLogManager.WriteToLog(logEntry));
                 //GameGlobals.mongoAtlasLogManager.Start(logEntry);
+                GameGlobals.callMongoLogServer.SentLog(logEntry);
 
-                }
+            }
 
 
                 TakeMoneyFromCommonPot();
