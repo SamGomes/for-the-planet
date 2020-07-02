@@ -299,7 +299,7 @@ public class FTPBoard : Board
             }
         }
         
-        return (econs[player - 1] - bestEcon)* 0.065f;       
+        return (econs[player - 1] - bestEcon)* 0.08f;       
     }
 
         
@@ -431,7 +431,7 @@ public class FTPBoard : Board
     protected override void DetermineWinner()
     {
         this.winner = -1;
-        if (env < 0.05)
+        if (env < 0.001)
         {
             this.winner = 10;
         }
@@ -446,7 +446,7 @@ public class FTPBoard : Board
                 {
                     bestEcon = currEcon;
                     bestPlayers.Add(i);
-                }else if ((currEcon - bestEcon) < 0.002)
+                }else if ((currEcon - bestEcon) < 0.001)
                 {
                     bestPlayers.Add(i);
                 }
@@ -523,26 +523,6 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
 
         float rpcMood = rpc.Mood;
         int numMctsSteps = 0;
-        // if(rpcMood >= -10.0f && rpcMood < -6.0f)
-        // { 
-        //     numMctsSteps = 5;
-        // }
-        // else if (rpcMood >= -6.0f && rpcMood < -2.0f)
-        // {
-        //     numMctsSteps = 4;
-        // }
-        // else if (rpcMood >= -2.0f && rpcMood <= 2.0f)
-        // {
-        //     numMctsSteps = 3;
-        // }
-        // else if (rpcMood > 2.0f && rpcMood <= 6.0f)
-        // {
-        //     numMctsSteps = 2;
-        // }
-        // else if (rpcMood > 6.0f && rpcMood <= 10.0f) 
-        // {
-        //     numMctsSteps = 1;
-        // }
         if(rpcMood >= -10.0f && rpcMood < -3.0f)
         { 
             numMctsSteps = 3;

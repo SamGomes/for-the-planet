@@ -5,7 +5,7 @@
     "maxNumRounds": 20,
 
     "isSimulation": true,
-    "numGamesToPlay": 1000,
+    "numGamesToPlay": 1250,
 
     "roundBudget": 5,
     "environmentDecayBudget": [9,9],
@@ -59,13 +59,13 @@
             }]
         },
         {
-            "id": "['MCTS_1', 'BALANCED-COOPERATOR', 'BALANCED-COOPERATOR']",
+            "id": "['AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST', 'BALANCED-COOPERATOR', 'BALANCED-COOPERATOR']",
             "gameParameterizations": [{
                 "diceLogic": "RANDOM",
                 "playerParameterizations": [{
-                        "name": "MCTS_1_VS_COOP",
+                        "name": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST_VS_COOP",
                         "interactionType": "NONE",
-                        "playerType": "AI-MCTS-1"
+                        "playerType": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST"
                     },
                     {
                         "name": "BALANCED-COOPERATOR",
@@ -82,13 +82,13 @@
             }]
         },
         {
-            "id": "['MCTS_1', 'BALANCED-DEFECTOR', 'BALANCED-DEFECTOR']",
+            "id": "['AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST', 'BALANCED-DEFECTOR', 'BALANCED-DEFECTOR']",
             "gameParameterizations": [{
                 "diceLogic": "RANDOM",
                 "playerParameterizations": [{
-                        "name": "MCTS_1_VS_DEF",
+                        "name": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST_VS_DEF",
                         "interactionType": "NONE",
-                        "playerType": "AI-MCTS-1"
+                        "playerType": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST"
                     },
                     {
                         "name": "BALANCED-DEFECTOR",
@@ -105,13 +105,13 @@
             }]
         },
         {
-            "id": "['MCTS_2', 'BALANCED-COOPERATOR', 'BALANCED-COOPERATOR']",
+            "id": "['AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC', 'BALANCED-COOPERATOR', 'BALANCED-COOPERATOR']",
             "gameParameterizations": [{
                 "diceLogic": "RANDOM",
                 "playerParameterizations": [{
-                        "name": "MCTS_2_VS_COOP",
+                        "name": "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC_VS_COOP",
                         "interactionType": "NONE",
-                        "playerType": "AI-MCTS-2"
+                        "playerType": "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC"
                     },
                     {
                         "name": "BALANCED-COOPERATOR",
@@ -128,13 +128,13 @@
             }]
         },
         {
-            "id": "['MCTS_2', 'BALANCED-DEFECTOR', 'BALANCED-DEFECTOR']",
+            "id": "['AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC', 'BALANCED-DEFECTOR', 'BALANCED-DEFECTOR']",
             "gameParameterizations": [{
                 "diceLogic": "RANDOM",
                 "playerParameterizations": [{
-                        "name": "MCTS_2_VS_DEF",
+                        "name": "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC_VS_DEF",
                         "interactionType": "NONE",
-                        "playerType": "AI-MCTS-2"
+                        "playerType": "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC"
                     },
                     {
                         "name": "BALANCED-DEFECTOR",
@@ -151,13 +151,13 @@
             }]
         },
         {
-            "id": "['MCTS_3', 'BALANCED-COOPERATOR', 'BALANCED-COOPERATOR']",
+            "id": "['AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST', 'BALANCED-COOPERATOR', 'BALANCED-COOPERATOR']",
             "gameParameterizations": [{
                 "diceLogic": "RANDOM",
                 "playerParameterizations": [{
-                        "name": "MCTS_3_VS_COOP",
+                        "name": "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST_VS_COOP",
                         "interactionType": "NONE",
-                        "playerType": "AI-MCTS-3"
+                        "playerType": "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST"
                     },
                     {
                         "name": "BALANCED-COOPERATOR",
@@ -174,13 +174,59 @@
             }]
         },
         {
-            "id": "['MCTS_3', 'BALANCED-DEFECTOR', 'BALANCED-DEFECTOR']",
+            "id": "['AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST', 'BALANCED-DEFECTOR', 'BALANCED-DEFECTOR']",
             "gameParameterizations": [{
                 "diceLogic": "RANDOM",
                 "playerParameterizations": [{
-                        "name": "MCTS_3_VS_DEF",
+                        "name": "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST_VS_DEF",
                         "interactionType": "NONE",
-                        "playerType": "AI-MCTS-3"
+                        "playerType": "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST"
+                    },
+                    {
+                        "name": "BALANCED-DEFECTOR",
+                        "interactionType": "NONE",
+                        "playerType": "AI-BALANCED-DEFECTOR"
+                    },
+                    {
+                        "name": "BALANCED-DEFECTOR",
+                        "interactionType": "NONE",
+                        "playerType": "AI-BALANCED-DEFECTOR"
+                    }
+                ],
+                "isNarrated": false
+            }]
+        },
+        {
+            "id": "['AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC', 'BALANCED-COOPERATOR', 'BALANCED-COOPERATOR']",
+            "gameParameterizations": [{
+                "diceLogic": "RANDOM",
+                "playerParameterizations": [{
+                        "name": "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC_VS_COOP",
+                        "interactionType": "NONE",
+                        "playerType": "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC"
+                    },
+                    {
+                        "name": "BALANCED-COOPERATOR",
+                        "interactionType": "NONE",
+                        "playerType": "AI-BALANCED-COOPERATOR"
+                    },
+                    {
+                        "name": "BALANCED-COOPERATOR",
+                        "interactionType": "NONE",
+                        "playerType": "AI-BALANCED-COOPERATOR"
+                    }
+                ],
+                "isNarrated": false
+            }]
+        },
+        {
+            "id": "['AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC', 'BALANCED-DEFECTOR', 'BALANCED-DEFECTOR']",
+            "gameParameterizations": [{
+                "diceLogic": "RANDOM",
+                "playerParameterizations": [{
+                        "name": "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC_VS_DEF",
+                        "interactionType": "NONE",
+                        "playerType": "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC"
                     },
                     {
                         "name": "BALANCED-DEFECTOR",

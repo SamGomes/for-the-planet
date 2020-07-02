@@ -212,9 +212,9 @@ public class AIPlayerBalancedCooperator : AIPlayer
 
     public override IEnumerator AutoBudgetAllocation()
     {
-
-        int environmentInvestment = GameGlobals.roundBudget / 2 + GameGlobals.roundBudget % 2;
-        int economyInvestment = GameGlobals.roundBudget / 2;
+        float meanInv = GameGlobals.roundBudget / 2.0f;
+        int environmentInvestment = Mathf.CeilToInt(meanInv);
+        int economyInvestment = Mathf.FloorToInt(meanInv);
 
         yield return InvestInEconomy(economyInvestment);
         yield return InvestInEnvironment(environmentInvestment);
@@ -232,10 +232,10 @@ public class AIPlayerBalancedDefector : AIPlayer
 
     public override IEnumerator AutoBudgetAllocation()
     {
-
-        int environmentInvestment = GameGlobals.roundBudget / 2;
-        int economyInvestment = GameGlobals.roundBudget / 2 + GameGlobals.roundBudget % 2;
-
+        float meanInv = GameGlobals.roundBudget / 2.0f;
+        int environmentInvestment = Mathf.FloorToInt(meanInv);
+        int economyInvestment = Mathf.CeilToInt(meanInv);
+        
         yield return InvestInEconomy(economyInvestment);
         yield return InvestInEnvironment(environmentInvestment);
         yield return EndBudgetAllocationPhase();
