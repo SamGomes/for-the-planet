@@ -1,8 +1,0 @@
-#!/bin/bash
-
-echo "Removing old data..."
-find . -name "*.forThePlanetData" -exec rm -f {} \;
-rm -f "output/*.csv"
-find . -name "*.png" -exec rm -f {} \;
-
-echo "Done"

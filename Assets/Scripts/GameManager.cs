@@ -120,9 +120,6 @@ public class GameManager : MonoBehaviour {
         numPlayersToDisplayHistory = GameGlobals.players.Count;
         numPlayersToSimulateInvestment = GameGlobals.players.Count;
 
-        GameGlobals.players[0].SetName(GameGlobals.participantName);
-        GameGlobals.players[0].UpdateNameUI();
-
         currPlayerIndex = 0;
 
         //get player poppups (can be from any player) and set methods
@@ -232,8 +229,8 @@ public class GameManager : MonoBehaviour {
             }
             //Set Players faces
             GameGlobals.players[0].SetFace(Resources.Load<Sprite>("Textures/Generation/player_icon"));
-            GameGlobals.players[1].SetFace(Resources.Load<Sprite>("Textures/Generation/player_icon"));
-            GameGlobals.players[2].SetFace(Resources.Load<Sprite>("Textures/Generation/player_icon"));
+            GameGlobals.players[1].SetFace(Resources.Load<Sprite>("Textures/Generation/player_icon_red"));
+            GameGlobals.players[2].SetFace(Resources.Load<Sprite>("Textures/Generation/player_icon_blue"));
 
             envDynamicSlider = new DynamicSlider(environmentSliderSceneElement.gameObject, true, true);
             StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState,true));
@@ -393,10 +390,7 @@ public class GameManager : MonoBehaviour {
                         {"playerGain", player.GetGains().ToString()},
                         {"envState", Convert.ToInt32(GameGlobals.envState).ToString()}
                     };
-                //string data1 = {"id": 104,"name": "TESTE1"};
 
-                //StartCoroutine(GameGlobals.mongoAtlasLogManager.WriteToLog(logEntry));
-                //GameGlobals.mongoAtlasLogManager.Start(logEntry);
                 GameGlobals.callMongoLogServer.SentLog(logEntry);
 
             }
@@ -690,6 +684,14 @@ public class GameManager : MonoBehaviour {
     //------------------------------------------Responses---------------------------------------
     public IEnumerator BudgetAllocationPhaseResponse(Player invoker)
     {
+        /*
+         * 
+        var watch = System.Diagnostics.Stopwatch.StartNew();
+        // the code that you want to measure comes here
+        watch.Stop();
+        var elapsedMs = watch.ElapsedMilliseconds;
+        */
+
         Player currPlayer = GameGlobals.players[currPlayerIndex];
         Player nextPlayer = ChangeToNextPlayer(currPlayer);
         poppupScreen.SetActive(true);

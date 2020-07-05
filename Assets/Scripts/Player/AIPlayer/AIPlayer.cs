@@ -219,6 +219,24 @@ public class AIPlayerTitForTat : AIPlayer
         base(type, interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name)
     { }
 
+    public int OtherPlayersAvgLastMove(int playerID)
+    {
+        int avg = 0;
+        switch (playerID)
+        {
+            case 0:
+                avg = (GameGlobals.players[1].environmentInvestmentPerRound[GameGlobals.currGameRoundId - 1] + GameGlobals.players[2].environmentInvestmentPerRound[GameGlobals.currGameRoundId - 1]) / 2;
+                break;
+            case 1:
+                avg = (GameGlobals.players[0].environmentInvestmentPerRound[GameGlobals.currGameRoundId - 1] + GameGlobals.players[2].environmentInvestmentPerRound[GameGlobals.currGameRoundId - 1]) / 2;
+                break;
+            case 2:
+                avg = (GameGlobals.players[0].environmentInvestmentPerRound[GameGlobals.currGameRoundId - 1] + GameGlobals.players[1].environmentInvestmentPerRound[GameGlobals.currGameRoundId - 1]) / 2;
+                break;
+        }
+        return avg;
+    }
+
     public override IEnumerator AutoBudgetAllocation()
     {
         //cooperative round
@@ -234,7 +252,7 @@ public class AIPlayerTitForTat : AIPlayer
         //last play of the player with +1 -1 diff
         else
         {
-            int environmentInvestment = GameGlobals.players[0].environmentInvestmentPerRound[GameGlobals.currGameRoundId-1] + UnityEngine.Random.Range(-1, 2);
+            int environmentInvestment = OtherPlayersAvgLastMove(this.id) + UnityEngine.Random.Range(-1, 2);
             if(environmentInvestment == 15) { environmentInvestment = 14; }
             if (environmentInvestment == -1) { environmentInvestment = 0; }
             int economyInvestment = GameGlobals.roundBudget - environmentInvestment;
@@ -254,6 +272,24 @@ public class AIPlayerCompensator : AIPlayer
         base(type, interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name)
     { }
 
+    public int OtherPlayersAvgLastMove(int playerID)
+    {
+        int avg = 0;
+        switch (playerID)
+        {
+            case 0:
+                avg = (GameGlobals.players[1].environmentInvestmentPerRound[GameGlobals.currGameRoundId - 1] + GameGlobals.players[2].environmentInvestmentPerRound[GameGlobals.currGameRoundId - 1]) / 2;
+                break;
+            case 1:
+                avg = (GameGlobals.players[0].environmentInvestmentPerRound[GameGlobals.currGameRoundId - 1] + GameGlobals.players[2].environmentInvestmentPerRound[GameGlobals.currGameRoundId - 1]) / 2;
+                break;
+            case 2:
+                avg = (GameGlobals.players[0].environmentInvestmentPerRound[GameGlobals.currGameRoundId - 1] + GameGlobals.players[1].environmentInvestmentPerRound[GameGlobals.currGameRoundId - 1]) / 2;
+                break;
+        }
+        return avg;
+    }
+
     public override IEnumerator AutoBudgetAllocation()
     {
         //cooperative round
@@ -269,9 +305,9 @@ public class AIPlayerCompensator : AIPlayer
         //diff play of the player
         else
         {
-            int playerLastMove = GameGlobals.players[0].environmentInvestmentPerRound[GameGlobals.currGameRoundId - 1];
+            int playersAverageLastMove = OtherPlayersAvgLastMove(this.id);
             int environmentInvestment = 0;
-            if (playerLastMove <= 7)
+            if (playersAverageLastMove <= 7)
             {
                 environmentInvestment = UnityEngine.Random.Range(8, 14);
             }
@@ -289,6 +325,39 @@ public class AIPlayerCompensator : AIPlayer
 
 }
 
+//Outcome BASE
+public class AIPlayerOutcomeBase : AIPlayer
+{
+    public AIPlayerOutcomeBase(string type, InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
+        base(type, interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name)
+    { }
+
+    public override IEnumerator AutoBudgetAllocation()
+    {
+        if (GameGlobals.envState >= GameGlobals.envThreshold)
+        {
+
+            int environmentInvestment = UnityEngine.Random.Range(8, 14);
+            int economyInvestment = GameGlobals.roundBudget - environmentInvestment;
+
+            yield return InvestInEnvironment(environmentInvestment);
+            yield return InvestInEconomy(economyInvestment);
+        }
+        else
+        {
+            int environmentInvestment = UnityEngine.Random.Range(0, 7);
+            int economyInvestment = GameGlobals.roundBudget - environmentInvestment;
+
+            yield return InvestInEnvironment(environmentInvestment);
+            yield return InvestInEconomy(economyInvestment);
+        }
+        yield return EndBudgetAllocationPhase();
+    }
+
+}
+
+
+
 //Only plays (0,1)
 public class AIPlayerUltraFair : AIPlayer
 {
@@ -300,6 +369,25 @@ public class AIPlayerUltraFair : AIPlayer
     {
 
         int environmentInvestment = UnityEngine.Random.Range(0, 2);
+        int economyInvestment = GameGlobals.roundBudget - environmentInvestment;
+
+        yield return InvestInEnvironment(environmentInvestment);
+        yield return InvestInEconomy(economyInvestment);
+
+        yield return EndBudgetAllocationPhase();
+    }
+
+}
+
+public class AIPlayerFair : AIPlayer
+{
+    public AIPlayerFair(string type, InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
+        base(type, interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name)
+    { }
+
+    public override IEnumerator AutoBudgetAllocation()
+    {
+        int environmentInvestment = GameGlobals.roundBudget / 2 + UnityEngine.Random.Range(-1, 2);
         int economyInvestment = GameGlobals.roundBudget - environmentInvestment;
 
         yield return InvestInEnvironment(environmentInvestment);

@@ -17,19 +17,19 @@
             "gameParameterizations": [{
                 "diceLogic": "RANDOM",
                 "playerParameterizations": [{
-                        "name": "Player",
+                        "name": "Player 251",
                         "fatimaRpcPath": "NONE",
                         "playerType": "HUMAN",
                         "interactionType": "NONE"
                     },
                     {
-                        "name": "Player541",
+                        "name": "Player 541",
                         "fatimaRpcPath": "NONE",
-                        "playerType": "AI-COMPENSATOR",
+                        "playerType": "AI-FAIR",
                         "interactionType": "NONE"
                     },
                     {
-                        "name": "Player76",
+                        "name": "Player 76",
                         "fatimaRpcPath": "NONE",
                         "playerType": "AI-COMPENSATOR",
                         "interactionType": "NONE"

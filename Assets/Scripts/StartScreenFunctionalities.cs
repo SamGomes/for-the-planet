@@ -203,16 +203,12 @@ public class StartScreenFunctionalities : MonoBehaviour {
     private void StartGame()
     {
         GameGlobals.gameSceneManager.LoadPlayersSetupScene();
-        InputField nameInputField = GameObject.Find("Canvas/StartScreen/nameInput").gameObject.GetComponent<InputField>();
-        GameGlobals.participantName = nameInputField.text;
         GameGlobals.skipTutorial = false;
     }
 
     private void SkipTutorial()
     {
         GameGlobals.gameSceneManager.LoadPlayersSetupScene();
-        InputField nameInputField = GameObject.Find("Canvas/StartScreen/nameInput").gameObject.GetComponent<InputField>();
-        GameGlobals.participantName = nameInputField.text;
         GameGlobals.skipTutorial = true;
     }
 

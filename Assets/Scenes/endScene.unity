@@ -3200,7 +3200,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'The winner of the game: Chtulu
+  m_Text: 'The winner of the game: PLAYERX
 
     You star with 60 and ended with 2000'
 --- !u!222 &950171592
