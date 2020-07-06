@@ -249,7 +249,7 @@ public class Player
         }
 
         coopPerc = 0.5f*coopPerc + 0.5f*((float) investmentHistory[GameProperties.InvestmentTarget.ENVIRONMENT] /
-                   (float) (investmentHistory[GameProperties.InvestmentTarget.ENVIRONMENT] +
+                   (float) (investmentHistory[GameProperties.InvestmentTarget.ECONOMIC] +
                             investmentHistory[GameProperties.InvestmentTarget.ENVIRONMENT]));
         
         SendHistoryDisplayPhaseResponse();

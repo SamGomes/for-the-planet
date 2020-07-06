@@ -561,7 +561,8 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
     
     public int PredictAction(Player player)
     {
-        return (int) (player.GetCoopPerc() * GameGlobals.roundBudget);
+        float coopValue = (player.GetCoopPerc() * GameGlobals.roundBudget);
+        return UnityEngine.Random.Range(Mathf.FloorToInt(coopValue), Mathf.CeilToInt(coopValue));
     }
 
 

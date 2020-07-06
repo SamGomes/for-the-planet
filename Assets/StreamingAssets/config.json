@@ -5,7 +5,7 @@
     "maxNumRounds": 20,
 
     "isSimulation": true,
-    "numGamesToPlay": 200,
+    "numGamesToPlay": 3000,
 
     "roundBudget": 5,
     "environmentDecayBudget": [9,9],
@@ -181,6 +181,98 @@
                         "name": "MCTS_3_VS_DEF",
                         "interactionType": "NONE",
                         "playerType": "AI-MCTS-3"
+                    },
+                    {
+                        "name": "BALANCED-DEFECTOR",
+                        "interactionType": "NONE",
+                        "playerType": "AI-BALANCED-DEFECTOR"
+                    },
+                    {
+                        "name": "BALANCED-DEFECTOR",
+                        "interactionType": "NONE",
+                        "playerType": "AI-BALANCED-DEFECTOR"
+                    }
+                ],
+                "isNarrated": false
+            }]
+        },
+        {
+            "id": "['MCTS_4', 'BALANCED-COOPERATOR', 'BALANCED-COOPERATOR']",
+            "gameParameterizations": [{
+                "diceLogic": "RANDOM",
+                "playerParameterizations": [{
+                        "name": "MCTS_4_VS_COOP",
+                        "interactionType": "NONE",
+                        "playerType": "AI-MCTS-4"
+                    },
+                    {
+                        "name": "BALANCED-COOPERATOR",
+                        "interactionType": "NONE",
+                        "playerType": "AI-BALANCED-COOPERATOR"
+                    },
+                    {
+                        "name": "BALANCED-COOPERATOR",
+                        "interactionType": "NONE",
+                        "playerType": "AI-BALANCED-COOPERATOR"
+                    }
+                ],
+                "isNarrated": false
+            }]
+        },
+        {
+            "id": "['MCTS_4', 'BALANCED-DEFECTOR', 'BALANCED-DEFECTOR']",
+            "gameParameterizations": [{
+                "diceLogic": "RANDOM",
+                "playerParameterizations": [{
+                        "name": "MCTS_4_VS_DEF",
+                        "interactionType": "NONE",
+                        "playerType": "AI-MCTS-4"
+                    },
+                    {
+                        "name": "BALANCED-DEFECTOR",
+                        "interactionType": "NONE",
+                        "playerType": "AI-BALANCED-DEFECTOR"
+                    },
+                    {
+                        "name": "BALANCED-DEFECTOR",
+                        "interactionType": "NONE",
+                        "playerType": "AI-BALANCED-DEFECTOR"
+                    }
+                ],
+                "isNarrated": false
+            }]
+        },
+        {
+            "id": "['MCTS_5', 'BALANCED-COOPERATOR', 'BALANCED-COOPERATOR']",
+            "gameParameterizations": [{
+                "diceLogic": "RANDOM",
+                "playerParameterizations": [{
+                        "name": "MCTS_5_VS_COOP",
+                        "interactionType": "NONE",
+                        "playerType": "AI-MCTS-5"
+                    },
+                    {
+                        "name": "BALANCED-COOPERATOR",
+                        "interactionType": "NONE",
+                        "playerType": "AI-BALANCED-COOPERATOR"
+                    },
+                    {
+                        "name": "BALANCED-COOPERATOR",
+                        "interactionType": "NONE",
+                        "playerType": "AI-BALANCED-COOPERATOR"
+                    }
+                ],
+                "isNarrated": false
+            }]
+        },
+        {
+            "id": "['MCTS_5', 'BALANCED-DEFECTOR', 'BALANCED-DEFECTOR']",
+            "gameParameterizations": [{
+                "diceLogic": "RANDOM",
+                "playerParameterizations": [{
+                        "name": "MCTS_5_VS_DEF",
+                        "interactionType": "NONE",
+                        "playerType": "AI-MCTS-5"
                     },
                     {
                         "name": "BALANCED-DEFECTOR",
