@@ -43,6 +43,7 @@ public static class GameGlobals
     public static Boolean firstGeneration;
     public static List<int> envStatePerRound;
     public static float diffCP = 0;
+    public static float impactOnCP = 0;
 
     //fatima stuff
     public static string FAtiMAScenarioPath;

@@ -71,6 +71,7 @@ public class GameManager : MonoBehaviour {
 
     private Text GenerationTextUI;
     private Text GenerationNumberTextUI;
+    private GameObject GenerationEnvHistory;
     private Image GenPhotoUI;
 
     private Sprite firstGenPhoto;
@@ -156,6 +157,7 @@ public class GameManager : MonoBehaviour {
 
         GenerationText = GameObject.Find("GenerationText");
         GenerationTextUI = GenerationText.transform.Find("genText").gameObject.GetComponent<Text>();
+        GenerationEnvHistory = GameObject.Find("EnvHistory");
 
         passRoundButton = GameObject.Find("passRoundButton").GetComponent<Button>();
         passRoundButton.gameObject.SetActive(false);
@@ -205,6 +207,7 @@ public class GameManager : MonoBehaviour {
             tutorialScreen.SetActive(false);
             newRoundScreen.SetActive(false);
             GenerationText.SetActive(false);
+            GenerationEnvHistory.SetActive(false);
             waitingForPlayers.SetActive(false);
             UIroundSum.SetActive(false);
             poppupScreen.SetActive(false);
@@ -245,6 +248,8 @@ public class GameManager : MonoBehaviour {
                 newRoundScreen.SetActive(true);
                 ImpactCP.SetActive(false);
                 GenerationText.SetActive(true);
+                if (GameGlobals.firstGeneration) { GenerationEnvHistory.SetActive(false);}
+                else { GenerationEnvHistory.SetActive(true); }
                 StartCoroutine(WaitingForAIPlayers());
                 UIroundSum.SetActive(false);
             }
@@ -258,6 +263,7 @@ public class GameManager : MonoBehaviour {
                 newRoundScreen.SetActive(false);
                 ImpactCP.SetActive(false);
                 GenerationText.SetActive(false);
+                GenerationEnvHistory.SetActive(false);
                 StartGameRoundForAllPlayers();
             });
 
@@ -266,6 +272,8 @@ public class GameManager : MonoBehaviour {
                 tutorialScreen.SetActive(false);
                 UIroundSum.SetActive(false);
                 GenerationText.SetActive(true);
+                if (GameGlobals.firstGeneration) { GenerationEnvHistory.SetActive(false); }
+                else { GenerationEnvHistory.SetActive(true); }
                 StartCoroutine(WaitingForAIPlayers());
                 newRoundScreen.SetActive(true);
                 ImpactCP.SetActive(false);
@@ -388,6 +396,7 @@ public class GameManager : MonoBehaviour {
                         //{"playerCurrInvestEcon", player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ECONOMIC].ToString()},
                         {"playerTookFromCP", player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT].ToString()},
                         {"playerGain", player.GetGains().ToString()},
+                        {"nCollaboration", player.GetNCollaboration().ToString()},
                         {"envState", Convert.ToInt32(GameGlobals.envState).ToString()}
                     };
 
@@ -431,6 +440,7 @@ public class GameManager : MonoBehaviour {
                         UIroundSum.SetActive(false);
                         GenerationNumberTextUI.text = "Generation: " + GameGlobals.generation.ToString();
                         ChangePhotoinGenPhoto(GameGlobals.generation);
+                        GenerationEnvHistory.SetActive(false);
                         GenerationText.SetActive(false);
                     }
 
@@ -563,6 +573,8 @@ public class GameManager : MonoBehaviour {
                         newRoundScreen.SetActive(true);
                         ImpactCP.SetActive(false);
                         GenerationText.SetActive(true);
+                        if (GameGlobals.firstGeneration) { GenerationEnvHistory.SetActive(false); }
+                        else { GenerationEnvHistory.SetActive(true); }
                     }
                     else { 
                         tutorialScreen.SetActive(true); 
@@ -863,14 +875,16 @@ public class GameManager : MonoBehaviour {
             GameGlobals.envStatePerRound.Add(Convert.ToInt32(GameGlobals.envState));
         }
 
+        StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState, arrows));
         ImpactCP.SetActive(true);
         ImpactCPtext.GetComponent<Text>().text = "Taken-From the Common-Pool: -" + this.roundTaken.ToString() + "\n" +
         "Common-Pool Renewed: +" + Convert.ToInt32(GameGlobals.diffCP).ToString() + "\n" +
-        "Impact on the Common-Pool: " + (Convert.ToInt32(GameGlobals.diffCP) - this.roundTaken).ToString();
+        "Impact on the Common-Pool: " + GameGlobals.impactOnCP.ToString();
 
-        StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState, arrows));
+        
         this.roundTaken = 0;
         GameGlobals.diffCP = 0;
+        GameGlobals.impactOnCP = 0;
     }
 
    }

@@ -106,7 +106,7 @@ public class DynamicSlider
 
 
         textToDisplay = string.Format("{0:+;-;+}{0,2:#;#;0}", growth);
-
+        GameGlobals.impactOnCP = growth;
         if (arrows)
         {
             if (growth > 0)

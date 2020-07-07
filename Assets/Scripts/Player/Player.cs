@@ -26,6 +26,7 @@ public class Player
     protected int unallocatedBudget;
     protected float money;
     public int gains;
+    public int nCollaborations;
 
     protected Dictionary<GameProperties.InvestmentTarget, int> currRoundInvestment;
     protected Dictionary<GameProperties.InvestmentTarget, int> investmentHistory;
@@ -75,6 +76,7 @@ public class Player
 
         money = 0.0f;
         this.gains = 0;
+        this.nCollaborations = 0;
         this.type = type;
         this.roundBudget = GameGlobals.roundBudget;
 
@@ -211,6 +213,11 @@ public class Player
         return this.gains;
     }
 
+    public int GetNCollaboration()
+    {
+        return this.nCollaborations;
+    }
+
     public void SetName(string _name)
     {
         this.name = _name;
@@ -323,6 +330,12 @@ public class Player
         int currentInvestment = currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT];
         environmentInvestmentPerRound.Add(currentInvestment);
         this.gains += currentInvestment;
+
+        if(currentInvestment <= 7)
+        {
+            this.nCollaborations += 1;
+        }
+
         moneyTextUI.text = "Gains: " + gains.ToString();
         budgetAllocationScreenUI.SetActive(false);
         displayHistoryScreenUI.SetActive(false);

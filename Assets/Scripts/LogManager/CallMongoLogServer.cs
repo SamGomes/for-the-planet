@@ -15,11 +15,11 @@ public class CallMongoLogServer : MonoBehaviour{
 
     public void SentLog(Dictionary<string, string> argsNValues)
     {
-        StartCoroutine(WriteLog(argsNValues["currSessionId"], argsNValues["currGameId"], argsNValues["generation"], argsNValues["playerName"],argsNValues["playerType"], argsNValues["playerTookFromCP"], argsNValues["playerGain"], argsNValues["envState"]));
+        StartCoroutine(WriteLog(argsNValues["currSessionId"], argsNValues["currGameId"], argsNValues["generation"], argsNValues["playerName"],argsNValues["playerType"], argsNValues["playerTookFromCP"], argsNValues["playerGain"],argsNValues["nCollaboration"], argsNValues["envState"]));
     }
 
     public IEnumerator WriteLog(string currSessionId, string currGameId, string generation, string playerName, string playerType, string playerTookFromCP,
-        string playerGain, string envState)
+        string playerGain,string nCollaboration, string envState)
     {
             WWWForm form = new WWWForm();
             form.AddField("currSessionId", currSessionId);
@@ -29,6 +29,7 @@ public class CallMongoLogServer : MonoBehaviour{
             form.AddField("playerType", playerType);
             form.AddField("playerTookFromCP", playerTookFromCP);
             form.AddField("playerGain", playerGain);
+            form.AddField("nCollaboration", nCollaboration);
             form.AddField("envState", envState);
 
             UnityWebRequest www = UnityWebRequest.Post("https://mongodbserverlog.herokuapp.com/fortheplanet", form);
