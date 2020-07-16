@@ -31,7 +31,11 @@ public class GameManager : MonoBehaviour {
     public GameObject simulateInvestmentScreen;
     public Button simulateEvolutionButton;
     public GameObject waitingForPlayers;
-    
+    public GameObject BetweenRoundScreen;
+    public GameObject IntroductionScreen;
+
+    public Button NextInstructionsButton;
+
     public GameObject ImpactCP;
     public Text ImpactCPtext;
 
@@ -39,6 +43,7 @@ public class GameManager : MonoBehaviour {
     public Text roundSumTex;
 
     public Button passRoundButton;
+    public Button newRoundButton;
 
     public GameObject rollDiceOverlay;
     public GameObject diceUIPrefab;
@@ -71,6 +76,8 @@ public class GameManager : MonoBehaviour {
 
     private Text GenerationTextUI;
     private Text GenerationNumberTextUI;
+    public GameObject TipsTextUI;
+    public Text TipsText;
     private GameObject GenerationEnvHistory;
     private Image GenPhotoUI;
 
@@ -89,9 +96,13 @@ public class GameManager : MonoBehaviour {
 
     IEnumerator WaitingForAIPlayers() {
 
+        newRoundScreen.SetActive(false);
+        GenerationText.SetActive(false);
+        GenerationEnvHistory.SetActive(false);
         waitingForPlayers.SetActive(true);
         yield return new WaitForSeconds(UnityEngine.Random.Range(5, 11));
         waitingForPlayers.SetActive(false);
+        StartGameRoundForAllPlayers();
 
     }
 
@@ -134,9 +145,14 @@ public class GameManager : MonoBehaviour {
         GameGlobals.envThreshold = GameGlobals.envState / 2;
         GameGlobals.envRenew = 0.5; // At the end of the round the env renew 50%
         GameGlobals.envRenewperRound = 0;
-        GameGlobals.roundBudget = 14; 
+        GameGlobals.roundBudget = 14;
+        GameGlobals.fairRefPoint = Convert.ToInt32((GameGlobals.envState / 2) / 4.5);
+        GameGlobals.maxSelfish = GameGlobals.fairRefPoint *2;
         GameGlobals.envStatePerRound = new List<int>();
-        GameGlobals.firstGeneration = false;
+        GameGlobals.firstGeneration = true;
+        GameGlobals.firstGenCP = 100;
+
+        GameGlobals.waitingForPaux = true;
 
         GameGlobals.callMongoLogServer = gameObject.AddComponent<CallMongoLogServer>();
 
@@ -157,25 +173,34 @@ public class GameManager : MonoBehaviour {
 
         GenerationText = GameObject.Find("GenerationText");
         GenerationTextUI = GenerationText.transform.Find("genText").gameObject.GetComponent<Text>();
+        TipsTextUI = GameObject.Find("TipsText");
+        TipsText = TipsTextUI.transform.Find("Text").gameObject.GetComponent<Text>();
         GenerationEnvHistory = GameObject.Find("EnvHistory");
 
         passRoundButton = GameObject.Find("passRoundButton").GetComponent<Button>();
         passRoundButton.gameObject.SetActive(false);
+        
+        newRoundButton = GameObject.Find("newRoundButton").GetComponent<Button>();
 
         waitingForPlayers = GameObject.Find("WaitingForPlayers");
 
         poppupScreen = GameObject.Find("PoppupScreen");
 
+        BetweenRoundScreen = GameObject.Find("BetweenRoundScreen");
+        IntroductionScreen = GameObject.Find("IntroductionScreen");
+        NextInstructionsButton = IntroductionScreen.transform.Find("NextInstructionsButton").gameObject.GetComponent<Button>();
+
         if (GameGlobals.firstGeneration)
         {
-            GenerationTextUI.text = "Hello!\n" + "You belong to a First Generation.\n" + "Take resources from the Common-Pool to win the game, but if you take too much " +
-    "there will be no next generation.";
+            GenerationTextUI.text = "Hello!\n" + "You belong to a First Generation.\n" + "You will start the game with a Planet with the resources of value " + GameGlobals.envState.ToString() + ".\n";
         }
         else
         {
-            GenerationTextUI.text = "Hello!" + " You belong to a Sixth Generation.\n" + "The previous Generations left the Planet with the resources of value 60.\n" +
-                "Bellow, you can see their choices.\n" + "Take from Common-Pool but if you take too much there will be no next generation.";
+            GenerationTextUI.text = "Hello!" + " You belong to a Sixth Generation.\n" + "The previous Generations left the Planet with the resources of value "+GameGlobals.firstGenCP.ToString()+".\n" +
+                "Below, you can see their choices.\n";// + "Take from Common-Pool but if you take too much there will be no next generation.";
         }
+
+        TipsText.text = "Take resources from the Common-Pool to win the game, but if you take too much " + "there will be no next generation.";
 
         GenerationNumberText = GameObject.Find("GenerationNumber");
         GenerationNumberTextUI = GenerationNumberText.transform.Find("genNumText").gameObject.GetComponent<Text>();
@@ -211,6 +236,7 @@ public class GameManager : MonoBehaviour {
             waitingForPlayers.SetActive(false);
             UIroundSum.SetActive(false);
             poppupScreen.SetActive(false);
+            BetweenRoundScreen.SetActive(false);
             ImpactCP.SetActive(false);
             StartGameRoundForAllPlayers();
         }
@@ -241,16 +267,17 @@ public class GameManager : MonoBehaviour {
 
             rollDiceOverlay.SetActive(false);
             poppupScreen.SetActive(false);
+            BetweenRoundScreen.SetActive(false);
 
             if (GameGlobals.skipTutorial)
             {
                 tutorialScreen.SetActive(false);
-                newRoundScreen.SetActive(true);
+                newRoundScreen.SetActive(false);
                 ImpactCP.SetActive(false);
+                waitingForPlayers.SetActive(false);
                 GenerationText.SetActive(true);
                 if (GameGlobals.firstGeneration) { GenerationEnvHistory.SetActive(false);}
                 else { GenerationEnvHistory.SetActive(true); }
-                StartCoroutine(WaitingForAIPlayers());
                 UIroundSum.SetActive(false);
             }
             else
@@ -260,11 +287,13 @@ public class GameManager : MonoBehaviour {
 
             advanceRoundButton.onClick.AddListener(delegate ()
             {
-                newRoundScreen.SetActive(false);
-                ImpactCP.SetActive(false);
-                GenerationText.SetActive(false);
-                GenerationEnvHistory.SetActive(false);
-                StartGameRoundForAllPlayers();
+                StartCoroutine(WaitingForAIPlayers());
+            });
+
+            NextInstructionsButton.onClick.AddListener(delegate ()
+            {
+                IntroductionScreen.SetActive(false);
+                newRoundScreen.SetActive(true);
             });
 
             advanceTutorialButton.onClick.AddListener(delegate ()
@@ -274,12 +303,16 @@ public class GameManager : MonoBehaviour {
                 GenerationText.SetActive(true);
                 if (GameGlobals.firstGeneration) { GenerationEnvHistory.SetActive(false); }
                 else { GenerationEnvHistory.SetActive(true); }
-                StartCoroutine(WaitingForAIPlayers());
-                newRoundScreen.SetActive(true);
+                IntroductionScreen.SetActive(true);
                 ImpactCP.SetActive(false);
             });
 
-
+            newRoundButton.onClick.AddListener(delegate ()
+            {
+                BetweenRoundScreen.SetActive(false);
+                ImpactCP.SetActive(false);
+                StartGameRoundForAllPlayers();
+            });
 
             simulateEvolutionButton.onClick.AddListener(delegate()
             {
@@ -436,7 +469,7 @@ public class GameManager : MonoBehaviour {
                     {
                         //RenewCommonPool(true);
                         currGamePhase = GameProperties.GamePhase.BUDGET_ALLOCATION;
-                        newRoundScreen.SetActive(true);
+                        BetweenRoundScreen.SetActive(true);
                         UIroundSum.SetActive(false);
                         GenerationNumberTextUI.text = "Generation: " + GameGlobals.generation.ToString();
                         ChangePhotoinGenPhoto(GameGlobals.generation);
@@ -449,7 +482,9 @@ public class GameManager : MonoBehaviour {
 
            
         }
-
+        //-----------------------------------------------------------------------------------------------//
+        //-----------------------------------------------------------------------------------------------//
+        //-----------------------------------------------------------------------------------------------//
         //end of third phase
         if (numPlayersToExecuteBudget == 0)
         {
@@ -567,10 +602,9 @@ public class GameManager : MonoBehaviour {
                     StartGameRoundForAllPlayers();
                 }
                 else
-                {
+                {//rever acho que nao necessita do if
                     if (GameGlobals.skipTutorial) {
-                        StartCoroutine(WaitingForAIPlayers());
-                        newRoundScreen.SetActive(true);
+                        IntroductionScreen.SetActive(true);
                         ImpactCP.SetActive(false);
                         GenerationText.SetActive(true);
                         if (GameGlobals.firstGeneration) { GenerationEnvHistory.SetActive(false); }
@@ -784,23 +818,57 @@ public class GameManager : MonoBehaviour {
 
     private void ChangePhotoinGenPhoto(int genNumber)
     {
-        switch (genNumber)
+        if (!GameGlobals.firstGeneration)
         {
-            case 1: case 6: case 7:
-                GenPhotoUI.sprite = firstGenPhoto;
-                break;
-            case 2: case 8: case 9: case 10:
-                GenPhotoUI.sprite = Resources.Load<Sprite>("Textures/Generation/2ndgen_icon");
-                break;
-            case 3: case 11: case 12: 
-                GenPhotoUI.sprite = Resources.Load<Sprite>("Textures/Generation/3rdgen_icon");
-                break;
-            case 4: case 13: case 14:
-                GenPhotoUI.sprite = Resources.Load<Sprite>("Textures/Generation/4thgen_icon");
-                break;
-            case 5: case 15:
-                GenPhotoUI.sprite = Resources.Load<Sprite>("Textures/Generation/5thgen_icon");
-                break;
+            switch (genNumber)
+            {
+                case 6:
+                case 7:
+                    GenPhotoUI.sprite = firstGenPhoto;
+                    break;
+                case 8:
+                case 9:
+                case 10:
+                    GenPhotoUI.sprite = Resources.Load<Sprite>("Textures/Generation/2ndgen_icon");
+                    break;
+                case 11:
+                case 12:
+                    GenPhotoUI.sprite = Resources.Load<Sprite>("Textures/Generation/3rdgen_icon");
+                    break;
+                case 13:
+                case 14:
+                    GenPhotoUI.sprite = Resources.Load<Sprite>("Textures/Generation/4thgen_icon");
+                    break;
+                case 15:
+                    GenPhotoUI.sprite = Resources.Load<Sprite>("Textures/Generation/5thgen_icon");
+                    break;
+            }
+        }
+        else
+        {
+            switch (genNumber)
+            {
+                case 1:
+                case 2:
+                    GenPhotoUI.sprite = firstGenPhoto;
+                    break;
+                case 3:
+                case 4:
+                case 5:
+                    GenPhotoUI.sprite = Resources.Load<Sprite>("Textures/Generation/2ndgen_icon");
+                    break;
+                case 6:
+                case 7:
+                    GenPhotoUI.sprite = Resources.Load<Sprite>("Textures/Generation/3rdgen_icon");
+                    break;
+                case 8:
+                case 9:
+                    GenPhotoUI.sprite = Resources.Load<Sprite>("Textures/Generation/4thgen_icon");
+                    break;
+                case 10:
+                    GenPhotoUI.sprite = Resources.Load<Sprite>("Textures/Generation/5thgen_icon");
+                    break;
+            }
         }
     }
 
@@ -863,8 +931,8 @@ public class GameManager : MonoBehaviour {
     private void RenewCommonPool(Boolean arrows)
     {
         GameGlobals.envRenewperRound = (float)(GameGlobals.envState * GameGlobals.envRenew);
-        GameGlobals.envState += GameGlobals.envRenewperRound;
-        GameGlobals.diffCP += GameGlobals.envRenewperRound;
+        GameGlobals.diffCP += Convert.ToInt32(GameGlobals.envRenewperRound);
+        GameGlobals.envState += GameGlobals.diffCP;
 
         if (GameGlobals.envState <= 0)
         {
@@ -877,14 +945,17 @@ public class GameManager : MonoBehaviour {
 
         StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState, arrows));
         ImpactCP.SetActive(true);
-        ImpactCPtext.GetComponent<Text>().text = "Taken-From the Common-Pool: -" + this.roundTaken.ToString() + "\n" +
-        "Common-Pool Renewed: +" + Convert.ToInt32(GameGlobals.diffCP).ToString() + "\n" +
-        "Impact on the Common-Pool: " + GameGlobals.impactOnCP.ToString();
+        ImpactCPtext.GetComponent<Text>().text = "Taken-From the Common-Pool: " + this.roundTaken.ToString() + "\n" +
+        "Common-Pool Renewed: " + GameGlobals.diffCP.ToString() + "\n" +
+        "Impact on the Common-Pool: " + GameGlobals.impactOnCP;
 
         
         this.roundTaken = 0;
         GameGlobals.diffCP = 0;
-        GameGlobals.impactOnCP = 0;
+        GameGlobals.impactOnCP = "";
+        GameGlobals.fairRefPoint = Convert.ToInt32((GameGlobals.envState / 2) / 4.5);
+        GameGlobals.maxSelfish = GameGlobals.fairRefPoint * 2;
+        if (GameGlobals.maxSelfish > 14) { GameGlobals.maxSelfish = 14; }
     }
 
    }

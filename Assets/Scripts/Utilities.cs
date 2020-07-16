@@ -41,9 +41,13 @@ public static class GameGlobals
     public static int generation;
     public static Boolean skipTutorial;
     public static Boolean firstGeneration;
+    public static int firstGenCP;
     public static List<int> envStatePerRound;
-    public static float diffCP = 0;
-    public static float impactOnCP = 0;
+    public static int diffCP = 0;
+    public static string impactOnCP;
+    public static int fairRefPoint; // ((CP/2)/4,5) converter em int
+    public static int maxSelfish;
+    public static Boolean waitingForPaux;
 
     //fatima stuff
     public static string FAtiMAScenarioPath;

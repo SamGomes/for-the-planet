@@ -243,7 +243,7 @@ public class AIPlayerTitForTat : AIPlayer
         if (GameGlobals.currGameRoundId == 0)
         {
 
-            int environmentInvestment = GameGlobals.roundBudget / 2 + UnityEngine.Random.Range(-1, 2);
+            int environmentInvestment = GameGlobals.fairRefPoint + UnityEngine.Random.Range(-1, 2);
             int economyInvestment = GameGlobals.roundBudget - environmentInvestment;
 
             yield return InvestInEnvironment(environmentInvestment);
@@ -296,7 +296,7 @@ public class AIPlayerCompensator : AIPlayer
         if (GameGlobals.currGameRoundId == 0)
         {
 
-            int environmentInvestment = GameGlobals.roundBudget / 2 + UnityEngine.Random.Range(-1, 2);
+            int environmentInvestment = GameGlobals.fairRefPoint + UnityEngine.Random.Range(-1, 2);
             int economyInvestment = GameGlobals.roundBudget - environmentInvestment;
 
             yield return InvestInEnvironment(environmentInvestment);
@@ -307,13 +307,13 @@ public class AIPlayerCompensator : AIPlayer
         {
             int playersAverageLastMove = OtherPlayersAvgLastMove(this.id);
             int environmentInvestment = 0;
-            if (playersAverageLastMove <= 7)
+            if (playersAverageLastMove < GameGlobals.fairRefPoint)
             {
-                environmentInvestment = UnityEngine.Random.Range(8, 14);
+                environmentInvestment = UnityEngine.Random.Range(GameGlobals.fairRefPoint+1, GameGlobals.maxSelfish);
             }
             else
             {
-                environmentInvestment = UnityEngine.Random.Range(0, 7);
+                environmentInvestment = UnityEngine.Random.Range(0, GameGlobals.fairRefPoint);
             }
             int economyInvestment = GameGlobals.roundBudget - environmentInvestment;
 
@@ -337,7 +337,7 @@ public class AIPlayerOutcomeBase : AIPlayer
         if (GameGlobals.envState >= GameGlobals.envThreshold)
         {
 
-            int environmentInvestment = UnityEngine.Random.Range(8, 14);
+            int environmentInvestment = UnityEngine.Random.Range(GameGlobals.fairRefPoint+1,GameGlobals.maxSelfish);
             int economyInvestment = GameGlobals.roundBudget - environmentInvestment;
 
             yield return InvestInEnvironment(environmentInvestment);
@@ -345,7 +345,7 @@ public class AIPlayerOutcomeBase : AIPlayer
         }
         else
         {
-            int environmentInvestment = UnityEngine.Random.Range(0, 7);
+            int environmentInvestment = UnityEngine.Random.Range(0, GameGlobals.fairRefPoint);
             int economyInvestment = GameGlobals.roundBudget - environmentInvestment;
 
             yield return InvestInEnvironment(environmentInvestment);
@@ -387,7 +387,7 @@ public class AIPlayerFair : AIPlayer
 
     public override IEnumerator AutoBudgetAllocation()
     {
-        int environmentInvestment = GameGlobals.roundBudget / 2 + UnityEngine.Random.Range(-1, 2);
+        int environmentInvestment = GameGlobals.fairRefPoint + UnityEngine.Random.Range(-1, 2);
         int economyInvestment = GameGlobals.roundBudget - environmentInvestment;
 
         yield return InvestInEnvironment(environmentInvestment);

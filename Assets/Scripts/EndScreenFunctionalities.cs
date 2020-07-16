@@ -136,7 +136,7 @@ public class EndScreenFunctionalities : MonoBehaviour
     {
         foreach (Player p in GameGlobals.players)
         {
-            p.gains -= p.environmentInvestmentPerRound[this.lastRound];
+            p.gains -= p.environmentInvestmentPerRound[this.lastRound-1];
         }
     }
 
@@ -151,12 +151,49 @@ public class EndScreenFunctionalities : MonoBehaviour
             else
             {
                 this.lastRound = i;
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
+    public void SendLastMongo()
+    {
+        GameGlobals.callMongoLogServer = gameObject.AddComponent<CallMongoLogServer>();
+        int EndenvState = 0;
+        if (System.Convert.ToInt32(GameGlobals.envState) < 0)
+        {
+            EndenvState = 0;
+        }
+        else
+        {
+            EndenvState = System.Convert.ToInt32(GameGlobals.envState);
+        }
+        string endstate;
+        if (System.Convert.ToInt32(GameGlobals.envState) < GameGlobals.envThreshold)
+        {
+            endstate = "LOSER";
+        }
+        else
+        {
+            endstate = "WINNER";
+        }
+
+        Dictionary<string, string> logEntry = new Dictionary<string, string>()
+                    {
+                        {"currSessionId", GameGlobals.currSessionId},
+                        {"currGameId", GameGlobals.currGameId.ToString()},
+                        {"generation", GameGlobals.generation.ToString()},
+                        {"playerName", GameGlobals.players[WinnerID].GetName().ToString()},
+                        {"playerType", endstate},
+                        {"playerTookFromCP", "LASTROUND"},
+                        {"playerGain", GameGlobals.players[WinnerID].GetGains().ToString()},
+                        {"nCollaboration", GameGlobals.players[WinnerID].GetNCollaboration().ToString()},
+                        {"envState", EndenvState.ToString()}
+                    };
+
+        GameGlobals.callMongoLogServer.SentLog(logEntry);
+    }
 
     // Use this for initialization
     void Start()
@@ -167,7 +204,12 @@ public class EndScreenFunctionalities : MonoBehaviour
     IEnumerator YieldedStart()
     {
         CheckWinner();
-            foreach (Player p in GameGlobals.players)
+        //Check if Env explode
+        if (CheckEnvExplode())
+        {
+            TakeEnvExplodeGains();
+        }
+        foreach (Player p in GameGlobals.players)
             {
                 GameObject newTableEntry = Object.Instantiate(tableEntryPrefab, environmentContributionsTableUI.transform);
                 if(p.GetId() == this.WinnerID && p.GetId() == 0)
@@ -180,13 +222,16 @@ public class EndScreenFunctionalities : MonoBehaviour
                 {
                     newTableEntry.GetComponentsInChildren<Text>()[0].text = p.GetName() + "(YOU)";
                 }
+
+                else if (p.GetId() == this.WinnerID)
+                {
+                    newTableEntry.GetComponentsInChildren<Text>()[0].text = p.GetName();
+                    newTableEntry.GetComponentsInChildren<Text>()[0].color = Color.yellow;
+                }
+
                 else {
                     newTableEntry.GetComponentsInChildren<Text>()[0].text = p.GetName();
 
-                }
-                //Check if Env explode
-                if (CheckEnvExplode()) {
-                    TakeEnvExplodeGains();
                 }
                 
                 for (int i = 0; i < GameProperties.configurableProperties.maxNumRounds; i++)
@@ -254,6 +299,7 @@ public class EndScreenFunctionalities : MonoBehaviour
                 }
 
             }
+        SendLastMongo();
             summaryText = GameObject.Find("SummaryText").GetComponent<Text>();
             if(GameGlobals.envStatePerRound[GameGlobals.currGameRoundId - 1]>0)
             {
@@ -263,23 +309,6 @@ public class EndScreenFunctionalities : MonoBehaviour
             else
             {
             summaryText.text = "You start with 60 and ended with 0";
-
-            GameGlobals.callMongoLogServer = gameObject.AddComponent<CallMongoLogServer>();
-
-            Dictionary<string, string> logEntry = new Dictionary<string, string>()
-                    {
-                        {"currSessionId", GameGlobals.currSessionId},
-                        {"currGameId", GameGlobals.currGameId.ToString()},
-                        {"generation", GameGlobals.generation.ToString()},
-                        {"playerName", GameGlobals.players[WinnerID].GetName().ToString()},
-                        {"playerType", "WINNER"},
-                        //{"playerCurrInvestEcon", player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ECONOMIC].ToString()},
-                        {"playerTookFromCP", "LASTROUND"},
-                        {"playerGain", GameGlobals.players[WinnerID].GetGains().ToString()},
-                        {"envState", System.Convert.ToInt32(GameGlobals.envState).ToString()}
-                    };
-
-            GameGlobals.callMongoLogServer.SentLog(logEntry);
 
 
              }
