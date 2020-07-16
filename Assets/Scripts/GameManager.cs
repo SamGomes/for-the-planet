@@ -443,34 +443,16 @@ public class GameManager : MonoBehaviour {
 
     private void TakeMoneyFromCommonPot()
     {
-        List<int> votes = new List<int>();
         foreach (Player p in GameGlobals.players)
         {
-            votes.Add(p.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT]);
-        }
-        int[] sortedVotes = votes.ToArray();
-        Array.Sort(sortedVotes);
-        int len = sortedVotes.Length;
-        float medianVote;
-        if (len % 2 == 0)
-        {
-            int a = sortedVotes[len / 2 - 1];
-            int b = sortedVotes[len / 2];
-            medianVote = (a + b) / 2;
-        }
-        else
-        {
-            medianVote = sortedVotes[len / 2];
-        }
-
-        foreach (Player p in GameGlobals.players)
-        {
-            p.environmentMedianInvestmentPerRound.Add(Convert.ToInt32(medianVote));
-            float newMoney = p.GetMoney() + medianVote;
+            int investment = p.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT];
+            p.environmentMedianInvestmentPerRound.Add(investment);
+            float newMoney = p.GetMoney() - investment;
             StartCoroutine(p.SetMoney(newMoney));
+            GameGlobals.envState += investment;
+
         }
 
-        GameGlobals.envState -= (3 * medianVote);
         GameGlobals.envStatePerRound.Add(GameGlobals.envState);
         StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState));
     }

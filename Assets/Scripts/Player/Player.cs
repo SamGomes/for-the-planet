@@ -72,7 +72,7 @@ public class Player
         playerMonoBehaviourFunctionalities = GameGlobals.monoBehaviourFunctionalities;
         this.warningScreenRef = warningScreenRef;
 
-        money = 0.0f;
+        money = 40.0f;
         this.type = type;
 
         investmentHistory = new Dictionary<GameProperties.InvestmentTarget, int>();
