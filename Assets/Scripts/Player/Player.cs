@@ -61,6 +61,7 @@ public class Player
     protected Button spendTokenInEnvironmentButtonUI;
     private Text environmentTokensDisplayUI;
     private Text environmentHistoryDisplay;
+    private Image environmentHistoryImage;
 
     protected Button executeBudgetButton;
     protected PopupScreenFunctionalities warningScreenRef;
@@ -167,7 +168,7 @@ public class Player
 
         economicGrowthHistoryDisplay = playerUI.transform.Find("playerActionSection/displayHistoryUI/tokenSelection/alocateEconomicGrowth/display").gameObject.GetComponent<Text>();
         environmentHistoryDisplay = playerUI.transform.Find("playerActionSection/displayHistoryUI/tokenSelection/alocateEnvironment/display").gameObject.GetComponent<Text>();
-        economicGrowthHistoryDisplay.color = new Color(0.1f, 0.9f, 0.9f);
+        environmentHistoryImage = playerUI.transform.Find("playerActionSection/displayHistoryUI/tokenSelection/alocateEnvironment/Image").gameObject.GetComponent<Image>();
 
         executeBudgetButton = playerUI.transform.Find("playerActionSection/budgetExecutionUI/rollForInvestmentButton").gameObject.GetComponent<Button>();
         executeBudgetButton.onClick.AddListener(SendBudgetExecutionPhaseResponseDelegate);
@@ -417,15 +418,18 @@ public class Player
             environmentHistoryDisplay.text = investment.ToString();
             if (investment == 0)
             {
-                economicGrowthHistoryDisplay.color = new Color(0.917f, 0.302f, 0.204f);
+                environmentHistoryDisplay.color = new Color(0.917f, 0.302f, 0.204f);
+                environmentHistoryImage.color = new Color(0.917f, 0.302f, 0.204f);
             }
             else if (investment == 2)
             {
-                economicGrowthHistoryDisplay.color = new Color(0.557f, 0.482f, 0.231f);
+                environmentHistoryDisplay.color = new Color(1.0f, 0.753f, 0.0f);
+                environmentHistoryImage.color = new Color(1.0f, 0.753f, 0.0f);
             }
             else if (investment == 4)
             {
-                economicGrowthHistoryDisplay.color = new Color(0.227f, 0.651f, 0.255f);
+                environmentHistoryDisplay.color = new Color(0.227f, 0.651f, 0.255f);
+                environmentHistoryImage.color = new Color(0.227f, 0.651f, 0.255f);
             }
         }
         else
