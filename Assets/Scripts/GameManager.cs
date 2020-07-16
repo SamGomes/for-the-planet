@@ -269,7 +269,6 @@ public class GameManager : MonoBehaviour {
 
             int environmentDecay = diceManager.GetCurrDiceTotal();
             float envDecay = (float) environmentDecay / 100.0f;
-//            Debug.Log("envDecay: "+envDecay);
             
             GameGlobals.envState = Mathf.Clamp01(GameGlobals.envState - envDecay);
             if (!GameGlobals.isSimulation)
@@ -290,7 +289,6 @@ public class GameManager : MonoBehaviour {
                 int economyDecay = diceManager.GetCurrDiceTotal();
                 float economicDecay = (float) economyDecay / 100.0f;
                 StartCoroutine(player.SetEconomicDecay(economicDecay));
-//                Debug.Log("economicDecay: "+economicDecay);
 
                 if (!GameGlobals.isSimulation && GameGlobals.isNarrated)
                 {
@@ -356,7 +354,7 @@ public class GameManager : MonoBehaviour {
                     EmotionalAIPlayer emotPlayer = (EmotionalAIPlayer) player;
                     RolePlayCharacterAsset rpc = emotPlayer.GetRpc();
                     EmotionalAppraisal.IActiveEmotion
-                        strongestEmotion = emotPlayer.GetRpc().GetStrongestActiveEmotion();
+                        strongestEmotion = rpc.GetStrongestActiveEmotion();
                     if (strongestEmotion != null)
                     {
                         Dictionary<string, float> emotionsStrI = new Dictionary<string, float>();
@@ -403,7 +401,7 @@ public class GameManager : MonoBehaviour {
                         logEntry["mood"] = rpc.Mood.ToString("0.00", CultureInfo.InvariantCulture);
                     }
                 }
-
+                
                 StartCoroutine(GameGlobals.gameLogManager.WriteToLog("fortheplanetlogs", "gameresultslog", logEntry));
             }
 

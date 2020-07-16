@@ -43,7 +43,6 @@ public class Player
     protected Button playerActionButtonUI;
 
     private Text nameTextUI;
-    private Slider moneySliderUI;
 
     private GameObject budgetAllocationScreenUI;
     private GameObject displayHistoryScreenUI;
@@ -132,7 +131,6 @@ public class Player
         playerActionButtonUI = playerUI.transform.Find("playerActionSection/playerActionButton").gameObject.GetComponent<Button>();
 
         nameTextUI = playerUI.transform.Find("nameText").gameObject.GetComponent<Text>();
-        moneySliderUI = playerUI.transform.Find("playerStateSection/InvestmentUI/Slider").gameObject.GetComponent<Slider>();
 
 
         spendTokenInEconomicGrowthButtonUI = playerUI.transform.Find("playerActionSection/budgetAllocationUI/tokenSelection/alocateEconomicGrowth/Button").gameObject.GetComponent<Button>();

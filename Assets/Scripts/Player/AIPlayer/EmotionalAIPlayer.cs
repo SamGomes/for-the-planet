@@ -8,34 +8,20 @@ using System.Text.RegularExpressions;
 using UnityEngine;
 using Utilities;
 using MCTS.Core;
-
 //Using the MCTS implementation originally provided by @Mikeywalsh
-
-
 
 public class EmotionalAIPlayer: AIPlayer
 {
     
     //Emotional stuff
     protected RolePlayCharacterAsset rpc;
-    private List<WellFormedNames.Name> unperceivedEvents;
-
     protected Dictionary<GameProperties.InvestmentTarget, int> investmentIntentions;
-    protected string fatimaRpcPath;
-
-    private float lastMoneyInc;
-    private float lastEnvInc;
-
+    
     public EmotionalAIPlayer(string type, InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name, float updateDelay, string fatimaRpcPath) :
         base(type, interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name)
     {
-        lastEnvInc = 0.0f;
-        lastMoneyInc = 0.0f;
-        
-        unperceivedEvents = new List<WellFormedNames.Name>();
-        this.rpc = GameGlobals.FAtiMAIat.Characters.FirstOrDefault(x => x.CharacterName.ToString() == this.type.ToString());
-        this.rpc.CharacterName =  (WellFormedNames.Name) ("Agent" + this.id.ToString());
-        this.fatimaRpcPath = fatimaRpcPath;
+        rpc = GameGlobals.FAtiMAIat.Characters.FirstOrDefault(x => x.CharacterName.ToString() == this.type.ToString());
+        rpc.CharacterName =  (WellFormedNames.Name) ("Agent" + this.id.ToString());
 
         investmentIntentions = new Dictionary<GameProperties.InvestmentTarget, int>();
 
@@ -43,81 +29,29 @@ public class EmotionalAIPlayer: AIPlayer
         investmentIntentions[GameProperties.InvestmentTarget.ECONOMIC] = 3;
         investmentIntentions[GameProperties.InvestmentTarget.ENVIRONMENT] = 2;
     }
-
-    public override void Perceive(List<WellFormedNames.Name> events)
-    {
-        unperceivedEvents.AddRange(events);
-    }
-    public List<EmotionalAppraisal.DTOs.EmotionDTO> GetAllActiveEmotions()
-    {
-        return this.rpc.GetAllActiveEmotions().ToList();
-    }
-
-    protected string ReplaceVariablesInDialogue(string dialog, Dictionary<string, string> tags)
-    {
-        var tokens = Regex.Matches(dialog, @"\|.*?\|");
-
-        var result = string.Empty;
-        foreach (Match t in tokens)
-        {
-            string strippedT = t.Value.Replace(@"|", "");
-            var valueToReplace = tags[strippedT];// rpc.GetBeliefValue(t);
-            dialog = dialog.Replace(t.Value, valueToReplace);
-        }
-        return dialog;
-    }
+    
+    public virtual Dictionary<GameProperties.InvestmentTarget, int> ComputeIntentions(){  return null; }
+    
     public RolePlayCharacterAsset GetRpc()
     {
         return this.rpc;
-    }
-
-
-    public virtual void Act() { }
-
-
-    protected void UpdateStep()
-    {
-        if (unperceivedEvents.Count > 0)
-        {
-            rpc.Perceive(unperceivedEvents);
-            unperceivedEvents.Clear();
-        }
-        try
-        {
-            Act();
-        }
-        catch (Exception e)
-        {
-            Debug.Log("Could not act due to the following exception: "+e.ToString());
-        }
-        rpc.Update();
-    }
-
-    public IEnumerator EmotionalUpdateLoop(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        playerMonoBehaviourFunctionalities.StartCoroutine(EmotionalUpdateLoop(delay));
     }
 
     public override IEnumerator AutoBudgetAllocation()
     {
         base.AutoBudgetAllocation();
 
-        int econ = currRoundInvestment[GameProperties.InvestmentTarget.ECONOMIC];
-        int env = currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT];
+        investmentIntentions = ComputeIntentions();
+        int econ = investmentIntentions[GameProperties.InvestmentTarget.ECONOMIC];
+        int env = investmentIntentions[GameProperties.InvestmentTarget.ENVIRONMENT];
+        
+        WellFormedNames.Name evnt = RolePlayCharacter.EventHelper.PropertyChange("BeforeBudgetAllocation(" + econ + "," + env + ")", this.id.ToString(), this.id.ToString());
+        rpc.Perceive(evnt);
+        rpc.Update();
 
-        List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
-        events.Add(RolePlayCharacter.EventHelper.PropertyChange("BeforeBudgetAllocation(" + econ + "," + env + ")", this.id.ToString(), this.id.ToString()));
-        Perceive(events);
-        UpdateStep();
-        
-        econ = investmentIntentions[GameProperties.InvestmentTarget.ECONOMIC];
-        env = investmentIntentions[GameProperties.InvestmentTarget.ENVIRONMENT];
-        
         yield return InvestInEconomy(econ);
         yield return InvestInEnvironment(env);
         yield return EndBudgetAllocationPhase();
-
     }
 
     public override IEnumerator AutoHistoryDisplay()
@@ -129,28 +63,23 @@ public class EmotionalAIPlayer: AIPlayer
         float env = 0;
         foreach (Player player in GameGlobals.players)
         {
-//            econ = player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ECONOMIC];
-//            env = player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT];
-//
-//            events.Add(RolePlayCharacter.EventHelper.PropertyChange(
-//                "HistoryDisplay(" + econ.ToString("0.00", CultureInfo.InvariantCulture) + "," +
-//                env.ToString("0.00", CultureInfo.InvariantCulture) + ")",
-//                this.id.ToString(), player.GetId().ToString()));
-
+            if (player == this)
+            {
+                continue;
+            }
             //aggregate
             econ += player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ECONOMIC];
             env += player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT];
         }
         //aggregate
-        econ /= GameGlobals.players.Count;
-        env /= GameGlobals.players.Count;
-        events.Add(RolePlayCharacter.EventHelper.PropertyChange(
+        econ /= (GameGlobals.players.Count - 1);
+        env /= (GameGlobals.players.Count - 1);
+        WellFormedNames.Name evnt = RolePlayCharacter.EventHelper.PropertyChange(
         "HistoryDisplay(" + econ.ToString("0.00", CultureInfo.InvariantCulture) + "," +
         env.ToString("0.00", CultureInfo.InvariantCulture) + ")",
-        this.id.ToString(), "OtherPlayers"));
-        
-        Perceive(events);
-        UpdateStep();
+        this.id.ToString(), "OtherPlayers");
+        rpc.Perceive(evnt);
+        rpc.Update();
 
         yield return null;
     }
@@ -164,60 +93,7 @@ public class EmotionalAIPlayer: AIPlayer
     {
         yield return base.AutoInvestmentExecution();
     }
-
-
 }
-
-public class TableEmotionalAIPlayer : EmotionalAIPlayer
-{
-
-    public TableEmotionalAIPlayer(string type, InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name, float updateDelay, string fatimaRpcPath) :
-        base(type, interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name, updateDelay, fatimaRpcPath)
-    {
-        
-    }
-
-
-    public override void Act()
-    {
-        List<ActionLibrary.IAction> actionList = rpc.Decide().ToList<ActionLibrary.IAction>();
-        foreach (ActionLibrary.IAction action in actionList)
-        {
-            switch (action.Key.ToString())
-            {
-                case "Speak":
-                    WellFormedNames.Name cs = action.Parameters[0];
-                    WellFormedNames.Name ns = action.Parameters[1];
-                    WellFormedNames.Name m = (WellFormedNames.Name)"-";
-                    if (rpc.GetStrongestActiveEmotion() != null)
-                    {
-                        m = (WellFormedNames.Name)rpc.GetStrongestActiveEmotion().EmotionType;
-                    }
-
-                    WellFormedNames.Name s = (WellFormedNames.Name)this.name; //ESTA MAL
-                    var dialogs = GameGlobals.FAtiMAIat.GetDialogueActions(cs, ns, m, s);
-                    if (dialogs.Count <= 0)
-                    {
-                        break;
-                    }
-                    var dialog = dialogs.Shuffle().FirstOrDefault();
-
-                    interactionModule.Speak(ReplaceVariablesInDialogue(dialog.Utterance, new Dictionary<string, string>() { { "target", action.Target.ToString() } }));
-
-                    WellFormedNames.Name speakEvent = RolePlayCharacter.EventHelper.ActionEnd(this.name, "Speak(" + cs + "," + ns + "," + m + "," + s + ")", this.name);
-                    Perceive(new List<WellFormedNames.Name>() { speakEvent });
-
-                    break;
-                case "Invest":
-                    investmentIntentions[GameProperties.InvestmentTarget.ENVIRONMENT] = int.Parse(action.Parameters[0].ToString());
-                    investmentIntentions[GameProperties.InvestmentTarget.ECONOMIC] = int.Parse(action.Parameters[1].ToString());
-                    break;
-            }
-
-        }
-    }
-}
-
 
 
 
@@ -375,10 +251,6 @@ public class FTPBoard : Board
         float estDecayEnv = (GameGlobals.environmentDecayBudget[0] + GameGlobals.environmentDecayBudget[1]) / 2.0f;
         estDecayEnv = (estDecayEnv * 3.5f) / 100.0f;
         
-//        float estGainEnv = (estEnvDice * 2.5f) / 100.0f;
-//        float estDecayEnv = (GameGlobals.environmentDecayBudget[0] + GameGlobals.environmentDecayBudget[1]) / 2.0f;
-//        estDecayEnv = (estDecayEnv * 4.5f) / 100.0f;
-        
         float estEnv = Mathf.Clamp01(env + (estGainEnv - estDecayEnv));
         
         econs = estEcons;
@@ -476,44 +348,27 @@ public class FTPBoard : Board
 }
 
 
-
-
 public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
 {
-    float pDisrupt;
-    Dictionary<string, float> pWeights;
-    
-    
     // big brain
     private static TreeSearch<Node> mcts;
     
     public CompetitiveCooperativeEmotionalAIPlayer(string type, InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name, float updateDelay, string fatimaRpcPath) :
        base(type, interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name, updateDelay, fatimaRpcPath)
     {
-        pDisrupt = 0.5f;
-
-        pWeights = new Dictionary<string, float>();
-        pWeights["Happy-for"] = pWeights["Gloating"] = pWeights["Satisfaction"] = 
-            pWeights["Relief"] = pWeights["Hope"] = pWeights["Joy"] = pWeights["Gratification"] = 
-            pWeights["Gratitude"] = pWeights["Pride"] = pWeights["Admiration"] = pWeights["Love"] = -1.0f;
-
-        pWeights["Resentment"] = pWeights["Pity"] = pWeights["Fear-confirmed"] =
-           pWeights["Disappointment"] = pWeights["Fear"] = pWeights["Distress"] = pWeights["Remorse"] =
-           pWeights["Anger"] = pWeights["Shame"] = pWeights["Reproach"] = pWeights["Hate"] = 1.0f;
     }
 
-    public override void Act()
+    public override Dictionary<GameProperties.InvestmentTarget, int> ComputeIntentions()
     {
         EmotionalAppraisal.IActiveEmotion strongestEmotion = this.rpc.GetStrongestActiveEmotion();
         if (strongestEmotion == null) {
-            return;
+            return investmentIntentions;
         }
 
         string rpcArr = "[";
         int j = 0;
         
         interactionModule.Speak("I'm feeling " + strongestEmotion.EmotionType);
-        
         
         List<float> moneyValues = new List<float>();
         foreach (Player player in GameGlobals.players)
@@ -537,7 +392,7 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
         }
         
         FTPBoard currentState = new FTPBoard(this.id + 1, GameProperties.configurableProperties.maxNumRounds, PredictAction, GameGlobals.envState, moneyValues);
-        investmentIntentions = Analyse(numMctsSteps, currentState); 
+        return Analyse(numMctsSteps, currentState); 
     }
 
     public Dictionary<GameProperties.InvestmentTarget, int> Analyse(int numMctsSteps, FTPBoard currentState)
@@ -558,33 +413,16 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
         return inv;
     }
     
-    
     public int PredictAction(Player player)
     {
         float coopValue = (player.GetCoopPerc() * GameGlobals.roundBudget);
         return UnityEngine.Random.Range(Mathf.FloorToInt(coopValue), Mathf.CeilToInt(coopValue));
     }
-
-
-
-    public override IEnumerator AutoBudgetExecution()
-    {
-        yield return base.AutoBudgetExecution();
-    }
-
-    public override IEnumerator AutoInvestmentExecution()
-    {
-        yield return base.AutoInvestmentExecution();
-    }
-
 }
 
 
 public class AIMCTSPlayer : AIPlayer
 {
-    Dictionary<string, float> pWeights;
-    
-    
     // big brain
     private static TreeSearch<Node> mcts;
     private int depth;
@@ -632,18 +470,7 @@ public class AIMCTSPlayer : AIPlayer
     
     public int PredictAction(Player player)
     {
-        return (int) (player.GetCoopPerc() * GameGlobals.roundBudget);
+        float coopValue = (player.GetCoopPerc() * GameGlobals.roundBudget);
+        return UnityEngine.Random.Range(Mathf.FloorToInt(coopValue), Mathf.CeilToInt(coopValue));
     }
-
-
-    public override IEnumerator AutoBudgetExecution()
-    {
-        yield return base.AutoBudgetExecution();
-    }
-
-    public override IEnumerator AutoInvestmentExecution()
-    {
-        yield return base.AutoInvestmentExecution();
-    }
-
 }
