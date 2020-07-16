@@ -50,6 +50,7 @@ public class RemotePlayer : Player
 
     internal void ReceiveRemoteBudgetAllocation(int envAllocation)
     {
+        //investmentSliderUI.value = ((float)envAllocation) / 2;
         environmentInvestmentPerRound.Add(envAllocation);
         unallocatedBudget = GameGlobals.roundBudget;
 

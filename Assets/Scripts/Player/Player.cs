@@ -46,6 +46,7 @@ public class Player
 
     private Text nameTextUI;
     private Slider moneySliderUI;
+    protected Slider investmentSliderUI;
 
     protected GameObject budgetAllocationScreenUI;
     protected GameObject displayHistoryScreenUI;
@@ -90,6 +91,14 @@ public class Player
         {
             InitUI(playerCanvas, warningScreenRef, UIAvatar);
         }
+    }
+
+
+    public void InvestmentChanged(float value)
+    {
+        Text textLabel = investmentSliderUI.transform.Find("HandleSlideArea/SliderPick/Text").gameObject.GetComponent<Text>();
+        textLabel.text = (value * 2).ToString();
+        currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT] = (int)(value * 2);
     }
 
 
@@ -142,6 +151,8 @@ public class Player
 
         nameTextUI = playerUI.transform.Find("nameText").gameObject.GetComponent<Text>();
         moneySliderUI = playerUI.transform.Find("playerStateSection/InvestmentUI/Slider").gameObject.GetComponent<Slider>();
+        investmentSliderUI = playerUI.transform.Find("playerActionSection/budgetAllocationUI/InvestementSlider").gameObject.GetComponent<Slider>();
+        investmentSliderUI.onValueChanged.AddListener(InvestmentChanged);
 
         spendTokenInEconomicGrowthButtonUI = playerUI.transform.Find("playerActionSection/budgetAllocationUI/tokenSelection/alocateEconomicGrowth/Button").gameObject.GetComponent<Button>();
         spendTokenInEconomicGrowthButtonUI.onClick.AddListener(SpendTokenInEconomicGrowth);
@@ -211,6 +222,11 @@ public class Player
     {
         return this.money;
     }
+
+    public float GetInvestment()
+    {
+        return (2 * this.investmentSliderUI.value);
+    }
     public Dictionary<GameProperties.InvestmentTarget, int> GetCurrRoundInvestment()
     {
         return this.currRoundInvestment;
@@ -231,8 +247,8 @@ public class Player
             this.investmentSimulationScreenUI.SetActive(false);
             this.playerActionButtonUI.gameObject.SetActive(true);
         }
-        
 
+        investmentSliderUI.value = 1;
         unallocatedBudget = GameGlobals.roundBudget;
         int halfBudget = Mathf.FloorToInt(this.unallocatedBudget / 2.0f);
         int startingEconomicInv = halfBudget;
@@ -389,7 +405,8 @@ public class Player
     {
         if (GameGlobals.areHumansOnSyncTablets)
         {
-            economicGrowthHistoryDisplay.text = currRoundInvestment[GameProperties.InvestmentTarget.ECONOMIC].ToString();
+            //economicGrowthHistoryDisplay.text = (investmentSliderUI.value * 2).ToString();
+            //economicGrowthHistoryDisplay.text = currRoundInvestment[GameProperties.InvestmentTarget.ECONOMIC].ToString();
             environmentHistoryDisplay.text = currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT].ToString();
         }
         else

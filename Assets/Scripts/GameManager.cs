@@ -300,12 +300,13 @@ public class GameManager : MonoBehaviour {
                 yield return new WaitForSeconds(10);
 
 
-                if (GameGlobals.envState <= 74) //environment exploded
+                /*if (GameGlobals.envState <= 74) //environment exploded
                 {
                     GameGlobals.currGameState = GameProperties.GameState.LOSS;
                     GameGlobals.gameSceneManager.LoadEndScene();
                 }
-                else if (GameGlobals.currGameRoundId == GameProperties.configurableProperties.maxNumRounds) //reached last round
+                else */
+                if (GameGlobals.currGameRoundId == GameProperties.configurableProperties.maxNumRounds) //reached last round
                 {
                     GameGlobals.currGameState = GameProperties.GameState.VICTORY;
                     GameGlobals.gameSceneManager.LoadEndScene();
@@ -446,6 +447,7 @@ public class GameManager : MonoBehaviour {
         foreach (Player p in GameGlobals.players)
         {
             int investment = p.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT];
+            //int investment = (int) p.GetInvestment();
             p.environmentMedianInvestmentPerRound.Add(investment);
             float newMoney = p.GetMoney() - investment;
             StartCoroutine(p.SetMoney(newMoney));
