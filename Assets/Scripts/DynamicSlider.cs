@@ -91,7 +91,7 @@ public class DynamicSlider
         {
             currSliderValue = initialSliderValue + t * growth;
             sliderUI.value = currSliderValue;
-            t += 0.2f;
+            t += 0.05f;
             yield return new WaitForSeconds(0.0416f);
         }
         sliderUI.value = targetSliderValue; //to avoid rounding errors due to animation

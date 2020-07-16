@@ -46,6 +46,7 @@ public class Player
 
     private Text nameTextUI;
     private Slider moneySliderUI;
+    private Text moneyTextUI;
     protected Slider investmentSliderUI;
 
     protected GameObject budgetAllocationScreenUI;
@@ -86,6 +87,7 @@ public class Player
 
         environmentInvestmentPerRound = new List<int>();
         environmentMedianInvestmentPerRound = new List<int>();
+
 
         if (!GameGlobals.isSimulation)
         {
@@ -151,6 +153,7 @@ public class Player
 
         nameTextUI = playerUI.transform.Find("nameText").gameObject.GetComponent<Text>();
         moneySliderUI = playerUI.transform.Find("playerStateSection/InvestmentUI/Slider").gameObject.GetComponent<Slider>();
+        moneyTextUI = playerUI.transform.Find("playerStateSection/InvestmentUI/Money").gameObject.GetComponent<Text>();
         investmentSliderUI = playerUI.transform.Find("playerActionSection/budgetAllocationUI/InvestementSlider").gameObject.GetComponent<Slider>();
         investmentSliderUI.onValueChanged.AddListener(InvestmentChanged);
 
@@ -164,6 +167,7 @@ public class Player
 
         economicGrowthHistoryDisplay = playerUI.transform.Find("playerActionSection/displayHistoryUI/tokenSelection/alocateEconomicGrowth/display").gameObject.GetComponent<Text>();
         environmentHistoryDisplay = playerUI.transform.Find("playerActionSection/displayHistoryUI/tokenSelection/alocateEnvironment/display").gameObject.GetComponent<Text>();
+        economicGrowthHistoryDisplay.color = new Color(0.1f, 0.9f, 0.9f);
 
         executeBudgetButton = playerUI.transform.Find("playerActionSection/budgetExecutionUI/rollForInvestmentButton").gameObject.GetComponent<Button>();
         executeBudgetButton.onClick.AddListener(SendBudgetExecutionPhaseResponseDelegate);
@@ -258,7 +262,8 @@ public class Player
         currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT] = 0;
 
         AddInvestment(GameProperties.InvestmentTarget.ECONOMIC, startingEconomicInv);
-        AddInvestment(GameProperties.InvestmentTarget.ENVIRONMENT, startingEnvironmentInv);
+        //AddInvestment(GameProperties.InvestmentTarget.ENVIRONMENT, startingEnvironmentInv);
+        AddInvestment(GameProperties.InvestmentTarget.ENVIRONMENT, 2);
 
         if (!GameGlobals.isSimulation)
         {
@@ -384,6 +389,7 @@ public class Player
     public IEnumerator SetMoney(float money)
     {
         this.money = money;
+        this.moneyTextUI.text = ((int)money).ToString();
         if (dynamicSlider != null)
         {
             yield return playerMonoBehaviourFunctionalities.StartCoroutine(this.dynamicSlider.UpdateSliderValue(money));
@@ -407,12 +413,25 @@ public class Player
         {
             //economicGrowthHistoryDisplay.text = (investmentSliderUI.value * 2).ToString();
             //economicGrowthHistoryDisplay.text = currRoundInvestment[GameProperties.InvestmentTarget.ECONOMIC].ToString();
-            environmentHistoryDisplay.text = currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT].ToString();
+            int investment = currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT];
+            environmentHistoryDisplay.text = investment.ToString();
+            if (investment == 0)
+            {
+                economicGrowthHistoryDisplay.color = new Color(0.917f, 0.302f, 0.204f);
+            }
+            else if (investment == 2)
+            {
+                economicGrowthHistoryDisplay.color = new Color(0.557f, 0.482f, 0.231f);
+            }
+            else if (investment == 4)
+            {
+                economicGrowthHistoryDisplay.color = new Color(0.227f, 0.651f, 0.255f);
+            }
         }
         else
         {
             economicGrowthHistoryDisplay.text = investmentHistory[GameProperties.InvestmentTarget.ECONOMIC].ToString();
-            environmentHistoryDisplay.text = investmentHistory[GameProperties.InvestmentTarget.ENVIRONMENT].ToString();
+            environmentHistoryDisplay.text = currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT].ToString();
         }
     }
 

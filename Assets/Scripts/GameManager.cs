@@ -39,6 +39,7 @@ public class GameManager : MonoBehaviour {
     public GameObject CommonAreaUI;
     public Slider environmentSliderSceneElement;
     private DynamicSlider envDynamicSlider;
+    public Text RoundsInfo;
 
     public GameProperties.GamePhase currGamePhase;
 
@@ -150,6 +151,7 @@ public class GameManager : MonoBehaviour {
             envDynamicSlider = new DynamicSlider(environmentSliderSceneElement.gameObject, true);
             StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState));
             DontDestroyOnLoad(CommonAreaUI);
+            RoundsInfo = CommonAreaUI.transform.Find("Rounds").gameObject.GetComponent<Text>();
 
             rollDiceOverlay.SetActive(false);
 
@@ -313,6 +315,7 @@ public class GameManager : MonoBehaviour {
                 }
                 else //normal round finished
                 {
+                    RoundsInfo.text = "Round " + (GameGlobals.currGameRoundId + 1).ToString() + " / " + GameProperties.configurableProperties.maxNumRounds;
                     currGamePhase = GameProperties.GamePhase.BUDGET_ALLOCATION;
                     newRoundScreen.SetActive(true);
                 }
