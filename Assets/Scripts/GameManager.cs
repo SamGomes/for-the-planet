@@ -105,7 +105,7 @@ public class GameManager : MonoBehaviour {
         phaseEndDelay = 2.0f;
         if (GameGlobals.areHumansOnSyncTablets)
         {
-            GameGlobals.envState = 150;
+            GameGlobals.envState = 0;
             GameGlobals.envStatePerRound = new List<float>();
         }
         else

@@ -89,7 +89,7 @@ public class DynamicSlider
 
         while (Mathf.Abs(targetSliderValue - currSliderValue) > 0.02f)
         {
-            currSliderValue = initialSliderValue + Mathf.Sin(t) * growth;
+            currSliderValue = initialSliderValue + t * growth;
             sliderUI.value = currSliderValue;
             t += 0.2f;
             yield return new WaitForSeconds(0.0416f);
