@@ -21,12 +21,15 @@ public class GameManager : MonoBehaviour {
     public GameObject playerUIPrefab;
     public GameObject investmentUIPrefab;
 
-
-    public GameObject newRoundScreen;
-    public Button advanceRoundButton;
+    private List<GameObject> playersEntriesGameStateTable;
+    public GameObject tableEntryPrefab;
+    public GameObject GameStateTableUI;
     public GameObject newRoundTimerScreen;
     public Button advanceRoundTimerButton;
     private int advanceRoundTimer;
+
+    public GameObject newRoundScreen;
+    public Button advanceRoundButton;
     public GameObject simulateInvestmentScreen;
     public Button simulateEvolutionButton;
     
@@ -170,6 +173,11 @@ public class GameManager : MonoBehaviour {
                 newRoundTimerScreen.SetActive(false);
                 StartGameRoundForAllPlayers();
             });
+            playersEntriesGameStateTable = new List<GameObject>();
+            foreach (Player p in GameGlobals.players)
+            {
+                playersEntriesGameStateTable.Add(UnityEngine.Object.Instantiate(tableEntryPrefab, GameStateTableUI.transform));
+            }
 
             simulateEvolutionButton.onClick.AddListener(delegate()
             {
@@ -327,6 +335,30 @@ public class GameManager : MonoBehaviour {
                     RoundsInfo.text = "Round " + (GameGlobals.currGameRoundId + 1).ToString() + " / " + GameProperties.configurableProperties.maxNumRounds;
                     currGamePhase = GameProperties.GamePhase.BUDGET_ALLOCATION;
                     advanceRoundTimerButton.interactable = false;
+
+
+                    for (int k = 0; k < GameGlobals.players.Count; k++)
+                    {
+                        Player p = GameGlobals.players[k];
+                        GameObject newTableEntry = playersEntriesGameStateTable[k];
+                        int tableSize = newTableEntry.GetComponentsInChildren<Text>().Length;
+                        newTableEntry.GetComponentsInChildren<Text>()[0].text = p.GetName();
+                        for (int i = 0; i < GameProperties.configurableProperties.maxNumRounds; i++)
+                        {
+                            if (i < p.environmentInvestmentPerRound.Count)
+                            {
+                                int playerInvestmentPerRound = p.environmentInvestmentPerRound[i];
+                                Text textEntry = newTableEntry.GetComponentsInChildren<Text>()[i + 1];
+                                textEntry.text = playerInvestmentPerRound.ToString();
+                            }
+                            else
+                            {
+                                newTableEntry.GetComponentsInChildren<Text>()[i + 1].text = "-";
+                            }
+                        }
+                        newTableEntry.GetComponentsInChildren<Text>()[tableSize - 1].text = ((int)p.GetMoney()).ToString();
+                    }
+
                     newRoundTimerScreen.SetActive(true);
                     advanceRoundTimer = 5;
                     advanceRoundTimerButton.transform.Find("Timer").gameObject.GetComponent<Text>().text = " Start New Round (" + advanceRoundTimer.ToString() + ")";
