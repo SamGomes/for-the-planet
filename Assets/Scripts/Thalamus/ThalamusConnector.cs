@@ -320,4 +320,9 @@ public class TabletThalamusConnector : ThalamusConnector, ITabletPublisher
     {
         _rpcProxy.SendBudgetAllocation(tabletID, envAllocation);
     }
+
+    public void Disconnect(int id)
+    {
+        _rpcProxy.Disconnect(id);
+    }
 }

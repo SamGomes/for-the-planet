@@ -19,6 +19,7 @@ public class TabletPlayer : Player
 
     public void Dispose()
     {
+        thalamusConnector.Disconnect(id);
         thalamusConnector.Dispose();
     }
 

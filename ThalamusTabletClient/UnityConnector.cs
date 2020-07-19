@@ -25,6 +25,11 @@ public class UnityListener : XmlRpcListenerService, IUnityTabletSubscriber
     {
         _thalamusCS.TypifiedPublisher.SendBudgetAllocation(tabletID, envAllocation);
     }
+
+    public void Disconnect(int id)
+    {
+        _thalamusCS.TypifiedPublisher.Disconnect(id);
+    }
 }
 
 public class UnityConnector

@@ -37,6 +37,8 @@ public interface ITabletPublisher : ITabletsGM
     new void ConnectToGM(int id, string name);
     [XmlRpcMethod]
     new void SendBudgetAllocation(int economyAllocation, int environmentAllocation);
+    [XmlRpcMethod]
+    new void Disconnect(int id);
 }
 
 public interface IUnityTabletSubscriber : IGMTablets

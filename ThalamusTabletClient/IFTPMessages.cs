@@ -15,6 +15,8 @@ public interface IUnityTabletSubscriber : ITabletsGM
     new void ConnectToGM(int id, string name);
     [XmlRpcMethod]
     new void SendBudgetAllocation(int tabletID, int envAllocation);
+    [XmlRpcMethod]
+    new void Disconnect(int id);
 
 }
 

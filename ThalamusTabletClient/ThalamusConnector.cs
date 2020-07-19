@@ -32,6 +32,11 @@ public class ThalamusConnector : ThalamusClient, IGMTablets
         {
             _publisher.SendBudgetAllocation(tabletID, envAllocation);
         }
+
+        public void Disconnect(int id)
+        {
+            _publisher.Disconnect(id);
+        }
     }
 
     public ThalamusConnector(string clientName, string character)

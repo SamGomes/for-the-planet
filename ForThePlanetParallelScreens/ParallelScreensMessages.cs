@@ -13,5 +13,6 @@ namespace ForThePlanetParallelScreens
     {
         void ConnectToGM(int id, string name);
         void SendBudgetAllocation(int tabletID, int envAllocation);
+        void Disconnect(int id);
     }
 }

@@ -104,6 +104,15 @@ public class EndScreenFunctionalities : MonoBehaviour
     }
 
 
+    void OnApplicationQuit()
+    {
+        if (GameGlobals.areHumansOnSyncTablets && GameGlobals.tabletPlayer != null)
+        {
+            GameGlobals.tabletPlayer.Dispose();
+        }
+    }
+
+
     // Use this for initialization
     void Start()
     {

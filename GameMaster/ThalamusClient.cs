@@ -108,10 +108,12 @@ class GameMasterThalamusClient : ThalamusClient, ITabletsGM
 
             if (input == "q")
             {
+                Console.WriteLine("Quiting...");
                 stop = true;
             }
             if (input == "r")
             {
+                Console.WriteLine("RESET! Waiting for 3 tablets...");
                 TabletPlayer p0 = new TabletPlayer(0);
                 TabletPlayer p1 = new TabletPlayer(1);
                 TabletPlayer p2 = new TabletPlayer(2);
@@ -120,5 +122,16 @@ class GameMasterThalamusClient : ThalamusClient, ITabletsGM
                 _totalInvestmentsCurrentRound = 0;
             }
         }
+    }
+
+    public void Disconnect(int id)
+    {
+        Console.WriteLine("RESET! Waiting for 3 tablets...");
+        TabletPlayer p0 = new TabletPlayer(0);
+        TabletPlayer p1 = new TabletPlayer(1);
+        TabletPlayer p2 = new TabletPlayer(2);
+        _tabletsConnected = new TabletPlayer[] { p0, p1, p2 };
+        _currentRound = 0;
+        _totalInvestmentsCurrentRound = 0;
     }
 }
