@@ -327,7 +327,14 @@ public class GameManager : MonoBehaviour {
                 else */
                 if (GameGlobals.currGameRoundId == GameProperties.configurableProperties.maxNumRounds) //reached last round
                 {
-                    GameGlobals.currGameState = GameProperties.GameState.VICTORY;
+                    if (GameGlobals.envState >= 60)
+                    {
+                        GameGlobals.currGameState = GameProperties.GameState.VICTORY;
+                    }
+                    else
+                    {
+                        GameGlobals.currGameState = GameProperties.GameState.LOSS;
+                    }
                     GameGlobals.gameSceneManager.LoadEndScene();
                 }
                 else //normal round finished

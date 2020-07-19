@@ -116,7 +116,9 @@ public class EndScreenFunctionalities : MonoBehaviour
         {
             foreach (Player p in GameGlobals.players)
             {
+
                 GameObject newTableEntry = Object.Instantiate(tableEntryPrefab, environmentContributionsTableUI.transform);
+                int tableSize = newTableEntry.GetComponentsInChildren<Text>().Length;
                 newTableEntry.GetComponentsInChildren<Text>()[0].text = p.GetName();
                 for (int i = 0; i < GameProperties.configurableProperties.maxNumRounds; i++)
                 {
@@ -125,18 +127,17 @@ public class EndScreenFunctionalities : MonoBehaviour
                         int playerInvestmentPerRound = p.environmentInvestmentPerRound[i];
                         Text textEntry = newTableEntry.GetComponentsInChildren<Text>()[i + 1];
                         textEntry.text = playerInvestmentPerRound.ToString();
-
-                        if (playerInvestmentPerRound == p.environmentMedianInvestmentPerRound[i])
-                        {
-                            textEntry.color = Color.yellow;
-                        }
                     }
                     else
                     {
                         newTableEntry.GetComponentsInChildren<Text>()[i + 1].text = "-";
                     }
                 }
+                newTableEntry.GetComponentsInChildren<Text>()[tableSize - 1].text = ((int)p.GetMoney()).ToString();
+                newTableEntry.GetComponentsInChildren<Text>()[tableSize - 1].color = Color.yellow;
             }
+            
+            /*
             GameObject newDummyLineEntry = Object.Instantiate(tableEntryPrefab, environmentContributionsTableUI.transform);
             newDummyLineEntry.GetComponentsInChildren<Text>()[0].text = "";
             newDummyLineEntry.GetComponentsInChildren<Text>()[1].text = "";
@@ -174,7 +175,7 @@ public class EndScreenFunctionalities : MonoBehaviour
                     textGameObject.color = Color.red;
                 }
 
-            }
+            }*/
         }
         else
         {
