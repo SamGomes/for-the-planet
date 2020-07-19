@@ -171,6 +171,7 @@ public class GameManager : MonoBehaviour {
             advanceRoundTimerButton.onClick.AddListener(delegate ()
             {
                 newRoundTimerScreen.SetActive(false);
+                RoundsInfo.enabled = true;
                 StartGameRoundForAllPlayers();
             });
             playersEntriesGameStateTable = new List<GameObject>();
@@ -340,6 +341,7 @@ public class GameManager : MonoBehaviour {
                 else //normal round finished
                 {
                     RoundsInfo.text = "Round " + (GameGlobals.currGameRoundId + 1).ToString() + " / " + GameProperties.configurableProperties.maxNumRounds;
+                    RoundsInfo.enabled = false;
                     currGamePhase = GameProperties.GamePhase.BUDGET_ALLOCATION;
                     advanceRoundTimerButton.interactable = false;
 
