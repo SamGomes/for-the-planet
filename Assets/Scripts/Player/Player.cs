@@ -416,6 +416,8 @@ public class Player
             //economicGrowthHistoryDisplay.text = currRoundInvestment[GameProperties.InvestmentTarget.ECONOMIC].ToString();
             int investment = currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT];
             environmentHistoryDisplay.text = investment.ToString();
+            
+            /*
             if (investment == 0)
             {
                 environmentHistoryDisplay.color = new Color(0.917f, 0.302f, 0.204f);
@@ -430,7 +432,7 @@ public class Player
             {
                 environmentHistoryDisplay.color = new Color(0.227f, 0.651f, 0.255f);
                 environmentHistoryImage.color = new Color(0.227f, 0.651f, 0.255f);
-            }
+            }*/
         }
         else
         {
