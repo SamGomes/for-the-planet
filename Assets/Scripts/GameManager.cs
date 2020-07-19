@@ -24,6 +24,9 @@ public class GameManager : MonoBehaviour {
 
     public GameObject newRoundScreen;
     public Button advanceRoundButton;
+    public GameObject newRoundTimerScreen;
+    public Button advanceRoundTimerButton;
+    private int advanceRoundTimer;
     public GameObject simulateInvestmentScreen;
     public Button simulateEvolutionButton;
     
@@ -159,6 +162,12 @@ public class GameManager : MonoBehaviour {
             advanceRoundButton.onClick.AddListener(delegate()
             {
                 newRoundScreen.SetActive(false);
+                StartGameRoundForAllPlayers();
+            });
+            advanceRoundTimerButton.interactable = false;
+            advanceRoundTimerButton.onClick.AddListener(delegate ()
+            {
+                newRoundTimerScreen.SetActive(false);
                 StartGameRoundForAllPlayers();
             });
 
@@ -299,7 +308,7 @@ public class GameManager : MonoBehaviour {
 
                 TakeMoneyFromCommonPot();
                 GameGlobals.currGameRoundId++;
-                yield return new WaitForSeconds(10);
+                yield return new WaitForSeconds(5);
 
 
                 /*if (GameGlobals.envState <= 74) //environment exploded
@@ -317,7 +326,18 @@ public class GameManager : MonoBehaviour {
                 {
                     RoundsInfo.text = "Round " + (GameGlobals.currGameRoundId + 1).ToString() + " / " + GameProperties.configurableProperties.maxNumRounds;
                     currGamePhase = GameProperties.GamePhase.BUDGET_ALLOCATION;
-                    newRoundScreen.SetActive(true);
+                    advanceRoundTimerButton.interactable = false;
+                    newRoundTimerScreen.SetActive(true);
+                    advanceRoundTimer = 5;
+                    advanceRoundTimerButton.transform.Find("Timer").gameObject.GetComponent<Text>().text = " Start New Round (" + advanceRoundTimer.ToString() + ")";
+                    while (advanceRoundTimer > 0)
+                    {
+                        yield return new WaitForSeconds(1f);
+                        advanceRoundTimer--;
+                        advanceRoundTimerButton.transform.Find("Timer").gameObject.GetComponent<Text>().text = " Start New Round (" + advanceRoundTimer.ToString() + ")";
+                    }
+                    advanceRoundTimerButton.transform.Find("Timer").gameObject.GetComponent<Text>().text = "    Start New Round";
+                    advanceRoundTimerButton.interactable = true;
                 }
             }
             else
@@ -465,7 +485,7 @@ public class GameManager : MonoBehaviour {
     // Run update or fixed update if is or not simulation mode    
     public void Update()
     {
-        if (GameGlobals.areHumansOnSyncTablets && _allConnect && advanceRoundButton.interactable == false)
+        if (GameGlobals.areHumansOnSyncTablets && _allConnect && GameGlobals.currGameRoundId == 0 && advanceRoundButton.interactable == false)
         {
             GameGlobals.players[0].UpdateNameUI();
             GameGlobals.players[1].UpdateNameUI();
