@@ -8,7 +8,7 @@
 				{
 					"KnowledgeBase":
 						{
-							"Perspective": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST",
+							"Perspective": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST_0",
 							"Knowledge":
 								{
 									"SELF":
@@ -43,17 +43,12 @@
 						{
 							"dictionary": []
 						},
-					"Goals": [
-						{
-							"Name": "WinGame",
-							"Significance": 5,
-							"Likelihood": 0.5
-						}]
+					"Goals": []
 				}, 
 				{
 					"KnowledgeBase":
 						{
-							"Perspective": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST",
+							"Perspective": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST_1",
 							"Knowledge":
 								{
 									"SELF":
@@ -88,17 +83,12 @@
 						{
 							"dictionary": []
 						},
-					"Goals": [
-						{
-							"Name": "WinGame",
-							"Significance": 5,
-							"Likelihood": 0.5
-						}]
+					"Goals": []
 				}, 
 				{
 					"KnowledgeBase":
 						{
-							"Perspective": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST",
+							"Perspective": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST_2",
 							"Knowledge":
 								{
 									"SELF":
@@ -133,17 +123,12 @@
 						{
 							"dictionary": []
 						},
-					"Goals": [
-						{
-							"Name": "WinGame",
-							"Significance": 5,
-							"Likelihood": 0.5
-						}]
+					"Goals": []
 				}, 
 				{
 					"KnowledgeBase":
 						{
-							"Perspective": "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC",
+							"Perspective": "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC_0",
 							"Knowledge":
 								{
 									"SELF":
@@ -178,17 +163,12 @@
 						{
 							"dictionary": []
 						},
-					"Goals": [
-						{
-							"Name": "WinGame",
-							"Significance": 5,
-							"Likelihood": 0.5
-						}]
-				},
+					"Goals": []
+				}, 
 				{
 					"KnowledgeBase":
 						{
-							"Perspective": "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC",
+							"Perspective": "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC_1",
 							"Knowledge":
 								{
 									"SELF":
@@ -223,17 +203,12 @@
 						{
 							"dictionary": []
 						},
-					"Goals": [
-						{
-							"Name": "WinGame",
-							"Significance": 5,
-							"Likelihood": 0.5
-						}]
-				},
+					"Goals": []
+				}, 
 				{
 					"KnowledgeBase":
 						{
-							"Perspective": "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC",
+							"Perspective": "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC_2",
 							"Knowledge":
 								{
 									"SELF":
@@ -268,17 +243,12 @@
 						{
 							"dictionary": []
 						},
-					"Goals": [
-						{
-							"Name": "WinGame",
-							"Significance": 5,
-							"Likelihood": 0.5
-						}]
+					"Goals": []
 				}, 
 				{
 					"KnowledgeBase":
 						{
-							"Perspective": "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST",
+							"Perspective": "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST_0",
 							"Knowledge":
 								{
 									"SELF":
@@ -313,17 +283,12 @@
 						{
 							"dictionary": []
 						},
-					"Goals": [
-						{
-							"Name": "WinGame",
-							"Significance": 5,
-							"Likelihood": 0.5
-						}]
+					"Goals": []
 				}, 
 				{
 					"KnowledgeBase":
 						{
-							"Perspective": "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST",
+							"Perspective": "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST_1",
 							"Knowledge":
 								{
 									"SELF":
@@ -358,17 +323,12 @@
 						{
 							"dictionary": []
 						},
-					"Goals": [
-						{
-							"Name": "WinGame",
-							"Significance": 5,
-							"Likelihood": 0.5
-						}]
+					"Goals": []
 				}, 
 				{
 					"KnowledgeBase":
 						{
-							"Perspective": "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST",
+							"Perspective": "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST_2",
 							"Knowledge":
 								{
 									"SELF":
@@ -403,17 +363,12 @@
 						{
 							"dictionary": []
 						},
-					"Goals": [
-						{
-							"Name": "WinGame",
-							"Significance": 5,
-							"Likelihood": 0.5
-						}]
+					"Goals": []
 				}, 
 				{
 					"KnowledgeBase":
 						{
-							"Perspective": "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC",
+							"Perspective": "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC_0",
 							"Knowledge":
 								{
 									"SELF":
@@ -448,17 +403,12 @@
 						{
 							"dictionary": []
 						},
-					"Goals": [
-						{
-							"Name": "WinGame",
-							"Significance": 5,
-							"Likelihood": 0.5
-						}]
-				},
+					"Goals": []
+				}, 
 				{
 					"KnowledgeBase":
 						{
-							"Perspective": "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC",
+							"Perspective": "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC_1",
 							"Knowledge":
 								{
 									"SELF":
@@ -493,17 +443,12 @@
 						{
 							"dictionary": []
 						},
-					"Goals": [
-						{
-							"Name": "WinGame",
-							"Significance": 5,
-							"Likelihood": 0.5
-						}]
-				},
+					"Goals": []
+				}, 
 				{
 					"KnowledgeBase":
 						{
-							"Perspective": "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC",
+							"Perspective": "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC_2",
 							"Knowledge":
 								{
 									"SELF":
@@ -538,14 +483,8 @@
 						{
 							"dictionary": []
 						},
-					"Goals": [
-						{
-							"Name": "WinGame",
-							"Significance": 5,
-							"Likelihood": 0.5
-						}]
-				}
-			],
+					"Goals": []
+				}],
 			"WorldModel":
 				{
 					"Effects":

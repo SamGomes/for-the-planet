@@ -1,4 +1,4 @@
-﻿using RolePlayCharacter;
+using RolePlayCharacter;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -17,10 +17,10 @@ public class EmotionalAIPlayer: AIPlayer
     protected RolePlayCharacterAsset rpc;
     protected Dictionary<GameProperties.InvestmentTarget, int> investmentIntentions;
     
-    public EmotionalAIPlayer(string type, InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name, float updateDelay, string fatimaRpcPath) :
-        base(type, interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name)
+    public EmotionalAIPlayer(string playerType, InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name, float updateDelay, string fatimaRpcPath) :
+        base(playerType, interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name)
     {
-        rpc = GameGlobals.FAtiMAIat.Characters.FirstOrDefault(x => x.CharacterName.ToString() == this.type.ToString());
+        rpc = GameGlobals.FAtiMAIat.Characters.FirstOrDefault(x => x.CharacterName.ToString() == this.playerType.ToString()+"_"+id);
         rpc.CharacterName =  (WellFormedNames.Name) ("Agent" + this.id.ToString());
 
         investmentIntentions = new Dictionary<GameProperties.InvestmentTarget, int>();

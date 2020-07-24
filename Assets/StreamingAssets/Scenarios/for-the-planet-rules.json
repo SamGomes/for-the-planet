@@ -26,38 +26,6 @@
 								}
 						}, 
 						{
-							"EventName": "Event(Property-Change, *, DecaySimulation([gs]), [target])",
-							"Conditions":
-								{
-									"Set": ["Is(DI) = True"]
-								},
-							"AppraisalVariables":
-								{
-									"AppraisalVariables": [
-										{
-											"Name": "Goal Success Probablity",
-											"Value": "[gs]",
-											"Target": "WinGame"
-										}]
-								}
-						}, 
-						{
-							"EventName": "Event(Property-Change, *, BudgetExecution([gs]), [target])",
-							"Conditions":
-								{
-									"Set": ["Is(DI) = True"]
-								},
-							"AppraisalVariables":
-								{
-									"AppraisalVariables": [
-										{
-											"Name": "Goal Success Probablity",
-											"Value": "[gs]",
-											"Target": "WinGame"
-										}]
-								}
-						}, 
-						{
 							"EventName": "Event(Property-Change, *, HistoryDisplay([econ], [env]), [target])",
 							"Conditions":
 								{
@@ -74,38 +42,6 @@
 								}
 						}, 
 						{
-							"EventName": "Event(Property-Change, *, DecaySimulation([gs]), [target])",
-							"Conditions":
-								{
-									"Set": ["Is(DC) = True"]
-								},
-							"AppraisalVariables":
-								{
-									"AppraisalVariables": [
-										{
-											"Name": "Goal Success Probablity",
-											"Value": "[gs]",
-											"Target": "WinGame"
-										}]
-								}
-						}, 
-						{
-							"EventName": "Event(Property-Change, *, BudgetExecution([gs]), [target])",
-							"Conditions":
-								{
-									"Set": ["Is(DC) = True"]
-								},
-							"AppraisalVariables":
-								{
-									"AppraisalVariables": [
-										{
-											"Name": "Goal Success Probablity",
-											"Value": "[gs]",
-											"Target": "WinGame"
-										}]
-								}
-						}, 
-						{
 							"EventName": "Event(Property-Change, *, HistoryDisplay([econ], [env]), [target])",
 							"Conditions":
 								{
@@ -118,70 +54,6 @@
 											"Name": "Praiseworthiness",
 											"Value": "[p]",
 											"Target": "[target]"
-										}]
-								}
-						}, 
-						{
-							"EventName": "Event(Property-Change, *, DecaySimulation([gs]), [target])",
-							"Conditions":
-								{
-									"Set": ["Is(CC) = True"]
-								},
-							"AppraisalVariables":
-								{
-									"AppraisalVariables": [
-										{
-											"Name": "Goal Success Probablity",
-											"Value": "[gs]",
-											"Target": "WinGame"
-										}]
-								}
-						}, 
-						{
-							"EventName": "Event(Property-Change, *, BudgetExecution([gs]), [target])",
-							"Conditions":
-								{
-									"Set": ["Is(CC) = True"]
-								},
-							"AppraisalVariables":
-								{
-									"AppraisalVariables": [
-										{
-											"Name": "Goal Success Probablity",
-											"Value": "[gs]",
-											"Target": "WinGame"
-										}]
-								}
-						}, 
-						{
-							"EventName": "Event(Property-Change, *, DecaySimulation([gs]), [target])",
-							"Conditions":
-								{
-									"Set": ["Is(CI) = True"]
-								},
-							"AppraisalVariables":
-								{
-									"AppraisalVariables": [
-										{
-											"Name": "Goal Success Probablity",
-											"Value": "[gs]",
-											"Target": "WinGame"
-										}]
-								}
-						}, 
-						{
-							"EventName": "Event(Property-Change, *, BudgetExecution([gs]), [target])",
-							"Conditions":
-								{
-									"Set": ["Is(CI) = True"]
-								},
-							"AppraisalVariables":
-								{
-									"AppraisalVariables": [
-										{
-											"Name": "Goal Success Probablity",
-											"Value": "[gs]",
-											"Target": "WinGame"
 										}]
 								}
 						}, 

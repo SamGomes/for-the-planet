@@ -21,7 +21,7 @@ public class Player
 
     protected int id;
     protected GameManager gameManagerRef;
-    protected string type;
+    protected string playerType;
     protected string name;
     protected int unallocatedBudget;
     protected float money;
@@ -61,7 +61,7 @@ public class Player
     protected PopupScreenFunctionalities warningScreenRef;
     private DynamicSlider dynamicSlider;
 
-    public Player(string type, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name)
+    public Player(string playerType, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name)
     {
 
         this.coopPerc = 0.5f;
@@ -73,7 +73,7 @@ public class Player
         this.warningScreenRef = warningScreenRef;
 
         money = 0.0f;
-        this.type = type;
+        this.playerType = playerType;
 
         investmentHistory = new Dictionary<GameProperties.InvestmentTarget, int>();
         investmentHistory[GameProperties.InvestmentTarget.ECONOMIC] = 0;
@@ -421,7 +421,7 @@ public class Player
 
     public string GetPlayerType()
     {
-        return this.type;
+        return this.playerType;
     }
 
     public virtual void Perceive(List<WellFormedNames.Name> events) { }

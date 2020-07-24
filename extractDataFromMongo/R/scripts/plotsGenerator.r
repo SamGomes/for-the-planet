@@ -24,46 +24,23 @@ suppressMessages(library(car))
 library("ggsci")
 
 
+df1 <- read.csv(file="input/gameresultslog.csv", header=TRUE, sep=",")
+df2 <- read.csv(file="input/gameresultslog(2).csv", header=TRUE, sep=",")
+df3 <- read.csv(file="input/gameresultslog(3).csv", header=TRUE, sep=",")
+df4 <- read.csv(file="input/gameresultslog(4).csv", header=TRUE, sep=",")
 
-gameresultslog <- read.csv(file="input/gameresultslog.csv", header=TRUE, sep=",")
-
+gameresultslog <- rbind(df1,df2,df3,df4)
 
 # plot game balance
 roundsNumL <- c()
 num_played_roundsL <- c()
-playerNamesL <- c()
+playerTypesL <- c()
 
-gameresultslog <- subset(gameresultslog, gameresultslog$playerName != "BALANCED-COOPERATOR" & gameresultslog$playerName != "BALANCED-DEFECTOR")
-gameresultslog$adversary <-""
-gameresultslog[grepl("DEF", gameresultslog$playerName),]$adversary <- as.numeric(0)
-gameresultslog[grepl("COOP", gameresultslog$playerName),]$adversary <- as.numeric(1)
+levels(gameresultslog$playerType)[levels(gameresultslog$playerType) == "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST"] <- "Constructive-Collectivist"
+levels(gameresultslog$playerType)[levels(gameresultslog$playerType) == "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC"] <- "Constructive-Individualist"
+levels(gameresultslog$playerType)[levels(gameresultslog$playerType) == "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST"] <- "Disruptive-Collectivist"
+levels(gameresultslog$playerType)[levels(gameresultslog$playerType) == "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC"] <- "Disruptive-Individualist"
 
-levels(gameresultslog$playerName)[levels(gameresultslog$playerName) == "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST_VS_DEF"] <- "Constructive-Collectivist"
-levels(gameresultslog$playerName)[levels(gameresultslog$playerName) == "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC_VS_DEF"] <- "Constructive-Individualist"
-levels(gameresultslog$playerName)[levels(gameresultslog$playerName) == "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST_VS_DEF"] <- "Disruptive-Collectivist"
-levels(gameresultslog$playerName)[levels(gameresultslog$playerName) == "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC_VS_DEF"] <- "Disruptive-Individualist"
-levels(gameresultslog$playerName)[levels(gameresultslog$playerName) == "RANDOM_CMP_VS_DEF"] <- "RANDOM"
-
-
-levels(gameresultslog$playerName)[levels(gameresultslog$playerName) == "MCTS_1_VS_COOP"] <- "MCTS (depth = 1)"
-levels(gameresultslog$playerName)[levels(gameresultslog$playerName) == "MCTS_2_VS_COOP"] <- "MCTS (depth = 2)"
-levels(gameresultslog$playerName)[levels(gameresultslog$playerName) == "MCTS_3_VS_COOP"] <- "MCTS (depth = 3)"
-levels(gameresultslog$playerName)[levels(gameresultslog$playerName) == "MCTS_4_VS_COOP"] <- "MCTS (depth = 4)"
-levels(gameresultslog$playerName)[levels(gameresultslog$playerName) == "MCTS_5_VS_COOP"] <- "MCTS (depth = 5)"
-
-
-levels(gameresultslog$playerName)[levels(gameresultslog$playerName) == "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST_VS_COOP"] <- "Constructive-Collectivist"
-levels(gameresultslog$playerName)[levels(gameresultslog$playerName) == "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC_VS_COOP"] <- "Constructive-Individualist"
-levels(gameresultslog$playerName)[levels(gameresultslog$playerName) == "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST_VS_COOP"] <- "Disruptive-Collectivist"
-levels(gameresultslog$playerName)[levels(gameresultslog$playerName) == "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC_VS_COOP"] <- "Disruptive-Individualist"
-levels(gameresultslog$playerName)[levels(gameresultslog$playerName) == "RANDOM_CMP_VS_COOP"] <- "Random"
-
-
-levels(gameresultslog$playerName)[levels(gameresultslog$playerName) == "MCTS_1_VS_DEF"] <- "MCTS (depth = 1)"
-levels(gameresultslog$playerName)[levels(gameresultslog$playerName) == "MCTS_2_VS_DEF"] <- "MCTS (depth = 2)"
-levels(gameresultslog$playerName)[levels(gameresultslog$playerName) == "MCTS_3_VS_DEF"] <- "MCTS (depth = 3)"
-levels(gameresultslog$playerName)[levels(gameresultslog$playerName) == "MCTS_4_VS_DEF"] <- "MCTS (depth = 4)"
-levels(gameresultslog$playerName)[levels(gameresultslog$playerName) == "MCTS_5_VS_DEF"] <- "MCTS (depth = 5)"
 
 
 gameresultslog <- gameresultslog %>% rename(
@@ -125,214 +102,172 @@ plotsEmotions <- c()
 labelSize <- 12.5
 
 
-analyse <- function(gameresultslog, adversary){
-
-
-	endGames <- subset(gameresultslog, gameresultslog$gameState == "VICTORY" | gameresultslog$gameState == "LOSS")
+endGames <- subset(gameresultslog, gameresultslog$gameState == "VICTORY" | gameresultslog$gameState == "LOSS")
 
 
 
-	# plot survival rates
- 	agg <- gameresultslog  %>% count(roundId, playerName, adversary)
-	agg2 <- endGames  %>% count(playerName, adversary)
-	colnames(agg) <- c("roundId", "playerName", "adversary", "survived")
-	colnames(agg2) <- c("playerName", "adversary", "total")
-	aggJ <- full_join(agg,agg2)
-	aggJDiv <- aggJ$survived / aggJ$total
-	aggJDiv[is.na(aggJDiv)] <- 0
-	aggJ$survivalRate <- aggJDiv
- 	aggJ <- aggJ[aggJ$adversary == adversary,]
+# plot survival rates
+agg <- gameresultslog  %>% count(roundId, playerType)
+agg2 <- endGames  %>% count(playerType)
+colnames(agg) <- c("roundId", "playerType", "survived")
+colnames(agg2) <- c("playerType", "total")
+aggJ <- full_join(agg,agg2)
+aggJDiv <- aggJ$survived / aggJ$total
+aggJDiv[is.na(aggJDiv)] <- 0
+aggJ$survivalRate <- aggJDiv
 
-	plotSRate <- ggplot(aggJ, aes(x = roundId, y=survivalRate*100, color=playerName)) + scale_color_npg()
-	plotSRate <- plotSRate + geom_line(stat = "identity", size=1.2)
-	plotSRate <- plotSRate + ylim(0, 100.0)
-	
-	if(adversary == 1){
-		plotSRate <- plotSRate + ggtitle("VS. Cooperation-Prone Opponents")
-	}else{
-		plotSRate <- plotSRate + ggtitle("VS. Defection-Prone Opponents")
-	}
-	
-	write.csv2(aggJ, sprintf("output/SurvivalRates_adversary_%d.csv", adversary))
+plotSRate <- ggplot(aggJ, aes(x = roundId, y=survivalRate*100, color=playerType)) + scale_color_npg()
+plotSRate <- plotSRate + geom_line(stat = "identity", size=1.2)
+plotSRate <- plotSRate + ylim(0, 100.0)
 
-	plotSRate <- plotSRate + labs(x = "Round Num", y = "Survived Games (%)\n") + theme(legend.text = element_text(size=labelSize), plot.margin=margin(10,30,10,30), axis.text=element_text(size = 15), axis.title=element_text(size = 15, face = "bold"), legend.title = element_blank(), legend.position = 'bottom') + guides(col = guide_legend(ncol = 2)) 
-	plotsSRate[[length(plotsSRate)+1]] <<- plotSRate
+plotSRate <- plotSRate + ggtitle("All VS. All")
+
+
+write.csv2(aggJ, "output/SurvivalRates_all.csv")
+
+plotSRate <- plotSRate + labs(x = "Round Num", y = "Survived Games (%)\n") + theme(legend.text = element_text(size=labelSize), plot.margin=margin(10,30,10,30), axis.text=element_text(size = 15), axis.title=element_text(size = 15, face = "bold"), legend.title = element_blank(), legend.position = 'bottom') + guides(col = guide_legend(ncol = 2)) 
+plotsSRate[[length(plotsSRate)+1]] <- plotSRate
 
 
 
-	# plot win rate and draw rate
-	df <- endGames[endGames$gameState == "VICTORY",]
-	agg <- aggregate(playerEconState ~ sessionId*gameId, df, max)
-	names(agg) <- c("sessionId", "gameId", "maxState")
-	joined <- full_join(df, agg)
-	filteredJoined <- joined[joined$playerEconState == joined$maxState,]
-	cnt <- count(filteredJoined, sessionId, gameId) #verify
-	joined2 <- full_join(filteredJoined, cnt)
-	winners = joined2[joined2$n==1,]
-	drawers = joined2[joined2$n!=1,]
+# plot win rate and draw rate
+df <- endGames[endGames$gameState == "VICTORY",]
+agg <- aggregate(playerEconState ~ sessionId*gameId, df, max)
+names(agg) <- c("sessionId", "gameId", "maxState")
+joined <- full_join(df, agg)
+filteredJoined <- joined[joined$playerEconState == joined$maxState,]
+cnt <- count(filteredJoined, sessionId, gameId) #verify
+joined2 <- full_join(filteredJoined, cnt)
+winners = joined2[joined2$n==1,]
+drawers = joined2[joined2$n!=1,]
 
-	wonGames <- winners  %>% count(playerName, adversary)
-	playedGames <- endGames  %>% count(playerName, adversary)
-	colnames(wonGames) <- c("playerName", "adversary", "wins")
-	colnames(playedGames) <- c("playerName", "adversary", "total")
-	ratio <- full_join(wonGames, playedGames)
+wonGames <- winners  %>% count(playerType)
+playedGames <- endGames  %>% count(playerType)
+colnames(wonGames) <- c("playerType", "wins")
+colnames(playedGames) <- c("playerType", "total")
+ratio <- full_join(wonGames, playedGames)
 
-	ratio[is.na(ratio)] <- 0
-	ratio$winRatio <- ratio$wins / ratio$total
- 	ratio <- ratio[ratio$adversary == adversary,]
+ratio[is.na(ratio)] <- 0
+ratio$winRatio <- ratio$wins / ratio$total
 
-	plotWRate <- ggplot(ratio, aes(x = playerName , y=winRatio*100, color=playerName, fill=playerName)) + scale_color_npg() + scale_fill_npg()
-	plotWRate <- plotWRate + geom_bar(stat = "identity")
+plotWRate <- ggplot(ratio, aes(x = playerType , y=winRatio*100, color=playerType, fill=playerType)) + scale_color_npg() + scale_fill_npg()
+plotWRate <- plotWRate + geom_bar(stat = "identity")
 
-	if(adversary == 1){
-		plotWRate <- plotWRate + ggtitle("VS. Cooperation-Prone Opponents")
-	}else{
-		plotWRate <- plotWRate + ggtitle("VS. Defection-Prone Opponents")
-	}
 
-	write.csv2(ratio, sprintf("output/WinRounds_adversary_%d.csv", adversary))
+plotWRate <- plotWRate + ggtitle("All VS. All")
 
-	plotWRate <- plotWRate + labs(x = "Player Type", y = "WinRate (%)\n") + theme(legend.text = element_text(size=labelSize), plot.margin=margin(10,30,10,30), axis.ticks = element_blank(), axis.text.x = element_blank(), axis.text=element_text(size = 15), axis.title=element_text(size = 15, face = "bold"), legend.title = element_blank(), legend.position = 'bottom') + guides(col = guide_legend(ncol = 2))
-	plotsWRate[[length(plotsWRate)+1]] <<- plotWRate
+write.csv2(ratio, "output/WinRounds_all.csv")
+
+plotWRate <- plotWRate + labs(x = "Player Type", y = "WinRate (%)\n") + theme(legend.text = element_text(size=labelSize), plot.margin=margin(10,30,10,30), axis.ticks = element_blank(), axis.text.x = element_blank(), axis.text=element_text(size = 15), axis.title=element_text(size = 15, face = "bold"), legend.title = element_blank(), legend.position = 'bottom') + guides(col = guide_legend(ncol = 2))
+plotsWRate[[length(plotsWRate)+1]] <- plotWRate
 
 
 
-	# plot final econs
-	endGamesWin <- subset(endGames, endGames$gameState == "VICTORY")
-	# endGamesWin[endGamesWin$gameState == "LOSS" ,]$playerEconState <- 0
+# plot final econs
+endGamesWin <- subset(endGames, endGames$gameState == "VICTORY")
+# endGamesWin[endGamesWin$gameState == "LOSS" ,]$playerEconState <- 0
 
-	agg <- aggregate(playerEconState ~ adversary + playerName, endGamesWin, mean)
-	agg <- agg[agg$adversary == adversary,]
+agg <- aggregate(playerEconState ~  playerType, endGamesWin, mean)
 
-	plotFinalEcons <- ggplot(agg, aes(x = playerName , y=playerEconState*100, color=playerName, fill=playerName)) + scale_color_npg() + scale_fill_npg()
-	plotFinalEcons <- plotFinalEcons + geom_bar(stat = "identity")
-	plotFinalEcons <- plotFinalEcons + labs(x = "Player Type", y = "Avg. Final Econs (%)\n") 
-	
-	if(adversary == 1){
-		plotFinalEcons <- plotFinalEcons + ggtitle("VS. Cooperation-Prone Opponents")
-	}else{
-		plotFinalEcons <- plotFinalEcons + ggtitle("VS. Defection-Prone Opponents")
-	}
-	
+plotFinalEcons <- ggplot(agg, aes(x = playerType , y=playerEconState*100, color=playerType, fill=playerType)) + scale_color_npg() + scale_fill_npg()
+plotFinalEcons <- plotFinalEcons + geom_bar(stat = "identity")
+plotFinalEcons <- plotFinalEcons + labs(x = "Player Type", y = "Avg. Final Econs (%)\n") 
 
-	write.csv2(agg, sprintf("output/Econs_adversary_%d.csv", adversary))
+plotFinalEcons <- plotFinalEcons + ggtitle("All VS. All")
 
-	plotFinalEcons <- plotFinalEcons + theme(legend.text = element_text(size=labelSize), plot.margin=margin(10,30,10,30), axis.ticks = element_blank(), axis.text.x = element_blank()) + theme(axis.text=element_text(size = 15), axis.title=element_text(size = 15, face = "bold"), legend.title = element_blank(), legend.position = 'bottom') + guides(col = guide_legend(ncol = 2))
-	plotsFinalEcons[[length(plotsFinalEcons)+1]] <<- plotFinalEcons
+write.csv2(agg, "output/Econs_all.csv")
+
+plotFinalEcons <- plotFinalEcons + theme(legend.text = element_text(size=labelSize), plot.margin=margin(10,30,10,30), axis.ticks = element_blank(), axis.text.x = element_blank()) + theme(axis.text=element_text(size = 15), axis.title=element_text(size = 15, face = "bold"), legend.title = element_blank(), legend.position = 'bottom') + guides(col = guide_legend(ncol = 2))
+plotsFinalEcons[[length(plotsFinalEcons)+1]] <- plotFinalEcons
 
 
 
-	# plot strategies
-	agg <- gameresultslog
-	agg_Root <- agg[agg$adversary == adversary,]
-	agg <- aggregate(playerInvestEnv ~ playerName*roundId , agg_Root , mean)
+# plot strategies
+agg <- gameresultslog
+agg <- aggregate(playerInvestEnv ~ playerType*roundId , agg , mean)
 
-	plotStrategies <- ggplot(agg, aes(x = roundId, y=playerInvestEnv, group=playerName, color=playerName, alpha=aggJ$survivalRate)) + scale_color_npg()
-	plotStrategies <- plotStrategies + geom_line(stat = "identity", size=2.0, guide=FALSE)
-	plotStrategies <- plotStrategies + geom_point(stat = "identity", size=3.0) + scale_alpha(range = c(0.3, 1), guide=FALSE)
-	# plotStrategies <- plotStrategies + ylim(0, 5.0)
+plotStrategies <- ggplot(agg, aes(x = roundId, y=playerInvestEnv, group=playerType, color=playerType, alpha=aggJ$survivalRate)) + scale_color_npg()
+plotStrategies <- plotStrategies + geom_line(stat = "identity", size=2.0, guide=FALSE)
+plotStrategies <- plotStrategies + geom_point(stat = "identity", size=3.0) + scale_alpha(range = c(0.3, 1), guide=FALSE)
+# plotStrategies <- plotStrategies + ylim(0, 5.0)
 
-	if(adversary == 1){
-		plotStrategies <- plotStrategies + ggtitle("VS. Cooperation-Prone Opponents")
-	}else{
-		plotStrategies <- plotStrategies + ggtitle("VS. Defection-Prone Opponents")
-	}
+plotStrategies <- plotStrategies + ggtitle("All VS. All")
 
-	write.csv2(agg, sprintf("output/Strategies_adversary_%d.csv", adversary))
+write.csv2(agg, "output/Strategies_all.csv")
 
-	plotStrategies <- plotStrategies + labs(x = "Round Id", y = "Avg. Cooperation Investment\n", color="Player Type") + theme(legend.text = element_text(size=labelSize), plot.margin=margin(10,30,10,30), axis.text = element_text(size = 15), axis.title = element_text(size = 15, face = "bold"), legend.title = element_blank(), legend.position = 'bottom') + guides(col = guide_legend(ncol = 2))  
-	plotsStrategies[[length(plotsStrategies)+1]] <<- plotStrategies
+plotStrategies <- plotStrategies + labs(x = "Round Id", y = "Avg. Cooperation Investment\n", color="Player Type") + theme(legend.text = element_text(size=labelSize), plot.margin=margin(10,30,10,30), axis.text = element_text(size = 15), axis.title = element_text(size = 15, face = "bold"), legend.title = element_blank(), legend.position = 'bottom') + guides(col = guide_legend(ncol = 2))  
+plotsStrategies[[length(plotsStrategies)+1]] <- plotStrategies
 
-	
 
-	# plot mood
-	moodlog <- gameresultslog[!is.na(gameresultslog$mood),]
- 	moodlog <- moodlog[moodlog$adversary == adversary,]
-	moodlog <- aggregate(mood ~ playerName*roundId , moodlog , mean)
-	plotMood <- ggplot(moodlog, aes(x = moodlog$roundId, y=moodlog$mood, color=moodlog$playerName, alpha=aggJ$survivalRate)) 
-	plotMood <- plotMood + scale_color_npg() + scale_alpha(range = c(0.3, 1), guide=FALSE)
-	
-	plotMood <- plotMood + geom_hline(aes(yintercept = -3), linetype = "dashed", size = 0.8)
-	plotMood <- plotMood + geom_hline(aes(yintercept = 3), linetype = "dashed", size = 0.8)
 
-	plotMood <- plotMood + geom_line(stat = "identity", size=2.0) 
-	plotMood <- plotMood + geom_point(stat = "identity", size=3.0, guide=FALSE)
-	plotMood <- plotMood + labs(x = "Curr Round Id", y = "Mood\n", color="Player Type") + theme(legend.text = element_text(size=labelSize), plot.margin=margin(10,30,10,30), axis.text = element_text(size = 15), axis.title = element_text(size = 15, face = "bold"), legend.title = element_blank(), legend.position = 'bottom') + guides(col = guide_legend(ncol = 2))  
+# plot mood
+moodlog <- gameresultslog[!is.na(gameresultslog$mood),]
+moodlog <- aggregate(mood ~ playerType*roundId , moodlog , mean)
+plotMood <- ggplot(moodlog, aes(x = moodlog$roundId, y=moodlog$mood, color=moodlog$playerType, alpha=aggJ$survivalRate)) 
+plotMood <- plotMood + scale_color_npg() + scale_alpha(range = c(0.3, 1), guide=FALSE)
 
-	
-	if(adversary == 1){
-		plotMood <- plotMood + ggtitle("VS. Cooperation-Prone Opponents")
-	}else{
-		plotMood <- plotMood + ggtitle("VS. Defection-Prone Opponents")
-	}
+plotMood <- plotMood + geom_hline(aes(yintercept = -3), linetype = "dashed", size = 0.8)
+plotMood <- plotMood + geom_hline(aes(yintercept = 3), linetype = "dashed", size = 0.8)
 
-	write.csv2(moodlog, sprintf("output/Mood_adversary_%d.csv", adversary))
+plotMood <- plotMood + geom_line(stat = "identity", size=2.0) 
+plotMood <- plotMood + geom_point(stat = "identity", size=3.0, guide=FALSE)
+plotMood <- plotMood + labs(x = "Curr Round Id", y = "Mood\n", color="Player Type") + theme(legend.text = element_text(size=labelSize), plot.margin=margin(10,30,10,30), axis.text = element_text(size = 15), axis.title = element_text(size = 15, face = "bold"), legend.title = element_blank(), legend.position = 'bottom') + guides(col = guide_legend(ncol = 2))  
 
-	plotMood <- plotMood + ylim(-10.0, 10.0)
-	plotsMood[[length(plotsMood)+1]] <<- plotMood
+plotMood <- plotMood + ggtitle("All VS. All")
+
+write.csv2(moodlog, "output/Mood_all.csv")
+
+plotMood <- plotMood + ylim(-10.0, 10.0)
+plotsMood[[length(plotsMood)+1]] <- plotMood
 
 
 
 
-	# plot emotions
-	feltEmotionsLog <- gameresultslog[gameresultslog$adversary== adversary,]
-	feltEmotionsLog <- aggregate(
-		 cbind(
-		 	 Hate,
-		 	 Reproach,
-			 Shame,
-			 Anger,
-			 Remorse,
-			 Distress,
-			 Fear,
-			 Disappointment,
-			 FearConfirmed,
-			 Pity,
-			 Resentment,
-			 Love,
-			 Admiration,
-			 Pride,
-			 Gratitude,
-			 Gratification,
-			 Joy,
-			 Hope,
-			 Relief,
-			 Satisfaction,
-			 Gloating,
-			 HappyFor)
-		 ~  playerName + roundId, feltEmotionsLog, mean)
-	
-	varsToConsider <- c("Hate", "Reproach","Shame","Anger","Remorse","Distress","Fear","Disappointment","FearConfirmed","Pity","Resentment","Love","Admiration","Pride","Gratitude","Gratification","Joy","Hope","Relief","Satisfaction","Gloating","HappyFor")
-	agg <- melt(feltEmotionsLog, id.vars = c("roundId","playerName"), measure.vars = varsToConsider)
-	agg <- agg[agg$value != 0,]
-	agg <- aggregate(value ~ playerName*roundId*variable , agg , mean)
-	agg <- merge(agg, aggJ, by=c("playerName","roundId"))
+# plot emotions
+feltEmotionsLog <- gameresultslog
+feltEmotionsLog <- aggregate(
+	 cbind(
+	 	 Hate,
+	 	 Reproach,
+		 Shame,
+		 Anger,
+		 Remorse,
+		 Distress,
+		 Fear,
+		 Disappointment,
+		 FearConfirmed,
+		 Pity,
+		 Resentment,
+		 Love,
+		 Admiration,
+		 Pride,
+		 Gratitude,
+		 Gratification,
+		 Joy,
+		 Hope,
+		 Relief,
+		 Satisfaction,
+		 Gloating,
+		 HappyFor)
+	 ~  playerType + roundId, feltEmotionsLog, mean)
+
+varsToConsider <- c("Hate", "Reproach","Shame","Anger","Remorse","Distress","Fear","Disappointment","FearConfirmed","Pity","Resentment","Love","Admiration","Pride","Gratitude","Gratification","Joy","Hope","Relief","Satisfaction","Gloating","HappyFor")
+agg <- melt(feltEmotionsLog, id.vars = c("roundId","playerType"), measure.vars = varsToConsider)
+agg <- agg[agg$value != 0,]
+agg <- aggregate(value ~ playerType*roundId*variable , agg , mean)
+agg <- merge(agg, aggJ, by=c("playerType","roundId"))
 
 
-	plotEmotions <- ggplot(agg, aes(x = agg$roundId, y = agg$value, color = agg$variable, alpha=agg$survivalRate)) + facet_grid(playerName ~ .) + scale_color_npg() + scale_alpha(range = c(0.3, 1), guide=FALSE)
-	plotEmotions <- plotEmotions + geom_line(stat = "identity", size=1.2, guide=FALSE)
-	plotEmotions <- plotEmotions + geom_point(aes(x = agg$roundId, y = agg$value, color = agg$variable), stat = "summary", fun.y = "mean", guide=FALSE) 
-	plotEmotions <- plotEmotions + labs(x = "Curr Round Id", y = "Avg. Emotion Intensity\n", color="Emotion Type") + theme(legend.text = element_text(size=labelSize*1.2), plot.margin=margin(10,30,10,30), panel.spacing=unit(1.5, "lines"), axis.text = element_text(size = 15), axis.title = element_text(size = 15, face = "bold"), legend.title = element_blank(), legend.position = 'bottom') + guides(col = guide_legend(ncol = 2))
-	
-	if(adversary == 1){
-		plotEmotions <- plotEmotions + ggtitle("VS. Cooperation-Prone Opponents")
-	}else{
-		plotEmotions <- plotEmotions + ggtitle("VS. Defection-Prone Opponents")
-	}
+plotEmotions <- ggplot(agg, aes(x = agg$roundId, y = agg$value, color = agg$variable, alpha=agg$survivalRate)) + facet_grid(playerType ~ .) + scale_color_npg() + scale_alpha(range = c(0.3, 1), guide=FALSE)
+plotEmotions <- plotEmotions + geom_line(stat = "identity", size=1.2, guide=FALSE)
+plotEmotions <- plotEmotions + geom_point(aes(x = agg$roundId, y = agg$value, color = agg$variable), stat = "summary", fun.y = "mean", guide=FALSE) 
+plotEmotions <- plotEmotions + labs(x = "Curr Round Id", y = "Avg. Emotion Intensity\n", color="Emotion Type") + theme(legend.text = element_text(size=labelSize*1.2), plot.margin=margin(10,30,10,30), panel.spacing=unit(1.5, "lines"), axis.text = element_text(size = 15), axis.title = element_text(size = 15, face = "bold"), legend.title = element_blank(), legend.position = 'bottom') + guides(col = guide_legend(ncol = 2))
 
-	write.csv2(feltEmotionsLog, sprintf("output/Emotions_adversary_%d.csv", adversary))
+plotEmotions <- plotEmotions + ggtitle("All VS. All")
 
-	plotEmotions <- plotEmotions + ylim(0.0, 6.5)
-	plotsEmotions[[length(plotsEmotions)+1]] <<- plotEmotions
+write.csv2(feltEmotionsLog, "output/Emotions_all.csv")
+plotsEmotions[[length(plotsEmotions)+1]] <- plotEmotions
 
-
-
-
-}
-
-
-analyse(gameresultslog, 1)
-analyse(gameresultslog, 0)
 
 
 ggarrange(plotlist = plotsSRate)
@@ -357,16 +292,4 @@ suppressMessages(ggsave("plots/Mood.png", height=5, width=15, units="in", dpi=50
 
 ggarrange(plotlist = plotsEmotions)
 suppressMessages(ggsave("plots/Emotions.png", height=9, width=15, units="in", dpi=500))
-
-
-# suppressMessages(ggsave("plots/SurvivalRate.png", height=6, width=10, units="in", dpi=500))
-# multiplot(plotsWRate)
-# suppressMessages(ggsave("plots/WinRate.png", height=6, width=10, units="in", dpi=500))
-# multiplot(plotsFinalEcons)
-# suppressMessages(ggsave("plots/EconLevels.png", height=6, width=10, units="in", dpi=500))
-# multiplot(plotsStrategies)
-# suppressMessages(ggsave("plots/StratsEnv.png", height=6, width=10, units="in", dpi=500))
-# multiplot(plotsMood)
-# suppressMessages(ggsave("plots/Mood.png", height=6, width=10, units="in", dpi=500))
-
 

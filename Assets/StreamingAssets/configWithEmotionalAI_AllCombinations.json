@@ -1,0 +1,642 @@
+{
+    "logManagerStyle": "MONGO",
+    "mongoConnector": "mongodb+srv://studyAC1:studyAC1@cluster0-nfksn.mongodb.net/test?retryWrites=true&w=majority",
+    "maxNumRounds": 20,
+    "isSimulation": true,
+    "numGamesToPlay": 6000,
+    "roundBudget": 5,
+    "environmentDecayBudget": [
+        9,
+        9
+    ],
+    "playerDecayBudget": [
+        3,
+        3
+    ],
+    "possibleParameterizations": [
+        {
+            "id": "[AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST, AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC, AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST]",
+            "gameParameterizations": [
+                {
+                    "diceLogic": "RANDOM",
+                    "playerParameterizations": [
+                        {
+                            "name": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST"
+                        },
+                        {
+                            "name": "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC"
+                        },
+                        {
+                            "name": "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST"
+                        }
+                    ],
+                    "isNarrated": false
+                }
+            ]
+        },
+        {
+            "id": "[AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST, AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC, AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC]",
+            "gameParameterizations": [
+                {
+                    "diceLogic": "RANDOM",
+                    "playerParameterizations": [
+                        {
+                            "name": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST"
+                        },
+                        {
+                            "name": "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC"
+                        },
+                        {
+                            "name": "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC"
+                        }
+                    ],
+                    "isNarrated": false
+                }
+            ]
+        },
+        {
+            "id": "[AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST, AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST, AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC]",
+            "gameParameterizations": [
+                {
+                    "diceLogic": "RANDOM",
+                    "playerParameterizations": [
+                        {
+                            "name": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST"
+                        },
+                        {
+                            "name": "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST"
+                        },
+                        {
+                            "name": "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC"
+                        }
+                    ],
+                    "isNarrated": false
+                }
+            ]
+        },
+        {
+            "id": "[AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST, AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST, AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC]",
+            "gameParameterizations": [
+                {
+                    "diceLogic": "RANDOM",
+                    "playerParameterizations": [
+                        {
+                            "name": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST"
+                        },
+                        {
+                            "name": "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST"
+                        },
+                        {
+                            "name": "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC"
+                        }
+                    ],
+                    "isNarrated": false
+                }
+            ]
+        },
+        {
+            "id": "[AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST, AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC, AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC]",
+            "gameParameterizations": [
+                {
+                    "diceLogic": "RANDOM",
+                    "playerParameterizations": [
+                        {
+                            "name": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST"
+                        },
+                        {
+                            "name": "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC"
+                        },
+                        {
+                            "name": "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC"
+                        }
+                    ],
+                    "isNarrated": false
+                }
+            ]
+        },
+        {
+            "id": "[AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST, AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC, AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST]",
+            "gameParameterizations": [
+                {
+                    "diceLogic": "RANDOM",
+                    "playerParameterizations": [
+                        {
+                            "name": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST"
+                        },
+                        {
+                            "name": "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC"
+                        },
+                        {
+                            "name": "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST"
+                        }
+                    ],
+                    "isNarrated": false
+                }
+            ]
+        },
+        {
+            "id": "[AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC, AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST, AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST]",
+            "gameParameterizations": [
+                {
+                    "diceLogic": "RANDOM",
+                    "playerParameterizations": [
+                        {
+                            "name": "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC"
+                        },
+                        {
+                            "name": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST"
+                        },
+                        {
+                            "name": "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST"
+                        }
+                    ],
+                    "isNarrated": false
+                }
+            ]
+        },
+        {
+            "id": "[AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC, AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST, AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC]",
+            "gameParameterizations": [
+                {
+                    "diceLogic": "RANDOM",
+                    "playerParameterizations": [
+                        {
+                            "name": "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC"
+                        },
+                        {
+                            "name": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST"
+                        },
+                        {
+                            "name": "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC"
+                        }
+                    ],
+                    "isNarrated": false
+                }
+            ]
+        },
+        {
+            "id": "[AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC, AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST, AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST]",
+            "gameParameterizations": [
+                {
+                    "diceLogic": "RANDOM",
+                    "playerParameterizations": [
+                        {
+                            "name": "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC"
+                        },
+                        {
+                            "name": "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST"
+                        },
+                        {
+                            "name": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST"
+                        }
+                    ],
+                    "isNarrated": false
+                }
+            ]
+        },
+        {
+            "id": "[AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC, AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST, AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC]",
+            "gameParameterizations": [
+                {
+                    "diceLogic": "RANDOM",
+                    "playerParameterizations": [
+                        {
+                            "name": "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC"
+                        },
+                        {
+                            "name": "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST"
+                        },
+                        {
+                            "name": "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC"
+                        }
+                    ],
+                    "isNarrated": false
+                }
+            ]
+        },
+        {
+            "id": "[AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC, AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC, AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST]",
+            "gameParameterizations": [
+                {
+                    "diceLogic": "RANDOM",
+                    "playerParameterizations": [
+                        {
+                            "name": "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC"
+                        },
+                        {
+                            "name": "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC"
+                        },
+                        {
+                            "name": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST"
+                        }
+                    ],
+                    "isNarrated": false
+                }
+            ]
+        },
+        {
+            "id": "[AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC, AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC, AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST]",
+            "gameParameterizations": [
+                {
+                    "diceLogic": "RANDOM",
+                    "playerParameterizations": [
+                        {
+                            "name": "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC"
+                        },
+                        {
+                            "name": "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC"
+                        },
+                        {
+                            "name": "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST"
+                        }
+                    ],
+                    "isNarrated": false
+                }
+            ]
+        },
+        {
+            "id": "[AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST, AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST, AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC]",
+            "gameParameterizations": [
+                {
+                    "diceLogic": "RANDOM",
+                    "playerParameterizations": [
+                        {
+                            "name": "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST"
+                        },
+                        {
+                            "name": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST"
+                        },
+                        {
+                            "name": "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC"
+                        }
+                    ],
+                    "isNarrated": false
+                }
+            ]
+        },
+        {
+            "id": "[AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST, AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST, AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC]",
+            "gameParameterizations": [
+                {
+                    "diceLogic": "RANDOM",
+                    "playerParameterizations": [
+                        {
+                            "name": "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST"
+                        },
+                        {
+                            "name": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST"
+                        },
+                        {
+                            "name": "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC"
+                        }
+                    ],
+                    "isNarrated": false
+                }
+            ]
+        },
+        {
+            "id": "[AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST, AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC, AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST]",
+            "gameParameterizations": [
+                {
+                    "diceLogic": "RANDOM",
+                    "playerParameterizations": [
+                        {
+                            "name": "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST"
+                        },
+                        {
+                            "name": "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC"
+                        },
+                        {
+                            "name": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST"
+                        }
+                    ],
+                    "isNarrated": false
+                }
+            ]
+        },
+        {
+            "id": "[AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST, AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC, AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC]",
+            "gameParameterizations": [
+                {
+                    "diceLogic": "RANDOM",
+                    "playerParameterizations": [
+                        {
+                            "name": "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST"
+                        },
+                        {
+                            "name": "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC"
+                        },
+                        {
+                            "name": "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC"
+                        }
+                    ],
+                    "isNarrated": false
+                }
+            ]
+        },
+        {
+            "id": "[AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST, AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC, AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST]",
+            "gameParameterizations": [
+                {
+                    "diceLogic": "RANDOM",
+                    "playerParameterizations": [
+                        {
+                            "name": "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST"
+                        },
+                        {
+                            "name": "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC"
+                        },
+                        {
+                            "name": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST"
+                        }
+                    ],
+                    "isNarrated": false
+                }
+            ]
+        },
+        {
+            "id": "[AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST, AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC, AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC]",
+            "gameParameterizations": [
+                {
+                    "diceLogic": "RANDOM",
+                    "playerParameterizations": [
+                        {
+                            "name": "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST"
+                        },
+                        {
+                            "name": "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC"
+                        },
+                        {
+                            "name": "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC"
+                        }
+                    ],
+                    "isNarrated": false
+                }
+            ]
+        },
+        {
+            "id": "[AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC, AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST, AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC]",
+            "gameParameterizations": [
+                {
+                    "diceLogic": "RANDOM",
+                    "playerParameterizations": [
+                        {
+                            "name": "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC"
+                        },
+                        {
+                            "name": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST"
+                        },
+                        {
+                            "name": "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC"
+                        }
+                    ],
+                    "isNarrated": false
+                }
+            ]
+        },
+        {
+            "id": "[AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC, AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST, AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST]",
+            "gameParameterizations": [
+                {
+                    "diceLogic": "RANDOM",
+                    "playerParameterizations": [
+                        {
+                            "name": "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC"
+                        },
+                        {
+                            "name": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST"
+                        },
+                        {
+                            "name": "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST"
+                        }
+                    ],
+                    "isNarrated": false
+                }
+            ]
+        },
+        {
+            "id": "[AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC, AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC, AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST]",
+            "gameParameterizations": [
+                {
+                    "diceLogic": "RANDOM",
+                    "playerParameterizations": [
+                        {
+                            "name": "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC"
+                        },
+                        {
+                            "name": "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC"
+                        },
+                        {
+                            "name": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST"
+                        }
+                    ],
+                    "isNarrated": false
+                }
+            ]
+        },
+        {
+            "id": "[AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC, AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC, AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST]",
+            "gameParameterizations": [
+                {
+                    "diceLogic": "RANDOM",
+                    "playerParameterizations": [
+                        {
+                            "name": "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC"
+                        },
+                        {
+                            "name": "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC"
+                        },
+                        {
+                            "name": "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST"
+                        }
+                    ],
+                    "isNarrated": false
+                }
+            ]
+        },
+        {
+            "id": "[AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC, AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST, AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST]",
+            "gameParameterizations": [
+                {
+                    "diceLogic": "RANDOM",
+                    "playerParameterizations": [
+                        {
+                            "name": "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC"
+                        },
+                        {
+                            "name": "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST"
+                        },
+                        {
+                            "name": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST"
+                        }
+                    ],
+                    "isNarrated": false
+                }
+            ]
+        },
+        {
+            "id": "[AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC, AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST, AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC]",
+            "gameParameterizations": [
+                {
+                    "diceLogic": "RANDOM",
+                    "playerParameterizations": [
+                        {
+                            "name": "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC"
+                        },
+                        {
+                            "name": "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST"
+                        },
+                        {
+                            "name": "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC",
+                            "interactionType": "NONE",
+                            "playerType": "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC"
+                        }
+                    ],
+                    "isNarrated": false
+                }
+            ]
+        }
+    ]
+}

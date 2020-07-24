@@ -5,59 +5,13 @@
     "maxNumRounds": 20,
 
     "isSimulation": true,
-    "numGamesToPlay": 1250,
+    "numGamesToPlay": 2000,
 
     "roundBudget": 5,
     "environmentDecayBudget": [9,9],
     "playerDecayBudget": [3,3],
 
     "possibleParameterizations": [
-        {
-            "id": "['RANDOM_CMP', 'BALANCED-COOPERATOR', 'BALANCED-COOPERATOR']",
-            "gameParameterizations": [{
-                "diceLogic": "RANDOM",
-                "playerParameterizations": [{
-                        "name": "RANDOM_CMP_VS_COOP",
-                        "interactionType": "NONE",
-                        "playerType": "AI-RANDOM"
-                    },
-                    {
-                        "name": "BALANCED-COOPERATOR",
-                        "interactionType": "NONE",
-                        "playerType": "AI-BALANCED-COOPERATOR"
-                    },
-                    {
-                        "name": "BALANCED-COOPERATOR",
-                        "interactionType": "NONE",
-                        "playerType": "AI-BALANCED-COOPERATOR"
-                    }
-                ],
-                "isNarrated": false
-            }]
-        },
-        {
-            "id": "['RANDOM_CMP', 'BALANCED-DEFECTOR', 'BALANCED-DEFECTOR']",
-            "gameParameterizations": [{
-                "diceLogic": "RANDOM",
-                "playerParameterizations": [{
-                        "name": "RANDOM_CMP_VS_DEF",
-                        "interactionType": "NONE",
-                        "playerType": "AI-RANDOM"
-                    },
-                    {
-                        "name": "BALANCED-DEFECTOR",
-                        "interactionType": "NONE",
-                        "playerType": "AI-BALANCED-DEFECTOR"
-                    },
-                    {
-                        "name": "BALANCED-DEFECTOR",
-                        "interactionType": "NONE",
-                        "playerType": "AI-BALANCED-DEFECTOR"
-                    }
-                ],
-                "isNarrated": false
-            }]
-        },
         {
             "id": "['AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST', 'BALANCED-COOPERATOR', 'BALANCED-COOPERATOR']",
             "gameParameterizations": [{

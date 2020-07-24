@@ -1,0 +1,273 @@
+{
+	"root":
+		{
+			"classId": 0,
+			"ScenarioName": "For-the-planet",
+			"Description": null,
+			"Characters": [
+				{
+					"KnowledgeBase":
+						{
+							"Perspective": "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST",
+							"Knowledge":
+								{
+									"SELF":
+										{
+											"Is(CC)": "True, 1"
+										}
+								}
+						},
+					"BodyName": null,
+					"VoiceName": null,
+					"EmotionalState":
+						{
+							"Mood": 0,
+							"initialTick": 0,
+							"EmotionalPool": [],
+							"AppraisalConfiguration":
+								{
+									"HalfLifeDecayConstant": 0.5,
+									"EmotionInfluenceOnMoodFactor": 0.3,
+									"MoodInfluenceOnEmotionFactor": 0.3,
+									"MinimumMoodValueForInfluencingEmotions": 0.5,
+									"EmotionalHalfLifeDecayTime": 15,
+									"MoodHalfLifeDecayTime": 60
+								}
+						},
+					"AutobiographicMemory":
+						{
+							"Tick": 0,
+							"records": []
+						},
+					"OtherAgents":
+						{
+							"dictionary": []
+						},
+					"Goals": [
+						{
+							"Name": "WinGame",
+							"Significance": 5,
+							"Likelihood": 0.5
+						}]
+				}, 
+				{
+					"KnowledgeBase":
+						{
+							"Perspective": "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC",
+							"Knowledge":
+								{
+									"SELF":
+										{
+											"Is(CI)": "True, 1"
+										}
+								}
+						},
+					"BodyName": null,
+					"VoiceName": null,
+					"EmotionalState":
+						{
+							"Mood": 0,
+							"initialTick": 0,
+							"EmotionalPool": [],
+							"AppraisalConfiguration":
+								{
+									"HalfLifeDecayConstant": 0.5,
+									"EmotionInfluenceOnMoodFactor": 0.3,
+									"MoodInfluenceOnEmotionFactor": 0.3,
+									"MinimumMoodValueForInfluencingEmotions": 0.5,
+									"EmotionalHalfLifeDecayTime": 15,
+									"MoodHalfLifeDecayTime": 60
+								}
+						},
+					"AutobiographicMemory":
+						{
+							"Tick": 0,
+							"records": []
+						},
+					"OtherAgents":
+						{
+							"dictionary": []
+						},
+					"Goals": [
+						{
+							"Name": "WinGame",
+							"Significance": 5,
+							"Likelihood": 0.5
+						}]
+				}, 
+				{
+					"KnowledgeBase":
+						{
+							"Perspective": "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST",
+							"Knowledge":
+								{
+									"SELF":
+										{
+											"Is(DC)": "True, 1"
+										}
+								}
+						},
+					"BodyName": null,
+					"VoiceName": null,
+					"EmotionalState":
+						{
+							"Mood": 0,
+							"initialTick": 0,
+							"EmotionalPool": [],
+							"AppraisalConfiguration":
+								{
+									"HalfLifeDecayConstant": 0.5,
+									"EmotionInfluenceOnMoodFactor": 0.3,
+									"MoodInfluenceOnEmotionFactor": 0.3,
+									"MinimumMoodValueForInfluencingEmotions": 0.5,
+									"EmotionalHalfLifeDecayTime": 15,
+									"MoodHalfLifeDecayTime": 60
+								}
+						},
+					"AutobiographicMemory":
+						{
+							"Tick": 0,
+							"records": []
+						},
+					"OtherAgents":
+						{
+							"dictionary": []
+						},
+					"Goals": [
+						{
+							"Name": "WinGame",
+							"Significance": 5,
+							"Likelihood": 0.5
+						}]
+				}, 
+				{
+					"KnowledgeBase":
+						{
+							"Perspective": "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC",
+							"Knowledge":
+								{
+									"SELF":
+										{
+											"Is(DI)": "True, 1"
+										}
+								}
+						},
+					"BodyName": null,
+					"VoiceName": null,
+					"EmotionalState":
+						{
+							"Mood": 0,
+							"initialTick": 0,
+							"EmotionalPool": [],
+							"AppraisalConfiguration":
+								{
+									"HalfLifeDecayConstant": 0.5,
+									"EmotionInfluenceOnMoodFactor": 0.3,
+									"MoodInfluenceOnEmotionFactor": 0.3,
+									"MinimumMoodValueForInfluencingEmotions": 0.5,
+									"EmotionalHalfLifeDecayTime": 15,
+									"MoodHalfLifeDecayTime": 60
+								}
+						},
+					"AutobiographicMemory":
+						{
+							"Tick": 0,
+							"records": []
+						},
+					"OtherAgents":
+						{
+							"dictionary": []
+						},
+					"Goals": [
+						{
+							"Name": "WinGame",
+							"Significance": 5,
+							"Likelihood": 0.5
+						}]
+				}],
+			"WorldModel":
+				{
+					"Effects":
+						{
+							"dictionary": [
+								{
+									"key": "Event(Action-End, *, Invest(5, 0), *)",
+									"value": []
+								}, 
+								{
+									"key": "Event(Action-End, *, Invest(4, 1), *)",
+									"value": []
+								}, 
+								{
+									"key": "Event(Action-End, *, Invest(3, 2), *)",
+									"value": []
+								}, 
+								{
+									"key": "Event(Action-End, *, Invest(2, 3), *)",
+									"value": []
+								}, 
+								{
+									"key": "Event(Action-End, *, Invest(1, 4), *)",
+									"value": []
+								}, 
+								{
+									"key": "Event(Action-End, *, Invest(0, 5), *)",
+									"value": []
+								}]
+						},
+					"Priorities":
+						{
+							"dictionary": [
+								{
+									"key": "Event(Action-End, *, Invest(5, 0), *)",
+									"value": 0
+								}, 
+								{
+									"key": "Event(Action-End, *, Invest([econ], [env]), *)",
+									"value": 0
+								}, 
+								{
+									"key": "Event(Action-End, *, Invest([env], [econ]), *)",
+									"value": 0
+								}, 
+								{
+									"key": "Event(Action-End, *, DuplicateInvest(5, 0), *)",
+									"value": 0
+								}, 
+								{
+									"key": "Event(Action-End, *, Invest(4, 1), *)",
+									"value": 0
+								}, 
+								{
+									"key": "Event(Action-End, *, Invest(3, 2), *)",
+									"value": 0
+								}, 
+								{
+									"key": "Event(Action-End, *, DuplicateInvest(3, 2), *)",
+									"value": 0
+								}, 
+								{
+									"key": "Event(Action-End, *, Invest(2, 3), *)",
+									"value": 0
+								}, 
+								{
+									"key": "Event(Action-End, *, Invest(1, 4), *)",
+									"value": 0
+								}, 
+								{
+									"key": "Event(Action-End, *, DuplicateInvest(1, 4), *)",
+									"value": 0
+								}, 
+								{
+									"key": "Event(Action-End, *, Invest(0, 5), *)",
+									"value": 0
+								}]
+						}
+				}
+		},
+	"types": [
+		{
+			"TypeId": 0,
+			"ClassName": "IntegratedAuthoringTool.IntegratedAuthoringToolAsset, IntegratedAuthoringTool, Version=1.7.0.0, Culture=neutral, PublicKeyToken=null"
+		}]
+}

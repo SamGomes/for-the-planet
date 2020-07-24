@@ -1,0 +1,263 @@
+[
+"EmotionalAppraisalAsset", 
+{
+	"root":
+		{
+			"classId": 0,
+			"Description": null,
+			"AppraisalRules":
+				{
+					"AppraisalWeight": 1,
+					"Rules": [
+						{
+							"EventName": "Event(Property-Change, *, HistoryDisplay([econ], [env]), [target])",
+							"Conditions":
+								{
+									"Set": ["Math(Math(Math([econ], Minus, [env]), Div, Math([env], Plus, [econ])), Times, 10) = [p]", "Is(DI) = True"]
+								},
+							"AppraisalVariables":
+								{
+									"AppraisalVariables": [
+										{
+											"Name": "Praiseworthiness",
+											"Value": "[p]",
+											"Target": "[target]"
+										}]
+								}
+						}, 
+						{
+							"EventName": "Event(Property-Change, *, HistoryDisplay([econ], [env]), [target])",
+							"Conditions":
+								{
+									"Set": ["Math(Math(Math([env], Minus, [econ]), Div, Math([env], Plus, [econ])), Times, 10) = [p]", "Is(DC) = True"]
+								},
+							"AppraisalVariables":
+								{
+									"AppraisalVariables": [
+										{
+											"Name": "Praiseworthiness",
+											"Value": "[p]",
+											"Target": "[target]"
+										}]
+								}
+						}, 
+						{
+							"EventName": "Event(Property-Change, *, HistoryDisplay([econ], [env]), [target])",
+							"Conditions":
+								{
+									"Set": ["Math(Math(Math([env], Minus, [econ]), Div, Math([env], Plus, [econ])), Times, 10) = [p]", "Is(CC) = True"]
+								},
+							"AppraisalVariables":
+								{
+									"AppraisalVariables": [
+										{
+											"Name": "Praiseworthiness",
+											"Value": "[p]",
+											"Target": "[target]"
+										}]
+								}
+						}, 
+						{
+							"EventName": "Event(Property-Change, *, BeforeBudgetAllocation([econ], [env]), [target])",
+							"Conditions":
+								{
+									"Set": ["Math(Math(Math([econ], Minus, [env]), Div, Math([env], Plus, [econ])), Times, 10) = [d]", "Is(DC) = True"]
+								},
+							"AppraisalVariables":
+								{
+									"AppraisalVariables": [
+										{
+											"Name": "Desirability",
+											"Value": "[d]",
+											"Target": "[target]"
+										}]
+								}
+						}, 
+						{
+							"EventName": "Event(Property-Change, *, BeforeBudgetAllocation([econ], [env]), [target])",
+							"Conditions":
+								{
+									"Set": ["Math(Math(Math([econ], Minus, [env]), Div, Math([env], Plus, [econ])), Times, 10) = [d]", "Is(DI) = True"]
+								},
+							"AppraisalVariables":
+								{
+									"AppraisalVariables": [
+										{
+											"Name": "Desirability",
+											"Value": "[d]",
+											"Target": "[target]"
+										}]
+								}
+						}, 
+						{
+							"EventName": "Event(Property-Change, *, HistoryDisplay([econ], [env]), [target])",
+							"Conditions":
+								{
+									"Set": ["Math(Math(Math([econ], Minus, [env]), Div, Math([env], Plus, [econ])), Times, 10) = [p]", "Is(CI) = True"]
+								},
+							"AppraisalVariables":
+								{
+									"AppraisalVariables": [
+										{
+											"Name": "Praiseworthiness",
+											"Value": "[p]",
+											"Target": "[target]"
+										}]
+								}
+						}, 
+						{
+							"EventName": "Event(Property-Change, *, BeforeBudgetAllocation([econ], [env]), [target])",
+							"Conditions":
+								{
+									"Set": ["Math(Math(Math([env], Minus, [econ]), Div, Math([env], Plus, [econ])), Times, 10) = [d]", "Is(CI) = True"]
+								},
+							"AppraisalVariables":
+								{
+									"AppraisalVariables": [
+										{
+											"Name": "Desirability",
+											"Value": "[d]",
+											"Target": "[target]"
+										}]
+								}
+						}, 
+						{
+							"EventName": "Event(Property-Change, *, BeforeBudgetAllocation([econ], [env]), [target])",
+							"Conditions":
+								{
+									"Set": ["Math(Math(Math([env], Minus, [econ]), Div, Math([env], Plus, [econ])), Times, 10) = [d]", "Is(CC) = True"]
+								},
+							"AppraisalVariables":
+								{
+									"AppraisalVariables": [
+										{
+											"Name": "Desirability",
+											"Value": "[d]",
+											"Target": "[target]"
+										}]
+								}
+						}, 
+						{
+							"EventName": "Event(Action-End, *, Invest([econ], [env]), [target])",
+							"Conditions":
+								{
+									"Set": ["Math(Math(Math([env], Minus, [econ]), Div, Math([env], Plus, [econ])), Times, 10) = [d]", "Is(CC) = True"]
+								},
+							"AppraisalVariables":
+								{
+									"AppraisalVariables": [
+										{
+											"Name": "Desirability",
+											"Value": "[d]",
+											"Target": "[target]"
+										}]
+								}
+						}]
+				}
+		},
+	"types": [
+		{
+			"TypeId": 0,
+			"ClassName": "EmotionalAppraisal.EmotionalAppraisalAsset, EmotionalAppraisal, Version=1.4.1.0, Culture=neutral, PublicKeyToken=null"
+		}]
+},
+"EmotionalDecisionMakingAsset", 
+{
+	"root":
+		{
+			"classId": 0,
+			"ActionTendencies": [
+				{
+					"Action": "Invest(5, 0)",
+					"Target": "-",
+					"Layer": "-",
+					"Conditions":
+						{
+							"Set": ["Is(CC) = True"]
+						},
+					"Priority": 1
+				}, 
+				{
+					"Action": "Invest(4, 1)",
+					"Target": "-",
+					"Layer": "-",
+					"Conditions":
+						{
+							"Set": ["Is(CC) = True"]
+						},
+					"Priority": 1
+				}, 
+				{
+					"Action": "Invest(3, 2)",
+					"Target": "-",
+					"Layer": "-",
+					"Conditions":
+						{
+							"Set": ["Is(CC) = True"]
+						},
+					"Priority": 1
+				}, 
+				{
+					"Action": "Invest(2, 3)",
+					"Target": "-",
+					"Layer": "-",
+					"Conditions":
+						{
+							"Set": ["Is(CC) = True"]
+						},
+					"Priority": 1
+				}, 
+				{
+					"Action": "Invest(1, 4)",
+					"Target": "-",
+					"Layer": "-",
+					"Conditions":
+						{
+							"Set": ["Is(CC) = True"]
+						},
+					"Priority": 1
+				}, 
+				{
+					"Action": "Invest(0, 5)",
+					"Target": "-",
+					"Layer": "-",
+					"Conditions":
+						{
+							"Set": ["Is(CC) = True"]
+						},
+					"Priority": 1
+				}]
+		},
+	"types": [
+		{
+			"TypeId": 0,
+			"ClassName": "EmotionalDecisionMaking.EmotionalDecisionMakingAsset, EmotionalDecisionMaking, Version=1.2.0.0, Culture=neutral, PublicKeyToken=null"
+		}]
+},
+"SocialImportanceAsset", 
+{
+	"root":
+		{
+			"classId": 0,
+			"AttributionRules": []
+		},
+	"types": [
+		{
+			"TypeId": 0,
+			"ClassName": "SocialImportance.SocialImportanceAsset, SocialImportance, Version=1.5.0.0, Culture=neutral, PublicKeyToken=null"
+		}]
+},
+"CommeillFautAsset", 
+{
+	"root":
+		{
+			"classId": 0,
+			"SocialExchanges": []
+		},
+	"types": [
+		{
+			"TypeId": 0,
+			"ClassName": "CommeillFaut.CommeillFautAsset, CommeillFaut, Version=1.7.0.0, Culture=neutral, PublicKeyToken=null"
+		}]
+}
+]

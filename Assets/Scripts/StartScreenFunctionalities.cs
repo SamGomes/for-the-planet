@@ -146,7 +146,6 @@ public class StartScreenFunctionalities : MonoBehaviour {
 
         
         
-        // Making sure it works on Android and Web-GL
         var storagePath = Application.streamingAssetsPath + "/Scenarios/for-the-planet-rules.json";
         var storage = AssetStorage.FromJson(File.ReadAllText(storagePath));
         
