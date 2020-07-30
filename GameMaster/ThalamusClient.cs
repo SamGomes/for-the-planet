@@ -63,8 +63,8 @@ class GameMasterThalamusClient : ThalamusClient, ITabletsGM
 
         if (_tabletsConnected[0].Connected & _tabletsConnected[1].Connected & _tabletsConnected[2].Connected)
         {
-            Console.WriteLine("Sleeping for 3s to make sure the tablets load MainScene and GameManager is not null...");
-            Thread.Sleep(3000);
+            Console.WriteLine("Sleeping for 5s to make sure the tablets load MainScene and GameManager is not null...");
+            Thread.Sleep(5000);
             TabletPlayer p0 = _tabletsConnected[0];
             TabletPlayer p1 = _tabletsConnected[1];
             TabletPlayer p2 = _tabletsConnected[2];

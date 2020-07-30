@@ -4595,7 +4595,7 @@ PrefabInstance:
     - target: {fileID: 114336404991915216, guid: fd81239246e80354596e7acc16a44759,
         type: 3}
       propertyPath: m_Text
-      value: Investments per round
+      value: contributions per round
       objectReference: {fileID: 0}
     - target: {fileID: 224093100333062638, guid: fd81239246e80354596e7acc16a44759,
         type: 3}

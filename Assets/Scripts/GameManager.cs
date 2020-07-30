@@ -45,6 +45,7 @@ public class GameManager : MonoBehaviour {
     public GameObject CommonAreaUI;
     public Slider environmentSliderSceneElement;
     private DynamicSlider envDynamicSlider;
+    private GameObject greenBar;
     public Text RoundsInfo;
 
     public GameProperties.GamePhase currGamePhase;
@@ -155,6 +156,7 @@ public class GameManager : MonoBehaviour {
 
 
             envDynamicSlider = new DynamicSlider(environmentSliderSceneElement.gameObject, true);
+            greenBar = CommonAreaUI.transform.Find("environmentStateElements/Slider/SliderBar/green").gameObject;
             StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState));
             DontDestroyOnLoad(CommonAreaUI);
             RoundsInfo = CommonAreaUI.transform.Find("Rounds").gameObject.GetComponent<Text>();
@@ -369,7 +371,7 @@ public class GameManager : MonoBehaviour {
                     }
 
                     newRoundTimerScreen.SetActive(true);
-                    advanceRoundTimer = 5;
+                    advanceRoundTimer = 30;
                     advanceRoundTimerButton.transform.Find("Timer").gameObject.GetComponent<Text>().text = " Start New Round (" + advanceRoundTimer.ToString() + ")";
                     while (advanceRoundTimer > 0)
                     {
@@ -521,6 +523,9 @@ public class GameManager : MonoBehaviour {
 
         GameGlobals.envStatePerRound.Add(GameGlobals.envState);
         StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState));
+        var greenBarRect = greenBar.GetComponent<RectTransform>();
+        greenBarRect.sizeDelta = new Vector2(GameGlobals.envState * 800f / 120f, greenBarRect.sizeDelta.y);
+        greenBarRect.localPosition = new Vector3((greenBarRect.sizeDelta.x / 2f) - 400f, greenBarRect.localPosition.y, greenBarRect.localPosition.z); 
     }
 
     // Run update or fixed update if is or not simulation mode    
