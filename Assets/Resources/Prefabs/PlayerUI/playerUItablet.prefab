@@ -1651,7 +1651,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Previous investment:'
+  m_Text: 'Previous contribution:'
 --- !u!1 &2827504797558025277
 GameObject:
   m_ObjectHideFlags: 0
@@ -1911,7 +1911,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Investment choice:'
+  m_Text: 'Contribution choice:'
 --- !u!1 &2983232628434533450
 GameObject:
   m_ObjectHideFlags: 0
@@ -2976,7 +2976,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Invest
+  m_Text: Done!
 --- !u!1 &4350115787075370857
 GameObject:
   m_ObjectHideFlags: 0
