@@ -24,10 +24,10 @@ suppressMessages(library(car))
 library("ggsci")
 
 
-df1 <- read.csv(file="input/gameresultslog.csv", header=TRUE, sep=",")
-df2 <- read.csv(file="input/gameresultslog(2).csv", header=TRUE, sep=",")
-df3 <- read.csv(file="input/gameresultslog(3).csv", header=TRUE, sep=",")
-df4 <- read.csv(file="input/gameresultslog(4).csv", header=TRUE, sep=",")
+df1 <- read.csv(file="input/AllVsAll/gameresultslog.csv", header=TRUE, sep=",")
+df2 <- read.csv(file="input/AllVsAll/gameresultslog(2).csv", header=TRUE, sep=",")
+df3 <- read.csv(file="input/AllVsAll/gameresultslog(3).csv", header=TRUE, sep=",")
+df4 <- read.csv(file="input/AllVsAll/gameresultslog(4).csv", header=TRUE, sep=",")
 
 gameresultslog <- rbind(df1,df2,df3,df4)
 
@@ -41,6 +41,23 @@ levels(gameresultslog$playerType)[levels(gameresultslog$playerType) == "AI-EMOTI
 levels(gameresultslog$playerType)[levels(gameresultslog$playerType) == "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST"] <- "Disruptive-Collectivist"
 levels(gameresultslog$playerType)[levels(gameresultslog$playerType) == "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC"] <- "Disruptive-Individualist"
 
+getMCTS <- function(mood)
+{
+	numMctsSteps = 0
+	if(mood >= -10 && mood < -3.)
+	{ 
+		numMctsSteps = 3;
+	}
+	else if (mood >= -3 && mood <= 3)
+	{
+		numMctsSteps = 2;
+	}
+	else if (mood > 3 && mood <= 10) 
+	{
+		numMctsSteps = 1;
+	}
+	return(numMctsSteps)
+}
 
 
 gameresultslog <- gameresultslog %>% rename(
@@ -97,9 +114,10 @@ plotsFinalEcons <- c()
 plotsStrategies <- c()
 plotsMood <- c()
 plotsEmotions <- c()
+plotsHeatMapMcts <- c()
 
 
-labelSize <- 12.5
+labelSize <- 15.5
 
 
 endGames <- subset(gameresultslog, gameresultslog$gameState == "VICTORY" | gameresultslog$gameState == "LOSS")
@@ -125,7 +143,7 @@ plotSRate <- plotSRate + ggtitle("All VS. All")
 
 write.csv2(aggJ, "output/SurvivalRates_all.csv")
 
-plotSRate <- plotSRate + labs(x = "Round Num", y = "Survived Games (%)\n") + theme(legend.text = element_text(size=labelSize), plot.margin=margin(10,30,10,30), axis.text=element_text(size = 15), axis.title=element_text(size = 15, face = "bold"), legend.title = element_blank(), legend.position = 'bottom') + guides(col = guide_legend(ncol = 2)) 
+plotSRate <- plotSRate + labs(x = "Round Num", y = "Survived Games (%)\n") + theme(plot.title = element_text(size=labelSize*1.4), legend.text = element_text(size=labelSize), plot.margin=margin(10,30,10,30), axis.text=element_text(size = 15), axis.title=element_text(size = 15, face = "bold"), legend.title = element_blank(), legend.position = 'bottom') + guides(col = guide_legend(ncol = 2)) 
 plotsSRate[[length(plotsSRate)+1]] <- plotSRate
 
 
@@ -158,7 +176,7 @@ plotWRate <- plotWRate + ggtitle("All VS. All")
 
 write.csv2(ratio, "output/WinRounds_all.csv")
 
-plotWRate <- plotWRate + labs(x = "Player Type", y = "WinRate (%)\n") + theme(legend.text = element_text(size=labelSize), plot.margin=margin(10,30,10,30), axis.ticks = element_blank(), axis.text.x = element_blank(), axis.text=element_text(size = 15), axis.title=element_text(size = 15, face = "bold"), legend.title = element_blank(), legend.position = 'bottom') + guides(col = guide_legend(ncol = 2))
+plotWRate <- plotWRate + labs(x = "Player Type", y = "WinRate (%)\n") + theme(plot.title = element_text(size=labelSize*1.4), legend.text = element_text(size=labelSize), plot.margin=margin(10,30,10,30), axis.ticks = element_blank(), axis.text.x = element_blank(), axis.text=element_text(size = 15), axis.title=element_text(size = 15, face = "bold"), legend.title = element_blank(), legend.position = 'bottom') + guides(col = guide_legend(ncol = 2))
 plotsWRate[[length(plotsWRate)+1]] <- plotWRate
 
 
@@ -177,7 +195,7 @@ plotFinalEcons <- plotFinalEcons + ggtitle("All VS. All")
 
 write.csv2(agg, "output/Econs_all.csv")
 
-plotFinalEcons <- plotFinalEcons + theme(legend.text = element_text(size=labelSize), plot.margin=margin(10,30,10,30), axis.ticks = element_blank(), axis.text.x = element_blank()) + theme(axis.text=element_text(size = 15), axis.title=element_text(size = 15, face = "bold"), legend.title = element_blank(), legend.position = 'bottom') + guides(col = guide_legend(ncol = 2))
+plotFinalEcons <- plotFinalEcons + theme(plot.title = element_text(size=labelSize*1.4), legend.text = element_text(size=labelSize), plot.margin=margin(10,30,10,30), axis.ticks = element_blank(), axis.text.x = element_blank()) + theme(axis.text=element_text(size = 15), axis.title=element_text(size = 15, face = "bold"), legend.title = element_blank(), legend.position = 'bottom') + guides(col = guide_legend(ncol = 2))
 plotsFinalEcons[[length(plotsFinalEcons)+1]] <- plotFinalEcons
 
 
@@ -195,32 +213,65 @@ plotStrategies <- plotStrategies + ggtitle("All VS. All")
 
 write.csv2(agg, "output/Strategies_all.csv")
 
-plotStrategies <- plotStrategies + labs(x = "Round Id", y = "Avg. Cooperation Investment\n", color="Player Type") + theme(legend.text = element_text(size=labelSize), plot.margin=margin(10,30,10,30), axis.text = element_text(size = 15), axis.title = element_text(size = 15, face = "bold"), legend.title = element_blank(), legend.position = 'bottom') + guides(col = guide_legend(ncol = 2))  
+plotStrategies <- plotStrategies + labs(x = "Round Id", y = "Avg. Cooperation Investment\n", color="Player Type") + theme(plot.title = element_text(size=labelSize*1.4), legend.text = element_text(size=labelSize), plot.margin=margin(10,30,10,30), axis.text = element_text(size = 15), axis.title = element_text(size = 15, face = "bold"), legend.title = element_blank(), legend.position = 'bottom') + guides(col = guide_legend(ncol = 2))  
+plotStrategies <- plotStrategies + ylim(0.0, 5.0)
 plotsStrategies[[length(plotsStrategies)+1]] <- plotStrategies
 
 
 
 # plot mood
 moodlog <- gameresultslog[!is.na(gameresultslog$mood),]
-moodlog <- aggregate(mood ~ playerType*roundId , moodlog , mean)
-plotMood <- ggplot(moodlog, aes(x = moodlog$roundId, y=moodlog$mood, color=moodlog$playerType, alpha=aggJ$survivalRate)) 
+moodAvg <- aggregate(mood ~ playerType*roundId , moodlog , mean)
+plotMood <- ggplot(moodAvg, aes(x = moodAvg$roundId, y=moodAvg$mood, color=moodAvg$playerType, alpha=aggJ$survivalRate)) 
 plotMood <- plotMood + scale_color_npg() + scale_alpha(range = c(0.3, 1), guide=FALSE)
 
-plotMood <- plotMood + geom_hline(aes(yintercept = -3), linetype = "dashed", size = 0.8)
-plotMood <- plotMood + geom_hline(aes(yintercept = 3), linetype = "dashed", size = 0.8)
+# plotMood <- plotMood + geom_hline(aes(yintercept = -3), linetype = "dashed", size = 0.8)
+# plotMood <- plotMood + geom_hline(aes(yintercept = 3), linetype = "dashed", size = 0.8)
 
 plotMood <- plotMood + geom_line(stat = "identity", size=2.0) 
 plotMood <- plotMood + geom_point(stat = "identity", size=3.0, guide=FALSE)
-plotMood <- plotMood + labs(x = "Curr Round Id", y = "Mood\n", color="Player Type") + theme(legend.text = element_text(size=labelSize), plot.margin=margin(10,30,10,30), axis.text = element_text(size = 15), axis.title = element_text(size = 15, face = "bold"), legend.title = element_blank(), legend.position = 'bottom') + guides(col = guide_legend(ncol = 2))  
+plotMood <- plotMood + labs(x = "Curr Round Id", y = "Mood\n", color="Player Type") + theme(plot.title = element_text(size=labelSize*1.4), legend.text = element_text(size=labelSize), plot.margin=margin(10,30,10,30), axis.text = element_text(size = 15), axis.title = element_text(size = 15, face = "bold"), legend.title = element_blank(), legend.position = 'bottom') + guides(col = guide_legend(ncol = 2))  
 
 plotMood <- plotMood + ggtitle("All VS. All")
 
-write.csv2(moodlog, "output/Mood_all.csv")
+write.csv2(moodAvg, "output/Mood_all.csv")
 
 plotMood <- plotMood + ylim(-10.0, 10.0)
 plotsMood[[length(plotsMood)+1]] <- plotMood
 
 
+
+
+# plot heatmap for mcts level
+# use mood log to get the mcts levels
+mctsLog <- moodlog
+mctsLog <- cbind(mctsLog, mcts = mapply(getMCTS, mctsLog$mood))
+res <- mctsLog %>% count(roundId, playerType, mcts)
+
+
+resAgg <- aggregate(n ~ playerType * roundId, res , sum)
+colnames(res) <- c("roundId", "playerType", "mcts", "nMcts")
+test <- merge(res, resAgg, by=c("roundId", "playerType"))
+test$heat <- (test$nMcts / test$n)*100
+
+# maybe use % instead of number of occurrences
+# adjust the scale
+mycol <- rgb(2, 144, 161, max = 255, alpha = 100)
+mycol2 <- rgb(2, 144, 161, max = 255, alpha = 255)
+
+margin = margin(0,0,0,0)
+
+plotHeatMapMcts <- ggplot(test, aes(x=roundId, y=mcts, fill=heat)) + 
+labs(x = "Round Id", y = "MCTS operating Depth\n", fill=" Relative\nFreq. (%)\n") + 
+geom_tile(aes(), colour = "transparent") + scale_fill_gradient(low = mycol[1], high = mycol2[1], limits = c(0,100)) + 
+theme(plot.title = element_text(size=labelSize*1.4), legend.text = element_text(size=labelSize*1.4), plot.margin=margin, panel.spacing=unit(1.5, "lines"), axis.text = element_text(size = labelSize*1.4), axis.title = element_text(size = labelSize*1.4, face = "bold"), legend.title=element_text(size = labelSize*1.4)) + 
+scale_y_reverse() + 
+facet_wrap(playerType ~ ., ncol=1) + 
+theme(strip.text.x = element_text(size = labelSize*1.2))
+# + theme(strip.text.y = element_text(size = labelSize*1.4))
+plotHeatMapMcts <- plotHeatMapMcts + ggtitle("All VS. All")
+
+plotsHeatMapMcts[[length(plotsHeatMapMcts)+1]] <- plotHeatMapMcts
 
 
 # plot emotions
@@ -258,12 +309,17 @@ agg <- aggregate(value ~ playerType*roundId*variable , agg , mean)
 agg <- merge(agg, aggJ, by=c("playerType","roundId"))
 
 
-plotEmotions <- ggplot(agg, aes(x = agg$roundId, y = agg$value, color = agg$variable, alpha=agg$survivalRate)) + facet_grid(playerType ~ .) + scale_color_npg() + scale_alpha(range = c(0.3, 1), guide=FALSE)
+plotEmotions <- ggplot(agg, aes(x = agg$roundId, y = agg$value, color = agg$variable, alpha=agg$survivalRate)) +
+	facet_wrap(playerType ~ ., ncol=1) + 
+	theme(strip.text.x = element_text(size = labelSize*1.2)) +
+	 scale_color_npg() +
+	 scale_alpha(range = c(0.3, 1), guide=FALSE)
 plotEmotions <- plotEmotions + geom_line(stat = "identity", size=1.2, guide=FALSE)
 plotEmotions <- plotEmotions + geom_point(aes(x = agg$roundId, y = agg$value, color = agg$variable), stat = "summary", fun.y = "mean", guide=FALSE) 
-plotEmotions <- plotEmotions + labs(x = "Curr Round Id", y = "Avg. Emotion Intensity\n", color="Emotion Type") + theme(legend.text = element_text(size=labelSize*1.2), plot.margin=margin(10,30,10,30), panel.spacing=unit(1.5, "lines"), axis.text = element_text(size = 15), axis.title = element_text(size = 15, face = "bold"), legend.title = element_blank(), legend.position = 'bottom') + guides(col = guide_legend(ncol = 2))
+plotEmotions <- plotEmotions + labs(x = "Curr Round Id", y = "Avg. Emotion Intensity\n", color="Emotion Type") + theme(plot.title = element_text(size=labelSize*1.4), legend.text = element_text(size=labelSize*1.2), plot.margin=margin(10,30,10,30), panel.spacing=unit(1.5, "lines"), axis.text = element_text(size = 15), axis.title = element_text(size = 15, face = "bold"), legend.title = element_blank(), legend.position = 'bottom') + guides(col = guide_legend(ncol = 2))
 
 plotEmotions <- plotEmotions + ggtitle("All VS. All")
+plotEmotions <- plotEmotions + ylim(0.0, 10.0)
 
 write.csv2(feltEmotionsLog, "output/Emotions_all.csv")
 plotsEmotions[[length(plotsEmotions)+1]] <- plotEmotions
@@ -271,25 +327,29 @@ plotsEmotions[[length(plotsEmotions)+1]] <- plotEmotions
 
 
 ggarrange(plotlist = plotsSRate)
-suppressMessages(ggsave("plots/SurvivalRate.png", height=5, width=15, units="in", dpi=500))
+suppressMessages(ggsave("plots/SurvivalRate.png", height=5, width=8, units="in", dpi=500))
 
 
 ggarrange(plotlist = plotsWRate)
-suppressMessages(ggsave("plots/WinRate.png", height=5, width=15, units="in", dpi=500))
+suppressMessages(ggsave("plots/WinRate.png", height=5, width=8, units="in", dpi=500))
 
 
 ggarrange(plotlist = plotsFinalEcons)
-suppressMessages(ggsave("plots/EconLevels.png", height=5, width=15, units="in", dpi=500))
+suppressMessages(ggsave("plots/EconLevels.png", height=5, width=8, units="in", dpi=500))
 
 
 ggarrange(plotlist = plotsStrategies)
-suppressMessages(ggsave("plots/StratsEnv.png", height=5, width=15, units="in", dpi=500))
+suppressMessages(ggsave("plots/StratsEnv.png", height=5, width=8, units="in", dpi=500))
 
 
 ggarrange(plotlist = plotsMood)
-suppressMessages(ggsave("plots/Mood.png", height=5, width=15, units="in", dpi=500))
+suppressMessages(ggsave("plots/Mood.png", height=5, width=8, units="in", dpi=500))
+
+
+ggarrange(plotlist = plotsHeatMapMcts)
+suppressMessages(ggsave("plots/HeatMapMcts.png", limitsize = FALSE, height=9, width=9, units="in", dpi=500))
 
 
 ggarrange(plotlist = plotsEmotions)
-suppressMessages(ggsave("plots/Emotions.png", height=9, width=15, units="in", dpi=500))
+suppressMessages(ggsave("plots/Emotions.png", height=8, width=9, units="in", dpi=500))
 
