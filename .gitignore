@@ -1,3 +1,7 @@
+*.csv
+extractDataFromMongo/R/plots/
+extractDataFromMongo/R/Rplots.pdf
+
 [Ll]ibrary/
 [Tt]emp/
 [Oo]bj/
@@ -42,4 +46,3 @@ sysinfo.txt
 *.apk
 *.unitypackage
 
-*.csv
