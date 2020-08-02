@@ -144,6 +144,7 @@ plotSRate <- plotSRate + ggtitle("All VS. All")
 write.csv2(aggJ, "output/SurvivalRates_all.csv")
 
 plotSRate <- plotSRate + labs(x = "Round Num", y = "Survived Games (%)\n") + theme(plot.title = element_text(size=labelSize*1.4), legend.text = element_text(size=labelSize), plot.margin=margin(10,30,10,30), axis.text=element_text(size = 15), axis.title=element_text(size = 15, face = "bold"), legend.title = element_blank(), legend.position = 'bottom') + guides(col = guide_legend(ncol = 2)) 
+plotSRate <- plotSRate + scale_x_continuous(breaks=c(1, 5, 10, 15, 20))
 plotsSRate[[length(plotsSRate)+1]] <- plotSRate
 
 
@@ -215,6 +216,7 @@ write.csv2(agg, "output/Strategies_all.csv")
 
 plotStrategies <- plotStrategies + labs(x = "Round Id", y = "Avg. Cooperation Investment\n", color="Player Type") + theme(plot.title = element_text(size=labelSize*1.4), legend.text = element_text(size=labelSize), plot.margin=margin(10,30,10,30), axis.text = element_text(size = 15), axis.title = element_text(size = 15, face = "bold"), legend.title = element_blank(), legend.position = 'bottom') + guides(col = guide_legend(ncol = 2))  
 plotStrategies <- plotStrategies + ylim(0.0, 5.0)
+plotStrategies <- plotStrategies + scale_x_continuous(breaks=c(1, 5, 10, 15, 20))
 plotsStrategies[[length(plotsStrategies)+1]] <- plotStrategies
 
 
@@ -237,6 +239,7 @@ plotMood <- plotMood + ggtitle("All VS. All")
 write.csv2(moodAvg, "output/Mood_all.csv")
 
 plotMood <- plotMood + ylim(-10.0, 10.0)
+plotMood <- plotMood + scale_x_continuous(breaks=c(1, 5, 10, 15, 20))
 plotsMood[[length(plotsMood)+1]] <- plotMood
 
 
@@ -270,6 +273,7 @@ facet_wrap(playerType ~ ., ncol=1) +
 theme(strip.text.x = element_text(size = labelSize*1.2))
 # + theme(strip.text.y = element_text(size = labelSize*1.4))
 plotHeatMapMcts <- plotHeatMapMcts + ggtitle("All VS. All")
+plotHeatMapMcts <- plotHeatMapMcts + scale_x_continuous(breaks=c(1, 5, 10, 15, 20))
 
 plotsHeatMapMcts[[length(plotsHeatMapMcts)+1]] <- plotHeatMapMcts
 
@@ -320,6 +324,7 @@ plotEmotions <- plotEmotions + labs(x = "Curr Round Id", y = "Avg. Emotion Inten
 
 plotEmotions <- plotEmotions + ggtitle("All VS. All")
 plotEmotions <- plotEmotions + ylim(0.0, 10.0)
+plotEmotions <- plotEmotions + scale_x_continuous(breaks=c(1, 5, 10, 15, 20))
 
 write.csv2(feltEmotionsLog, "output/Emotions_all.csv")
 plotsEmotions[[length(plotsEmotions)+1]] <- plotEmotions

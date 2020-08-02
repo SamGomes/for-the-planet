@@ -309,12 +309,12 @@ public class GameManager : MonoBehaviour {
             }
             else
             {
-                if (GameGlobals.currGameRoundId > GameProperties.configurableProperties.maxNumRounds - 1)
+                if (GameGlobals.currGameRoundId >= (GameProperties.configurableProperties.maxNumRounds - 1))
                 {
                     GameGlobals.currGameState = GameProperties.GameState.VICTORY;
                     // ONHOLD @jbgrocha: Send GAME Victory Event to AIPlayers (call AIplayer update emotional module function)
                 }
-                Debug.Log("[Game: "+GameGlobals.currGameId+"; Round: " + (GameGlobals.currGameRoundId+1) +" of "+GameProperties.configurableProperties.maxNumRounds+"]");
+                Debug.Log("[Game: "+GameGlobals.currGameId+"; Round: " + (GameGlobals.currGameRoundId + 1) +" of "+GameProperties.configurableProperties.maxNumRounds+"]");
             }
 
             
@@ -324,7 +324,7 @@ public class GameManager : MonoBehaviour {
                 {
                     {"sessionId", GameGlobals.currSessionId},
                     {"gameId", GameGlobals.currGameId.ToString()},
-                    {"roundId", GameGlobals.currGameRoundId.ToString()},
+                    {"roundId", (GameGlobals.currGameRoundId + 1).ToString()},
                     {"condition", GameGlobals.currGameCondition},
                     {"gameState", GameGlobals.currGameState.ToString()},
 

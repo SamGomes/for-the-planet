@@ -217,8 +217,6 @@ public class FTPBoard : Board
     /// Performs a move on this board state for the current player and returns the updated state.
     public override Board MakeMove(Move move)
     {
-        DetermineWinner(move);
-        
         FTPMove moveFTP = (FTPMove) move;
         int myInvestmentEnv = moveFTP.GetInvestmentEnv();
 
@@ -255,8 +253,10 @@ public class FTPBoard : Board
         
         econs = estEcons;
         env = estEnv;
-        this.currGameRound = this.currGameRound + 1;
 
+        DetermineWinner(move);
+        
+        this.currGameRound = this.currGameRound + 1;
         return base.MakeMove(move);
     }
 
@@ -307,7 +307,7 @@ public class FTPBoard : Board
         {
             this.winner = 10;
         }
-        else if (currGameRound >= maxGameRound)
+        else if (currGameRound >= (maxGameRound - 1))
         {
             float bestEcon = -1.0f;
             List<int> bestPlayers = new List<int>();

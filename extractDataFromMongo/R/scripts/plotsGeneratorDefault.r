@@ -25,8 +25,13 @@ suppressMessages(library(car))
 library("ggsci")
 
 
+affectiveResults = FALSE
 
-gameresultslog <- read.csv(file="input/gameresultslog.csv", header=TRUE, sep=",")
+if(affectiveResults){
+	gameresultslog <- read.csv(file="input/Affective/gameresultslog.csv", header=TRUE, sep=",")
+}else{
+	gameresultslog <- read.csv(file="input/MCTS/gameresultslog.csv", header=TRUE, sep=",")
+}
 
 
 # plot game balance
@@ -66,6 +71,10 @@ levels(gameresultslog$playerName)[levels(gameresultslog$playerName) == "MCTS_3_V
 levels(gameresultslog$playerName)[levels(gameresultslog$playerName) == "MCTS_4_VS_DEF"] <- "MCTS (depth = 4)"
 levels(gameresultslog$playerName)[levels(gameresultslog$playerName) == "MCTS_5_VS_DEF"] <- "MCTS (depth = 5)"
 
+
+if(!affectiveResults){
+	gameresultslog$playerName <- factor(gameresultslog$playerName, levels = c("Random","MCTS (depth = 1)","MCTS (depth = 2)","MCTS (depth = 3)","MCTS (depth = 4)","MCTS (depth = 5)"))
+}
 
 gameresultslog <- gameresultslog %>% rename(
      	 Hate = activeEmotions_Hate,
@@ -182,6 +191,7 @@ analyse <- function(gameresultslog, adversary){
 		margin = margin(10,10,10,60)
 	}
 	plotSRate <- plotSRate + labs(x = "Round Num", y = "Survived Games (%)\n") + theme(plot.title = element_text(size=labelSize*1.8), legend.text = element_text(size=labelSize), plot.margin=margin, axis.text=element_text(size = 15), axis.title=element_text(size = 15, face = "bold"), legend.title = element_blank(), legend.position = 'bottom') + guides(col = guide_legend(ncol = 2)) 
+	plotSRate <- plotSRate + scale_x_continuous(breaks=c(1, 5, 10, 15, 20))
 	plotsSRate[[length(plotsSRate)+1]] <<- plotSRate
 
 
@@ -287,9 +297,17 @@ analyse <- function(gameresultslog, adversary){
 		margin = margin(10,10,10,60)
 	}
 	plotStrategies <- plotStrategies + labs(x = "Round Id", y = "Avg. Cooperation Investment\n", color="Player Type") + theme(plot.title = element_text(size=labelSize*1.8), legend.text = element_text(size=labelSize), plot.margin=margin, axis.text = element_text(size = 15), axis.title = element_text(size = 15, face = "bold"), legend.title = element_blank(), legend.position = 'bottom') + guides(col = guide_legend(ncol = 2))  
+	plotStrategies <- plotStrategies + scale_x_continuous(breaks=c(1, 5, 10, 15, 20))
 	plotsStrategies[[length(plotsStrategies)+1]] <<- plotStrategies + ylim(0,5)
 	
-	return()
+
+
+
+	if(!affectiveResults){
+		return()
+	}
+
+
 
 	# plot mood
 	moodlog <- gameresultslog[!is.na(gameresultslog$mood),]
@@ -332,6 +350,7 @@ analyse <- function(gameresultslog, adversary){
 
 	write.csv2(moodAvg, sprintf("output/Mood_adversary_%d.csv", adversary))
 
+	plotMood <- plotMood + scale_x_continuous(breaks=c(1, 5, 10, 15, 20))
 	# plotMood <- plotMood + ylim(-10.0, 10.0)
 	plotsMood[[length(plotsMood)+1]] <<- plotMood
 
@@ -366,6 +385,7 @@ analyse <- function(gameresultslog, adversary){
 	facet_wrap(playerName ~ ., ncol=1) + 
 	theme(strip.text.x = element_text(size = labelSize*1.5))
 	plotHeatMapMcts <- plotHeatMapMcts + ggtitle("All VS. All")
+	plotHeatMapMcts <- plotHeatMapMcts + scale_x_continuous(breaks=c(1, 5, 10, 15, 20))
 
 
 	if(adversary == 1){
@@ -422,6 +442,8 @@ analyse <- function(gameresultslog, adversary){
 		plotEmotions <- plotEmotions + ggtitle("VS. Defection-Prone Opponents")
 	}
 
+	plotEmotions <- plotEmotions + scale_x_continuous(breaks=c(1, 5, 10, 15, 20))
+
 	write.csv2(feltEmotionsLog, sprintf("output/Emotions_adversary_%d.csv", adversary))
 	plotsEmotions[[length(plotsEmotions)+1]] <<- plotEmotions + ylim(0, 10)
 
@@ -446,13 +468,16 @@ suppressMessages(ggsave("plots/EconLevels.png", height=5, width=15, units="in", 
 ggarrange(plotlist = plotsStrategies)
 suppressMessages(ggsave("plots/StratsEnv.png", height=5, width=15, units="in", dpi=500))
 
-# ggarrange(plotlist = plotsMood)
-# suppressMessages(ggsave("plots/Mood.png", height=5, width=15, units="in", dpi=500))
 
-# ggarrange(plotlist = plotsHeatMapMcts)
-# suppressMessages(ggsave("plots/HeatMapMcts.png", height=10, width=20, units="in", dpi=500))
 
-# ggarrange(plotlist = plotsEmotions)
-# suppressMessages(ggsave("plots/Emotions.png", height=9, width=15, units="in", dpi=500))
+if(affectiveResults){
+	ggarrange(plotlist = plotsMood)
+	suppressMessages(ggsave("plots/Mood.png", height=5, width=15, units="in", dpi=500))
 
+	ggarrange(plotlist = plotsHeatMapMcts)
+	suppressMessages(ggsave("plots/HeatMapMcts.png", height=10, width=20, units="in", dpi=500))
+
+	ggarrange(plotlist = plotsEmotions)
+	suppressMessages(ggsave("plots/Emotions.png", height=9, width=15, units="in", dpi=500))
+}
 
