@@ -143,7 +143,7 @@ plotSRate <- plotSRate + ggtitle("All VS. All")
 
 write.csv2(aggJ, "output/SurvivalRates_all.csv")
 
-plotSRate <- plotSRate + labs(x = "Round Num", y = "Survived Games (%)\n") + theme(plot.title = element_text(size=labelSize*1.4), legend.text = element_text(size=labelSize), plot.margin=margin(10,30,10,30), axis.text=element_text(size = 15), axis.title=element_text(size = 15, face = "bold"), legend.title = element_blank(), legend.position = 'bottom') + guides(col = guide_legend(ncol = 2)) 
+plotSRate <- plotSRate + labs(x = "Round Num", y = "Survival Rate (%)\n") + theme(plot.title = element_text(size=labelSize*1.4), legend.text = element_text(size=labelSize), plot.margin=margin(10,30,10,30), axis.text=element_text(size = 15), axis.title=element_text(size = 15, face = "bold"), legend.title = element_blank(), legend.position = 'bottom') + guides(col = guide_legend(ncol = 2)) 
 plotSRate <- plotSRate + scale_x_continuous(breaks=c(1, 5, 10, 15, 20))
 plotsSRate[[length(plotsSRate)+1]] <- plotSRate
 
@@ -177,7 +177,7 @@ plotWRate <- plotWRate + ggtitle("All VS. All")
 
 write.csv2(ratio, "output/WinRounds_all.csv")
 
-plotWRate <- plotWRate + labs(x = "Player Type", y = "WinRate (%)\n") + theme(plot.title = element_text(size=labelSize*1.4), legend.text = element_text(size=labelSize), plot.margin=margin(10,30,10,30), axis.ticks = element_blank(), axis.text.x = element_blank(), axis.text=element_text(size = 15), axis.title=element_text(size = 15, face = "bold"), legend.title = element_blank(), legend.position = 'bottom') + guides(col = guide_legend(ncol = 2))
+plotWRate <- plotWRate + labs(x = "Player Type", y = "Win Rate (%)\n") + theme(plot.title = element_text(size=labelSize*1.4), legend.text = element_text(size=labelSize), plot.margin=margin(10,30,10,30), axis.ticks = element_blank(), axis.text.x = element_blank(), axis.text=element_text(size = 15), axis.title=element_text(size = 15, face = "bold"), legend.title = element_blank(), legend.position = 'bottom') + guides(col = guide_legend(ncol = 2))
 plotsWRate[[length(plotsWRate)+1]] <- plotWRate
 
 
@@ -348,7 +348,7 @@ suppressMessages(ggsave("plots/StratsEnv.png", height=5, width=8, units="in", dp
 
 
 ggarrange(plotlist = plotsMood)
-suppressMessages(ggsave("plots/Mood.png", height=5, width=8, units="in", dpi=500))
+suppressMessages(ggsave("plots/Mood.png", height=4, width=8, units="in", dpi=500))
 
 
 ggarrange(plotlist = plotsHeatMapMcts)
@@ -356,5 +356,5 @@ suppressMessages(ggsave("plots/HeatMapMcts.png", limitsize = FALSE, height=9, wi
 
 
 ggarrange(plotlist = plotsEmotions)
-suppressMessages(ggsave("plots/Emotions.png", height=8, width=9, units="in", dpi=500))
+suppressMessages(ggsave("plots/Emotions.png", height=10, width=9, units="in", dpi=500))
 
