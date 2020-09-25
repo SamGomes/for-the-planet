@@ -31,7 +31,7 @@
                     {
                         "name": "Player 76",
                         "fatimaRpcPath": "NONE",
-                        "playerType": "AI-OUTCOME-BASE",
+                        "playerType": "AI-TIT-FOR-TAT",
                         "interactionType": "NONE"
                     }
                 ],

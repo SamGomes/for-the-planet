@@ -2,7 +2,7 @@
     "maxNumRounds": 10,
 	
 	"logManagerStyle": "DEBUG",
-	"mongoConnector": "mongodb+srv://admin:admin@fortheplanet-ya50d.mongodb.net/test?retryWrites=true&w=majority",
+	"mongoConnector": "mongodb+srv://admin:admin@fortheplanet-ya50d.mongodb.net/fortheplanetlog?retryWrites=true&w=majority",
 
 	"areHumansOnSyncTablets": false,
     "isSimulation": false,
@@ -31,7 +31,7 @@
                     {
                         "name": "Player 76",
                         "fatimaRpcPath": "NONE",
-                        "playerType": "AI-COMPENSATOR",
+                        "playerType": "AI-TIT-FOR-TAT",
                         "interactionType": "NONE"
                     }
                 ],

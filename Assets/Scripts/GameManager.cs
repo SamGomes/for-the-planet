@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour {
 
     public GameObject newRoundScreen;
     public GameObject tutorialScreen;
+    public GameObject instructions;
     public Button advanceRoundButton;
     public Button advanceTutorialButton;
     public GameObject GenerationText;
@@ -80,6 +81,7 @@ public class GameManager : MonoBehaviour {
     public Text TipsText;
     private GameObject GenerationEnvHistory;
     private Image GenPhotoUI;
+    private Image EnvPhotoUI;
 
     private Sprite firstGenPhoto;
 
@@ -150,7 +152,6 @@ public class GameManager : MonoBehaviour {
         GameGlobals.maxSelfish = GameGlobals.fairRefPoint *2;
         GameGlobals.envStatePerRound = new List<int>();
         GameGlobals.firstGeneration = true;
-        GameGlobals.firstGenCP = 100;
 
         GameGlobals.waitingForPaux = true;
 
@@ -169,6 +170,8 @@ public class GameManager : MonoBehaviour {
         //Init Gen UI
 
         tutorialScreen = GameObject.Find("TutorialScreen");
+        instructions = GameObject.Find("Tutorialback");
+        Boolean tutorialAux = false;
         advanceTutorialButton = tutorialScreen.transform.Find("advanceTutorialButton").gameObject.GetComponent<Button>();
 
         GenerationText = GameObject.Find("GenerationText");
@@ -176,6 +179,17 @@ public class GameManager : MonoBehaviour {
         TipsTextUI = GameObject.Find("TipsText");
         TipsText = TipsTextUI.transform.Find("Text").gameObject.GetComponent<Text>();
         GenerationEnvHistory = GameObject.Find("EnvHistory");
+        EnvPhotoUI = GenerationEnvHistory.GetComponent<Image>();
+
+        if (GameGlobals.envState<60)
+        {
+            EnvPhotoUI.sprite = Resources.Load<Sprite>("Textures/Generation/EnvironmentHistoryBad");
+        }
+        else
+        {
+            EnvPhotoUI.sprite = Resources.Load<Sprite>("Textures/Generation/EnvironmentHistoryGood");
+        }
+
 
         passRoundButton = GameObject.Find("passRoundButton").GetComponent<Button>();
         passRoundButton.gameObject.SetActive(false);
@@ -196,11 +210,11 @@ public class GameManager : MonoBehaviour {
         }
         else
         {
-            GenerationTextUI.text = "Hello!" + " You belong to a Sixth Generation.\n" + "The previous Generations left the Planet with the resources of value "+GameGlobals.firstGenCP.ToString()+".\n" +
+            GenerationTextUI.text = "Hello!" + " You belong to a Sixth Generation.\n" + "The previous group of players left the Planet with the resources of value "+GameGlobals.envState.ToString()+".\n" +
                 "Below, you can see their choices.\n";// + "Take from Common-Pool but if you take too much there will be no next generation.";
         }
 
-        TipsText.text = "Take resources from the Common-Pool to win the game, but if you take too much " + "there will be no next generation.";
+        TipsText.text = "You may profit from the resources available. The aggregate of all choices within a group will define the resources available to the next generations.";
 
         GenerationNumberText = GameObject.Find("GenerationNumber");
         GenerationNumberTextUI = GenerationNumberText.transform.Find("genNumText").gameObject.GetComponent<Text>();
@@ -230,6 +244,7 @@ public class GameManager : MonoBehaviour {
             }
 
             tutorialScreen.SetActive(false);
+            instructions.SetActive(false);
             newRoundScreen.SetActive(false);
             GenerationText.SetActive(false);
             GenerationEnvHistory.SetActive(false);
@@ -283,6 +298,10 @@ public class GameManager : MonoBehaviour {
             else
             {
                 tutorialScreen.SetActive(true);
+                newRoundScreen.SetActive(false);
+                ImpactCP.SetActive(false);
+                waitingForPlayers.SetActive(false);
+                UIroundSum.SetActive(false);
             }
 
             advanceRoundButton.onClick.AddListener(delegate ()
@@ -298,13 +317,21 @@ public class GameManager : MonoBehaviour {
 
             advanceTutorialButton.onClick.AddListener(delegate ()
             {
-                tutorialScreen.SetActive(false);
-                UIroundSum.SetActive(false);
-                GenerationText.SetActive(true);
-                if (GameGlobals.firstGeneration) { GenerationEnvHistory.SetActive(false); }
-                else { GenerationEnvHistory.SetActive(true); }
-                IntroductionScreen.SetActive(true);
-                ImpactCP.SetActive(false);
+                if (tutorialAux) { 
+                    tutorialScreen.SetActive(false);
+                    IntroductionScreen.SetActive(true);
+                    UIroundSum.SetActive(false);
+                    waitingForPlayers.SetActive(false);
+                    GenerationText.SetActive(true);
+                    if (GameGlobals.firstGeneration) { GenerationEnvHistory.SetActive(false); }
+                    else { GenerationEnvHistory.SetActive(true); }
+                    ImpactCP.SetActive(false);
+                }
+                else
+                {
+                    instructions.SetActive(false);
+                    tutorialAux = true;
+                }
             });
 
             newRoundButton.onClick.AddListener(delegate ()
@@ -611,7 +638,8 @@ public class GameManager : MonoBehaviour {
                         else { GenerationEnvHistory.SetActive(true); }
                     }
                     else { 
-                        tutorialScreen.SetActive(true); 
+                        tutorialScreen.SetActive(true);
+                        instructions.SetActive(false);
                     }
                 }
             }
@@ -953,7 +981,7 @@ public class GameManager : MonoBehaviour {
         this.roundTaken = 0;
         GameGlobals.diffCP = 0;
         GameGlobals.impactOnCP = "";
-        GameGlobals.fairRefPoint = Convert.ToInt32((GameGlobals.envState / 2) / 4.5);
+        GameGlobals.fairRefPoint = Convert.ToInt32(GameGlobals.envState / 9);
         GameGlobals.maxSelfish = GameGlobals.fairRefPoint * 2;
         if (GameGlobals.maxSelfish > 14) { GameGlobals.maxSelfish = 14; }
     }

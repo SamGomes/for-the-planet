@@ -41,7 +41,6 @@ public static class GameGlobals
     public static int generation;
     public static Boolean skipTutorial;
     public static Boolean firstGeneration;
-    public static int firstGenCP;
     public static List<int> envStatePerRound;
     public static int diffCP = 0;
     public static string impactOnCP;
