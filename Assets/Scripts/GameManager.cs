@@ -21,12 +21,16 @@ public class GameManager : MonoBehaviour {
     public GameObject playerUIPrefab;
     public GameObject investmentUIPrefab;
 
-
-    public GameObject newRoundScreen;
+    //--------Tutorial-----------------------
+    public GameObject tutorialScreens;
     public GameObject tutorialScreen;
-    public GameObject instructions;
-    public Button advanceRoundButton;
+    public GameObject tutorialScreen2;
+    public GameObject tutorialScreen3;
+    public GameObject tutorialScreen4;
     public Button advanceTutorialButton;
+    
+    public GameObject newRoundScreen;
+    public Button advanceRoundButton;
     public GameObject GenerationText;
     public GameObject GenerationNumberText;
     public GameObject simulateInvestmentScreen;
@@ -169,10 +173,13 @@ public class GameManager : MonoBehaviour {
 
         //Init Gen UI
 
+        tutorialScreens = GameObject.Find("TutorialScreens");
         tutorialScreen = GameObject.Find("TutorialScreen");
-        instructions = GameObject.Find("Tutorialback");
-        Boolean tutorialAux = false;
-        advanceTutorialButton = tutorialScreen.transform.Find("advanceTutorialButton").gameObject.GetComponent<Button>();
+        tutorialScreen = GameObject.Find("TutorialScreen2");
+        tutorialScreen = GameObject.Find("TutorialScreen3");
+        tutorialScreen = GameObject.Find("TutorialScreen4");
+        int tutorialAux = 1;
+        advanceTutorialButton = tutorialScreens.transform.Find("advanceTutorialButton").gameObject.GetComponent<Button>();
 
         GenerationText = GameObject.Find("GenerationText");
         GenerationTextUI = GenerationText.transform.Find("genText").gameObject.GetComponent<Text>();
@@ -206,15 +213,17 @@ public class GameManager : MonoBehaviour {
 
         if (GameGlobals.firstGeneration)
         {
-            GenerationTextUI.text = "Hello!\n" + "You belong to a First Generation.\n" + "You will start the game with a Planet with the resources of value " + GameGlobals.envState.ToString() + ".\n";
+            GenerationTextUI.text = "Hello!\n" + "You are the first generation in this planet.\n" + "The game will start with average resources " + GameGlobals.envState.ToString() + ".\n";
         }
         else
         {
-            GenerationTextUI.text = "Hello!" + " You belong to a Sixth Generation.\n" + "The previous group of players left the Planet with the resources of value "+GameGlobals.envState.ToString()+".\n" +
+
+            GenerationTextUI.text = "Hello!" + " You are the Sixth Generation in this planet.\n" + "The previous Generations left the planet with average resources of value " + GameGlobals.envState.ToString()+".\n" +
                 "Below, you can see their choices.\n";// + "Take from Common-Pool but if you take too much there will be no next generation.";
         }
 
-        TipsText.text = "You may profit from the resources available. The aggregate of all choices within a group will define the resources available to the next generations.";
+        TipsText.text = "You may profit from the resources available in the planet.\n" + "You and your group will make choices that will define the resources available for the next generations.";
+
 
         GenerationNumberText = GameObject.Find("GenerationNumber");
         GenerationNumberTextUI = GenerationNumberText.transform.Find("genNumText").gameObject.GetComponent<Text>();
@@ -243,8 +252,11 @@ public class GameManager : MonoBehaviour {
                 StartCoroutine(currPlayer.SetMoney(0.1f));
             }
 
+            tutorialScreens.SetActive(false);
             tutorialScreen.SetActive(false);
-            instructions.SetActive(false);
+            tutorialScreen2.SetActive(false);
+            tutorialScreen3.SetActive(false);
+            tutorialScreen4.SetActive(false);
             newRoundScreen.SetActive(false);
             GenerationText.SetActive(false);
             GenerationEnvHistory.SetActive(false);
@@ -286,7 +298,7 @@ public class GameManager : MonoBehaviour {
 
             if (GameGlobals.skipTutorial)
             {
-                tutorialScreen.SetActive(false);
+                tutorialScreens.SetActive(false);
                 newRoundScreen.SetActive(false);
                 ImpactCP.SetActive(false);
                 waitingForPlayers.SetActive(false);
@@ -297,7 +309,11 @@ public class GameManager : MonoBehaviour {
             }
             else
             {
+                tutorialScreens.SetActive(true);
                 tutorialScreen.SetActive(true);
+                tutorialScreen2.SetActive(false);
+                tutorialScreen3.SetActive(false);
+                tutorialScreen4.SetActive(false);
                 newRoundScreen.SetActive(false);
                 ImpactCP.SetActive(false);
                 waitingForPlayers.SetActive(false);
@@ -317,20 +333,35 @@ public class GameManager : MonoBehaviour {
 
             advanceTutorialButton.onClick.AddListener(delegate ()
             {
-                if (tutorialAux) { 
+                if (tutorialAux==1) { 
                     tutorialScreen.SetActive(false);
-                    IntroductionScreen.SetActive(true);
+                    tutorialScreen2.SetActive(true);
                     UIroundSum.SetActive(false);
                     waitingForPlayers.SetActive(false);
                     GenerationText.SetActive(true);
                     if (GameGlobals.firstGeneration) { GenerationEnvHistory.SetActive(false); }
                     else { GenerationEnvHistory.SetActive(true); }
                     ImpactCP.SetActive(false);
+                    tutorialAux = 2;
                 }
-                else
+                else if(tutorialAux==2)
                 {
-                    instructions.SetActive(false);
-                    tutorialAux = true;
+                    tutorialScreen2.SetActive(false);
+                    tutorialScreen3.SetActive(true);
+                    tutorialAux = 3;
+                }
+                else if (tutorialAux == 3)
+                {
+                    tutorialScreen3.SetActive(false);
+                    tutorialScreen4.SetActive(true);
+                    tutorialAux = 4;
+                    advanceTutorialButton.GetComponentInChildren<Text>().text = "Finish Tutorial";
+                }
+                else if (tutorialAux == 4)
+                {
+                    tutorialScreen4.SetActive(false);
+                    tutorialScreens.SetActive(false);
+                    tutorialAux = 5;
                 }
             });
 
@@ -638,8 +669,11 @@ public class GameManager : MonoBehaviour {
                         else { GenerationEnvHistory.SetActive(true); }
                     }
                     else { 
-                        tutorialScreen.SetActive(true);
-                        instructions.SetActive(false);
+                        tutorialScreens.SetActive(true);
+                        tutorialScreen.SetActive(false);
+                        tutorialScreen2.SetActive(false);
+                        tutorialScreen3.SetActive(false);
+                        tutorialScreen4.SetActive(false);
                     }
                 }
             }
@@ -918,11 +952,11 @@ public class GameManager : MonoBehaviour {
 
         UIroundSum.SetActive(true);
         if(this.roundTaken > 0) {
-            roundSumTex.text = "To Take From the Common-Pool: " + this.roundTaken.ToString();/* + "\n" 
+            roundSumTex.text = "Total value to take from the common pool:  " + this.roundTaken.ToString();/* + "\n" 
             + "Impact on the Common-Pool: " + "+" + Convert.ToInt32(GameGlobals.diffCP).ToString();*/
         }
         else{
-            roundSumTex.text = "To Take From the Common-Pool: " + this.roundTaken.ToString();/* + "\n"
+            roundSumTex.text = "Total value to take from the common pool:  " + this.roundTaken.ToString();/* + "\n"
             + "Impact on the Common-Pool: " + Convert.ToInt32(GameGlobals.diffCP).ToString();*/
         }
 

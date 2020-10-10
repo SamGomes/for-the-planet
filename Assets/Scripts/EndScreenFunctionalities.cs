@@ -304,11 +304,11 @@ public class EndScreenFunctionalities : MonoBehaviour
             if(GameGlobals.envStatePerRound[GameGlobals.currGameRoundId - 1]>0)
             {
             summaryText.text = "Winner of the Game: " + GameGlobals.players[WinnerID].GetName() + "!\n" +
-            "You start with 60 and ended with " + GameGlobals.envStatePerRound[GameGlobals.currGameRoundId - 1].ToString();
+            "You started with 60 and ended with " + GameGlobals.envStatePerRound[GameGlobals.currGameRoundId - 1].ToString();
             }
             else
             {
-            summaryText.text = "You start with 60 and ended with 0";
+            summaryText.text = "You started with 60 and ended with 0";
 
 
              }
