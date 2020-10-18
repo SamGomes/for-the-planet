@@ -35,11 +35,11 @@ public static class GameGlobals
 
 
     public static float envState;
+    public static float StartingEnvState;
     public static float envThreshold;
     public static double envRenew;
     public static float envRenewperRound;
     public static int generation;
-    public static Boolean skipTutorial;
     public static Boolean firstGeneration;
     public static List<int> envStatePerRound;
     public static int diffCP = 0;
@@ -47,6 +47,7 @@ public static class GameGlobals
     public static int fairRefPoint; // ((CP/2)/4,5) converter em int
     public static int maxSelfish;
     public static Boolean waitingForPaux;
+    public static string conditionTag;
 
     //fatima stuff
     public static string FAtiMAScenarioPath;

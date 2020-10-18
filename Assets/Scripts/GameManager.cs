@@ -147,7 +147,8 @@ public class GameManager : MonoBehaviour {
 
         gameMainSceneFinished = false;
         phaseEndDelay = 2.0f;
-        GameGlobals.envState = 60; //Common Pool Resource
+        GameGlobals.envState = 30; //Common Pool Resource
+        GameGlobals.StartingEnvState = GameGlobals.envState;
         GameGlobals.envThreshold = GameGlobals.envState / 2;
         GameGlobals.envRenew = 0.5; // At the end of the round the env renew 50%
         GameGlobals.envRenewperRound = 0;
@@ -155,7 +156,8 @@ public class GameManager : MonoBehaviour {
         GameGlobals.fairRefPoint = Convert.ToInt32((GameGlobals.envState / 2) / 4.5);
         GameGlobals.maxSelfish = GameGlobals.fairRefPoint *2;
         GameGlobals.envStatePerRound = new List<int>();
-        GameGlobals.firstGeneration = true;
+        GameGlobals.firstGeneration = false;
+        GameGlobals.conditionTag = "6Ger30";
 
         GameGlobals.waitingForPaux = true;
 
@@ -192,6 +194,10 @@ public class GameManager : MonoBehaviour {
         {
             EnvPhotoUI.sprite = Resources.Load<Sprite>("Textures/Generation/EnvironmentHistoryBad");
         }
+        else if(GameGlobals.envState == 60)
+        {
+            EnvPhotoUI.sprite = Resources.Load<Sprite>("Textures/Generation/EnvironmentHistory");
+        }
         else
         {
             EnvPhotoUI.sprite = Resources.Load<Sprite>("Textures/Generation/EnvironmentHistoryGood");
@@ -218,7 +224,7 @@ public class GameManager : MonoBehaviour {
         else
         {
 
-            GenerationTextUI.text = "Hello!" + " You are the Sixth Generation in this planet.\n" + "The previous Generations left the planet with average resources of value " + GameGlobals.envState.ToString()+".\n" +
+            GenerationTextUI.text = "Hello!" + " You are the Sixth Generation in this planet.\n" + "The previous Generations left the planet with average resources " + GameGlobals.envState.ToString()+".\n" +
                 "Below, you can see their choices.\n";// + "Take from Common-Pool but if you take too much there will be no next generation.";
         }
 
@@ -296,29 +302,17 @@ public class GameManager : MonoBehaviour {
             poppupScreen.SetActive(false);
             BetweenRoundScreen.SetActive(false);
 
-            if (GameGlobals.skipTutorial)
-            {
-                tutorialScreens.SetActive(false);
-                newRoundScreen.SetActive(false);
-                ImpactCP.SetActive(false);
-                waitingForPlayers.SetActive(false);
-                GenerationText.SetActive(true);
-                if (GameGlobals.firstGeneration) { GenerationEnvHistory.SetActive(false);}
-                else { GenerationEnvHistory.SetActive(true); }
-                UIroundSum.SetActive(false);
-            }
-            else
-            {
-                tutorialScreens.SetActive(true);
-                tutorialScreen.SetActive(true);
-                tutorialScreen2.SetActive(false);
-                tutorialScreen3.SetActive(false);
-                tutorialScreen4.SetActive(false);
-                newRoundScreen.SetActive(false);
-                ImpactCP.SetActive(false);
-                waitingForPlayers.SetActive(false);
-                UIroundSum.SetActive(false);
-            }
+            //start tutoriala
+            tutorialScreens.SetActive(true);
+            tutorialScreen.SetActive(true);
+            tutorialScreen2.SetActive(false);
+            tutorialScreen3.SetActive(false);
+            tutorialScreen4.SetActive(false);
+            newRoundScreen.SetActive(false);
+            ImpactCP.SetActive(false);
+            waitingForPlayers.SetActive(false);
+            UIroundSum.SetActive(false);
+            
 
             advanceRoundButton.onClick.AddListener(delegate ()
             {
@@ -479,7 +473,7 @@ public class GameManager : MonoBehaviour {
                     Dictionary<string, string> logEntry = new Dictionary<string, string>()
                     {
                         {"currSessionId", GameGlobals.currSessionId},
-                        {"currGameId", GameGlobals.currGameId.ToString()},
+                        {"currGameId", GameGlobals.conditionTag.ToString()},
                         //{"currRoundId", GameGlobals.currGameRoundId.ToString()},
                         {"generation", GameGlobals.generation.ToString()},
                         {"playerName", player.GetName()},
@@ -661,20 +655,12 @@ public class GameManager : MonoBehaviour {
                 }
                 else
                 {//rever acho que nao necessita do if
-                    if (GameGlobals.skipTutorial) {
-                        IntroductionScreen.SetActive(true);
-                        ImpactCP.SetActive(false);
-                        GenerationText.SetActive(true);
-                        if (GameGlobals.firstGeneration) { GenerationEnvHistory.SetActive(false); }
-                        else { GenerationEnvHistory.SetActive(true); }
-                    }
-                    else { 
-                        tutorialScreens.SetActive(true);
-                        tutorialScreen.SetActive(false);
-                        tutorialScreen2.SetActive(false);
-                        tutorialScreen3.SetActive(false);
-                        tutorialScreen4.SetActive(false);
-                    }
+                   tutorialScreens.SetActive(true);
+                   tutorialScreen.SetActive(false);
+                   tutorialScreen2.SetActive(false);
+                   tutorialScreen3.SetActive(false);
+                   tutorialScreen4.SetActive(false);
+   
                 }
             }
         }

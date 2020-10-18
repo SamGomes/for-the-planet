@@ -182,7 +182,7 @@ public class EndScreenFunctionalities : MonoBehaviour
         Dictionary<string, string> logEntry = new Dictionary<string, string>()
                     {
                         {"currSessionId", GameGlobals.currSessionId},
-                        {"currGameId", GameGlobals.currGameId.ToString()},
+                        {"currGameId", GameGlobals.conditionTag.ToString()},
                         {"generation", GameGlobals.generation.ToString()},
                         {"playerName", GameGlobals.players[WinnerID].GetName().ToString()},
                         {"playerType", endstate},
@@ -304,11 +304,11 @@ public class EndScreenFunctionalities : MonoBehaviour
             if(GameGlobals.envStatePerRound[GameGlobals.currGameRoundId - 1]>0)
             {
             summaryText.text = "Winner of the Game: " + GameGlobals.players[WinnerID].GetName() + "!\n" +
-            "You started with 60 and ended with " + GameGlobals.envStatePerRound[GameGlobals.currGameRoundId - 1].ToString();
+            "You started with " + GameGlobals.StartingEnvState.ToString() + "and ended with " + GameGlobals.envStatePerRound[GameGlobals.currGameRoundId - 1].ToString();
             }
             else
             {
-            summaryText.text = "You started with 60 and ended with 0";
+            summaryText.text = "You started with "+ GameGlobals.StartingEnvState.ToString()+" and ended with 0";
 
 
              }
