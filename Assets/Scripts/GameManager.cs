@@ -27,6 +27,8 @@ public class GameManager : MonoBehaviour {
     public GameObject tutorialScreen2;
     public GameObject tutorialScreen3;
     public GameObject tutorialScreen4;
+    public GameObject tutorialScreen5;
+    public GameObject tutorialScreen6;
     public Button advanceTutorialButton;
     
     public GameObject newRoundScreen;
@@ -147,7 +149,7 @@ public class GameManager : MonoBehaviour {
 
         gameMainSceneFinished = false;
         phaseEndDelay = 2.0f;
-        GameGlobals.envState = 30; //Common Pool Resource
+        GameGlobals.envState = 60; //Common Pool Resource
         GameGlobals.StartingEnvState = GameGlobals.envState;
         GameGlobals.envThreshold = GameGlobals.envState / 2;
         GameGlobals.envRenew = 0.5; // At the end of the round the env renew 50%
@@ -157,7 +159,7 @@ public class GameManager : MonoBehaviour {
         GameGlobals.maxSelfish = GameGlobals.fairRefPoint *2;
         GameGlobals.envStatePerRound = new List<int>();
         GameGlobals.firstGeneration = false;
-        GameGlobals.conditionTag = "6Ger30";
+        GameGlobals.conditionTag = "6Ger60";
 
         GameGlobals.waitingForPaux = true;
 
@@ -263,6 +265,8 @@ public class GameManager : MonoBehaviour {
             tutorialScreen2.SetActive(false);
             tutorialScreen3.SetActive(false);
             tutorialScreen4.SetActive(false);
+            tutorialScreen5.SetActive(false);
+            tutorialScreen6.SetActive(false);
             newRoundScreen.SetActive(false);
             GenerationText.SetActive(false);
             GenerationEnvHistory.SetActive(false);
@@ -308,6 +312,8 @@ public class GameManager : MonoBehaviour {
             tutorialScreen2.SetActive(false);
             tutorialScreen3.SetActive(false);
             tutorialScreen4.SetActive(false);
+            tutorialScreen5.SetActive(false);
+            tutorialScreen6.SetActive(false);
             newRoundScreen.SetActive(false);
             ImpactCP.SetActive(false);
             waitingForPlayers.SetActive(false);
@@ -349,13 +355,25 @@ public class GameManager : MonoBehaviour {
                     tutorialScreen3.SetActive(false);
                     tutorialScreen4.SetActive(true);
                     tutorialAux = 4;
-                    advanceTutorialButton.GetComponentInChildren<Text>().text = "Finish Tutorial";
                 }
                 else if (tutorialAux == 4)
                 {
                     tutorialScreen4.SetActive(false);
-                    tutorialScreens.SetActive(false);
+                    tutorialScreen5.SetActive(true);
                     tutorialAux = 5;
+                }
+                else if (tutorialAux == 5)
+                {
+                    tutorialScreen5.SetActive(false);
+                    tutorialScreen6.SetActive(true);
+                    tutorialAux = 6;
+                    advanceTutorialButton.GetComponentInChildren<Text>().text = "Finish Tutorial";
+                }
+                else if (tutorialAux == 6)
+                {
+                    tutorialScreen6.SetActive(false);
+                    tutorialScreens.SetActive(false);
+                    tutorialAux = 7;
                 }
             });
 
@@ -660,7 +678,9 @@ public class GameManager : MonoBehaviour {
                    tutorialScreen2.SetActive(false);
                    tutorialScreen3.SetActive(false);
                    tutorialScreen4.SetActive(false);
-   
+                   tutorialScreen5.SetActive(false);
+                   tutorialScreen6.SetActive(false);
+
                 }
             }
         }
@@ -1002,6 +1022,7 @@ public class GameManager : MonoBehaviour {
         GameGlobals.diffCP = 0;
         GameGlobals.impactOnCP = "";
         GameGlobals.fairRefPoint = Convert.ToInt32(GameGlobals.envState / 9);
+        if (GameGlobals.fairRefPoint >= 13) { GameGlobals.fairRefPoint = 13; }
         GameGlobals.maxSelfish = GameGlobals.fairRefPoint * 2;
         if (GameGlobals.maxSelfish > 14) { GameGlobals.maxSelfish = 14; }
     }

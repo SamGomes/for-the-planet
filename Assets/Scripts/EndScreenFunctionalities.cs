@@ -214,6 +214,7 @@ public class EndScreenFunctionalities : MonoBehaviour
                 GameObject newTableEntry = Object.Instantiate(tableEntryPrefab, environmentContributionsTableUI.transform);
                 if(p.GetId() == this.WinnerID && p.GetId() == 0)
                 {
+                    newTableEntry.GetComponentsInChildren<Image>()[0].sprite = Resources.Load<Sprite>("Textures/Generation/player_icon");
                     newTableEntry.GetComponentsInChildren<Text>()[0].text = p.GetName() + " (YOU)";
                     newTableEntry.GetComponentsInChildren<Text>()[0].color = Color.yellow;
                     newTableEntry.GetComponentsInChildren<Text>()[0].fontStyle = FontStyle.Bold;
@@ -221,19 +222,35 @@ public class EndScreenFunctionalities : MonoBehaviour
                 else if(p.GetId() == 0)
                 {
                     newTableEntry.GetComponentsInChildren<Text>()[0].text = p.GetName() + "(YOU)";
+                    newTableEntry.GetComponentsInChildren<Image>()[0].sprite = Resources.Load<Sprite>("Textures/Generation/player_icon");
                 }
 
-                else if (p.GetId() == this.WinnerID)
+                else if (p.GetId() == this.WinnerID && p.GetId() == 1)
                 {
                     newTableEntry.GetComponentsInChildren<Text>()[0].text = p.GetName();
                     newTableEntry.GetComponentsInChildren<Text>()[0].color = Color.yellow;
+                    newTableEntry.GetComponentsInChildren<Image>()[0].sprite = Resources.Load<Sprite>("Textures/Generation/player_icon_red");
                 }
 
-                else {
+                else if (p.GetId() == this.WinnerID && p.GetId() == 2)
+                {
+                    newTableEntry.GetComponentsInChildren<Text>()[0].text = p.GetName();
+                    newTableEntry.GetComponentsInChildren<Text>()[0].color = Color.yellow;
+                    newTableEntry.GetComponentsInChildren<Image>()[0].sprite = Resources.Load<Sprite>("Textures/Generation/player_icon_blue");
+                }
+
+                else if (p.GetId() == 1){
+                     newTableEntry.GetComponentsInChildren<Image>()[0].sprite = Resources.Load<Sprite>("Textures/Generation/player_icon_red");
+                     newTableEntry.GetComponentsInChildren<Text>()[0].text = p.GetName();
+
+                 }
+                else if (p.GetId() == 2)
+                {
+                    newTableEntry.GetComponentsInChildren<Image>()[0].sprite = Resources.Load<Sprite>("Textures/Generation/player_icon_blue");
                     newTableEntry.GetComponentsInChildren<Text>()[0].text = p.GetName();
 
                 }
-                
+
                 for (int i = 0; i < GameProperties.configurableProperties.maxNumRounds; i++)
                 {
                     if (i < p.environmentInvestmentPerRound.Count)
@@ -255,6 +272,7 @@ public class EndScreenFunctionalities : MonoBehaviour
             newTableEntry.GetComponentsInChildren<Text>()[11].text = p.gains.ToString();
             }
             GameObject newDummyLineEntry = Object.Instantiate(tableEntryPrefab, environmentContributionsTableUI.transform);
+            newDummyLineEntry.GetComponentsInChildren<Image>()[0].enabled = false;
             newDummyLineEntry.GetComponentsInChildren<Text>()[0].text = "";
             newDummyLineEntry.GetComponentsInChildren<Text>()[1].text = "";
             newDummyLineEntry.GetComponentsInChildren<Text>()[2].text = "";
@@ -267,11 +285,13 @@ public class EndScreenFunctionalities : MonoBehaviour
             newDummyLineEntry.GetComponentsInChildren<Text>()[9].text = "";
             newDummyLineEntry.GetComponentsInChildren<Text>()[10].text = "";
             newDummyLineEntry.GetComponentsInChildren<Text>()[11].text = "";
+            
 
             GameObject environmentEntry = Object.Instantiate(tableEntryPrefab, environmentContributionsTableUI.transform);
             Text textGameObject = environmentEntry.GetComponentsInChildren<Text>()[0];
             textGameObject.text = "ENVIRONMENT";
             environmentEntry.GetComponentsInChildren<Text>()[11].text = "";
+            environmentEntry.GetComponentsInChildren<Image>()[0].enabled = false;
             textGameObject.fontStyle = FontStyle.Bold;
             for (int i = 0; i < GameProperties.configurableProperties.maxNumRounds; i++)
             {
@@ -299,16 +319,16 @@ public class EndScreenFunctionalities : MonoBehaviour
                 }
 
             }
-        SendLastMongo();
+            SendLastMongo();
             summaryText = GameObject.Find("SummaryText").GetComponent<Text>();
             if(GameGlobals.envStatePerRound[GameGlobals.currGameRoundId - 1]>0)
             {
             summaryText.text = "Winner of the Game: " + GameGlobals.players[WinnerID].GetName() + "!\n" +
-            "You started with " + GameGlobals.StartingEnvState.ToString() + "and ended with " + GameGlobals.envStatePerRound[GameGlobals.currGameRoundId - 1].ToString();
+            "Your Team started with " + GameGlobals.StartingEnvState.ToString() + " in the common-pool\n and finished with " + GameGlobals.envStatePerRound[GameGlobals.currGameRoundId - 1].ToString();
             }
             else
             {
-            summaryText.text = "You started with "+ GameGlobals.StartingEnvState.ToString()+" and ended with 0";
+            summaryText.text = "Your Team started with " + GameGlobals.StartingEnvState.ToString() + " in the common-pool\n and finished with zero";
 
 
              }
