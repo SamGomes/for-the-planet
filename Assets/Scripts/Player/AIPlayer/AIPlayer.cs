@@ -252,7 +252,7 @@ public class AIPlayerTitForTat : AIPlayer
         //last play of the player with +1 -1 diff
         else
         {
-            int environmentInvestment = OtherPlayersAvgLastMove(this.id) + UnityEngine.Random.Range(-1, 2);
+            int environmentInvestment = GameGlobals.players[0].environmentInvestmentPerRound[GameGlobals.currGameRoundId - 1] + UnityEngine.Random.Range(-1, 2);
             if(environmentInvestment == 15) { environmentInvestment = 14; }
             if (environmentInvestment == -1) { environmentInvestment = 0; }
             int economyInvestment = GameGlobals.roundBudget - environmentInvestment;

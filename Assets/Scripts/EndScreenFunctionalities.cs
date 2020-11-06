@@ -136,7 +136,8 @@ public class EndScreenFunctionalities : MonoBehaviour
     {
         foreach (Player p in GameGlobals.players)
         {
-            p.gains -= p.environmentInvestmentPerRound[this.lastRound-1];
+            //p.gains -= p.environmentInvestmentPerRound[this.lastRound-1];
+            p.gains = 0;
         }
     }
 
@@ -170,7 +171,7 @@ public class EndScreenFunctionalities : MonoBehaviour
             EndenvState = System.Convert.ToInt32(GameGlobals.envState);
         }
         string endstate;
-        if (System.Convert.ToInt32(GameGlobals.envState) < GameGlobals.envThreshold)
+        if (System.Convert.ToInt32(GameGlobals.envState) <= 0)
         {
             endstate = "LOSER";
         }
@@ -301,7 +302,7 @@ public class EndScreenFunctionalities : MonoBehaviour
                     textGameObject.text = GameGlobals.envStatePerRound[i].ToString();
                     textGameObject.fontStyle = FontStyle.Bold;
 
-                    if (GameGlobals.envStatePerRound[i] < GameGlobals.envThreshold)
+                    if (GameGlobals.envStatePerRound[i] <= 0)
                     {
                         textGameObject.color = Color.red;
                     }

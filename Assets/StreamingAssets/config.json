@@ -17,19 +17,19 @@
             "gameParameterizations": [{
                 "diceLogic": "RANDOM",
                 "playerParameterizations": [{
-                        "name": "Player 251",
+                        "name": "Black Player",
                         "fatimaRpcPath": "NONE",
                         "playerType": "HUMAN",
                         "interactionType": "NONE"
                     },
                     {
-                        "name": "Player 541",
+                        "name": "Red Player",
                         "fatimaRpcPath": "NONE",
                         "playerType": "AI-FAIR",
                         "interactionType": "NONE"
                     },
                     {
-                        "name": "Player 76",
+                        "name": "Blue Player",
                         "fatimaRpcPath": "NONE",
                         "playerType": "AI-TIT-FOR-TAT",
                         "interactionType": "NONE"
