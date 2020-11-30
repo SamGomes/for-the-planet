@@ -185,7 +185,7 @@ public class EndScreenFunctionalities : MonoBehaviour
                         {"currSessionId", GameGlobals.currSessionId},
                         {"currGameId", GameGlobals.conditionTag.ToString()},
                         {"generation", GameGlobals.generation.ToString()},
-                        {"playerName", GameGlobals.players[WinnerID].GetName().ToString()},
+                        {"playerName", GameGlobals.workerId},
                         {"playerType", endstate},
                         {"playerTookFromCP", "LASTROUND"},
                         {"playerGain", GameGlobals.players[WinnerID].GetGains().ToString()},
@@ -270,7 +270,7 @@ public class EndScreenFunctionalities : MonoBehaviour
                         newTableEntry.GetComponentsInChildren<Text>()[i + 1].text = "-";
                     }
                 }
-            newTableEntry.GetComponentsInChildren<Text>()[11].text = p.gains.ToString();
+            newTableEntry.GetComponentsInChildren<Text>()[5].text = p.gains.ToString();
             }
             GameObject newDummyLineEntry = Object.Instantiate(tableEntryPrefab, environmentContributionsTableUI.transform);
             newDummyLineEntry.GetComponentsInChildren<Image>()[0].enabled = false;
@@ -280,18 +280,12 @@ public class EndScreenFunctionalities : MonoBehaviour
             newDummyLineEntry.GetComponentsInChildren<Text>()[3].text = "";
             newDummyLineEntry.GetComponentsInChildren<Text>()[4].text = "";
             newDummyLineEntry.GetComponentsInChildren<Text>()[5].text = "";
-            newDummyLineEntry.GetComponentsInChildren<Text>()[6].text = "";
-            newDummyLineEntry.GetComponentsInChildren<Text>()[7].text = "";
-            newDummyLineEntry.GetComponentsInChildren<Text>()[8].text = "";
-            newDummyLineEntry.GetComponentsInChildren<Text>()[9].text = "";
-            newDummyLineEntry.GetComponentsInChildren<Text>()[10].text = "";
-            newDummyLineEntry.GetComponentsInChildren<Text>()[11].text = "";
             
 
             GameObject environmentEntry = Object.Instantiate(tableEntryPrefab, environmentContributionsTableUI.transform);
             Text textGameObject = environmentEntry.GetComponentsInChildren<Text>()[0];
             textGameObject.text = "ENVIRONMENT";
-            environmentEntry.GetComponentsInChildren<Text>()[11].text = "";
+            environmentEntry.GetComponentsInChildren<Text>()[5].text = "";
             environmentEntry.GetComponentsInChildren<Image>()[0].enabled = false;
             textGameObject.fontStyle = FontStyle.Bold;
             for (int i = 0; i < GameProperties.configurableProperties.maxNumRounds; i++)
@@ -302,11 +296,11 @@ public class EndScreenFunctionalities : MonoBehaviour
                     textGameObject.text = GameGlobals.envStatePerRound[i].ToString();
                     textGameObject.fontStyle = FontStyle.Bold;
 
-                    if (GameGlobals.envStatePerRound[i] <= 0)
+                    if (GameGlobals.envStatePerRound[i] <30)
                     {
                         textGameObject.color = Color.red;
                     }
-                    else if (i == GameProperties.configurableProperties.maxNumRounds - 1)
+                    else
                     {
                         textGameObject.color = Color.green;
                     }
@@ -322,18 +316,9 @@ public class EndScreenFunctionalities : MonoBehaviour
             }
             SendLastMongo();
             summaryText = GameObject.Find("SummaryText").GetComponent<Text>();
-            if(GameGlobals.envStatePerRound[GameGlobals.currGameRoundId - 1]>0)
-            {
-            summaryText.text = "Winner of the Game: " + GameGlobals.players[WinnerID].GetName() + "!\n" +
-            "Your Team started with " + GameGlobals.StartingEnvState.ToString() + " in the common-pool\n and finished with " + GameGlobals.envStatePerRound[GameGlobals.currGameRoundId - 1].ToString();
-            }
-            else
-            {
-            summaryText.text = "Your Team started with " + GameGlobals.StartingEnvState.ToString() + " in the common-pool\n and finished with zero";
+            summaryText.text = "Insert the session ID in the follow-up Questionnaire, to correctly receive your payment.\n";
+            summaryText.text += "Session ID: " + GameGlobals.currSessionId;// +
 
-
-             }
-            //summaryText.text += "\n" + "YOU WON";
         /*
         else
         {
@@ -407,24 +392,25 @@ public class EndScreenFunctionalities : MonoBehaviour
             lossBackgroundUI.SetActive(false);
 
             mainScene.SetActive(false);
+            victoryBackgroundUI.SetActive(true);
+            /*            if (GameGlobals.currGameState == GameProperties.GameState.VICTORY)
+                        {
+                            victoryOverlayUI.SetActive(true);
+                            victoryBackgroundUI.SetActive(true);
+                        }
+                        else if (GameGlobals.currGameState == GameProperties.GameState.LOSS)
+                        {
+                            lossOverlayUI.SetActive(true);
+                            lossBackgroundUI.SetActive(true);
 
-            if (GameGlobals.currGameState == GameProperties.GameState.VICTORY)
-            {
-                victoryOverlayUI.SetActive(true);
-                victoryBackgroundUI.SetActive(true);
-            }
-            else if (GameGlobals.currGameState == GameProperties.GameState.LOSS)
-            {
-                lossOverlayUI.SetActive(true);
-                lossBackgroundUI.SetActive(true);
-
-            }
-            else
-            {
-                Debug.Log("[ERROR]: Game state returned NON FINISHED on game end!");
-                yield break;
-            }
-            StartCoroutine(LoadMainScreenAfterDelay(5.0f));
+                        }
+                        else
+                        {
+                            Debug.Log("[ERROR]: Game state returned NON FINISHED on game end!");
+                            yield break;
+            }*/
+            //StartCoroutine(LoadMainScreenAfterDelay(5.0f));
+            LoadEndScreenUIElements();
         }
     }
 

@@ -38,6 +38,8 @@ public class StartScreenFunctionalities : MonoBehaviour {
     public GameObject UIGameCodeDisplayPrefab;
     public GameObject monoBehaviourDummyPrefab;
 
+    public InputField workerID;
+
     private int autoSessionConfigurationIndex;
 
     [DllImport("__Internal")]
@@ -192,7 +194,7 @@ public class StartScreenFunctionalities : MonoBehaviour {
         {
             autoSessionConfigurationIndex = (((int)lastConditionIndex) +1) % (possibleConditions.Count);
             GameProperties.currSessionParameterization = GameProperties.configurableProperties.possibleParameterizations[autoSessionConfigurationIndex];
-            if (GameGlobals.currGameId == 1) GameGlobals.currSessionId += GameProperties.currSessionParameterization.id; //session code with last digit being the condition if any
+            //if (GameGlobals.currGameId == 1) GameGlobals.currSessionId += GameProperties.currSessionParameterization.id; //session code with last digit being the condition if any
         }
         return 0;
     }
@@ -200,6 +202,8 @@ public class StartScreenFunctionalities : MonoBehaviour {
     
     private void StartGame()
     {
+        workerID = GameObject.Find("workerID").GetComponent<InputField>();
+        GameGlobals.workerId = this.workerID.text;
         GameGlobals.gameSceneManager.LoadPlayersSetupScene();
     }
 

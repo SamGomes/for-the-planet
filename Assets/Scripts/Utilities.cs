@@ -19,6 +19,8 @@ public static class GameGlobals
     public static int currGameRoundId;
     public static string currGameCondition;
 
+    public static string workerId;
+
     public static GameProperties.GameState currGameState;
 
     public static int numberOfSpeakingPlayers;
@@ -41,6 +43,8 @@ public static class GameGlobals
     public static float envRenewperRound;
     public static int generation;
     public static Boolean firstGeneration;
+    public static Boolean ruinedPlanet;
+    public static Boolean informationOfGeneration;
     public static List<int> envStatePerRound;
     public static int diffCP = 0;
     public static string impactOnCP;

@@ -11,7 +11,7 @@ public class DynamicSlider
     private GameObject valueUpdateUIdown;
     private Slider sliderUI;
     private Text sliderUITextLabel;
-    public Text sliderMaxValueText;
+    //public Text sliderMaxValueText;
 
     public DynamicSlider(GameObject dynamicSliderUI)
     {
@@ -20,7 +20,7 @@ public class DynamicSlider
         valueUpdateUIdown = this.dynamicSliderUI.transform.Find("valueUpdateUI/down").gameObject;
         sliderUI = this.dynamicSliderUI.transform.GetComponent<Slider>();
         sliderUITextLabel = null;
-        sliderMaxValueText = null;
+        //sliderMaxValueText = null;
         valueUpdateUIup.SetActive(false);
         valueUpdateUIdown.SetActive(false);
     }
@@ -57,14 +57,14 @@ public class DynamicSlider
         {
             sliderUITextLabel = null;
         }
-        if (sliderWithMaxLabel)
+        /*if (sliderWithMaxLabel)
         {
             sliderMaxValueText = sliderUI.transform.Find("HandleSlideArea/MaxPick/MaxValueText").GetComponent<Text>();
         }
         else
         {
             sliderMaxValueText = null;
-        }
+        }*/
         valueUpdateUIup.SetActive(false);
         valueUpdateUIdown.SetActive(false);
     }
@@ -74,7 +74,7 @@ public class DynamicSlider
         return sliderUI.value;
     }
 
-    public void UpdateSliderMaxValue(float SliderValue)
+    /*public void UpdateSliderMaxValue(float SliderValue)
     {
         if (SliderValue > (0.8*sliderUI.maxValue))
         {
@@ -82,11 +82,11 @@ public class DynamicSlider
             sliderUI.maxValue *= 2;
             sliderMaxValueText.text = sliderUI.maxValue.ToString();
         }
-    }
+    }*/
 
     public IEnumerator UpdateSliderValue(float targetSliderValue,Boolean arrows)
     {
-        UpdateSliderMaxValue(targetSliderValue);
+        //UpdateSliderMaxValue(targetSliderValue);
         if (GameGlobals.isSimulation)
         {
             sliderUI.value = targetSliderValue;

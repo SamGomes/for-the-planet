@@ -1,5 +1,5 @@
     {
-    "maxNumRounds": 10,
+    "maxNumRounds": 4,
 	
 	"logManagerStyle": "DEBUG",
 	"mongoConnector": "mongodb+srv://admin:admin@fortheplanet-ya50d.mongodb.net/fortheplanetlog?retryWrites=true&w=majority",
@@ -8,7 +8,7 @@
     "isSimulation": false,
     "numGamesToPlay": 35,
 
-    "roundBudget": 14,
+    "roundBudget": 20,
     "environmentDecayBudget": [7,7],
     "playerDecayBudget": [2,2],
 
@@ -31,7 +31,7 @@
                     {
                         "name": "Blue Player",
                         "fatimaRpcPath": "NONE",
-                        "playerType": "AI-TIT-FOR-TAT",
+                        "playerType": "AI-FAIR",
                         "interactionType": "NONE"
                     }
                 ],

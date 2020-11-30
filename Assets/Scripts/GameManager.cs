@@ -8,8 +8,9 @@ using System.Globalization;
 using System.Threading;
 using System;
 
-public class GameManager : MonoBehaviour {
-    
+public class GameManager : MonoBehaviour
+{
+
     public GameObject canvas;
 
     private int numPlayersToAllocateBudget;
@@ -31,7 +32,7 @@ public class GameManager : MonoBehaviour {
     public GameObject tutorialScreen6;
     public GameObject tutorialScreen7;
     public Button advanceTutorialButton;
-    
+
     public GameObject GenerationText;
     public GameObject FirstGenerationText;
     public GameObject GenerationNumberText;
@@ -40,6 +41,7 @@ public class GameManager : MonoBehaviour {
     public GameObject waitingForPlayers;
     public GameObject BetweenRoundScreen;
     public GameObject IntroductionScreen;
+    public GameObject InformationScreen;
 
     public GameObject StartGameButtonObject;
     public Button NextInstructionsButton;
@@ -48,11 +50,21 @@ public class GameManager : MonoBehaviour {
     public GameObject ImpactCP;
     public Text ImpactCPtext;
 
+    //Transition between rounds
     public GameObject UIroundSum;
     public Text roundSumTex;
+    public GameObject NewGenerationScreen;
+    public Text NewGenerationText;
+    public Image InformationGen;
+
+    public GameObject victoryOverlayUI;
+    public GameObject lossOverlayUI;
+    public Boolean GenerationResult;
 
     public Button passRoundButton;
     public Button newRoundButton;
+    public Button NewGenerationButton;
+    public Button PassInformationButton;
 
     public GameObject rollDiceOverlay;
     public GameObject diceUIPrefab;
@@ -73,12 +85,13 @@ public class GameManager : MonoBehaviour {
 
     private bool gameMainSceneFinished;
     private int interruptionRequests; //changed whenever an interruption occurs (either a poppup, warning, etc.)
-    
+
     private int currPlayerIndex;
     private float phaseEndDelay;
 
     public int roundTaken = 0;
     public Boolean stopbugButton = false;
+
 
     private int marketLimit;
     private int currNumberOfMarketDices;
@@ -105,7 +118,8 @@ public class GameManager : MonoBehaviour {
         return 0;
     }
 
-    IEnumerator WaitingForAIPlayers() {
+    IEnumerator WaitingForAIPlayers()
+    {
 
         GenerationText.SetActive(false);
         GenerationEnvHistory.SetActive(false);
@@ -151,19 +165,23 @@ public class GameManager : MonoBehaviour {
 
         gameMainSceneFinished = false;
         phaseEndDelay = 2.0f;
-        GameGlobals.envState = 90; //Common Pool Resource
+        GameGlobals.envState = 60; //Common Pool Resource
         GameGlobals.StartingEnvState = GameGlobals.envState;
         GameGlobals.envThreshold = GameGlobals.envState / 2;
-        GameGlobals.envRenew = 0.5; // At the end of the round the env renew 50%
-        GameGlobals.envRenewperRound = 0;
-        GameGlobals.roundBudget = 14;
+        //GameGlobals.envRenew = 0.5; // At the end of the round the env renew 50%
+        //GameGlobals.envRenewperRound = 0;
+        GameGlobals.roundBudget = 20;
         GameGlobals.fairRefPoint = Convert.ToInt32((GameGlobals.envState / 2) / 4.5);
-        GameGlobals.maxSelfish = GameGlobals.fairRefPoint *2;
+        GameGlobals.maxSelfish = GameGlobals.fairRefPoint * 2;
         GameGlobals.envStatePerRound = new List<int>();
-        GameGlobals.firstGeneration = false;
-        GameGlobals.conditionTag = "10Ger90";
-
         GameGlobals.waitingForPaux = true;
+
+        //Study Conditions
+        GameGlobals.firstGeneration = false;
+        GameGlobals.ruinedPlanet = false;
+        GameGlobals.informationOfGeneration = true;
+        GameGlobals.conditionTag = "InterGenGoodPlanetInfo";
+
 
         GameGlobals.callMongoLogServer = gameObject.AddComponent<CallMongoLogServer>();
 
@@ -173,7 +191,7 @@ public class GameManager : MonoBehaviour {
         }
         else
         {
-            GameGlobals.generation = 10;
+            GameGlobals.generation = 4;
         }
 
 
@@ -181,9 +199,12 @@ public class GameManager : MonoBehaviour {
 
         tutorialScreens = GameObject.Find("TutorialScreens");
         tutorialScreen = GameObject.Find("TutorialScreen");
-        tutorialScreen = GameObject.Find("TutorialScreen2");
-        tutorialScreen = GameObject.Find("TutorialScreen3");
-        tutorialScreen = GameObject.Find("TutorialScreen4");
+        tutorialScreen2 = GameObject.Find("TutorialScreen2");
+        tutorialScreen3 = GameObject.Find("TutorialScreen3");
+        tutorialScreen4 = GameObject.Find("TutorialScreen4");
+        tutorialScreen5 = GameObject.Find("TutorialScreen5");
+        tutorialScreen6 = GameObject.Find("TutorialScreen6");
+        tutorialScreen7 = GameObject.Find("TutorialScreen7");
         int tutorialAux = 1;
         advanceTutorialButton = tutorialScreens.transform.Find("advanceTutorialButton").gameObject.GetComponent<Button>();
         GenerationText = GameObject.Find("TenthGenerationText");
@@ -196,23 +217,14 @@ public class GameManager : MonoBehaviour {
         GenerationEnvHistory = GameObject.Find("EnvHistory");
         EnvPhotoUI = GenerationEnvHistory.GetComponent<Image>();
 
-        if (GameGlobals.envState<60)
-        {
-            EnvPhotoUI.sprite = Resources.Load<Sprite>("Textures/Generation/EnvironmentHistoryBad");
-        }
-        else if(GameGlobals.envState == 60)
-        {
-            EnvPhotoUI.sprite = Resources.Load<Sprite>("Textures/Generation/EnvironmentHistory");
-        }
-        else
-        {
-            EnvPhotoUI.sprite = Resources.Load<Sprite>("Textures/Generation/EnvironmentHistoryGood");
-        }
+        NewGenerationScreen = GameObject.Find("NewGenerationScreen");
+        NewGenerationText = GameObject.Find("NewGenerationText").transform.Find("Text").gameObject.GetComponent<Text>();
+        NewGenerationButton = NewGenerationScreen.transform.Find("NewGenerationButton").gameObject.GetComponent<Button>();
 
 
         passRoundButton = GameObject.Find("passRoundButton").GetComponent<Button>();
         passRoundButton.gameObject.SetActive(false);
-        
+
         newRoundButton = GameObject.Find("newRoundButton").GetComponent<Button>();
 
         waitingForPlayers = GameObject.Find("WaitingForPlayers");
@@ -221,8 +233,14 @@ public class GameManager : MonoBehaviour {
 
         BetweenRoundScreen = GameObject.Find("BetweenRoundScreen");
         IntroductionScreen = GameObject.Find("IntroductionScreen");
-        StartGameButtonObject = GameObject.Find("StartGameButtonObject"); 
+        StartGameButtonObject = GameObject.Find("StartGameButtonObject");
         NextInstructionsButton = StartGameButtonObject.transform.Find("NextInstructionsButton").gameObject.GetComponent<Button>();
+
+        InformationScreen = GameObject.Find("InformationScreen");
+        PassInformationButton = InformationScreen.transform.Find("PassInformationButton").gameObject.GetComponent<Button>();
+        InformationGen = InformationScreen.transform.Find("InformationGen").gameObject.GetComponent<Image>();
+
+
 
         if (GameGlobals.firstGeneration)
         {
@@ -236,27 +254,31 @@ public class GameManager : MonoBehaviour {
             FirstGenerationText.SetActive(false);
             GenerationEnvHistory.SetActive(false);
             StartGameButtonObject.SetActive(false);
-            GenerationTextUI.text = "Hello!" + " You are the tenth Generation in this planet.\n" + "The previous Generations left the planet with average resources " + GameGlobals.envState.ToString()+".\n" +
-                "You can see their choices on the next graphic.\n";// + "Take from Common-Pool but if you take too much there will be no next generation.";
+            EnvPhotoUI.sprite = Resources.Load<Sprite>("Textures/Generation/Information1");
+            GenerationTextUI.text = "Hello!\n" + "You are an intermediate generation in this planet.\n" + "The previous Generations preserved the planet until this generation.\n You can see how the previous generations played this game.";// + "Take from Common-Pool but if you take too much there will be no next generation.";
         }
 
 
         GenerationNumberText = GameObject.Find("GenerationNumber");
         GenerationNumberTextUI = GenerationNumberText.transform.Find("genNumText").gameObject.GetComponent<Text>();
-        GenerationNumberTextUI.text = "Generation: "+ GameGlobals.generation.ToString();
         GenPhotoUI = GenerationNumberText.transform.Find("GenPhoto").gameObject.GetComponent<Image>();
-
-        firstGenPhoto = Resources.Load<Sprite>("Textures/Generation/1stgen_icon");
+        if (GameGlobals.firstGeneration){ GenerationNumberTextUI.text = "First Generation";
+            firstGenPhoto = Resources.Load<Sprite>("Textures/Generation/1stgen_icon");
+        }
+        else { GenerationNumberTextUI.text = "Intermediate Generation";
+            firstGenPhoto = Resources.Load<Sprite>("Textures/Generation/2ndgen_icon");
+        }      
+        
         GenPhotoUI.sprite = firstGenPhoto;
 
         UIroundSum = GameObject.Find("roundSumUI");
         roundSumTex = UIroundSum.transform.Find("roundSumTex").gameObject.GetComponent<Text>();
 
         ImpactCP = GameObject.Find("ImpactCP");
-        ImpactCPtext = ImpactCP.transform.Find("ImpactCPtext").gameObject.GetComponent<Text>();
+        ImpactCPtext = ImpactCP.transform.Find("Text").gameObject.GetComponent<Text>();
 
         int numPlayers = GameGlobals.players.Count;
-        
+
         // @jbgrocha: Auto Continue for Batch Mode
         Player currPlayer = null;
         if (GameGlobals.isSimulation)
@@ -269,20 +291,14 @@ public class GameManager : MonoBehaviour {
             }
 
             tutorialScreens.SetActive(false);
-            tutorialScreen.SetActive(false);
-            tutorialScreen2.SetActive(false);
-            tutorialScreen3.SetActive(false);
-            tutorialScreen4.SetActive(false);
-            tutorialScreen5.SetActive(false);
-            tutorialScreen6.SetActive(false);
-            tutorialScreen7.SetActive(false);
             GenerationText.SetActive(false);
             GenerationEnvHistory.SetActive(false);
             waitingForPlayers.SetActive(false);
             UIroundSum.SetActive(false);
             poppupScreen.SetActive(false);
             BetweenRoundScreen.SetActive(false);
-            ImpactCP.SetActive(false);
+            NewGenerationScreen.SetActive(false);
+            InformationScreen.SetActive(false);
             StartGameRoundForAllPlayers();
         }
         else
@@ -294,8 +310,8 @@ public class GameManager : MonoBehaviour {
                 currPlayer.ReceiveGameManager(this);
                 StartCoroutine(currPlayer.SetMoney(0.1f));
 
-                
-                
+
+
 
                 //Setup warnings
                 currPlayer.GetWarningScreenRef().AddOnShow(InterruptGame);
@@ -307,7 +323,7 @@ public class GameManager : MonoBehaviour {
             GameGlobals.players[2].SetFace(Resources.Load<Sprite>("Textures/Generation/player_icon_blue"));
 
             envDynamicSlider = new DynamicSlider(environmentSliderSceneElement.gameObject, true, true);
-            StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState,true));
+            StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState, true));
             DontDestroyOnLoad(CommonAreaUI);
 
             rollDiceOverlay.SetActive(false);
@@ -323,10 +339,11 @@ public class GameManager : MonoBehaviour {
             tutorialScreen5.SetActive(false);
             tutorialScreen6.SetActive(false);
             tutorialScreen7.SetActive(false);
-            ImpactCP.SetActive(false);
             waitingForPlayers.SetActive(false);
             UIroundSum.SetActive(false);
-            
+            NewGenerationScreen.SetActive(false);
+            InformationScreen.SetActive(false);
+
 
             NextInstructionsButton.onClick.AddListener(delegate ()
             {
@@ -343,7 +360,8 @@ public class GameManager : MonoBehaviour {
 
             advanceTutorialButton.onClick.AddListener(delegate ()
             {
-                if (tutorialAux==1) { 
+                if (tutorialAux == 1)
+                {
                     tutorialScreen.SetActive(false);
                     tutorialScreen2.SetActive(true);
                     UIroundSum.SetActive(false);
@@ -353,7 +371,7 @@ public class GameManager : MonoBehaviour {
                     ImpactCP.SetActive(false);
                     tutorialAux = 2;
                 }
-                else if(tutorialAux==2)
+                else if (tutorialAux == 2)
                 {
                     tutorialScreen2.SetActive(false);
                     tutorialScreen3.SetActive(true);
@@ -396,11 +414,69 @@ public class GameManager : MonoBehaviour {
             newRoundButton.onClick.AddListener(delegate ()
             {
                 BetweenRoundScreen.SetActive(false);
-                ImpactCP.SetActive(false);
-                StartGameRoundForAllPlayers();
+                if (GameGlobals.firstGeneration &&  GameGlobals.generation == 9)
+                {
+                    GameGlobals.currGameState = GameProperties.GameState.VICTORY;
+                    GameGlobals.gameSceneManager.LoadEndScene();
+                }
+                else if (!GameGlobals.firstGeneration && GameGlobals.generation == 12)
+                {
+                    GameGlobals.currGameState = GameProperties.GameState.VICTORY;
+                    GameGlobals.gameSceneManager.LoadEndScene();
+                }
+                else
+                {
+                    ResetCommonPot();
+                }
             });
 
-            simulateEvolutionButton.onClick.AddListener(delegate()
+            NewGenerationButton.onClick.AddListener(delegate ()
+            {
+                NewGenerationScreen.SetActive(false);
+                
+                if(GameGlobals.informationOfGeneration == false) { 
+                    if (GameGlobals.ruinedPlanet && GameGlobals.generation == 4)
+                    {
+                        GameGlobals.currGameRoundId++;
+                        GameGlobals.envStatePerRound.Add(0);
+                        foreach (Player p in GameGlobals.players)
+                        {
+                            p.environmentInvestmentPerRound.Add(0);
+                        }
+                        ResetCommonPot();
+                    }
+                    else
+                    {
+                        StartGameRoundForAllPlayers();
+                    }
+                }
+                else
+                {
+                    ChangeGraphInformation();
+                    InformationScreen.SetActive(true);
+                }
+            });
+
+            PassInformationButton.onClick.AddListener(delegate ()
+            {
+                InformationScreen.SetActive(false);
+                if (GameGlobals.ruinedPlanet && GameGlobals.generation == 4)
+                {
+                    GameGlobals.currGameRoundId++;
+                    GameGlobals.envStatePerRound.Add(0);
+                    foreach (Player p in GameGlobals.players)
+                    {
+                        p.environmentInvestmentPerRound.Add(0);
+                    }
+                    ResetCommonPot();
+                }
+                else
+                {
+                    StartGameRoundForAllPlayers();
+                }
+            });
+
+            simulateEvolutionButton.onClick.AddListener(delegate ()
             {
                 simulateInvestmentScreen.SetActive(false);
                 StartInvestmentSimulationPhase();
@@ -411,7 +487,7 @@ public class GameManager : MonoBehaviour {
             Button[] allButtons = FindObjectsOfType<Button>();
             foreach (Button button in allButtons)
             {
-                button.onClick.AddListener(delegate() { GameGlobals.audioManager.PlayClip("Audio/snap"); });
+                button.onClick.AddListener(delegate () { GameGlobals.audioManager.PlayClip("Audio/snap"); });
             }
 
             if (!GameGlobals.isSimulation && GameGlobals.isNarrated)
@@ -435,30 +511,30 @@ public class GameManager : MonoBehaviour {
         yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, numTokensForEconomy));
 
         int economyResult = diceManager.GetCurrDiceTotal();
-        float economicIncrease = (float) economyResult / 100.0f;
+        float economicIncrease = (float)economyResult / 100.0f;
 
         yield return StartCoroutine(currPlayer.SetEconomicResult(economicIncrease));
-//        Debug.Log("economicIncrease: "+economicIncrease);
+        //        Debug.Log("economicIncrease: "+economicIncrease);
 
         if (!GameGlobals.isSimulation && GameGlobals.isNarrated)
         {
             yield return GameGlobals.narrator.EconomyBudgetExecution(currPlayer, GameGlobals.currGameRoundId, economyResult);
         }
 
-        
+
         //roll dice for GameProperties.InvestmentTarget.ENVIRONMENT       
         diceOverlayTitle = currPlayer.GetName() + " rolling " + numTokensForEnvironment + " dice for environment ...";
         yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, numTokensForEnvironment));
 
         int environmentResult = diceManager.GetCurrDiceTotal();
-        float envIncrease = (float) environmentResult / 100.0f;
-//        Debug.Log("envIncrease: "+envIncrease);
+        float envIncrease = (float)environmentResult / 100.0f;
+        //        Debug.Log("envIncrease: "+envIncrease);
 
         GameGlobals.envState = Mathf.Clamp01(GameGlobals.envState + envIncrease);
         if (!GameGlobals.isSimulation)
         {
             yield return GameGlobals.monoBehaviourFunctionalities.StartCoroutine(
-                envDynamicSlider.UpdateSliderValue(GameGlobals.envState,true));
+                envDynamicSlider.UpdateSliderValue(GameGlobals.envState, true));
         }
 
         currPlayer.SetEnvironmentResult(envIncrease);
@@ -483,7 +559,7 @@ public class GameManager : MonoBehaviour {
             yield return null;
         }
 
-        
+
         //end of first phase; trigger second phase
         if (numPlayersToAllocateBudget == 0)
         {
@@ -500,9 +576,28 @@ public class GameManager : MonoBehaviour {
         {
             numPlayersToDisplayHistory = GameGlobals.players.Count;
 
-                numPlayersToDisplayHistory = GameGlobals.players.Count;
+            numPlayersToDisplayHistory = GameGlobals.players.Count;
 
-                foreach (Player player in GameGlobals.players)
+            foreach (Player player in GameGlobals.players)
+            {
+                if (player.GetPlayerType() == "HUMAN") {
+                    Dictionary<string, string> logEntry = new Dictionary<string, string>()
+                    {
+                        {"currSessionId", GameGlobals.currSessionId},
+                        {"currGameId", GameGlobals.conditionTag.ToString()},
+                        //{"currRoundId", GameGlobals.currGameRoundId.ToString()},
+                        {"generation", GameGlobals.generation.ToString()},
+                        {"playerName", GameGlobals.workerId },
+                        {"playerType", player.GetPlayerType()},
+                        //{"playerCurrInvestEcon", player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ECONOMIC].ToString()},
+                        {"playerTookFromCP", player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT].ToString()},
+                        {"playerGain", player.GetGains().ToString()},
+                        {"nCollaboration", player.GetNCollaboration().ToString()},
+                        {"envState", Convert.ToInt32(GameGlobals.envState).ToString()}
+                    };
+                    GameGlobals.callMongoLogServer.SentLog(logEntry);
+                }
+                else
                 {
                     Dictionary<string, string> logEntry = new Dictionary<string, string>()
                     {
@@ -518,54 +613,56 @@ public class GameManager : MonoBehaviour {
                         {"nCollaboration", player.GetNCollaboration().ToString()},
                         {"envState", Convert.ToInt32(GameGlobals.envState).ToString()}
                     };
-
-                GameGlobals.callMongoLogServer.SentLog(logEntry);
+                    GameGlobals.callMongoLogServer.SentLog(logEntry);
+                }
 
             }
 
 
-                TakeMoneyFromCommonPot();
-                GameGlobals.currGameRoundId++;
-                yield return new WaitForSeconds(1);
-                passRoundButton.gameObject.SetActive(true);
-                passRoundButton.onClick.RemoveAllListeners();
-                passRoundButton.onClick.AddListener(delegate ()
-                {
-                    RenewCommonPool(true);
-                    if (this.stopbugButton) { //DO NOTHING}
+            //TakeMoneyFromCommonPot();
+            TakeFromCommonPot();
+            GameGlobals.currGameRoundId++;
+            yield return new WaitForSeconds(1);
+            passRoundButton.gameObject.SetActive(true);
+            passRoundButton.onClick.RemoveAllListeners();
+            passRoundButton.onClick.AddListener(delegate ()
+            {
+                //RenewCommonPool(true);
+                if (this.stopbugButton)
+                { //DO NOTHING}
                     }
-                    else if (GameGlobals.envState <= 0) //environment exploded
+                /*else if (GameGlobals.currGameRoundId == GameProperties.configurableProperties.maxNumRounds && GameGlobals.envState <= GameGlobals.envThreshold) //environment exploded
                     {
-                        //RenewCommonPool(false);
-                        this.stopbugButton = true;
-                        GameGlobals.currGameState = GameProperties.GameState.LOSS;
-                        GameGlobals.gameSceneManager.LoadEndScene();
-                        UIroundSum.SetActive(false);
-                    }
-                    else if (GameGlobals.currGameRoundId == GameProperties.configurableProperties.maxNumRounds) //reached last round
+                    this.stopbugButton = true;
+                    GameGlobals.currGameState = GameProperties.GameState.LOSS;
+                    GameGlobals.gameSceneManager.LoadEndScene();
+                    UIroundSum.SetActive(false);
+                }
+                else if (GameGlobals.currGameRoundId == GameProperties.configurableProperties.maxNumRounds) //reached last round
                     {
-                        //RenewCommonPool(false);
-                        this.stopbugButton = true;
-                        GameGlobals.currGameState = GameProperties.GameState.VICTORY;
-                        GameGlobals.gameSceneManager.LoadEndScene();
-                        UIroundSum.SetActive(false);
-                    }
-                    else //normal round finished
-                    {
-                        //RenewCommonPool(true);
-                        currGamePhase = GameProperties.GamePhase.BUDGET_ALLOCATION;
-                        BetweenRoundScreen.SetActive(true);
-                        UIroundSum.SetActive(false);
-                        GenerationNumberTextUI.text = "Generation: " + GameGlobals.generation.ToString();
-                        ChangePhotoinGenPhoto(GameGlobals.generation);
-                        GenerationEnvHistory.SetActive(false);
-                        GenerationText.SetActive(false);
-                    }
+                    this.stopbugButton = true;
+                    GameGlobals.currGameState = GameProperties.GameState.VICTORY;
+                    GameGlobals.gameSceneManager.LoadEndScene();
+                    UIroundSum.SetActive(false);
+                }*/
+                //normal round finished
+                else {
+                    victoryOverlayUI.SetActive(false);
+                    lossOverlayUI.SetActive(false);
+                    //RenewCommonPool(true);
+                    currGamePhase = GameProperties.GamePhase.BUDGET_ALLOCATION;
+                    if (GenerationResult) { victoryOverlayUI.SetActive(true); }
+                    else { lossOverlayUI.SetActive(true); }
+                    BetweenRoundScreen.SetActive(true);
+                    UIroundSum.SetActive(false);
+                    GenerationEnvHistory.SetActive(false);
+                    GenerationText.SetActive(false);
+                }
 
-                    passRoundButton.gameObject.SetActive(false);
-                });
+                passRoundButton.gameObject.SetActive(false);
+            });
 
-           
+
         }
         //-----------------------------------------------------------------------------------------------//
         //-----------------------------------------------------------------------------------------------//
@@ -592,16 +689,16 @@ public class GameManager : MonoBehaviour {
             numPlayersToSimulateInvestment = GameGlobals.players.Count;
 
             string diceOverlayTitle = "Simulating environment decay ...";
-            yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, UnityEngine.Random.Range(GameGlobals.environmentDecayBudget[0],GameGlobals.environmentDecayBudget[1]+1)));
+            yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, UnityEngine.Random.Range(GameGlobals.environmentDecayBudget[0], GameGlobals.environmentDecayBudget[1] + 1)));
 
             int environmentDecay = diceManager.GetCurrDiceTotal();
-            float envDecay = (float) environmentDecay / 100.0f;
-//            Debug.Log("envDecay: "+envDecay);
-            
+            float envDecay = (float)environmentDecay / 100.0f;
+            //            Debug.Log("envDecay: "+envDecay);
+
             GameGlobals.envState = Mathf.Clamp01(GameGlobals.envState - envDecay);
             if (!GameGlobals.isSimulation)
             {
-                yield return StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState,true));
+                yield return StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState, true));
             }
 
             if (!GameGlobals.isSimulation && GameGlobals.isNarrated)
@@ -612,12 +709,12 @@ public class GameManager : MonoBehaviour {
             foreach (Player player in GameGlobals.players)
             {
                 diceOverlayTitle = "Simulating economic decay ...";
-                yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, UnityEngine.Random.Range(GameGlobals.playerDecayBudget[0],GameGlobals.playerDecayBudget[1]+1)));
+                yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, UnityEngine.Random.Range(GameGlobals.playerDecayBudget[0], GameGlobals.playerDecayBudget[1] + 1)));
 
                 int economyDecay = diceManager.GetCurrDiceTotal();
-                float economicDecay = (float) economyDecay / 100.0f;
+                float economicDecay = (float)economyDecay / 100.0f;
                 StartCoroutine(player.SetEconomicDecay(economicDecay));
-//                Debug.Log("economicDecay: "+economicDecay);
+                //                Debug.Log("economicDecay: "+economicDecay);
 
                 if (!GameGlobals.isSimulation && GameGlobals.isNarrated)
                 {
@@ -629,7 +726,7 @@ public class GameManager : MonoBehaviour {
             {
                 yield return new WaitForSeconds(phaseEndDelay);
             }
-            
+
             //check for game end to stop the game instead of loading new round
             if (GameGlobals.envState <= 0.001f)
             {
@@ -643,11 +740,11 @@ public class GameManager : MonoBehaviour {
                     GameGlobals.currGameState = GameProperties.GameState.VICTORY;
                     // ONHOLD @jbgrocha: Send GAME Victory Event to AIPlayers (call AIplayer update emotional module function)
                 }
-                Debug.Log("[Game: "+GameGlobals.currGameId+"; Round: " + (GameGlobals.currGameRoundId+1) +" of "+GameProperties.configurableProperties.maxNumRounds+"]");
+                Debug.Log("[Game: " + GameGlobals.currGameId + "; Round: " + (GameGlobals.currGameRoundId + 1) + " of " + GameProperties.configurableProperties.maxNumRounds + "]");
             }
 
-            
-            foreach(Player player in GameGlobals.players)
+
+            foreach (Player player in GameGlobals.players)
             {
                 Dictionary<string, string> logEntry = new Dictionary<string, string>()
                 {
@@ -657,12 +754,12 @@ public class GameManager : MonoBehaviour {
                     {"condition", GameProperties.currSessionParameterization.id},
                     {"gameState", GameGlobals.currGameState.ToString()},
 
-                    
+
                     {"envState", GameGlobals.envState.ToString()},
-                    
+
                     {"playerId", player.GetId().ToString()},
                     {"playerType", player.GetPlayerType()},
-                    
+
                     {"playerInvestEcon", player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ECONOMIC].ToString()},
                     {"playerInvestEnv", player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT].ToString()},
 
@@ -688,14 +785,14 @@ public class GameManager : MonoBehaviour {
                 }
                 else
                 {//rever acho que nao necessita do if
-                   tutorialScreens.SetActive(true);
-                   tutorialScreen.SetActive(false);
-                   tutorialScreen2.SetActive(false);
-                   tutorialScreen3.SetActive(false);
-                   tutorialScreen4.SetActive(false);
-                   tutorialScreen5.SetActive(false);
-                   tutorialScreen6.SetActive(false);
-                   tutorialScreen7.SetActive(false);
+                    tutorialScreens.SetActive(true);
+                    tutorialScreen.SetActive(false);
+                    tutorialScreen2.SetActive(false);
+                    tutorialScreen3.SetActive(false);
+                    tutorialScreen4.SetActive(false);
+                    tutorialScreen5.SetActive(false);
+                    tutorialScreen6.SetActive(false);
+                    tutorialScreen7.SetActive(false);
 
                 }
             }
@@ -740,8 +837,8 @@ public class GameManager : MonoBehaviour {
 
     }
 
-    
-    
+
+
     //------------------------------------------Requests---------------------------------------
     public void StartAlocateBudgetPhase()
     {
@@ -862,7 +959,7 @@ public class GameManager : MonoBehaviour {
         yield return null;
     }
 
-    
+
     public Player ChangeToNextPlayer(Player currPlayer)
     {
         currPlayerIndex = (currPlayerIndex + 1) % GameGlobals.players.Count;
@@ -873,7 +970,7 @@ public class GameManager : MonoBehaviour {
         }
         return nextPlayer;
     }
-    
+
 
     public GameProperties.GamePhase GetCurrGamePhase()
     {
@@ -902,146 +999,256 @@ public class GameManager : MonoBehaviour {
 
     private void ChangePhotoinGenPhoto(int genNumber)
     {
-        if (!GameGlobals.firstGeneration)
-        {
-            switch (genNumber)
-            {
-                case 10:
-                case 11:
-                    GenPhotoUI.sprite = firstGenPhoto;
-                    break;
-                case 12:
-                case 13:
-                case 14:
-                    GenPhotoUI.sprite = Resources.Load<Sprite>("Textures/Generation/2ndgen_icon");
-                    break;
-                case 15:
-                case 16:
-                    GenPhotoUI.sprite = Resources.Load<Sprite>("Textures/Generation/3rdgen_icon");
-                    break;
-                case 17:
-                case 18:
-                    GenPhotoUI.sprite = Resources.Load<Sprite>("Textures/Generation/4thgen_icon");
-                    break;
-                case 19:
-                case 20:
-                    GenPhotoUI.sprite = Resources.Load<Sprite>("Textures/Generation/5thgen_icon");
-                    break;
+    switch (genNumber){
+        case 1:
+             GenPhotoUI.sprite = firstGenPhoto;
+                break;
+        case 4:
+             GenPhotoUI.sprite = Resources.Load<Sprite>("Textures/Generation/2ndgen_icon");
+             break;
+        case 7:
+             GenPhotoUI.sprite = Resources.Load<Sprite>("Textures/Generation/3rdgen_icon");
+             break;
+        case 9:
+             if (GameGlobals.firstGeneration) { GenPhotoUI.sprite = Resources.Load<Sprite>("Textures/Generation/5thgen_icon"); }
+             else { GenPhotoUI.sprite = Resources.Load<Sprite>("Textures/Generation/4thgen_icon"); }         
+             break;
+        case 12:
+             GenPhotoUI.sprite = Resources.Load<Sprite>("Textures/Generation/5thgen_icon");
+             break;
             }
-        }
-        else
-        {
-            switch (genNumber)
-            {
-                case 1:
-                case 2:
-                    GenPhotoUI.sprite = firstGenPhoto;
-                    break;
-                case 3:
-                case 4:
-                case 5:
-                    GenPhotoUI.sprite = Resources.Load<Sprite>("Textures/Generation/2ndgen_icon");
-                    break;
-                case 6:
-                case 7:
-                    GenPhotoUI.sprite = Resources.Load<Sprite>("Textures/Generation/3rdgen_icon");
-                    break;
-                case 8:
-                case 9:
-                    GenPhotoUI.sprite = Resources.Load<Sprite>("Textures/Generation/4thgen_icon");
-                    break;
-                case 10:
-                    GenPhotoUI.sprite = Resources.Load<Sprite>("Textures/Generation/5thgen_icon");
-                    break;
-            }
-        }
     }
 
-    //Take from common-pool what players choose
-    private void TakeMoneyFromCommonPot()
+
+    private void TakeFromCommonPot()
     {
-        //List<int> votes = new List<int>();
         foreach (Player p in GameGlobals.players)
         {
             GameGlobals.envState -= p.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT];
             this.roundTaken += p.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT];
-            //GameGlobals.diffCP -= p.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT];
-
-            //votes.Add(p.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT]);
         }
-        //renew envState
-        //GameGlobals.diffCP += GameGlobals.envRenewperRound;
-        //StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState,false));
-
         UIroundSum.SetActive(true);
-        if(this.roundTaken > 0) {
-            roundSumTex.text = "Total value to take from the Common-Pool:  " + this.roundTaken.ToString();/* + "\n" 
-            + "Impact on the Common-Pool: " + "+" + Convert.ToInt32(GameGlobals.diffCP).ToString();*/
-        }
-        else{
-            roundSumTex.text = "Total value to take from the Common-Pool:  " + this.roundTaken.ToString();/* + "\n"
-            + "Impact on the Common-Pool: " + Convert.ToInt32(GameGlobals.diffCP).ToString();*/
-        }
+        roundSumTex.text = "Total value to take from the Common-Pool:  " + this.roundTaken.ToString();
 
-        //end generation
-        GameGlobals.generation += 1;
+        GameGlobals.envStatePerRound.Add(Convert.ToInt32(GameGlobals.envState));
 
-        /* Player take medianVote
-        int[] sortedVotes = votes.ToArray();
-        Array.Sort(sortedVotes);
-        int len = sortedVotes.Length;
-        float medianVote;
-        if (len % 2 == 0)
-        {
-            int a = sortedVotes[len / 2 - 1];
-            int b = sortedVotes[len / 2];
-            medianVote = (a + b) / 2;
-        }
-        else
-        {
-            medianVote = sortedVotes[len / 2];
-        }
-
-        foreach (Player p in GameGlobals.players)
-        {
-            p.environmentMedianInvestmentPerRound.Add(Convert.ToInt32(medianVote));
-            float newMoney = p.GetMoney() + medianVote;
-            StartCoroutine(p.SetMoney(newMoney));
-        }
-        GameGlobals.envState -= (3 * medianVote);
-        GameGlobals.envStatePerRound.Add(GameGlobals.envState);
-        StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState));
-        */
-    }
-    private void RenewCommonPool(Boolean arrows)
-    {
-        GameGlobals.envRenewperRound = (float)(GameGlobals.envState * GameGlobals.envRenew);
-        GameGlobals.diffCP += Convert.ToInt32(GameGlobals.envRenewperRound);
-        GameGlobals.envState += GameGlobals.diffCP;
-
-        if (GameGlobals.envState <= 0)
-        {
-            GameGlobals.envStatePerRound.Add(0);
-        }
-        else
-        {
-            GameGlobals.envStatePerRound.Add(Convert.ToInt32(GameGlobals.envState));
-        }
-
-        StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState, arrows));
+        StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState, true));
         ImpactCP.SetActive(true);
-        ImpactCPtext.GetComponent<Text>().text = "Taken-From the Common-Pool: " + this.roundTaken.ToString() + "\n" +
-        "Common-Pool Renewed: " + GameGlobals.diffCP.ToString() + "\n" +
-        "Impact on the Common-Pool: " + GameGlobals.impactOnCP;
 
-        
+        if (GameGlobals.envState >= GameGlobals.envThreshold) {
+            GenerationResult = true;
+            ImpactCPtext.GetComponent<Text>().text = "Your group took a total of " + this.roundTaken.ToString() + ", which is less or equal than the threshold of 30 units.\nThe Common-Pool is refilled to 60 units.";
+            if (GameGlobals.firstGeneration && GameGlobals.generation == 9) { 
+                newRoundButton.GetComponentInChildren<Text>().text = "End Game"; 
+            }
+            else if (!GameGlobals.firstGeneration && GameGlobals.generation == 12)
+            {
+                newRoundButton.GetComponentInChildren<Text>().text = "End Game";
+            }
+        }
+        else if(GameGlobals.envState < GameGlobals.envThreshold)
+        {
+            GenerationResult = false;
+            ImpactCPtext.GetComponent<Text>().text = "Your group took a total of " + this.roundTaken.ToString() + ", which is more than the threshold of 30 units.\nThe Common-Pool is permanently destroyed for future generations.";
+            if (GameGlobals.firstGeneration && GameGlobals.generation == 9){
+                newRoundButton.GetComponentInChildren<Text>().text = "End Game";
+            }
+            else if (!GameGlobals.firstGeneration && GameGlobals.generation == 12){
+                newRoundButton.GetComponentInChildren<Text>().text = "End Game";
+            }
+        }
+
         this.roundTaken = 0;
         GameGlobals.diffCP = 0;
         GameGlobals.impactOnCP = "";
-        GameGlobals.fairRefPoint = Convert.ToInt32(GameGlobals.envState / 9);
-        if (GameGlobals.fairRefPoint >= 13) { GameGlobals.fairRefPoint = 13; }
-        GameGlobals.maxSelfish = GameGlobals.fairRefPoint * 2;
-        if (GameGlobals.maxSelfish > 14) { GameGlobals.maxSelfish = 14; }
+
     }
 
-   }
+    private void ResetCommonPot()
+    {
+        GameGlobals.generation = NewGeneration();
+        GenerationNumberTextUI.text = "Intermediate Generation";
+        ChangePhotoinGenPhoto(GameGlobals.generation);
+
+        this.roundTaken = 0;
+        GameGlobals.diffCP = 0;
+        GameGlobals.impactOnCP = "";
+
+        if(GameGlobals.informationOfGeneration == false) { 
+            if (GameGlobals.ruinedPlanet && GameGlobals.generation == 4) {
+                GameGlobals.envState = 0;
+                NewGenerationText.text = "Hello!\n" + "You are an intermediate generation in this planet.\n" + "Unfortunately the previous Generations destroyed the planet," +
+                    "so you will not obtain any bonus in this round.\n";
+                NewGenerationButton.GetComponentInChildren<Text>().text = "End Generation";
+            } 
+            else {
+                GameGlobals.envState = 60;
+                NewGenerationText.text = "Hello!\n" + "You are an intermediate generation in this planet.\n" + "The previous Generations preserved the planet until this generation.\n";
+                NewGenerationButton.GetComponentInChildren<Text>().text = "Start Round";
+            }
+            InformationScreen.SetActive(false);
+        }
+        else
+        {
+            if (GameGlobals.ruinedPlanet && GameGlobals.generation == 4)
+            {
+                GameGlobals.envState = 0;
+                NewGenerationText.text = "Hello!\n" + "You are an intermediate generation in this planet.\n" + "Unfortunately the previous Generations destroyed the planet," +
+                    "so you will not obtain any bonus in this round.\n You can see how the previous generations played this game.";
+                NewGenerationButton.GetComponentInChildren<Text>().text = "Next";
+            }
+            else
+            {
+                GameGlobals.envState = 60;
+                NewGenerationText.text = "Hello!\n" + "You are an intermediate generation in this planet.\n" + "The previous Generations preserved the planet until this generation.\n You can see how the previous generations played this game.";
+                NewGenerationButton.GetComponentInChildren<Text>().text = "Next";
+            }
+        }
+
+
+        StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState, false));
+
+        NewGenerationScreen.SetActive(true);
+
+    }
+
+    private int NewGeneration()
+    {
+        switch (GameGlobals.generation)
+        {
+            case 1:
+                return 4;
+            case 4:
+                return 7;
+            case 7:
+                return 9;
+            case 9:
+                return 12;
+            case 12:
+                return 99;
+        }
+        return 0;
+    }
+    
+    private void ChangeGraphInformation()
+    {
+        switch (GameGlobals.generation)
+        {
+            case 4:
+                if(GameGlobals.ruinedPlanet == false) { 
+                    InformationGen.sprite = Resources.Load<Sprite>("Textures/Generation/Information1");
+                }
+                else
+                {
+                    InformationGen.sprite = Resources.Load<Sprite>("Textures/Generation/Information2");
+                    PassInformationButton.GetComponentInChildren<Text>().text = "End Generation";
+                }
+                return;
+            case 7:
+                InformationGen.sprite = Resources.Load<Sprite>("Textures/Generation/Information3");
+                PassInformationButton.GetComponentInChildren<Text>().text = "Start Round" ;
+                return;
+            case 9:
+                InformationGen.sprite = Resources.Load<Sprite>("Textures/Generation/Information4");
+                return;
+            case 12:
+                InformationGen.sprite = Resources.Load<Sprite>("Textures/Generation/Information5");
+                return;
+        }
+    }
+
+
+
+    // OLD IMPLEMENTATION com 10 rondas
+    /*
+
+
+        //Take from common-pool what players choose
+        private void TakeMoneyFromCommonPot()
+        {
+            //List<int> votes = new List<int>();
+            foreach (Player p in GameGlobals.players)
+            {
+                GameGlobals.envState -= p.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT];
+                this.roundTaken += p.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT];
+                //GameGlobals.diffCP -= p.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT];
+
+                //votes.Add(p.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT]);
+            }
+            //renew envState
+            //GameGlobals.diffCP += GameGlobals.envRenewperRound;
+            //StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState,false));
+
+            UIroundSum.SetActive(true);
+            if(this.roundTaken > 0) {
+                roundSumTex.text = "Total value to take from the Common-Pool:  " + this.roundTaken.ToString();/* + "\n" 
+                + "Impact on the Common-Pool: " + "+" + Convert.ToInt32(GameGlobals.diffCP).ToString();
+            }
+            else{
+                roundSumTex.text = "Total value to take from the Common-Pool:  " + this.roundTaken.ToString();
+            }
+
+            //end generation
+            GameGlobals.generation += 1;
+
+            /* Player take medianVote
+            int[] sortedVotes = votes.ToArray();
+            Array.Sort(sortedVotes);
+            int len = sortedVotes.Length;
+            float medianVote;
+            if (len % 2 == 0)
+            {
+                int a = sortedVotes[len / 2 - 1];
+                int b = sortedVotes[len / 2];
+                medianVote = (a + b) / 2;
+            }
+            else
+            {
+                medianVote = sortedVotes[len / 2];
+            }
+
+            foreach (Player p in GameGlobals.players)
+            {
+                p.environmentMedianInvestmentPerRound.Add(Convert.ToInt32(medianVote));
+                float newMoney = p.GetMoney() + medianVote;
+                StartCoroutine(p.SetMoney(newMoney));
+            }
+            GameGlobals.envState -= (3 * medianVote);
+            GameGlobals.envStatePerRound.Add(GameGlobals.envState);
+            StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState));
+
+        }
+        private void RenewCommonPool(Boolean arrows)
+        {
+            GameGlobals.envRenewperRound = (float)(GameGlobals.envState * GameGlobals.envRenew);
+            GameGlobals.diffCP += Convert.ToInt32(GameGlobals.envRenewperRound);
+            GameGlobals.envState += GameGlobals.diffCP;
+
+            if (GameGlobals.envState <= 0)
+            {
+                GameGlobals.envStatePerRound.Add(0);
+            }
+            else
+            {
+                GameGlobals.envStatePerRound.Add(Convert.ToInt32(GameGlobals.envState));
+            }
+
+            StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState, arrows));
+            ImpactCP.SetActive(true);
+            ImpactCPtext.GetComponent<Text>().text = "Taken-From the Common-Pool: " + this.roundTaken.ToString() + "\n" +
+            "Common-Pool Renewed: " + GameGlobals.diffCP.ToString() + "\n" +
+            "Impact on the Common-Pool: " + GameGlobals.impactOnCP;
+
+
+            this.roundTaken = 0;
+            GameGlobals.diffCP = 0;
+            GameGlobals.impactOnCP = "";
+            GameGlobals.fairRefPoint = Convert.ToInt32(GameGlobals.envState / 9);
+            if (GameGlobals.fairRefPoint >= 13) { GameGlobals.fairRefPoint = 13; }
+            GameGlobals.maxSelfish = GameGlobals.fairRefPoint * 2;
+            if (GameGlobals.maxSelfish > 14) { GameGlobals.maxSelfish = 14; }
+        }
+
+       }
+    */
+}

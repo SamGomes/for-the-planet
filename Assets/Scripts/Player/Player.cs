@@ -331,7 +331,7 @@ public class Player
         environmentInvestmentPerRound.Add(currentInvestment);
         this.gains += currentInvestment;
 
-        if(currentInvestment <= 7)
+        if(currentInvestment <= 10)
         {
             this.nCollaborations += 1;
         }

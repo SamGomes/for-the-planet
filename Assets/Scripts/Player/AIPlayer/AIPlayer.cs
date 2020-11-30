@@ -253,7 +253,7 @@ public class AIPlayerTitForTat : AIPlayer
         else
         {
             int environmentInvestment = GameGlobals.players[0].environmentInvestmentPerRound[GameGlobals.currGameRoundId - 1] + UnityEngine.Random.Range(-1, 2);
-            if(environmentInvestment == 15) { environmentInvestment = 14; }
+            if(environmentInvestment > GameGlobals.roundBudget) { environmentInvestment = GameGlobals.roundBudget; }
             if (environmentInvestment == -1) { environmentInvestment = 0; }
             int economyInvestment = GameGlobals.roundBudget - environmentInvestment;
 
@@ -358,7 +358,7 @@ public class AIPlayerOutcomeBase : AIPlayer
 
 
 
-//Only plays (0,1)
+//Altruista
 public class AIPlayerUltraFair : AIPlayer
 {
     public AIPlayerUltraFair(string type, InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
@@ -368,7 +368,7 @@ public class AIPlayerUltraFair : AIPlayer
     public override IEnumerator AutoBudgetAllocation()
     {
 
-        int environmentInvestment = UnityEngine.Random.Range(0, 2);
+        int environmentInvestment = UnityEngine.Random.Range(0, 5);
         int economyInvestment = GameGlobals.roundBudget - environmentInvestment;
 
         yield return InvestInEnvironment(environmentInvestment);
@@ -387,7 +387,26 @@ public class AIPlayerFair : AIPlayer
 
     public override IEnumerator AutoBudgetAllocation()
     {
-        int environmentInvestment = GameGlobals.fairRefPoint + UnityEngine.Random.Range(-1, 2);
+        int environmentInvestment = UnityEngine.Random.Range(5, 10);
+        int economyInvestment = GameGlobals.roundBudget - environmentInvestment;
+
+        yield return InvestInEnvironment(environmentInvestment);
+        yield return InvestInEconomy(economyInvestment);
+
+        yield return EndBudgetAllocationPhase();
+    }
+
+}
+
+public class AIPlayerSelfish : AIPlayer
+{
+    public AIPlayerSelfish(string type, InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name) :
+        base(type, interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name)
+    { }
+
+    public override IEnumerator AutoBudgetAllocation()
+    {
+        int environmentInvestment = UnityEngine.Random.Range(10, 20);
         int economyInvestment = GameGlobals.roundBudget - environmentInvestment;
 
         yield return InvestInEnvironment(environmentInvestment);

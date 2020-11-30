@@ -78,12 +78,15 @@ public class GameSetupFunctionalities : MonoBehaviour {
                     GameGlobals.players.Add(new AIPlayerCompensator(currParam.playerType, chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
                     break;
 
-                case "AI-ULTRA-FAIR":
+                case "AI-ALTRUISTIC":
                     GameGlobals.players.Add(new AIPlayerUltraFair(currParam.playerType, chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
                     break;
 
                 case "AI-FAIR":
                     GameGlobals.players.Add(new AIPlayerFair(currParam.playerType, chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
+                    break;
+                case "AI-SELFISH":
+                    GameGlobals.players.Add(new AIPlayerSelfish(currParam.playerType, chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
                     break;
                 case "AI-OUTCOME-BASE":
                     GameGlobals.players.Add(new AIPlayerOutcomeBase(currParam.playerType, chosenIM, playerCanvas, playerWarningPoppupRef, Resources.Load<Sprite>("Textures/UI/Icons/" + currParam.spriteIndex), currPlayerId++, currParam.name));
