@@ -265,7 +265,7 @@ mycol2 <- rgb(2, 144, 161, max = 255, alpha = 255)
 margin = margin(0,0,0,0)
 
 plotHeatMapMcts <- ggplot(test, aes(x=roundId, y=mcts, fill=heat)) + 
-labs(x = "Round Id", y = "MCTS operating Depth\n", fill=" Relative\nFreq. (%)\n") + 
+labs(x = "Round Id", y = "Level of Reasoning\n", fill=" Relative\nFreq. (%)\n") + 
 geom_tile(aes(), colour = "transparent") + scale_fill_gradient(low = mycol[1], high = mycol2[1], limits = c(0,100)) + 
 theme(plot.title = element_text(size=labelSize*1.4), legend.text = element_text(size=labelSize*1.4), plot.margin=margin, panel.spacing=unit(1.5, "lines"), axis.text = element_text(size = labelSize*1.4), axis.title = element_text(size = labelSize*1.4, face = "bold"), legend.title=element_text(size = labelSize*1.4)) + 
 scale_y_reverse() + 
