@@ -42,15 +42,33 @@ public class EmotionalAIPlayer: AIPlayer
         base.AutoBudgetAllocation();
 
         investmentIntentions = ComputeIntentions();
-        int econ = investmentIntentions[GameProperties.InvestmentTarget.ECONOMIC];
-        int env = investmentIntentions[GameProperties.InvestmentTarget.ENVIRONMENT];
+        int econInv = investmentIntentions[GameProperties.InvestmentTarget.ECONOMIC];
+        int envInv = investmentIntentions[GameProperties.InvestmentTarget.ENVIRONMENT];
         
-        WellFormedNames.Name evnt = RolePlayCharacter.EventHelper.PropertyChange("BeforeBudgetAllocation(" + econ + "," + env + ")", this.id.ToString(), this.id.ToString());
+        float env = GameGlobals.envState - 0.001f;
+        float bestEcon = -1.0f;
+        // foreach (Player innerPlayer in GameGlobals.players)
+        // {
+        //     int id = innerPlayer.GetId();
+        //     float currEcon = innerPlayer.GetMoney();
+        //     if (currEcon > bestEcon)
+        //     {
+        //         bestEcon = currEcon;
+        //     }
+        // }
+        float econ = money;
+        
+
+        WellFormedNames.Name evnt = EventHelper.PropertyChange(
+            "BeforeBudgetAllocation(" + 
+            econ.ToString("0.00", CultureInfo.InvariantCulture) + "," + 
+            env.ToString("0.00", CultureInfo.InvariantCulture) + ")", 
+            "Self", id.ToString());
         rpc.Perceive(evnt);
         rpc.Update();
 
-        yield return InvestInEconomy(econ);
-        yield return InvestInEnvironment(env);
+        yield return InvestInEconomy(econInv);
+        yield return InvestInEnvironment(envInv);
         yield return EndBudgetAllocationPhase();
     }
 
@@ -59,26 +77,28 @@ public class EmotionalAIPlayer: AIPlayer
         yield return base.AutoHistoryDisplay();
 
         List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
-        float econ = 0;
-        float env = 0;
+
+        float econOthers = 0;
+        float envOthers = 0;
         foreach (Player player in GameGlobals.players)
         {
-            if (player == this)
-            {
-                continue;
-            }
-            //aggregate
-            econ += player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ECONOMIC];
-            env += player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT];
+            //aggregate all investments
+            econOthers += player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ECONOMIC];
+            envOthers += player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT];
         }
-        //aggregate
-        econ /= (GameGlobals.players.Count - 1);
-        env /= (GameGlobals.players.Count - 1);
-        WellFormedNames.Name evnt = RolePlayCharacter.EventHelper.PropertyChange(
-        "HistoryDisplay(" + econ.ToString("0.00", CultureInfo.InvariantCulture) + "," +
-        env.ToString("0.00", CultureInfo.InvariantCulture) + ")",
-        this.id.ToString(), "OtherPlayers");
-        rpc.Perceive(evnt);
+        //aggregate (do not need to average because the function is already a ratio)
+        // econOthers /= (GameGlobals.players.Count);
+        // envOthers /= (GameGlobals.players.Count);
+        
+        events.Add(
+            EventHelper.PropertyChange(
+                "HistoryDisplay(" + 
+                econOthers.ToString("0.00", CultureInfo.InvariantCulture) + "," +
+                envOthers.ToString("0.00", CultureInfo.InvariantCulture) + ")",
+                "OtherPlayers", id.ToString())
+        );
+        
+        rpc.Perceive(events);
         rpc.Update();
 
         yield return null;
@@ -151,8 +171,6 @@ public class FTPBoard : Board
     protected int currGameRound;
     protected int maxGameRound;
     
-        
-        
     public override float GetScore(int player)
     {
         if(winner == 0)
@@ -181,14 +199,14 @@ public class FTPBoard : Board
         
     public FTPBoard()
     {
-        this.env = 0;
-        this.econs = new List<float>();
+        env = 0;
+        econs = new List<float>();
         
         CurrentPlayer = 0;
 
-        this.actionPredictorCallback = null;
-        this.maxGameRound = 0;
-        this.currGameRound = 0;
+        actionPredictorCallback = null;
+        maxGameRound = 0;
+        currGameRound = 0;
         possibleMoves = GeneratePossibleMoves();
 
     }
@@ -198,11 +216,11 @@ public class FTPBoard : Board
         winner = board.Winner;
         possibleMoves = GeneratePossibleMoves();
         
-        this.maxGameRound = board.maxGameRound;
-        this.currGameRound = board.currGameRound;
-        this.actionPredictorCallback = board.actionPredictorCallback;
-        this.env = board.env;
-        this.econs = new List<float>(board.econs);
+        maxGameRound = board.maxGameRound;
+        currGameRound = board.currGameRound;
+        actionPredictorCallback = board.actionPredictorCallback;
+        env = board.env;
+        econs = new List<float>(board.econs);
     }
     public FTPBoard(int id, int maxGameRound, Func<Player, int> actionPredictorCallback, float env, List<float> econs): this()
     {
@@ -228,7 +246,7 @@ public class FTPBoard : Board
         estDecayEcon = (estDecayEcon * 3.5f) / 100.0f;
         foreach(Player player in GameGlobals.players)
         {
-            float estGainEcon = 0.0f;
+            float estGainEcon;
             if (player.GetId() == CurrentPlayer)
             {
                 estEnvDice += myInvestmentEnv;
@@ -256,7 +274,7 @@ public class FTPBoard : Board
 
         DetermineWinner(move);
         
-        this.currGameRound = this.currGameRound + 1;
+        currGameRound += 1;
         return base.MakeMove(move);
     }
 
