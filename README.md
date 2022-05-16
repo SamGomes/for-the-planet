@@ -10,7 +10,7 @@ Following the CRD convention, in our game, players try to avoid an environmental
 
 ## Work developed by:
 - Samuel Gomes - [@SamGomes](https://github.com/SamGomes)
-- José Bernardo Rocha - [@Jbrocha](https://github.com/jbrocha)
+- José Bernardo Rocha - [@jbgrocha](https://github.com/jbgrocha)
 
 
 ## Components were also developed, modified and adapted for several studies by:
