@@ -14,6 +14,7 @@ Following the CRD convention, in our game, players try to avoid an environmental
 
 
 ## Components were also developed, modified and adapted for several studies by:
+- Guilherme Nogueira [@GuilhermeRNogueira](https://github.com/GuilhermeRNogueira)
 - Filipa Correia - [@PipzCorreiaz](https://github.com/PipzCorreiaz)
 - Samuel Mascarenhas - [@samuelfm](https://github.com/samuelfm)
 - Silvia Tulli - [@Silviatulli](https://github.com/Silviatulli)
