@@ -24,22 +24,23 @@ suppressMessages(library(car))
 library("ggsci")
 
 
-df1 <- read.csv(file="input/AllVsAll/gameresultslog.csv", header=TRUE, sep=",")
-df2 <- read.csv(file="input/AllVsAll/gameresultslog(2).csv", header=TRUE, sep=",")
-df3 <- read.csv(file="input/AllVsAll/gameresultslog(3).csv", header=TRUE, sep=",")
-df4 <- read.csv(file="input/AllVsAll/gameresultslog(4).csv", header=TRUE, sep=",")
+df1 <- read.csv(file="input/AllVsAll/gameresultslog(1).csv", header=TRUE, sep=",", stringsAsFactors=T)
+df2 <- read.csv(file="input/AllVsAll/gameresultslog(2).csv", header=TRUE, sep=",", stringsAsFactors=T)
+df3 <- read.csv(file="input/AllVsAll/gameresultslog(3).csv", header=TRUE, sep=",", stringsAsFactors=T)
+df4 <- read.csv(file="input/AllVsAll/gameresultslog(4).csv", header=TRUE, sep=",", stringsAsFactors=T)
 
 gameresultslog <- rbind(df1,df2,df3,df4)
+# gameresultslog <- df1
 
 # plot game balance
 roundsNumL <- c()
 num_played_roundsL <- c()
 playerTypesL <- c()
 
-levels(gameresultslog$playerType)[levels(gameresultslog$playerType) == "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST"] <- "Constructive-Collectivist"
-levels(gameresultslog$playerType)[levels(gameresultslog$playerType) == "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC"] <- "Constructive-Individualist"
-levels(gameresultslog$playerType)[levels(gameresultslog$playerType) == "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST"] <- "Disruptive-Collectivist"
-levels(gameresultslog$playerType)[levels(gameresultslog$playerType) == "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC"] <- "Disruptive-Individualist"
+levels(gameresultslog$playerType)[levels(gameresultslog$playerType) == "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST"] <- "Profile A"
+levels(gameresultslog$playerType)[levels(gameresultslog$playerType) == "AI-EMOTIONAL-CONSTRUCTIVE-INDIVIDUALISTIC"] <- "Profile B"
+levels(gameresultslog$playerType)[levels(gameresultslog$playerType) == "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST"] <- "Profile C"
+levels(gameresultslog$playerType)[levels(gameresultslog$playerType) == "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC"] <- "Profile D"
 
 getMCTS <- function(mood)
 {
@@ -111,6 +112,7 @@ if(!dir.exists(path)){
 plotsSRate <- c()
 plotsWRate <- c()
 plotsFinalEcons <- c()
+plotsFinalEnv <- c()
 plotsStrategies <- c()
 plotsMood <- c()
 plotsEmotions <- c()
@@ -155,7 +157,7 @@ agg <- aggregate(playerEconState ~ sessionId*gameId, df, max)
 names(agg) <- c("sessionId", "gameId", "maxState")
 joined <- full_join(df, agg)
 filteredJoined <- joined[joined$playerEconState == joined$maxState,]
-cnt <- count(filteredJoined, sessionId, gameId) #verify
+cnt <- count(filteredJoined, sessionId, gameId)
 joined2 <- full_join(filteredJoined, cnt)
 winners = joined2[joined2$n==1,]
 drawers = joined2[joined2$n!=1,]
@@ -201,6 +203,25 @@ plotsFinalEcons[[length(plotsFinalEcons)+1]] <- plotFinalEcons
 
 
 
+# plot final envs
+endGamesWin <- subset(endGames, endGames$gameState == "VICTORY")
+# endGamesWin[endGamesWin$gameState == "LOSS" ,]$playerEconState <- 0
+
+agg <- aggregate(envState ~  playerType, endGamesWin, mean)
+
+plotFinalEnv <- ggplot(agg, aes(x = playerType , y=envState*100, color=playerType, fill=playerType)) + scale_color_npg() + scale_fill_npg()
+plotFinalEnv <- plotFinalEnv + geom_bar(stat = "identity")
+plotFinalEnv <- plotFinalEnv + labs(x = "Player Type", y = "Avg. Final Env. State (%)\n") 
+
+plotFinalEnv <- plotFinalEnv + ggtitle("All VS. All")
+
+write.csv2(agg, "output/Env_all.csv")
+
+plotFinalEnv <- plotFinalEnv + theme(plot.title = element_text(size=labelSize*1.4), legend.text = element_text(size=labelSize), plot.margin=margin(10,30,10,30), axis.ticks = element_blank(), axis.text.x = element_blank()) + theme(axis.text=element_text(size = 15), axis.title=element_text(size = 15, face = "bold"), legend.title = element_blank(), legend.position = 'bottom') + guides(col = guide_legend(ncol = 2))
+plotsFinalEnv[[length(plotsFinalEnv)+1]] <- plotFinalEnv
+
+
+
 # plot strategies
 agg <- gameresultslog
 agg <- aggregate(playerInvestEnv ~ playerType*roundId , agg , mean)
@@ -232,7 +253,7 @@ plotMood <- plotMood + scale_color_npg() + scale_alpha(range = c(0.3, 1), guide=
 
 plotMood <- plotMood + geom_line(stat = "identity", size=2.0) 
 plotMood <- plotMood + geom_point(stat = "identity", size=3.0, guide=FALSE)
-plotMood <- plotMood + labs(x = "Curr Round Id", y = "Mood\n", color="Player Type") + theme(plot.title = element_text(size=labelSize*1.4), legend.text = element_text(size=labelSize), plot.margin=margin(10,30,10,30), axis.text = element_text(size = 15), axis.title = element_text(size = 15, face = "bold"), legend.title = element_blank(), legend.position = 'bottom') + guides(col = guide_legend(ncol = 2))  
+plotMood <- plotMood + labs(x = "Curr Round Id", y = "Avg. Mood\n", color="Player Type") + theme(plot.title = element_text(size=labelSize*1.4), legend.text = element_text(size=labelSize), plot.margin=margin(10,30,10,30), axis.text = element_text(size = 15), axis.title = element_text(size = 15, face = "bold"), legend.title = element_blank(), legend.position = 'bottom') + guides(col = guide_legend(ncol = 2))  
 
 plotMood <- plotMood + ggtitle("All VS. All")
 
@@ -341,6 +362,10 @@ suppressMessages(ggsave("plots/WinRate.png", height=5, width=8, units="in", dpi=
 
 ggarrange(plotlist = plotsFinalEcons)
 suppressMessages(ggsave("plots/EconLevels.png", height=5, width=8, units="in", dpi=500))
+
+
+ggarrange(plotlist = plotsFinalEnv)
+suppressMessages(ggsave("plots/EnvLevels.png", height=5, width=8, units="in", dpi=500))
 
 
 ggarrange(plotlist = plotsStrategies)
