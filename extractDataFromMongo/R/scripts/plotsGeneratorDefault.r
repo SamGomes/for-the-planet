@@ -52,11 +52,11 @@ levels(gameresultslog$playerName)[levels(gameresultslog$playerName) == "AI-EMOTI
 levels(gameresultslog$playerName)[levels(gameresultslog$playerName) == "RANDOM_CMP_VS_DEF"] <- "Random"
 
 
-levels(gameresultslog$playerName)[levels(gameresultslog$playerName) == "MCTS_1_VS_COOP"] <- "MCTS (depth = 1)"
-levels(gameresultslog$playerName)[levels(gameresultslog$playerName) == "MCTS_2_VS_COOP"] <- "MCTS (depth = 2)"
-levels(gameresultslog$playerName)[levels(gameresultslog$playerName) == "MCTS_3_VS_COOP"] <- "MCTS (depth = 3)"
-levels(gameresultslog$playerName)[levels(gameresultslog$playerName) == "MCTS_4_VS_COOP"] <- "MCTS (depth = 4)"
-levels(gameresultslog$playerName)[levels(gameresultslog$playerName) == "MCTS_5_VS_COOP"] <- "MCTS (depth = 5)"
+levels(gameresultslog$playerName)[levels(gameresultslog$playerName) == "MCTS_1_VS_COOP"] <- "MCTS (\U03B4 = 1)"
+levels(gameresultslog$playerName)[levels(gameresultslog$playerName) == "MCTS_2_VS_COOP"] <- "MCTS (\U03B4 = 2)"
+levels(gameresultslog$playerName)[levels(gameresultslog$playerName) == "MCTS_3_VS_COOP"] <- "MCTS (\U03B4 = 3)"
+levels(gameresultslog$playerName)[levels(gameresultslog$playerName) == "MCTS_4_VS_COOP"] <- "MCTS (\U03B4 = 4)"
+levels(gameresultslog$playerName)[levels(gameresultslog$playerName) == "MCTS_5_VS_COOP"] <- "MCTS (\U03B4 = 5)"
 
 
 levels(gameresultslog$playerName)[levels(gameresultslog$playerName) == "AI-EMOTIONAL-CONSTRUCTIVE-COLLECTIVIST_VS_COOP"] <- "Constructive-Collectivist"
@@ -66,15 +66,15 @@ levels(gameresultslog$playerName)[levels(gameresultslog$playerName) == "AI-EMOTI
 levels(gameresultslog$playerName)[levels(gameresultslog$playerName) == "RANDOM_CMP_VS_COOP"] <- "Random"
 
 
-levels(gameresultslog$playerName)[levels(gameresultslog$playerName) == "MCTS_1_VS_DEF"] <- "MCTS (depth = 1)"
-levels(gameresultslog$playerName)[levels(gameresultslog$playerName) == "MCTS_2_VS_DEF"] <- "MCTS (depth = 2)"
-levels(gameresultslog$playerName)[levels(gameresultslog$playerName) == "MCTS_3_VS_DEF"] <- "MCTS (depth = 3)"
-levels(gameresultslog$playerName)[levels(gameresultslog$playerName) == "MCTS_4_VS_DEF"] <- "MCTS (depth = 4)"
-levels(gameresultslog$playerName)[levels(gameresultslog$playerName) == "MCTS_5_VS_DEF"] <- "MCTS (depth = 5)"
+levels(gameresultslog$playerName)[levels(gameresultslog$playerName) == "MCTS_1_VS_DEF"] <- "MCTS (\U03B4 = 1)"
+levels(gameresultslog$playerName)[levels(gameresultslog$playerName) == "MCTS_2_VS_DEF"] <- "MCTS (\U03B4 = 2)"
+levels(gameresultslog$playerName)[levels(gameresultslog$playerName) == "MCTS_3_VS_DEF"] <- "MCTS (\U03B4 = 3)"
+levels(gameresultslog$playerName)[levels(gameresultslog$playerName) == "MCTS_4_VS_DEF"] <- "MCTS (\U03B4 = 4)"
+levels(gameresultslog$playerName)[levels(gameresultslog$playerName) == "MCTS_5_VS_DEF"] <- "MCTS (\U03B4 = 5)"
 
 
 if(!affectiveResults){
-	gameresultslog$playerName <- factor(gameresultslog$playerName, levels = c("Random","MCTS (depth = 1)","MCTS (depth = 2)","MCTS (depth = 3)","MCTS (depth = 4)","MCTS (depth = 5)"))
+	gameresultslog$playerName <- factor(gameresultslog$playerName, levels = c("Random","MCTS (\U03B4 = 1)","MCTS (\U03B4 = 2)","MCTS (\U03B4 = 3)","MCTS (\U03B4 = 4)","MCTS (\U03B4 = 5)"))
 }
 
 gameresultslog <- gameresultslog %>% rename(
@@ -178,9 +178,9 @@ analyse <- function(gameresultslog, adversary){
 	plotSRate <- plotSRate + ylim(0, 100.0)
 	
 	if(adversary == 1){
-		plotSRate <- plotSRate + ggtitle("VS. Cooperation-Prone Opponents")
+		plotSRate <- plotSRate + ggtitle("Playing with Cooperation-Prone Agents")
 	}else{
-		plotSRate <- plotSRate + ggtitle("VS. Defection-Prone Opponents")
+		plotSRate <- plotSRate + ggtitle("Playing with Defection-Prone Agents")
 	}
 	
 	write.csv2(aggJ, sprintf("output/SurvivalRates_adversary_%d.csv", adversary))
@@ -222,9 +222,9 @@ analyse <- function(gameresultslog, adversary){
 	plotWRate <- plotWRate + geom_bar(stat = "identity")
 
 	if(adversary == 1){
-		plotWRate <- plotWRate + ggtitle("VS. Cooperation-Prone Opponents")
+		plotWRate <- plotWRate + ggtitle("Playing with Cooperation-Prone Agents")
 	}else{
-		plotWRate <- plotWRate + ggtitle("VS. Defection-Prone Opponents")
+		plotWRate <- plotWRate + ggtitle("Playing with Defection-Prone Agents")
 	}
 
 	write.csv2(ratio, sprintf("output/WinRounds_adversary_%d.csv", adversary))
@@ -253,9 +253,9 @@ analyse <- function(gameresultslog, adversary){
 	plotFinalEcons <- plotFinalEcons + labs(x = "Player Type", y = "Avg. Final Econs (%)\n") 
 	
 	if(adversary == 1){
-		plotFinalEcons <- plotFinalEcons + ggtitle("VS. Cooperation-Prone Opponents")
+		plotFinalEcons <- plotFinalEcons + ggtitle("Playing with Cooperation-Prone Agents")
 	}else{
-		plotFinalEcons <- plotFinalEcons + ggtitle("VS. Defection-Prone Opponents")
+		plotFinalEcons <- plotFinalEcons + ggtitle("Playing with Defection-Prone Agents")
 	}
 	
 
@@ -284,9 +284,9 @@ analyse <- function(gameresultslog, adversary){
 	# plotStrategies <- plotStrategies + ylim(0, 5.0)
 
 	if(adversary == 1){
-		plotStrategies <- plotStrategies + ggtitle("VS. Cooperation-Prone Opponents")
+		plotStrategies <- plotStrategies + ggtitle("Playing with Cooperation-Prone Agents")
 	}else{
-		plotStrategies <- plotStrategies + ggtitle("VS. Defection-Prone Opponents")
+		plotStrategies <- plotStrategies + ggtitle("Playing with Defection-Prone Agents")
 	}
 
 	write.csv2(agg, sprintf("output/Strategies_adversary_%d.csv", adversary))
@@ -344,9 +344,9 @@ analyse <- function(gameresultslog, adversary){
 	# plotMood <- plotMood + geom_ribbon(width=.1, alpha=aggJ$survivalRate*0.5, aes(ymin=moodAvg$mood - moodSd$mood, ymax=moodAvg$mood + moodSd$mood, fill=moodAvg$playerName))
 	
 	if(adversary == 1){
-		plotMood <- plotMood + ggtitle("VS. Cooperation-Prone Opponents")
+		plotMood <- plotMood + ggtitle("Playing with Cooperation-Prone Agents")
 	}else{
-		plotMood <- plotMood + ggtitle("VS. Defection-Prone Opponents")
+		plotMood <- plotMood + ggtitle("Playing with Defection-Prone Agents")
 	}
 
 	write.csv2(moodAvg, sprintf("output/Mood_adversary_%d.csv", adversary))
@@ -379,7 +379,7 @@ analyse <- function(gameresultslog, adversary){
 		margin = margin(10,0,10,40)
 	}
 	plotHeatMapMcts <- ggplot(test, aes(x=roundId, y=mcts, fill=heat)) + 
-	labs(x = "Round Id", y = "MCTS operating Depth\n", fill=" Relative\nFreq. (%)\n") + 
+	labs(x = "Round Id", y = "Level of Reasoning\n", fill=" Relative\nFreq. (%)\n") + 
 	geom_tile(aes(), colour = "transparent") + scale_fill_gradient(low = mycol[1], high = mycol2[1], limits = c(0,100)) + 
 	theme(plot.title = element_text(size=labelSize*1.8), legend.text = element_text(size=labelSize*1.4), plot.margin=margin, panel.spacing=unit(1.5, "lines"), axis.text = element_text(size = labelSize*1.4), axis.title = element_text(size = labelSize*1.4, face = "bold"), legend.title=element_text(size = labelSize*1.4)) + 
 	scale_y_reverse() + 
@@ -390,9 +390,9 @@ analyse <- function(gameresultslog, adversary){
 
 
 	if(adversary == 1){
-		plotHeatMapMcts <- plotHeatMapMcts + ggtitle("VS. Cooperation-Prone Opponents")
+		plotHeatMapMcts <- plotHeatMapMcts + ggtitle("Playing with Cooperation-Prone Agents")
 	}else{
-		plotHeatMapMcts <- plotHeatMapMcts + ggtitle("VS. Defection-Prone Opponents")
+		plotHeatMapMcts <- plotHeatMapMcts + ggtitle("Playing with Defection-Prone Agents")
 	}
 
 	plotsHeatMapMcts[[length(plotsHeatMapMcts)+1]] <<- plotHeatMapMcts
@@ -438,9 +438,9 @@ analyse <- function(gameresultslog, adversary){
 	plotEmotions <- plotEmotions + geom_point(aes(x = agg$roundId, y = agg$value, color = agg$variable), stat = "summary", fun.y = "mean", guide=FALSE) 
 	plotEmotions <- plotEmotions + labs(x = "Curr Round Id", y = "Avg. Emotion Intensity\n", color="Emotion Type") + theme(plot.title = element_text(size=labelSize*1.8), legend.text = element_text(size=labelSize*1.2), plot.margin=margin(10,30,10,30), panel.spacing=unit(1.5, "lines"), axis.text = element_text(size = 15), axis.title = element_text(size = 15, face = "bold"), legend.title = element_blank(), legend.position = 'bottom') + guides(col = guide_legend(ncol = 2))
 	if(adversary == 1){
-		plotEmotions <- plotEmotions + ggtitle("VS. Cooperation-Prone Opponents")
+		plotEmotions <- plotEmotions + ggtitle("Playing with Cooperation-Prone Agents")
 	}else{
-		plotEmotions <- plotEmotions + ggtitle("VS. Defection-Prone Opponents")
+		plotEmotions <- plotEmotions + ggtitle("Playing with Defection-Prone Agents")
 	}
 
 	plotEmotions <- plotEmotions + scale_x_continuous(breaks=c(1, 5, 10, 15, 20))
