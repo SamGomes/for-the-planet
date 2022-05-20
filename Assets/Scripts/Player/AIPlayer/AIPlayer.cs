@@ -1,6 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -68,7 +66,8 @@ public class AIPlayer : Player
 
     public IEnumerator InvestInEconomy(int quantity)
     {
-        int clicks = quantity - currRoundInvestment[GameProperties.InvestmentTarget.ECONOMIC];
+        // Debug.Log("econInv--curr: " + quantity);
+        int clicks = quantity - GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ECONOMIC];
         yield return ClickEconomyInvestmentButton(clicks);
     }
 
@@ -83,7 +82,7 @@ public class AIPlayer : Player
         if (!GameGlobals.isSimulation)
         {
             yield return new WaitForSeconds(0.1f);
-            yield return SimulateMouseClick(this.spendTokenInEnvironmentButtonUI, 0.5f);
+            yield return SimulateMouseClick(spendTokenInEnvironmentButtonUI, 0.5f);
         }
         else
         {
@@ -101,7 +100,8 @@ public class AIPlayer : Player
 
     public IEnumerator InvestInEnvironment(int quantity)
     {
-        int clicks = quantity - currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT];
+        // Debug.Log("envInv--curr: " + quantity);
+        int clicks = quantity - GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT];
         yield return ClickEnvironmentInvestmentButton(clicks);
     }
 

@@ -1,41 +1,41 @@
 ﻿using System;
-using RolePlayCharacter;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Globalization;
 using Object = UnityEngine.Object;
 
 public class Player
 {
+    // //global state change
+    // protected float lastEconDelta;
+    // protected float lastEnvDelta;
 
-    public float lastEconomicDecay;
-    public float lastEconomicResult;
-    public float lastEnvironmentResult;
-
+    //my state increases
+    protected float myLastEconIncrease;
+    protected float myLastEnvIncrease;
+    
+    //my state decays
+    protected float myLastEconDecay;
+    
     protected int id;
     protected GameManager gameManagerRef;
-    protected string playerType;
-    protected string name;
+    protected readonly string playerType;
+    protected readonly string name;
     protected int unallocatedBudget;
-    protected float money;
+    protected float econ;
 
-    protected Dictionary<GameProperties.InvestmentTarget, int> currRoundInvestment;
-    protected Dictionary<GameProperties.InvestmentTarget, int> investmentHistory;
+    private Dictionary<GameProperties.InvestmentTarget, int> currRoundInvestment;
+    private Dictionary<GameProperties.InvestmentTarget, int> prevRoundInvestment;
+    private Dictionary<GameProperties.InvestmentTarget, int> investmentHistory;
 
     protected float coopPerc; //based on previous actions
 
     //UI Stuff
     protected MonoBehaviourFunctionalities playerMonoBehaviourFunctionalities;
-    private Sprite UIAvatar;
+    // private Sprite UIAvatar;
 
-    private GameObject canvas;
     protected GameObject playerUI;
     private GameObject playerMarkerUI;
     private GameObject playerDisablerUI;
@@ -64,7 +64,12 @@ public class Player
     public Player(string playerType, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name)
     {
 
-        this.coopPerc = 0.5f;
+        myLastEconIncrease = 0.0f;
+        myLastEnvIncrease = 0.0f;
+        
+        myLastEconDecay = 0.0f;
+    
+        coopPerc = 0.5f;
         
         gameManagerRef = GameGlobals.gameManager;
         this.id = id;
@@ -72,7 +77,7 @@ public class Player
         playerMonoBehaviourFunctionalities = GameGlobals.monoBehaviourFunctionalities;
         this.warningScreenRef = warningScreenRef;
 
-        money = 0.0f;
+        econ = 0.0f;
         this.playerType = playerType;
 
         investmentHistory = new Dictionary<GameProperties.InvestmentTarget, int>();
@@ -85,11 +90,24 @@ public class Player
 
         if (!GameGlobals.isSimulation)
         {
-            InitUI(playerCanvas, warningScreenRef, UIAvatar);
+            InitUI(playerCanvas, UIAvatar);
         }
     }
 
 
+    public float GetMyLastEnvIncrease()
+    {
+        return myLastEnvIncrease;
+    }
+    public float GetMyLastEconIncrease()
+    {
+        return myLastEconIncrease;
+    }
+    public float GetMyLastEconDecay()
+    {
+        return myLastEconDecay;
+    }
+    
     public void SpendTokenInEconomicGrowth()
     {
         if (currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT] == 0)
@@ -115,10 +133,8 @@ public class Player
     
 
 
-    public void InitUI(GameObject canvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar)
+    public void InitUI(GameObject canvas, Sprite UIAvatar)
     {
-        this.canvas = canvas;
-
         playerUI = Object.Instantiate(Resources.Load<GameObject>("Prefabs/PlayerUI/playerUI"), canvas.transform);
 
         playerMarkerUI = playerUI.transform.Find("marker").gameObject;
@@ -126,7 +142,7 @@ public class Player
         playerSelfDisablerUI = playerUI.transform.Find("selfDisabler").gameObject;
         playerSelfDisablerUI.SetActive(false); //provide interaction by default
 
-        this.UIAvatar = UIAvatar;
+        // this.UIAvatar = UIAvatar;
 
         playerActionButtonUI = playerUI.transform.Find("playerActionSection/playerActionButton").gameObject.GetComponent<Button>();
 
@@ -180,47 +196,55 @@ public class Player
 
     public int GetId()
     {
-        return this.id;
+        return id;
     }
     public string GetName()
     {
-        return this.name;
+        return name;
     }
     public float GetMoney()
     {
-        return this.money;
+        return econ;
     }
     public Dictionary<GameProperties.InvestmentTarget, int> GetCurrRoundInvestment()
     {
-        return this.currRoundInvestment;
+        return currRoundInvestment;
+    }
+    public void SetCurrRoundInvestment(Dictionary<GameProperties.InvestmentTarget, int> currRoundInvestment)
+    {
+        this.currRoundInvestment = currRoundInvestment;
+    }
+    public Dictionary<GameProperties.InvestmentTarget, int> GetPrevRoundInvestment()
+    {
+        return prevRoundInvestment;
     }
     public Dictionary<GameProperties.InvestmentTarget, int> GetInvestmentsHistory()
     {
-        return this.investmentHistory;
+        return investmentHistory;
     }
 
     public float GetCoopPerc()
     {
-        return this.coopPerc;
+        return coopPerc;
     }
 
     public virtual void BudgetAllocationPhaseRequest()
     {
         if (!GameGlobals.isSimulation)
         {
-            this.budgetAllocationScreenUI.SetActive(true);
-            this.displayHistoryScreenUI.SetActive(false);
-            this.budgetExecutionScreenUI.SetActive(false);
-            this.investmentSimulationScreenUI.SetActive(false);
-            this.playerActionButtonUI.gameObject.SetActive(true);
+            budgetAllocationScreenUI.SetActive(true);
+            displayHistoryScreenUI.SetActive(false);
+            budgetExecutionScreenUI.SetActive(false);
+            investmentSimulationScreenUI.SetActive(false);
+            playerActionButtonUI.gameObject.SetActive(true);
         }
         
 
         unallocatedBudget = GameGlobals.roundBudget;
-        int halfBudget = Mathf.FloorToInt(this.unallocatedBudget / 2.0f);
+        int halfBudget = Mathf.FloorToInt(unallocatedBudget / 2.0f);
         int startingEconomicInv = halfBudget;
         int startingEnvironmentInv = unallocatedBudget - halfBudget;
-
+        
         currRoundInvestment[GameProperties.InvestmentTarget.ECONOMIC] = 0;
         currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT] = 0;
 
@@ -265,6 +289,11 @@ public class Player
     }
     public virtual void InvestmentSimulationRequest()
     {
+        //this forces passing by value
+        prevRoundInvestment = new Dictionary<GameProperties.InvestmentTarget, int>();
+        prevRoundInvestment[GameProperties.InvestmentTarget.ECONOMIC] = currRoundInvestment[GameProperties.InvestmentTarget.ECONOMIC];
+        prevRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT] = currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT];
+        
         if (!GameGlobals.isSimulation)
         {
             budgetAllocationScreenUI.SetActive(false);
@@ -347,22 +376,16 @@ public class Player
         }
     }
 
-    public IEnumerator TakeAllMoney()
+    //UI Stuff
+    public IEnumerator SetEconomicValue(float econ)
     {
-        this.money = 0;
-        yield return playerMonoBehaviourFunctionalities.StartCoroutine(this.dynamicSlider.UpdateSliderValue(money));
-    }
-    public IEnumerator SetMoney(float money)
-    {
-        this.money = Mathf.Clamp01(money);
+        this.econ = Mathf.Clamp01(econ);
         if (dynamicSlider != null)
         {
-            yield return playerMonoBehaviourFunctionalities.StartCoroutine(this.dynamicSlider.UpdateSliderValue(money));
+            yield return playerMonoBehaviourFunctionalities.StartCoroutine(this.dynamicSlider.UpdateSliderValue(econ));
         }
     }
-
-
-    //UI Stuff
+    
     private void UpdateTokensUI()
     {
         economicGrowthTokensDisplayUI.text = currRoundInvestment[GameProperties.InvestmentTarget.ECONOMIC].ToString();
@@ -376,52 +399,43 @@ public class Player
 
     public PopupScreenFunctionalities GetWarningScreenRef()
     {
-        return this.warningScreenRef;
-    }
-    public GameObject GetPlayerCanvas()
-    {
-        return this.canvas;
+        return warningScreenRef;
     }
     public GameObject GetPlayerUI()
     {
-        return this.playerUI;
+        return playerUI;
     }
     public GameObject GetPlayerMarkerUI()
     {
-        return this.playerMarkerUI;
+        return playerMarkerUI;
     }
     public GameObject GetPlayerDisablerUI()
     {
-        return this.playerDisablerUI;
+        return playerDisablerUI;
     }
 
-    public Sprite GetAvatarUI()
+    public IEnumerator UpdateEconomy(float myEconomicIncrease)
     {
-        throw new NotImplementedException();
-        return this.UIAvatar;
+        yield return GameGlobals.monoBehaviourFunctionalities.StartCoroutine(SetEconomicValue(econ + myEconomicIncrease));
     }
-
     
-    public IEnumerator SetEconomicDecay(float economicDecay)
+    public void UpdateLastEconIncrease(float myEconomicIncrease)
     {
-        this.lastEconomicDecay = economicDecay;
-        yield return GameGlobals.monoBehaviourFunctionalities.StartCoroutine(SetMoney(money - economicDecay));
+        myLastEconIncrease = myEconomicIncrease;
     }
-
-    public IEnumerator SetEconomicResult(float economicIncrease)
+    public void UpdateLastEnvIncrease(float myEnvIncrease)
     {
-        this.lastEconomicResult = economicIncrease;
-        yield return GameGlobals.monoBehaviourFunctionalities.StartCoroutine(SetMoney(money + economicIncrease));
+        myLastEnvIncrease = myEnvIncrease;
     }
-    public void SetEnvironmentResult(float environmentResult)
+    
+    public void UpdateLastEconDecay(float myEconomicDecay)
     {
-        this.lastEconomicResult = environmentResult;
+        myLastEconDecay = myEconomicDecay;
     }
-
 
     public string GetPlayerType()
     {
-        return this.playerType;
+        return playerType;
     }
 
     public virtual void Perceive(List<WellFormedNames.Name> events) { }
