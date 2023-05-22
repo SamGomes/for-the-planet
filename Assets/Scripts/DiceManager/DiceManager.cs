@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -137,8 +136,6 @@ public class DiceManager
 
         //record result
         UpdateCurrDiceTotal(currThrowResult);
-        Debug.Log(currThrowResult);
-
         if (sequenceNumber > maxSeqNumber-2)
         {
             this.rollDiceOverlay.SetActive(false);

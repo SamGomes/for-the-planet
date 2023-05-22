@@ -8,21 +8,22 @@ using System.Text.RegularExpressions;
 using UnityEngine;
 using Utilities;
 using MCTS.Core;
+using WellFormedNames;
+using Random = System.Random;
+
 //Using the MCTS implementation originally provided by @Mikeywalsh
 
 public class EmotionalAIPlayer: AIPlayer
 {
     
     //Emotional stuff
-    protected RolePlayCharacterAsset rpc;
+    protected readonly RolePlayCharacterAsset rpc;
     protected Dictionary<GameProperties.InvestmentTarget, int> investmentIntentions;
     
     public EmotionalAIPlayer(string playerType, InteractionModule interactionModule, GameObject playerCanvas, PopupScreenFunctionalities warningScreenRef, Sprite UIAvatar, int id, string name, float updateDelay, string fatimaRpcPath) :
         base(playerType, interactionModule, playerCanvas, warningScreenRef, UIAvatar, id, name)
     {
         rpc = GameGlobals.FAtiMAIat.Characters.FirstOrDefault(x => x.CharacterName.ToString() == this.playerType.ToString()+"_"+id);
-        rpc.CharacterName =  (WellFormedNames.Name) ("Agent" + this.id.ToString());
-
         investmentIntentions = new Dictionary<GameProperties.InvestmentTarget, int>();
 
         //default investment intention
@@ -34,39 +35,68 @@ public class EmotionalAIPlayer: AIPlayer
     
     public RolePlayCharacterAsset GetRpc()
     {
-        return this.rpc;
+        return rpc;
     }
 
     public override IEnumerator AutoBudgetAllocation()
     {
         base.AutoBudgetAllocation();
+        
+        // List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
+
+        if (GameGlobals.currGameRoundId > 0)
+        {
+            //----------------------desirability-related event------------------------      
+            //(using separate events)
+            List<Name> evntsD = new List<Name>();
+            foreach (Player player in GameGlobals.players)
+            {
+                string target = player.GetId().ToString();
+                if (player == this)
+                {
+                    target = rpc.CharacterName.ToString();
+                }
+                evntsD.Add(EventHelper.ActionEnd(rpc.CharacterName.ToString(),
+                    "BeforeBudgetAllocation(" +
+                    player.GetMyLastEconIncrease().ToString("0.000000", CultureInfo.InvariantCulture) + "," +
+                    player.GetMyLastEnvIncrease().ToString("0.000000", CultureInfo.InvariantCulture) + ")", 
+                    target));
+                // Debug.Log("BeforeBudgetAllocation(" +
+                //           player.GetMyLastEconIncrease().ToString("0.000000", CultureInfo.InvariantCulture) + "," +
+                //           player.GetMyLastEnvIncrease().ToString("0.000000", CultureInfo.InvariantCulture) + "),"+target+","+id.ToString());
+            }
+            rpc.Perceive(evntsD);
+            rpc.Update();
+
+            //-----------------praiseworthiness-related event-------------------------
+            //(using separate events)
+            List<Name> evntsP = new List<Name>();
+            foreach (Player player in GameGlobals.players)
+            {
+                string target = player.GetId().ToString();
+                if (player == this)
+                {
+                    target = rpc.CharacterName.ToString();
+                }
+                evntsP.Add(EventHelper.ActionEnd( 
+                    rpc.CharacterName.ToString(),
+                    "HistoryDisplay(" +
+                    player.GetPrevRoundInvestment()[GameProperties.InvestmentTarget.ECONOMIC]
+                        .ToString("0.0000", CultureInfo.InvariantCulture) + "," +
+                    player.GetPrevRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT]
+                        .ToString("0.0000", CultureInfo.InvariantCulture) + ")",
+                    target));
+                // Debug.Log("HistoryDisplay(" +
+                //           player.GetPrevRoundInvestment()[GameProperties.InvestmentTarget.ECONOMIC].ToString("0.000000", CultureInfo.InvariantCulture) + "," +
+                //           player.GetPrevRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT].ToString("0.000000", CultureInfo.InvariantCulture) + "),"+target+","+id.ToString());
+            }
+            rpc.Perceive(evntsP);
+            rpc.Update();
+        }
 
         investmentIntentions = ComputeIntentions();
         int econInv = investmentIntentions[GameProperties.InvestmentTarget.ECONOMIC];
         int envInv = investmentIntentions[GameProperties.InvestmentTarget.ENVIRONMENT];
-        
-        float env = GameGlobals.envState - 0.001f;
-        float bestEcon = -1.0f;
-        // foreach (Player innerPlayer in GameGlobals.players)
-        // {
-        //     int id = innerPlayer.GetId();
-        //     float currEcon = innerPlayer.GetMoney();
-        //     if (currEcon > bestEcon)
-        //     {
-        //         bestEcon = currEcon;
-        //     }
-        // }
-        float econ = money;
-        
-
-        WellFormedNames.Name evnt = EventHelper.PropertyChange(
-            "BeforeBudgetAllocation(" + 
-            econ.ToString("0.00", CultureInfo.InvariantCulture) + "," + 
-            env.ToString("0.00", CultureInfo.InvariantCulture) + ")", 
-            "Self", id.ToString());
-        rpc.Perceive(evnt);
-        rpc.Update();
-
         yield return InvestInEconomy(econInv);
         yield return InvestInEnvironment(envInv);
         yield return EndBudgetAllocationPhase();
@@ -75,33 +105,8 @@ public class EmotionalAIPlayer: AIPlayer
     public override IEnumerator AutoHistoryDisplay()
     {
         yield return base.AutoHistoryDisplay();
-
-        List<WellFormedNames.Name> events = new List<WellFormedNames.Name>();
-
-        float econOthers = 0;
-        float envOthers = 0;
-        foreach (Player player in GameGlobals.players)
-        {
-            //aggregate all investments
-            econOthers += player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ECONOMIC];
-            envOthers += player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT];
-        }
-        //aggregate (do not need to average because the function is already a ratio)
-        // econOthers /= (GameGlobals.players.Count);
-        // envOthers /= (GameGlobals.players.Count);
         
-        events.Add(
-            EventHelper.PropertyChange(
-                "HistoryDisplay(" + 
-                econOthers.ToString("0.00", CultureInfo.InvariantCulture) + "," +
-                envOthers.ToString("0.00", CultureInfo.InvariantCulture) + ")",
-                "OtherPlayers", id.ToString())
-        );
-        
-        rpc.Perceive(events);
-        rpc.Update();
-
-        yield return null;
+        //praiseworthiness used to be here
     }
 
     public override IEnumerator AutoBudgetExecution()
@@ -141,7 +146,7 @@ public class FTPMove: Move
     /// Returns a unique hash code for this move instance
     public int GetInvestmentEnv()
     {
-        return this.investmentEnv;
+        return investmentEnv;
     }
 
 
@@ -320,10 +325,10 @@ public class FTPBoard : Board
     /// Determines if there is a winner or not for this board state and updates the winner integer accordingly
     protected override void DetermineWinner()
     {
-        this.winner = -1;
+        winner = -1;
         if (env < 0.001)
         {
-            this.winner = 10;
+            winner = 10;
         }
         else if (currGameRound >= (maxGameRound - 1))
         {
@@ -344,15 +349,15 @@ public class FTPBoard : Board
 
             if (bestPlayers.Count() > 1)
             {
-                this.winner = 10;
+                winner = 10;
                 if (bestPlayers.Contains(CurrentPlayer))
                 {
-                    this.winner = 0;
+                    winner = 0;
                 }
             }
             else
             {
-                this.winner = bestPlayers[0] + 1;
+                winner = bestPlayers[0] + 1;
             }
         }
     }
@@ -383,9 +388,6 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
             return investmentIntentions;
         }
 
-        string rpcArr = "[";
-        int j = 0;
-        
         interactionModule.Speak("I'm feeling " + strongestEmotion.EmotionType);
         
         List<float> moneyValues = new List<float>();
@@ -409,7 +411,7 @@ public class CompetitiveCooperativeEmotionalAIPlayer : EmotionalAIPlayer
             numMctsSteps = 1;
         }
         
-        FTPBoard currentState = new FTPBoard(this.id + 1, GameProperties.configurableProperties.maxNumRounds, PredictAction, GameGlobals.envState, moneyValues);
+        FTPBoard currentState = new FTPBoard(id + 1, GameProperties.configurableProperties.maxNumRounds, PredictAction, GameGlobals.envState, moneyValues);
         return Analyse(numMctsSteps, currentState); 
     }
 
@@ -460,10 +462,10 @@ public class AIMCTSPlayer : AIPlayer
         }
 
         FTPBoard currentState = new FTPBoard(this.id + 1, GameProperties.configurableProperties.maxNumRounds, PredictAction, GameGlobals.envState, moneyValues);
-        currRoundInvestment = Analyse(depth, currentState);
+        SetCurrRoundInvestment(Analyse(depth, currentState));
         
-        yield return InvestInEconomy(currRoundInvestment[GameProperties.InvestmentTarget.ECONOMIC]);
-        yield return InvestInEnvironment(currRoundInvestment[GameProperties.InvestmentTarget.ENVIRONMENT]);
+        yield return InvestInEconomy(GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ECONOMIC]);
+        yield return InvestInEnvironment(GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT]);
         yield return EndBudgetAllocationPhase();
     }
 
@@ -488,7 +490,7 @@ public class AIMCTSPlayer : AIPlayer
     
     public int PredictAction(Player player)
     {
-        float coopValue = (player.GetCoopPerc() * GameGlobals.roundBudget);
+        float coopValue = player.GetCoopPerc() * GameGlobals.roundBudget;
         return UnityEngine.Random.Range(Mathf.FloorToInt(coopValue), Mathf.CeilToInt(coopValue));
     }
 }

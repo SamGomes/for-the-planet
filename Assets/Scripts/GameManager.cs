@@ -1,5 +1,4 @@
-﻿
-using System.Linq;
+﻿using System.Linq;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,8 +7,8 @@ using System.Globalization;
 using EmotionalAppraisal.DTOs;
 using RolePlayCharacter;
 
-public class GameManager : MonoBehaviour {
-    
+public class GameManager : MonoBehaviour
+{
     public GameObject canvas;
 
     private int numPlayersToAllocateBudget;
@@ -26,7 +25,7 @@ public class GameManager : MonoBehaviour {
     public Button advanceRoundButton;
     public GameObject simulateInvestmentScreen;
     public Button simulateEvolutionButton;
-    
+
     public GameObject rollDiceOverlay;
     public GameObject diceUIPrefab;
     private DiceManager diceManager;
@@ -44,7 +43,7 @@ public class GameManager : MonoBehaviour {
 
     private bool gameMainSceneFinished;
     private int interruptionRequests; //changed whenever an interruption occurs (either a poppup, warning, etc.)
-    
+
     private int currPlayerIndex;
     private float phaseEndDelay;
 
@@ -56,13 +55,14 @@ public class GameManager : MonoBehaviour {
         interruptionRequests++;
         return 0;
     }
+
     public int ContinueGame()
     {
         interruptionRequests--;
         return 0;
     }
 
-   
+
     void Start()
     {
         currGamePhase = GameProperties.GamePhase.BUDGET_ALLOCATION;
@@ -71,7 +71,8 @@ public class GameManager : MonoBehaviour {
         GameGlobals.gameManager = this;
         GameGlobals.currGameState = GameProperties.GameState.NOT_FINISHED;
 
-        diceManager = new DiceManager(rollDiceOverlay, diceUIPrefab, GameGlobals.monoBehaviourFunctionalities, GameGlobals.diceLogic);
+        diceManager = new DiceManager(rollDiceOverlay, diceUIPrefab, GameGlobals.monoBehaviourFunctionalities,
+            GameGlobals.diceLogic);
 
         // init main scene elements
         interruptionRequests = 0;
@@ -85,17 +86,23 @@ public class GameManager : MonoBehaviour {
         currPlayerIndex = 0;
 
         //get player poppups (can be from any player) and set methods
-        infoPoppupLossRef = new PopupScreenFunctionalities(false, InterruptGame, ContinueGame, poppupPrefab, canvas, GameGlobals.monoBehaviourFunctionalities, Resources.Load<Sprite>("Textures/UI/Icons/InfoLoss"), new Color(0.9f, 0.8f, 0.8f), "Audio/albumLoss");
-        infoPoppupWinRef = new PopupScreenFunctionalities(false, InterruptGame, ContinueGame, poppupPrefab, canvas, GameGlobals.monoBehaviourFunctionalities, Resources.Load<Sprite>("Textures/UI/Icons/InfoWin"), new Color(0.9f, 0.9f, 0.8f), "Audio/albumVictory");
-        infoPoppupNeutralRef = new PopupScreenFunctionalities(false, InterruptGame, ContinueGame, poppupPrefab, canvas, GameGlobals.monoBehaviourFunctionalities, Resources.Load<Sprite>("Textures/UI/Icons/Info"), new Color(0.9f, 0.9f, 0.9f), "Audio/snap");
-        
+        infoPoppupLossRef = new PopupScreenFunctionalities(false, InterruptGame, ContinueGame, poppupPrefab, canvas,
+            GameGlobals.monoBehaviourFunctionalities, Resources.Load<Sprite>("Textures/UI/Icons/InfoLoss"),
+            new Color(0.9f, 0.8f, 0.8f), "Audio/albumLoss");
+        infoPoppupWinRef = new PopupScreenFunctionalities(false, InterruptGame, ContinueGame, poppupPrefab, canvas,
+            GameGlobals.monoBehaviourFunctionalities, Resources.Load<Sprite>("Textures/UI/Icons/InfoWin"),
+            new Color(0.9f, 0.9f, 0.8f), "Audio/albumVictory");
+        infoPoppupNeutralRef = new PopupScreenFunctionalities(false, InterruptGame, ContinueGame, poppupPrefab, canvas,
+            GameGlobals.monoBehaviourFunctionalities, Resources.Load<Sprite>("Textures/UI/Icons/Info"),
+            new Color(0.9f, 0.9f, 0.9f), "Audio/snap");
+
 
         gameMainSceneFinished = false;
         phaseEndDelay = 2.0f;
         GameGlobals.envState = 0.5f;
 
         int numPlayers = GameGlobals.players.Count;
-        
+
         // @jbgrocha: Auto Continue for Batch Mode
         Player currPlayer = null;
         if (GameGlobals.isSimulation)
@@ -104,7 +111,7 @@ public class GameManager : MonoBehaviour {
             {
                 currPlayer = GameGlobals.players[i];
                 currPlayer.ReceiveGameManager(this);
-                StartCoroutine(currPlayer.SetMoney(0.1f));
+                StartCoroutine(currPlayer.SetEconomicValue(0.1f));
             }
 
             newRoundScreen.SetActive(false);
@@ -112,12 +119,11 @@ public class GameManager : MonoBehaviour {
         }
         else
         {
-
             for (int i = 0; i < numPlayers; i++)
             {
                 currPlayer = GameGlobals.players[i];
                 currPlayer.ReceiveGameManager(this);
-                StartCoroutine(currPlayer.SetMoney(0.1f));
+                StartCoroutine(currPlayer.SetEconomicValue(0.1f));
 
                 //Setup warnings
                 currPlayer.GetWarningScreenRef().AddOnShow(InterruptGame);
@@ -127,7 +133,7 @@ public class GameManager : MonoBehaviour {
 
             envDynamicSlider = new DynamicSlider(environmentSliderSceneElement.gameObject);
             StartCoroutine(envDynamicSlider.UpdateSliderValue(GameGlobals.envState));
-            DontDestroyOnLoad(CommonAreaUI);
+            // DontDestroyOnLoad(CommonAreaUI);
 
             rollDiceOverlay.SetActive(false);
 
@@ -168,37 +174,39 @@ public class GameManager : MonoBehaviour {
         int numTokensForEnvironment = currInvestment[GameProperties.InvestmentTarget.ENVIRONMENT];
 
         //roll dice for GameProperties.InvestmentTarget.ECONOMIC
-        string diceOverlayTitle = currPlayer.GetName() + " rolling " + numTokensForEconomy + " dice for economic growth ...";
+        string diceOverlayTitle =
+            currPlayer.GetName() + " rolling " + numTokensForEconomy + " dice for economic growth ...";
         yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, numTokensForEconomy));
 
         int economyResult = diceManager.GetCurrDiceTotal();
-        float economicIncrease = (float) economyResult / 100.0f;
+        float economicIncrease = economyResult / 100.0f;
 
-        yield return StartCoroutine(currPlayer.SetEconomicResult(economicIncrease));
-//        Debug.Log("economicIncrease: "+economicIncrease);
+        yield return StartCoroutine(currPlayer.UpdateEconomy(economicIncrease));
+        currPlayer.UpdateLastEconIncrease(economicIncrease);
+        GameGlobals.lastTotalEconIncrease += economicIncrease;
 
         if (!GameGlobals.isSimulation && GameGlobals.isNarrated)
         {
-            yield return GameGlobals.narrator.EconomyBudgetExecution(currPlayer, GameGlobals.currGameRoundId, economyResult);
+            yield return GameGlobals.narrator.EconomyBudgetExecution(currPlayer, GameGlobals.currGameRoundId,
+                economyResult);
         }
 
-        
         //roll dice for GameProperties.InvestmentTarget.ENVIRONMENT       
         diceOverlayTitle = currPlayer.GetName() + " rolling " + numTokensForEnvironment + " dice for environment ...";
         yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, numTokensForEnvironment));
 
         int environmentResult = diceManager.GetCurrDiceTotal();
-        float envIncrease = (float) environmentResult / 100.0f;
-//        Debug.Log("envIncrease: "+envIncrease);
+        float envIncrease = environmentResult / 100.0f;
 
         GameGlobals.envState = Mathf.Clamp01(GameGlobals.envState + envIncrease);
+        currPlayer.UpdateLastEnvIncrease(envIncrease);
+        GameGlobals.lastTotalEnvIncrease += envIncrease;
+
         if (!GameGlobals.isSimulation)
         {
             yield return GameGlobals.monoBehaviourFunctionalities.StartCoroutine(
                 envDynamicSlider.UpdateSliderValue(GameGlobals.envState));
         }
-
-        currPlayer.SetEnvironmentResult(envIncrease);
 
         if (!GameGlobals.isSimulation && GameGlobals.isNarrated)
         {
@@ -212,6 +220,7 @@ public class GameManager : MonoBehaviour {
         //yield return GameGlobals.narrator.BudgetExecution(currPlayer, GameGlobals.currGameRoundId, economyResult, environmentResult);
     }
 
+
     private IEnumerator YieldedGameUpdateLoop()
     {
         //avoid rerun in this case because load scene is asyncronous
@@ -220,12 +229,12 @@ public class GameManager : MonoBehaviour {
             yield return null;
         }
 
-        
+
         //end of first phase; trigger second phase
         if (numPlayersToAllocateBudget == 0)
         {
             currGamePhase = GameProperties.GamePhase.HISTORY_DISPLAY;
-            
+
             StartDisplayHistoryPhase();
             numPlayersToAllocateBudget = GameGlobals.players.Count;
         }
@@ -240,6 +249,9 @@ public class GameManager : MonoBehaviour {
             {
                 yield return new WaitForSeconds(phaseEndDelay);
             }
+
+            GameGlobals.lastTotalEconIncrease = 0.0f;
+            GameGlobals.lastTotalEnvIncrease = 0.0f;
             StartExecuteBudgetPhase();
         }
 
@@ -261,15 +273,17 @@ public class GameManager : MonoBehaviour {
         //end of forth phase
         if (numPlayersToSimulateInvestment == 0)
         {
-            currGamePhase = GameProperties.GamePhase.BUDGET_ALLOCATION;
+            currGamePhase = GameProperties.GamePhase.DECAY_SIMULATION;
             numPlayersToSimulateInvestment = GameGlobals.players.Count;
 
             string diceOverlayTitle = "Simulating environment decay ...";
-            yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, Random.Range(GameGlobals.environmentDecayBudget[0],GameGlobals.environmentDecayBudget[1]+1)));
+            yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle,
+                Random.Range(GameGlobals.environmentDecayBudget[0], GameGlobals.environmentDecayBudget[1] + 1)));
 
             int environmentDecay = diceManager.GetCurrDiceTotal();
-            float envDecay = (float) environmentDecay / 100.0f;
-            
+            float envDecay = environmentDecay / 100.0f;
+            GameGlobals.lastEnvDecay = envDecay;
+
             GameGlobals.envState = Mathf.Clamp01(GameGlobals.envState - envDecay);
             if (!GameGlobals.isSimulation)
             {
@@ -278,29 +292,37 @@ public class GameManager : MonoBehaviour {
 
             if (!GameGlobals.isSimulation && GameGlobals.isNarrated)
             {
-                StartCoroutine(GameGlobals.narrator.EnvironmentDecaySimulation(GameGlobals.currGameRoundId, environmentDecay));
+                StartCoroutine(
+                    GameGlobals.narrator.EnvironmentDecaySimulation(GameGlobals.currGameRoundId, environmentDecay));
             }
 
+            GameGlobals.lastTotalEconDecay = 0.0f;
             foreach (Player player in GameGlobals.players)
             {
                 diceOverlayTitle = "Simulating economic decay ...";
-                yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle, Random.Range(GameGlobals.playerDecayBudget[0],GameGlobals.playerDecayBudget[1]+1)));
+                yield return StartCoroutine(diceManager.RollTheDice(diceOverlayTitle,
+                    Random.Range(GameGlobals.playerDecayBudget[0], GameGlobals.playerDecayBudget[1] + 1)));
 
                 int economyDecay = diceManager.GetCurrDiceTotal();
-                float economicDecay = (float) economyDecay / 100.0f;
-                StartCoroutine(player.SetEconomicDecay(economicDecay));
+                float economicDecay = economyDecay / 100.0f;
+                StartCoroutine(player.UpdateEconomy(-economicDecay));
+                player.UpdateLastEconDecay(economicDecay);
+                GameGlobals.lastTotalEconDecay += economicDecay;
 
                 if (!GameGlobals.isSimulation && GameGlobals.isNarrated)
                 {
-                    StartCoroutine(GameGlobals.narrator.EconomyDecaySimulation(player, GameGlobals.currGameRoundId, economyDecay));
+                    StartCoroutine(GameGlobals.narrator.EconomyDecaySimulation(player, GameGlobals.currGameRoundId,
+                        economyDecay));
                 }
             }
 
+            currGamePhase = GameProperties.GamePhase.BUDGET_ALLOCATION;
             if (!GameGlobals.isSimulation)
             {
                 yield return new WaitForSeconds(phaseEndDelay);
             }
-            
+
+
             //check for game end to stop the game instead of loading new round
             if (GameGlobals.envState <= 0.001f)
             {
@@ -314,11 +336,13 @@ public class GameManager : MonoBehaviour {
                     GameGlobals.currGameState = GameProperties.GameState.VICTORY;
                     // ONHOLD @jbgrocha: Send GAME Victory Event to AIPlayers (call AIplayer update emotional module function)
                 }
-                Debug.Log("[Game: "+GameGlobals.currGameId+"; Round: " + (GameGlobals.currGameRoundId + 1) +" of "+GameProperties.configurableProperties.maxNumRounds+"]");
+
+                Debug.Log("[Game: " + GameGlobals.currGameId + "; Round: " + (GameGlobals.currGameRoundId + 1) +
+                          " of " + GameProperties.configurableProperties.maxNumRounds + "]");
             }
 
-            
-            foreach(Player player in GameGlobals.players)
+            //log game round
+            foreach (Player player in GameGlobals.players)
             {
                 Dictionary<string, string> logEntry = new Dictionary<string, string>()
                 {
@@ -328,18 +352,30 @@ public class GameManager : MonoBehaviour {
                     {"condition", GameGlobals.currGameCondition},
                     {"gameState", GameGlobals.currGameState.ToString()},
 
-                    
+
                     {"envState", GameGlobals.envState.ToString()},
-                    
+
                     {"playerId", player.GetId().ToString()},
                     {"playerName", player.GetName()},
                     {"playerType", player.GetPlayerType()},
-                    
-                    {"playerInvestEcon", player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ECONOMIC].ToString()},
-                    {"playerInvestEnv", player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT].ToString()},
 
-                    {"playerInvHistEcon", player.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ECONOMIC].ToString()},
-                    {"playerInvHistEnv", player.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ENVIRONMENT].ToString()},
+                    {
+                        "playerInvestEcon",
+                        player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ECONOMIC].ToString()
+                    },
+                    {
+                        "playerInvestEnv",
+                        player.GetCurrRoundInvestment()[GameProperties.InvestmentTarget.ENVIRONMENT].ToString()
+                    },
+
+                    {
+                        "playerInvHistEcon",
+                        player.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ECONOMIC].ToString()
+                    },
+                    {
+                        "playerInvHistEnv",
+                        player.GetInvestmentsHistory()[GameProperties.InvestmentTarget.ENVIRONMENT].ToString()
+                    },
 
                     {"playerEconState", player.GetMoney().ToString()}
                 };
@@ -350,58 +386,52 @@ public class GameManager : MonoBehaviour {
                     playerType == "AI-EMOTIONAL-DISRUPTIVE-COLLECTIVIST" ||
                     playerType == "AI-EMOTIONAL-DISRUPTIVE-INDIVIDUALISTIC")
                 {
-
                     EmotionalAIPlayer emotPlayer = (EmotionalAIPlayer) player;
                     RolePlayCharacterAsset rpc = emotPlayer.GetRpc();
-                    EmotionalAppraisal.IActiveEmotion
-                        strongestEmotion = rpc.GetStrongestActiveEmotion();
-                    if (strongestEmotion != null)
+
+                    Dictionary<string, float> emotionsStrI = new Dictionary<string, float>();
+                    emotionsStrI["Happy-for"] = emotionsStrI["Gloating"] = emotionsStrI["Satisfaction"] =
+                        emotionsStrI["Relief"] = emotionsStrI["Hope"] = emotionsStrI["Joy"] =
+                            emotionsStrI["Gratification"] =
+                                emotionsStrI["Gratitude"] = emotionsStrI["Pride"] = emotionsStrI["Admiration"] =
+                                    emotionsStrI["Love"] =
+                                        emotionsStrI["Resentment"] = emotionsStrI["Pity"] =
+                                            emotionsStrI["Fear-confirmed"] =
+                                                emotionsStrI["Disappointment"] = emotionsStrI["Fear"] =
+                                                    emotionsStrI["Distress"] = emotionsStrI["Remorse"] =
+                                                        emotionsStrI["Anger"] = emotionsStrI["Shame"] =
+                                                            emotionsStrI["Reproach"] = emotionsStrI["Hate"] = 0.0f;
+
+                    string str = "";
+                    foreach (EmotionDTO currEmotion in rpc.GetAllActiveEmotions())
                     {
-                        Dictionary<string, float> emotionsStrI = new Dictionary<string, float>();
-                        emotionsStrI["Happy-for"] = emotionsStrI["Gloating"] = emotionsStrI["Satisfaction"] =
-                            emotionsStrI["Relief"] = emotionsStrI["Hope"] = emotionsStrI["Joy"] =
-                                emotionsStrI["Gratification"] =
-                                    emotionsStrI["Gratitude"] = emotionsStrI["Pride"] = emotionsStrI["Admiration"] =
-                                        emotionsStrI["Love"] =
-                                            emotionsStrI["Resentment"] = emotionsStrI["Pity"] =
-                                                emotionsStrI["Fear-confirmed"] =
-                                                    emotionsStrI["Disappointment"] = emotionsStrI["Fear"] =
-                                                        emotionsStrI["Distress"] = emotionsStrI["Remorse"] =
-                                                            emotionsStrI["Anger"] = emotionsStrI["Shame"] =
-                                                                emotionsStrI["Reproach"] = emotionsStrI["Hate"] = 0.0f;
-
-                        string str = "";
-                        foreach (EmotionDTO currEmotion in rpc.GetAllActiveEmotions())
+                        if (currEmotion.Intensity > emotionsStrI[currEmotion.Type])
                         {
-                            if (currEmotion.Intensity > emotionsStrI[currEmotion.Type])
-                            {
-                                emotionsStrI[currEmotion.Type] = currEmotion.Intensity;
-                            }
+                            emotionsStrI[currEmotion.Type] = currEmotion.Intensity;
                         }
-
-                        foreach (string currEmotionKey in emotionsStrI.Keys)
-                        {
-                            string currEmotion = currEmotionKey;
-                            if (currEmotion == "Happy-for")
-                            {
-                                currEmotion = "HappyFor";
-                            }
-
-                            if (currEmotion == "Fear-confirmed")
-                            {
-                                currEmotion = "FearConfirmed";
-                            }
-                            str += "feltEmotionsLog$activeEmotions_" + currEmotion + ",";
-                            logEntry["activeEmotions_" + currEmotion] = emotionsStrI[currEmotionKey]
-                                .ToString("0.00", CultureInfo.InvariantCulture);
-                        }
-                        logEntry["strongestEmotionType"] = strongestEmotion.EmotionType;
-                        logEntry["strongestEmotionIntensity"] =
-                            strongestEmotion.Intensity.ToString("0.00", CultureInfo.InvariantCulture);
-                        logEntry["mood"] = rpc.Mood.ToString("0.00", CultureInfo.InvariantCulture);
                     }
+
+                    foreach (string currEmotionKey in emotionsStrI.Keys)
+                    {
+                        string currEmotion = currEmotionKey;
+                        if (currEmotion == "Happy-for")
+                        {
+                            currEmotion = "HappyFor";
+                        }
+
+                        if (currEmotion == "Fear-confirmed")
+                        {
+                            currEmotion = "FearConfirmed";
+                        }
+
+                        str += "feltEmotionsLog$activeEmotions_" + currEmotion + ",";
+                        logEntry["activeEmotions_" + currEmotion] = emotionsStrI[currEmotionKey]
+                            .ToString("0.00", CultureInfo.InvariantCulture);
+                    }
+
+                    logEntry["mood"] = rpc.Mood.ToString("0.00", CultureInfo.InvariantCulture);
                 }
-                
+
                 StartCoroutine(GameGlobals.gameLogManager.WriteToLog("fortheplanetlogs", "gameresultslog", logEntry));
             }
 
@@ -430,15 +460,14 @@ public class GameManager : MonoBehaviour {
         if (GameGlobals.isSimulation)
         {
             StartCoroutine(YieldedGameUpdateLoop());
-
         }
     }
+
     public void FixedUpdate()
     {
         if (!GameGlobals.isSimulation)
         {
             StartCoroutine(YieldedGameUpdateLoop());
-
         }
     }
 
@@ -458,11 +487,11 @@ public class GameManager : MonoBehaviour {
         {
             StartCoroutine(GameGlobals.narrator.RoundStart());
         }
+
         StartAlocateBudgetPhase();
     }
 
-    
-    
+
     //------------------------------------------Requests---------------------------------------
     public void StartAlocateBudgetPhase()
     {
@@ -472,10 +501,13 @@ public class GameManager : MonoBehaviour {
             {
                 player.ResetPlayerUI();
             }
+
             ChangeActivePlayerUI(GameGlobals.players[0]);
         }
+
         GameGlobals.players[0].BudgetAllocationPhaseRequest();
     }
+
     public void StartDisplayHistoryPhase()
     {
         //this phase displays the history of all players
@@ -485,6 +517,7 @@ public class GameManager : MonoBehaviour {
             {
                 player.ResetPlayerUI();
             }
+
             player.HistoryDisplayPhaseRequest();
 
             if (!GameGlobals.isSimulation && GameGlobals.isNarrated)
@@ -493,6 +526,7 @@ public class GameManager : MonoBehaviour {
             }
         }
     }
+
     public void StartExecuteBudgetPhase()
     {
         if (!GameGlobals.isSimulation)
@@ -501,8 +535,10 @@ public class GameManager : MonoBehaviour {
             {
                 player.ResetPlayerUI();
             }
+
             ChangeActivePlayerUI(GameGlobals.players[0]);
         }
+
         GameGlobals.players[0].BudgetExecutionPhaseRequest();
     }
 
@@ -515,6 +551,7 @@ public class GameManager : MonoBehaviour {
             {
                 player.ResetPlayerUI();
             }
+
             player.InvestmentSimulationRequest();
         }
     }
@@ -537,13 +574,16 @@ public class GameManager : MonoBehaviour {
         {
             nextPlayer.BudgetAllocationPhaseRequest();
         }
+
         yield return null;
     }
+
     public IEnumerator HistoryDisplayPhaseResponse(Player invoker)
     {
         numPlayersToDisplayHistory--;
         yield return null;
     }
+
     public IEnumerator BudgetExecutionPhaseResponse(Player invoker)
     {
         Player currPlayer = GameGlobals.players[currPlayerIndex];
@@ -556,13 +596,14 @@ public class GameManager : MonoBehaviour {
             nextPlayer.BudgetExecutionPhaseRequest();
         }
     }
+
     public IEnumerator InvestmentSimulationPhaseResponse(Player invoker)
     {
         numPlayersToSimulateInvestment--;
         yield return null;
     }
 
-    
+
     public Player ChangeToNextPlayer(Player currPlayer)
     {
         currPlayerIndex = (currPlayerIndex + 1) % GameGlobals.players.Count;
@@ -571,9 +612,10 @@ public class GameManager : MonoBehaviour {
         {
             ChangeActivePlayerUI(nextPlayer);
         }
+
         return nextPlayer;
     }
-    
+
 
     public GameProperties.GamePhase GetCurrGamePhase()
     {
@@ -592,10 +634,12 @@ public class GameManager : MonoBehaviour {
                 player.GetPlayerDisablerUI().SetActive(true);
                 continue;
             }
+
             Player currPlayer = GameGlobals.players[i];
             currPlayer.GetPlayerMarkerUI().SetActive(false);
             currPlayer.GetPlayerDisablerUI().SetActive(false);
         }
+
         return null;
     }
 }

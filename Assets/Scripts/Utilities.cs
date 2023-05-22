@@ -35,6 +35,12 @@ public static class GameGlobals
 
 
     public static float envState;
+    
+    public static float lastTotalEnvIncrease;
+    public static float lastTotalEconIncrease;
+    
+    public static float lastEnvDecay;
+    public static float lastTotalEconDecay;
 
     //fatima stuff
     public static string FAtiMAScenarioPath;
@@ -63,7 +69,8 @@ public static class GameProperties
         BUDGET_ALLOCATION,
         HISTORY_DISPLAY,
         BUDGET_EXECUTION,
-        INVESTMENT_SIMULATION
+        INVESTMENT_SIMULATION,
+        DECAY_SIMULATION
     }
 
     public enum InvestmentTarget
