@@ -1,6 +1,6 @@
 # For the Planet
 
-![For the Planet](Assets/Resources/Textures/logo.png)
+<img src="Assets/Resources/Textures/logo.png" width="300">
 
 _For the Planet_ is a Collective Risk Dilemma (CRD) game focusing on climate change. 
 Following the CRD convention, players try to avoid an environmental collapse, balancing their own **Economic Development** (their individual profit) – the private good which is affected only by a player's actions; with the shared **Environment State** – the public good which is affected by the actions of every player; both variables defined in the range [0, 1]. 
